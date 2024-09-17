@@ -55,4 +55,19 @@ input:not([type="radio"]) {
   height: 55px;
   margin-top: 20px;
   font-weight: 700;
+
+  &:disabled {
+    background: #e0e0e0;
+  }
+}
+
+.input-container {
+  position: relative;
+  display: block;
+
+  .password-icon {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
 }
