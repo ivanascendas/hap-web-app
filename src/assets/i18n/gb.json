@@ -1,0 +1,941 @@
+{
+  "APP": {
+    "TITLE": "ONLINE RENTS ACCOUNT",
+    "TITLE2": "CUSTOMER PORTAL ACCOUNT",
+    "TITLE3": "Local Authority Customer Portal",
+    "WELCOME": "welcome",
+    "FOOTER_TEXT": "Local Authority Customer Portal",
+    "HEADER": {
+      "BUTTONS": {
+        "LOGIN": "Login",
+        "REGISTER": "Register"
+      }
+    }
+  },
+  "ERRORS": {
+    "VERIFICATION_FAILED": "verification failed",
+    "WRONG_CODE": "wrong code",
+    "WRONG_CREDENTIALS": "Wrong Username/Password combination",
+    "WEEK_PASSWORD": "Please create a new password.<br/>We have detected that you are using a weak password",
+    "SESSION_EXPIRED": "Session Expired, please login again.",
+    "AMOUNT_REQUIRED_FIELD": "Amount is required field",
+    "SERVER_CONNECTION_ERROR": "Error with server communication",
+    "DIFFERENT_PASSWORDS": "Passwords are different",
+    "USER_NOT_FOUND": "User not found",
+    "TOO_MANY_REQUESTS": "Too many requests please  wait",
+    "LOCKED_OUT": "Your login is locked.",
+    "ACCESS_DENIED": "Access denied",
+    "SERVER_ERROR": "Server error",
+    "PLS_ACCEPT_COOKIE": "Accept Cookies at the bottom of the page",
+    "CONDITION_CONFIRM": "Check here to indicate that you have read and agree to the terms and conditions",
+    "LETTER_BEFORE_LOGIN": "Before you login you must have received a letter containing a\n                Temporary Password.",
+    "TOO_SHORT": "Your field is too short",
+    "TOO_LONG": "Your field is too long",
+    "WRONG_PASSWORD": "Password must contain at least 1 uppercase letter, 1 lowercase letter and 1 number",
+    "WRONG_PASSWORD_MESSAGE": "The new password must be at least 8 characters, it must also contain an uppercase letter and a number",
+    "EMAIL": "This field must be a valid email address.",
+    "REQUIRED": "The value is required",
+    "INVALID_NUMBER": "Value should be 1 to 500.",
+    "PASSWORD_VERIFY": "Your password and confirmation password do not match.",
+    "PASSWORD_COMPLEXITY": "Your password too weak.",
+    "VERIFICATION_ERROR": "Error sending verification",
+    "INVALID_PHONE": "Phone number invalid",
+    "INVALID_COUNTRY_CODE": "Please enter valid Phone country code",
+    "INVALID_PHONE_SHORT": "Please enter valid Phone excluding country code",
+    "INVALID_MFA": "Default MFA is required",
+    "EMAIL_CONFIRMATION_REQUIRED": "Email Confirmed is required",
+    "PHONE_CONFIRMATION_REQUIRED": "Phone Number Confirmed is required",
+    "INVALID_ACCOUNT_NUMBER": "Please enter valid integer Number",
+    "passwordValidationMinLength": "Password is too short",
+    "passwordValidationLowerCase": "Password must contain at least 1 lowercase letter",
+    "passwordValidationUpperCase": "Password must contain at least 1 uppercase letter",
+    "passwordValidationNumbers": "Password must contain numbers ",
+    "passwordValidationSpecialChars": "Password must contain at least 1 special symbol",
+    "passwordValidationCharRepeating": "Symbols can't repeat more than twice ",
+    "AMOUNT_IS_REQUIRED": "Amount is required field",
+    "AMOUNT_OVERPAY": "Are you sure you want to overpay",
+    "AMOUNT_SHOULD_BE_GREATER": "Amount should be greater than ",
+    "AMOUNT_SHOULD_NOT_BE_GREATER": " Amount should not be greater than ",
+    "UNKNOWN_ERROR": "Unknown error occurred",
+    "WRONG_DATA": "incorrect parameters",
+    "INVALID_INCOME_DEPARTMENT": "Invalid income department",
+    "EMPTY_PHONE": "Phone number cannot be empty",
+    "INVALID_TOP": "The `top` parameter must be less or equal 200",
+    "IDS_REQUIRED": "Ids is required",
+    "DATE_FROM_GREATER": "Date From greater than date To",
+    "FILE_NOT_FOUND": "File not found",
+    "FILE_NOT_EXISTS_TO_DOWNLOAD": "File Not Exist To Download",
+    "NOTIFICATION_NOT_FOUND": "Notification is not found in database",
+    "RegCustomerNumberNotExists": "Customer number does not exist",
+    "RegCustomerAlreadyRegistered": "Customer is already registered",
+    "RegWrongCustomerNumberOrPassword": "Wrong credentials",
+    "RegTempPasswordExpired": "Temp password has expired",
+    "ResCustomerNumberNotExists": "Customer number does not exist",
+    "ResCustomerAlreadyRegistered": "Customer is already registered",
+    "RapMissingInputSecret": "The secret parameter is missing.",
+    "RapInvalidInputSecret": "The secret parameter is invalid or malformed.",
+    "CapMissingInputResponse": "The response parameter is missing.",
+    "CapInvalidInputResponse": "The response parameter is invalid or malformed.",
+    "CapOtherCapthaError": "Error occured. Please try again",
+    "PaymentErr1xx": "Test Err1",
+    "PaymentErr2xx": "b",
+    "PaymentErr3xx": "c",
+    "PaymentErr5xx": "d",
+    "PaymentErr666": "e",
+    "INVALID_CAPTCHA": "Invalid captcha.",
+    "SMS_ISSUE": "Issue in saving SMS",
+    "OTP_EXPIRED": "OTP Expired",
+    "INVALID_OTP": "Invalid OTP.",
+    "SENDING_SMS_ISSUE": "Issue in sending SMS",
+    "INVALID_TOKEN": "Invalid token.",
+    "INVALID_EMAIL": "Invalid Email",
+    "NO_REQUIRED": "VoucherNo or SequenceNo is required.",
+    "PROPERTY_NUMBER_REQUIRED": "PropertyNumber is required.",
+    "PAYMENT_REQUIRED": "Payments info required.",
+    "DEPARTMENT_NOT_SPECIFIED": "Department is not specified.",
+    "PAYMENT_ACC_NOT_SPECIFIED": "A payment Account is not specified for the current department.",
+    "PAYMENT_MERCHANT_NOT_SPECIFIED": "A payment MerchantId is not specified for the current department.",
+    "PAYMENT_SECRET_NOT_SPECIFIED": "A payment Secret is not specified for the current department.",
+    "CONFIRM_PAY_REQUIRED": "ConfirmPay info required.",
+    "APPROPRIATE_RECEIPT_NOT_FOUND": "Appropriate receipt wasn't found.",
+    "WRONG_HASH": "Wrong hash.",
+    "NO_OPEN_INVOICES_FOUND": "No open invoices for property found.",
+    "AMOUNT_MORE_THEN_BALANCE": "Amount to pay is more then balance.",
+    "INCOME_DEPARTMENT_REQUIRED": "Income Department is required",
+    "INITIAL_VERIFICATION_ACCOUNT": "InitialVerification for this account number was not created by nightly routine.",
+    "INVALID_CREDENTIALS": "Customer number and Password/Pin do not match. Please check.",
+    "DOB_NOT_MATCH": "Date of Birth is wrong",
+    "TOO_MATCH_ATTEMPTS": "Too match attempts. Please connect with administrator"
+  },
+  "SIGN_UP": {
+    "TITLE4": "Register",
+    "TITLE2": "Signup",
+    "TITLE3": "Request Registration Letter",
+    "DESCRIPTION": "Enter your contact details below and select \"Next\" below to complete the registration process",
+    "DESCRIPTION_STEP_3": "Enter the codes below received by email and SME, then select Check. Please also enter your date of birth. Once your codes are confirmed, click on Next",
+    "TO_LOGIN": "Already registered, click here to",
+    "TITLE": "Complete Registration",
+    "SUB_TITLE": "Please enter the followings details to complete your registration.",
+    "REQUEST_TEMP_PASSWORD": "Request temporary password",
+    "AGREE_TERMS": "I agree to receive one time passcodes by SMS and email",
+    "NEED_HELP": "Need help?",
+    "ALREADY_REGISTERED": "Already registered, click here to ",
+    "AGREE": "I understand by ticking this box I am agreeing to the {{terms}} of using the app",
+    "AGREE_WITH": "I agree with",
+    "PASSWORDS_INFO": "Password must contain one uppercase letter and one number",
+    "ACCOUNT_NUMBER_INFO": "This is your customer number. You should be able to find this on any letter that we sent\n                                to you.",
+    "MFA_INFO": "We strongly recommend that you choose multi-factor authentication (MFA). This will improve the security of your account. <br/> Please select SMS OTP or Email OTP. You will then receive a code to enter each time you access the WEB Portal in order to confirm your identity. If you do not wish to receive a code, select No MFA. This is not recommended. <br/> You can change your selection at any time in your WEB Portal Profile.",
+    "BUTTONS": {
+      "GET_IN_TOUCH": "Get in touch",
+      "NEXT": "Next",
+      "GET_STARTED": " Get started"
+    }
+  },
+  "SIGN_IN": {
+    "TITLE": "Sign in",
+    "NAME": "Name",
+    "SUB_TITLE": "Before you login you must have received a letter containing a Temporary Password.",
+    "BUTTONS": {
+      "LOGIN": "Login",
+      "FORGOT_PASSWORD": "Forgot Password?",
+      "CHANGE_REGION": "Change region?"
+    }
+  },
+  "LOGOUT": {
+    "INGO": "You are now logged out"
+  },
+  "MESSAGE_PAGE": {
+    "TITLE": "Messages",
+    "NO_MESSAGES": "No messages",
+    "KEY": "Key"
+  },
+  "FORGOT_PASSWORD": {
+    "TITLE": "Reset Password",
+    "LABELS": {
+      "CUSTOMER_NUMBER": "Customer Number"
+    },
+    "BUTTONS": {
+      "RESET": "Reset"
+    }
+  },
+  "POPUPS": {
+    "TERM_AND_CONDITIONS": {
+      "TITLE": "Terms and Conditions",
+      "CONTENT_1": "THESE TERMS AND CONDITIONS APPLY TO AND GOVERN YOUR ACCESS TO AND USE OF SOUTH DUBLIN COUNTY COUNCIL MOBILE RENTS SERVICE APP",
+      "CONTENT_2": "IT IS IMPORTANT THAT YOU READ AND UNDERSTAND OUR TERMS AND CONDITIONS AS BY DOWNLOADING THE APP YOU INDICATE THAT YOU ACCEPT THESE TERMS AND CONDITIONS. IF YOU DO NOT AGREE TO THESE TERMS AND CONDITIONS THEN DO NOT DOWNLOAD THE APP",
+      "STATE_1": {
+        "TITLE": "1. Availability and registration",
+        "DESCRIPTION_1": "We have made this SOUTH DUBLIN COUNTY COUNCIL MOBILE RENTS SERVICE (the <b>App</b>) available to you for your own personal use only and only for the purposes of facilitating your use of accessing your rent account online (the <b>Service</b>).",
+        "DESCRIPTION_2": "You will not be able to use the App until you have completed the registration process."
+      },
+      "STATE_2": {
+        "TITLE": "2. Applicable terms",
+        "DESCRIPTION_1": "Your use of the Service is governed by the terms and conditions at  (the <b>Service T&Cs</b>). These App Terms and Conditions (the <b>App T&Cs</b>) supplement and amend the Service T&Cs in respect of your use of the App. By downloading the App you agree to comply with each of the Service T&Cs and the App T&Cs.",
+        "DESCRIPTION_2": "We reserve the right to modify these App T&Cs as required. If these App T&Cs are modified, we will post a clear, easily accessible modification notification on the App. If you continue using the App, you will be bound by any or all modifications made to it."
+      },
+      "STATE_3": {
+        "TITLE": "3. Charges",
+        "DESCRIPTION": "You may be charged by your service provider for downloading and/or accessing the App on your mobile phone, tablet or other handheld device (the <b>Device</b>). These may include data roaming charges if you do this outside your home territory. All these charges are solely your responsibility. If you do not pay the bills for your Device then we assume that you have the permission from the person that does before incurring any of these charges. We will not charge a separate fee for accessing the App, but you may be charged fees for using the Service. These fees will be as set out in the Service T&Cs."
+      },
+      "STATE_4": {
+        "TITLE": "4. Minimum system requirements",
+        "DESCRIPTION": "The App will only work on compatible Devices and operating systems and certain functionality will only work if your Device is connected to the internet. Some features \tmay also only be available with certain operating systems."
+      },
+      "STATE_5": {
+        "TITLE": "5. Use of your personal information",
+        "DESCRIPTION_1": "Your personal information is processed under applicable law and controlled by SOUTH DUBLIN COUNTY COUNCIL. Details of the information we collect and how we use it, including where this is shared with third parties and/or processed outside the EEA, is as set out in the Service T&Cs.",
+        "DESCRIPTION_2": "Through your use of the App we also collect and use touch ID, store your username, language selection, country selection and location data and our use of this personal information is subject to your opt-in choice and the applicable provisions in the Service T&Cs.",
+        "DESCRIPTION_3": "Certain functionality of the App may need to access your Device and information stored on it so that it works properly. By using the App you consent to this."
+      },
+      "STATE_6": {
+        "TITLE": "6. Your use of the App",
+        "DESCRIPTION_1": "You must comply with these App T&Cs as these apply to your use of the App and the Service T&Cs apply to your use of the Service that you access and use through the App. Any violation of these App T&Cs or the Service T&Cs may result in the termination of your access to the App and/or the Service.",
+        "DESCRIPTION_2": "The may only use the App for your own personal use and not in connection with any commercial endeavours. You must not send it to anyone else or copy or modify any part of it in any way.",
+        "DESCRIPTION_3": "You must not attempt to extract any source code from the App, disassemble it or make any derivative versions, or attempt to interrupt or decipher the transmissions between the App and our systems.",
+        "DESCRIPTION_4": "You must not use the App for any of the following purposes:",
+        "DESCRIPTION_5": "(a) anything unlawful or illegal or which is fraudulent or malicious or which promotes any criminal activity or provides information about the same;",
+        "DESCRIPTION_6": "(b) anything which is defamatory, harassing or threatening or which otherwise infringes or violates the rights of others. This includes any information that you may add or upload to the App;",
+        "DESCRIPTION_7": "(c) interfering in any way with any other user of the App; and/or",
+        "DESCRIPTION_8": "(d) knowingly introducing viruses or other malicious or harmful material or using it in connection with unsolicited communications.",
+        "DESCRIPTION_9": "You must not use the App in a way that may damage or impair the App, the Service or our underlying systems and security.",
+        "DESCRIPTION_10": "As the App facilitates money transfers, security is of paramount importance. You must keep your Device secure and properly close the App after each use. You must ensure that any security details, money transfer and account information and all other information that you provide to us via the App or otherwise is complete, accurate and up to date."
+      },
+      "STATE_7": {
+        "TITLE": "7. Intellectual property rights",
+        "DESCRIPTION": "The App and all copyright, database rights, trade marks and other intellectual property rights related to it belong to us or our licensors."
+      },
+      "STATE_8": {
+        "TITLE": "8. Our responsibilities to you",
+        "DESCRIPTION_1": "While we will endeavour to ensure that the App is normally available 24 hours a day, we shall not be liable if for any reason the App is not available at any time or for any period. Access to the App may be suspended temporarily from time to time and without notice in the case of system failure, maintenance or repair or for any reason beyond our control or if we deem it necessary.  For the avoidance of doubt, we shall not be liable for any loss or liability which may be suffered or incurred by you as a result of any suspension of, or interruption to, the operation of the App.",
+        "DESCRIPTION_2": "The App, including all content on or available through the App, is provided on an ‘as is’ basis and we do not make any representation or give any warranty in respect of the App or any of its content.  In particular, but without limitation, we do not give any warranty as to the accuracy, suitability, reliability, completeness, performance, fitness, freedom from viruses or timeliness of the content contained on the App.  The content of the App is not intended as advice and should not be relied upon.",
+        "DESCRIPTION_3": "We do not accept any responsibility to you for:",
+        "DESCRIPTION_4": "(a) malfunctions in communications facilities which cannot reasonably be considered to be under our control and that may affect the accuracy or timeliness of messages you send or the material you access via the App;",
+        "DESCRIPTION_5": "(b) any losses or delays in transmission of messages or material you access arising out of the use of any Internet access service provider or mobile network service provider or caused by any browser or other software which is not under our control;",
+        "DESCRIPTION_6": "(c) viruses that may infect your computer equipment or other property on account of your access to or use of the App or your accessing any materials on the App;",
+        "DESCRIPTION_7": "(d) any unauthorised use or interception of any message or information before it reaches the App or our servers from the App;",
+        "DESCRIPTION_8": "(e) any unauthorised use of or access to data relating to you or your transactions which is held by us (unless such use or access is caused by our negligence, fraud or failure to comply with laws relating to the protection of your data), to the extent permitted by local law;",
+        "DESCRIPTION_9": "(f) any content provided by third parties."
+      },
+      "STATE_9": {
+        "TITLE": "9. Limitations of liability",
+        "DESCRIPTION_1": "There are provisions on liability in the Service T&Cs that also apply in connection with these App T&Cs and your use of the App.",
+        "DESCRIPTION_2": "In addition, we and our group companies and our and their officers, directors, employees, shareholders or agents, exclude all liability and responsibility for any amount or kind of loss or damage that may result to you or a third party (including without limitation, any direct, indirect, punitive or consequential loss or damages, or any loss of income, profits, goodwill, data, contracts, use of money, or loss or damages arising from or connected in any way to business interruption, and whether in tort (including without limitation negligence), contract or otherwise) in any way or in connection with:",
+        "DESCRIPTION_3": "(a) the App and your  use, delay in use or inability to use the App or if it does not work as you expect or would like or if it contains any defects or errors and whether or not we correct any of those defects or errors;",
+        "DESCRIPTION_4": "(b) your access to and use of any material on the App or material linked to or referred to on the App; and/or",
+        "DESCRIPTION_5": "(c) any loss or damage to your Device or any other hardware or software you use in connection with the App, including in connection with any viruses that may affect the same on account of your downloading and use of the App.",
+        "DESCRIPTION_6": "You acknowledge that use of the App is dependent on third parties, including your own network providers, and that we are not liable for any acts or omissions of those third parties.",
+        "DESCRIPTION_7": "If we or any of our group companies or our or their officers, directors, employees, shareholders or agents do have any liability to you for any kind of loss or damage for any reason under or in connection with these App T&Cs and/or the Service T&Cs, you agree that you shall not recover more than once for that same loss and/or damage regardless of whether your claim(s) are made under or in connection with any or both of these App T&Cs and/or the Service T&Cs.",
+        "DESCRIPTION_8": "Nothing in these App T&Cs shall exclude any party’s liability for: (a) death or personal injury arising through negligence; (b) fraudulent misrepresentation; and/or (c) anything else that cannot be excluded or limited by us under any applicable law.",
+        "DESCRIPTION_9": "You shall indemnify us (and you shall keep us indemnified) and hold us and our directors, employees, agents and representatives harmless against any claim, loss, expense, liability or damages suffered by us resulting from your breach of these App T&Cs."
+      },
+      "STATE_10": {
+        "TITLE": "10. Termination and suspension",
+        "DESCRIPTION": "We may terminate or suspend your use of the App with or without notice at any time and without any liability to you. Upon any termination your right to use the App, and any other rights or permissions granted to you in these App T&Cs, will end and you must stop using the App and delete it from your Device."
+      },
+      "STATE_11": {
+        "TITLE": "11. Law and jurisdiction",
+        "DESCRIPTION": "These App T&Cs and any dispute or claim arising out of or in connection with them or their subject matter (including any non-contractual disputes or claims) will be governed by the law of Ireland and the parties agree that the courts of Ireland will have exclusive jurisdiction to settle any such disputes or claims."
+      }
+    },
+    "ADMIN_DETAILS": {
+      "TITLE": "Admin details",
+      "INCOME_DEPARTMENTS": "Income Departments",
+      "LABELS": {
+        "ADMIN_NAME": "Admin Name",
+        "EMAIL": "Email",
+        "PHONE": "Phone",
+        "STATUS": "Status"
+      },
+      "STATUS": {
+        "ENABLED": "Enabled",
+        "DISABLED": "Disabled"
+      }
+    },
+    "CONFIRM_PAYMENT": {
+      "REDIRECTING_TO_PAYMENT": "redirecting to payment page...",
+      "INVOICES": "invoices",
+      "INVOICE": "invoice",
+      "AMOUNT_TO_BE_PAID": "amount to be paid"
+    },
+    "CONFIRM_PAYMENT_RESPONSE": {
+      "BACK_TO_HOME": "Back to Home"
+    },
+    "CREATE_ADMIN": {
+      "TITLE": "Create Admin",
+      "LABELS": {
+        "ADMIN_NAME": "Admin Name",
+        "EMAIL": "Email",
+        "PHONE": "Phone",
+        "STATUS": "Status"
+      },
+      "STATUS": {
+        "ENABLED": "Enabled",
+        "DISABLED": "Disabled"
+      }
+    },
+    "PAYMENT_PROCESS": {
+      "TITLE": "Notification"
+    },
+    "USER_DETAILS": {
+      "TITLE": "Account details"
+    }
+  },
+  "BUTTONS": {
+    "BACK_TO_SIGN_IN": "Back to Sign in",
+    "BACK_TO_STATEMENTS": "Back to Statements",
+    "CANCEL": "CANCEL",
+    "CONTINUE": "Continue",
+    "RESET": "Reset",
+    "BACK": "Back",
+    "UPDATE": "Update",
+    "EDIT": "Edit",
+    "SAVE": "Save",
+    "SEND": "Send",
+    "OK": "Ok",
+    "NEXT": "Next",
+    "PREV": "Prev",
+    "CLOSE": "Close",
+    "CHANGE": "Change",
+    "CHANGE_PASSWORD": "Change Password",
+    "SEND_LETTER": "Send Registration Letter",
+    "CREATE": "Create",
+    "PRINT": "Print",
+    "CHANGE_CONTINUE": "Change to Continue",
+    "FINISH": "Finish"
+  },
+  "LABELS": {
+    "GET_APP": "Get application",
+    "ACTIVE": "Active",
+    "CLOSED": "Closed",
+    "NO_ACTIVE": "No Active",
+    "TERMS_AND_CONDITION": "terms and conditions",
+    "CUSTOMER_NUMBER": "Customer Number",
+    "CUSTOMER_NAME": " Customer Name",
+    "DR_NUMBER": "DR Number",
+    "NAME": "Name",
+    "ADDRESS": "Address",
+    "STATUS": "Status",
+    "EMAIL": "Email",
+    "PHONE": "Phone",
+    "PASSWORD": "Password",
+    "PHONE_NUMBER": "Phone number",
+    "TRANSACTIONS": "Transactions",
+    "NEW_PASSWORD": "New password",
+    "TEMPORARY_PASSWORD": "Temporary password",
+    "CURRENT_PASSWORD": "Current password",
+    "CONFIRM_PASSWORD": "Confirm password",
+    "CONFIRM_NEW_PASSWORD": "Confirm new password",
+    "ENTER_EMAIL": "Enter your email address",
+    "ENTER_PHONE": "Enter your phone number ",
+    "ENTER_BIRTH_DATE": "Please enter your date of birth",
+    "SELECTED": "Selected",
+    "TOTAL": "Total",
+    "PASSWORDS_INFO": "Password must contain one uppercase letter and one number. It should be a minimum of 10 characters long."
+  },
+  "MFA": {
+    "SEND_OTP": "Send OTP",
+    "ENTER_CODE": "Enter code from",
+    "CHOOSE_MFA": "Choose MFA option",
+    "TWO_FACTOR_AUTH": "Two factor Auth",
+    "CODE_FROM_EMAIL": "Code from Email",
+    "SEND_TO": "Send to ",
+    "ENTER_EMAIL_OTP": "Enter the  OTP received on email ",
+    "ENTER_PHONE_OTP": "Enter the  OTP received on your phone ",
+    "DESCRIPTION": "Verify your email address and phone number.",
+    "EXISTING_TENANT_TITLE": "Register your contact details",
+    "ENTER_INFO": "As part of your selected Multi Factor Authentication (MFA) option, you will receive a code to your verified mobile number or email address, please insert same below.\n\nYou can amend your selected MFA option in your account profile.",
+    "EXISTING_TENANT_INFO": "This is a once off process to confirm your contact details. Enter your details below and select {{button}} to complete the verification process",
+    "EXISTING_TENANT_INFO_2": "Enter the codes that you have received by SMS and email and select “check” for each code. Then press Continue.",
+    "EXISTING_TENANT_INFO_3": "We strongly recommend that you choose multi-factor authentication (MFA). This will improve the security of your account. Please select SMS OTP or Email OTP. You will then receive a code to enter each time you access the WEB Portal in order to confirm your identity. If you do not wish to receive a code, select No MFA. This is not recommended. You can change your selection at any time in your WEB Portal Profile",
+    "AGREE": "I agree to receive one time passcodes  by SMS and email.",
+    "INFO": "We strongly recommend that you choose multi-factor authentication (MFA). This will improve security of your account.",
+    "TYPES": {
+      "SMS_OTP": "SMS OTP",
+      "EMAIL_OTP": "Email OTP",
+      "NO_OTP": "No MFA (Not Recommended)"
+    },
+    "VERIFICATION_INPUT": {
+      "TRY_ANOTHER_WAY": "Try another way",
+      "RESEND_OTP": "Resend OTP",
+      "SECOND_LEFT": "Wait for {{seconds}} seconds before resending OTP",
+      "PHONE_INPUT_SENT_LABEL": "Enter the  OTP received on your phone",
+      "EMAIL_INPUT_SENT_LABEL": "Enter the  OTP received on email",
+      "PHONE_INPUT_LABEL": "Click here to send SMS code to Phone",
+      "EMAIL_INPUT_LABEL": "Click here to send Email code"
+    }
+  },
+  "MESSAGES": {
+    "PaymentSuccess": "Thank you for your payment, a receipt of this payment will be emailed to you",
+    "VERIFICATION_SAVED": "Verification Saved Successfully",
+    "EMAIL_VERIFIED": "Email Verified Successfully",
+    "DOB_VERIFIED": "Date of Birth Verified Successfully",
+    "PHONE_VERIFIED": "Phone number verified successfully",
+    "LOADING": "Loading...",
+    "ADMIN_CREATED": "Admin Created",
+    "MESSAGES_SAVED": "Massages saved",
+    "TERMS_SAVED": "Terms saved",
+    "INFO_UPDATED": "Information has been successfully updated",
+    "PASSWORD_UPDATED": "Password has been successfully updated",
+    "CHECK_EMAIL": "Check Email for code",
+    "DOWNLOAD_SUCCESS": "Download completed",
+    "DEFAULT": "Done",
+    "DEFAULT_TYPE": "success",
+    "ERROR_TYPE": "error",
+    "ERROR_NO_CHANGES": "Nothing to update",
+    "SUCCESS_RESET_PASSWORD": "Temporary password is sent to the user's email address",
+    "PASSWORD_SUCCESSFULLY_CHANGED": "Password successfully changed",
+    "INCORRECT_PARAMETERS": "Incorrect password",
+    "INCORRECT_CODE": "Incorrect code",
+    "SUCCESS_DATA_UPDATED": "Information successfully updated",
+    "DEFAULT_ERROR": "Error with server communication",
+    "CUSTOMER_NUMBER_TOOLTIP": "This is your customer number, you can get this from your registration letter. It will also be on any previous statement sent to you.",
+    "CUSTOMER_PASSWORD_TOOLTIP": "This is the temporary password provided to you in your registration letter. Please note that password is case sensitive.",
+    "REGISTRATION_NUMBER_TOOLTIP": "This is your customer account number, it does not contain any letters.  You can get this from your previous customer statements.",
+    "REGISTRATION_NAME_TOOLTIP": "This is your full name field",
+    "REGISTRATION_EMAIL_TOOLTIP": "This is your email address field",
+    "REGISTRATION_BIRTH_DATES_TOOLTIP": "Please enter your date of birth",
+    "REGISTRATION_ADDRESS_TOOLTIP": "This is your address field",
+    "REGISTRATION_PHONE_TOOLTIP": "This is your phone number field",
+    "LETTER_WILL_SENT": "We have received your request, you will receive a registration letter from us within the next 5 working days. You will be able to register once you have received this letter",
+    "LETTER_NOT_SENT": "There appears to have been an error handling your request, please contact support",
+    "CUSTOMER_CURRENT_PASSWORD_TOOLTIP": "This is your current password. Please note that password is case sensitive.",
+    "CUSTOMER_NEW_PASSWORD_TOOLTIP": "Please, enter your new password. Please note that password is case sensitive.",
+    "CUSTOMER_CONFIRM_PASSWORD_TOOLTIP": "Please, repeat your new password. Please note that password is case sensitive.",
+    "CUSTOMER_REGISTRATION_CONFIRM_PASSWORD_TOOLTIP": "Password must contain at least 1 uppercase letter, 1 lowercase letter and 1 number",
+    "SIGNUP_TITLE": "Please enter your Personal details to receive a registration letter",
+    "RESET_PASSWORD": "Please check your inbox for an email to reset your password",
+    "SUCCESS_MESSAGEG_SENT": "Information successfully sent",
+    "SOMETHING_ERROR": "Something went wrong",
+    "PAYMENT_ACCEPTED": "Payment accepted!",
+    "PAYMENT_ACCEPTED_TITLE": "Your payment will be reflected your account in 24 hours.",
+    "PAYMENT_DECLINED_TITLE": "Your payment couldn’t be processed. Double check the card information or try with another credit card.",
+    "PAYMENT_PENDING": "Your payment is being processed, please do not leave this page.",
+    "PAYMENT_PROCESSING": "Your recent payment will be reflected on your account tomorrow.",
+    "PASSWORD_IS_CHANGED": "Password is changed.",
+    "LETTER_BEFORE_LOGIN": "Before you login you must have received a letter containing a\n                Temporary Password.",
+    "CUSTOMER_NUMBER_EXPL": "This is your customer number. You should be able to find this on\n                  any letter that we sent to you."
+  },
+  "MAIN": {
+    "PAY_BUTTON": "Pay",
+    "STATEMENT": "Statement",
+    "PRINT_STATEMENT": "Print Statement",
+    "ACCOUNT": "Account",
+    "INFO": "Info",
+    "PAY": "Pay",
+    "MENU": {
+      "HAP": "Hap",
+      "RATES": "Hap",
+      "RENTS": "Rents",
+      "LOANS": "Loans",
+      "LOAN_INFO": "Loan Info",
+      "DOCUMENTS": "Documents",
+      "DATA_POLICY": "Data Policy",
+      "CONTACT_US": "Contact us",
+      "ACCOUNT": "Account",
+      "MESSAGES": "Messages"
+    },
+    "ACCOUNT_MENU": {
+      "ACCOUNT_INFO": "Account Information",
+      "MESSAGES": "Messages",
+      "CHANGE_PASSWORD": "Change Password",
+      "LOGOUT": "logout"
+    },
+    "PAGINATION": {
+      "PREV": "Prev",
+      "NEXT": "Next"
+    }
+  },
+  "RATES": {
+    "TITLE": "Rates",
+    "FILTER": {
+      "PROPERTY": "Property",
+      "ALL_PROPERTIES": "All Properties",
+      "DATE_RANGE": "Date Range",
+      "DATE_RANGE_OPTIONS": {
+        "CURRENT_YEAR": "Current year",
+        "INCLUDE_PREVIOUS_YEAR": "Include previous year"
+      }
+    },
+    "COLUMNS": {
+      "DATE": "Date",
+      "TRANSACTION": "Transaction",
+      "REFERENCE": "Reference",
+      "AMOUNT": "Amount",
+      "PROPERTY": "Property",
+      "BALANCE": "Balance"
+    },
+    "CLOSING_BALANCE": "Closing Balance"
+  },
+  "RENTS": {
+    "TITLE": "Rents",
+    "FILTER": {
+      "DATE_RANGE": "Date Range",
+      "DATE_RANGE_OPTIONS": {
+        "MONTHS_3": "3 months",
+        "MONTHS_6": "6 months",
+        "MONTHS_12": "12 months"
+      }
+    },
+    "COLUMNS": {
+      "DATE": "Date",
+      "TRANSACTION": "Transaction",
+      "REFERENCE": "Reference",
+      "DETAILS": "Details",
+      "RENT": "Rent",
+      "AMOUNT": "Amount",
+      "PAYMENT": "Payment",
+      "BALANCE": "Balance"
+    },
+    "CLOSING_BALANCE": "Closing Balance"
+  },
+  "LOANS": {
+    "TITLE": "Loans",
+    "FILTER": {
+      "DATE_RANGE": "Date Range",
+      "DATE_RANGE_OPTIONS": {
+        "MONTHS_3": "3 months",
+        "MONTHS_6": "6 months",
+        "MONTHS_12": "12 months"
+      }
+    },
+    "COLUMNS": {
+      "DATE": "Date",
+      "TRANSACTION": "Transaction",
+      "REFERENCE": "Reference",
+      "AMOUNT": "Amount",
+      "BALANCE": "Balance"
+    },
+    "IN_CREDIT": "In Credit"
+  },
+  "LOAN_INFO": {
+    "TITLE": "Loan info",
+    "COLUMNS": {
+      "LOAN_NUMBER": "Loan Number",
+      "CAPITAL_BALANCE": "Capital Balance",
+      "INTEREST_RATE": "Interest Rate",
+      "LOAN_END_DATE": "Loan End Date"
+    }
+  },
+  "POLICY": {
+    "TITLE": "Policy Rules",
+    "CONTENT": "Policy Rules will be provided here."
+  },
+  "CONTACT_US": {
+    "TITLE": " Contact Us",
+    "CONTACT_US_SSC": "Contact us in the HAP SSC",
+    "EMAIL": "Email",
+    "PHONE": "Phone"
+  },
+  "ACCOUNT": {
+    "TITLE": "Profile",
+    "PERSONAL_DETAILS": "Personal Details",
+    "CUSTOMER_NAME": "Customer Name",
+    "CUSTOMER_NUMBER": "Customer No",
+    "EMAIL": "Email",
+    "PHONE": "Phone",
+    "CURRENT_PASSWORD": "Current Password",
+    "NEW_PASSWORD": "New Password",
+    "CONFIRM_PASSWORD": "Confirm Password",
+    "BUTTONS": {
+      "UPDATE": "Update",
+      "CHANGE": "Change"
+    }
+  },
+  "INVOICES": {
+    "RATES": {
+      "TITLE": "Select invoices to pay",
+      "FILTER": {
+        "NAME": "Property ",
+        "OPTIONS": {
+          "ALL_PROPERTIES": "All Properties"
+        }
+      },
+      "COLUMNS": {
+        "PAYMENT": "PAYMENT - {{invoiceNo}}",
+        "PROPERTY_NUMBER": "Property number",
+        "PROPERTY": "Property",
+        "BALANCE": "Balance",
+        "AMOUNT_TO_PAY": "Amount to pay"
+      },
+      "SELECTED_INVOICE": "Selected Invoice",
+      "TOTAL": "Total",
+      "CURRENT_BALANCE": "Current Balance"
+    },
+    "RENTS": {
+      "TITLE": "Enter in amount that you wish to pay",
+      "COLUMNS": {
+        "DATE": "Date",
+        "REFERENCE": "Reference",
+        "AMOUNT_TO_PAY": "Amount to pay"
+      },
+      "SELECTED_INVOICE": "Selected Invoice",
+      "TOTAL": "Total",
+      "CURRENT_BALANCE": "Current Balance"
+    },
+    "LOANS": {
+      "TITLE": "Enter in amount that you wish to pay",
+      "COLUMNS": {
+        "DATE": "Date",
+        "REFERENCE": "Reference",
+        "AMOUNT_TO_PAY": "Amount to pay"
+      },
+      "SELECTED_INVOICE": "Selected Invoice",
+      "TOTAL": "Total"
+    },
+    "PAYMENT": "Payment",
+    "CURRENT_BALANCE": "Current Balance",
+    "CLOSING_BALANCE": "Closing Balance"
+  },
+  "PAYMENT_INFO": {
+    "TITLE": "Additional Information",
+    "ENTER_ADDITIONAL_INFO": "Enter Additional Information",
+    "DESCRIPTION_1": "The new European directive on payments(PSD2) is now in force.",
+    "DESCRIPTION_2": "The main aim of this directive is to reduce online payment fraud. We therefore require additional\n                    information from you to complete the transaction.",
+    "DESCRIPTION_3": "Please feel free to change the details below to match the card that will be used to complete this transaction.\n                    Please click on proceed once details below match the card details",
+    "INFO": {
+      "NAME": "Name",
+      "ADDRESS_1": "Address 1",
+      "ADDRESS_2": "Address 2",
+      "ADDRESS_3": "Address 3",
+      "ADDRESS_4": "Address 4",
+      "COUNTRY": "Country",
+      "EIRCODE": "Eircode",
+      "EMAIL": "Email",
+      "PHONE": "Phone"
+    }
+  },
+  "PAYMENT_DETAILS": {
+    "TITLE": "Payment Details",
+    "DATE": "Date:",
+    "PROPERTY": "Property:",
+    "REFERENCE": "Reference:",
+    "TOTAL_PAID": "Total Paid:"
+  },
+  "PAYMENT": {
+    "BACK_TO_STAT": "Back to statement selection",
+    "PAYMENT_TOTAL": "Payment Total",
+    "PAY_NOW": "Pay Now",
+    "ENTER_AMOUNT": "Enter amount to be paid",
+    "ENTER_AMOUNT_HERE": "Enter Amount here",
+    "LABEL_ORIGINAL": "Original:",
+    "LABEL_ALREADY_PAID": "Already Paid:",
+    "LABEL_BALANCE": "Balance:"
+  },
+  "COOKIE": {
+    "TITLE": "Cookie Policy",
+    "DESCRIPTION": "Fat new smallness few supposing suspicion two. Course sir people worthy\n        horses add entire suffer. How one dull get busy dare far. At principle\n        perfectly by sweetness do. As mr started arrival subject by believe.\n        Strictly numerous outlived kindness whatever on we no on addition. He do\n        subjects prepared bachelor juvenile ye oh. He feelings removing informed\n        he as ignorant we prepared. Evening do forming observe spirits is in.\n        Country hearted be of justice sending. On so they as with room cold ye.\n        Be call four my went mean. Celebrated if remarkably especially an. Going\n        eat set she books found met aware. Sex reached suppose our whether. Oh\n        really by an manner sister so. One sportsman tolerably him extensive put\n        she immediate. He abroad of cannot looked in. Continuing interested ten\n        stimulated prosperous frequently all boisterous nay. Of oh really he\n        extent horses wicket. Carried nothing on am warrant towards. Polite in\n        of in oh needed itself silent course. Assistance travelling so\n        especially do prosperous appearance mr no celebrated. Wanted easily in\n        my called formed suffer. Songs hoped sense as taken ye mirth at. Believe\n        fat how six drawing pursuit minutes far. Same do seen head am part it\n        dear open to. Whatever may scarcely judgment had. Far curiosity\n        incommode now led smallness allowance. Favour bed assure son things yet.\n        She consisted consulted elsewhere happiness disposing household any old\n        the. Widow downs you new shade drift hopes small. So otherwise commanded\n        sweetness we improving. Instantly by daughters resembled unwilling\n        principle so middleton. Fail most room even gone her end like.\n        Comparison dissimilar unpleasant six compliment two unpleasing any add.\n        Ashamed my company thought wishing colonel it prevent he in. Pretended\n        residence are something far engrossed old off. One advanced diverted\n        domestic sex repeated bringing you old. Possible procured her trifling\n        laughter thoughts property she met way. Companions shy had solicitude\n        favourable own. Which could saw guest man now heard but. Lasted my\n        coming uneasy marked so should. Gravity letters it amongst herself\n        dearest an windows by. Wooded ladies she basket season age her uneasy\n        saw. Discourse unwilling am no described dejection incommode no\n        listening of. Before nature his parish boy. Its had resolving otherwise\n        she contented therefore. Afford relied warmth out sir hearts sister use\n        garden. Men day warmth formed admire former simple. Humanity declared\n        vicinity continue supplied no an. He hastened am no property exercise\n        of. Dissimilar comparison no terminated devonshire no literature on. Say\n        most yet head room such just easy. Expenses as material breeding\n        insisted building to in. Continual so distrusts pronounce by unwilling\n        listening. Thing do taste on we manor. Him had wound use found hoped. Of\n        distrusts immediate enjoyment curiosity do. Marianne numerous saw\n        thoughts the humoured. Surprise steepest recurred landlord mr wandered\n        amounted of. Continuing devonshire but considered its. Rose past oh shew\n        roof is song neat. Do depend better praise do friend garden an wonder\n        to. Intention age nay otherwise but breakfast. Around garden beyond to\n        extent by. Oh he decisively impression attachment friendship so if\n        everything. Whose her enjoy chief new young. Felicity if ye required\n        likewise so doubtful. On so attention necessary at by provision\n        otherwise existence direction. Unpleasing up announcing unpleasant\n        themselves oh do on. Way advantage age led listening belonging\n        supposing.",
+    "POPUP": {
+      "TITLE": "This Website uses cookies.",
+      "CONTENT": "HAP SSC uses only cookies on this website & application\n                    that are strictly necessary for services requested by you. For more information, please look at our\n                    <a ng-href=\"#/data\">Data Protection Statement</a> and <a ng-href=\"#/cookie\">Cookie Statement</a>.",
+      "GOT_IT": "Got it"
+    }
+  },
+  "ADMIN": {
+    "USERS": {
+      "TITLE": "User Management",
+      "FILTERS": {
+        "DEPTS": "Depts"
+      },
+      "COLUMNS": {
+        "CUSTOMER_NUMBER": "Customer Number",
+        "NAME": "Name",
+        "ADDRESS": "Address",
+        "STATUS": "Status"
+      }
+    },
+    "LETTER": {
+      "CUSTOMER_FROM": "Customer From",
+      "CUSTOMER_TO": "Customer To",
+      "COUNTER": "Counter",
+      "INVITATION_TITLE": "Invitation",
+      "REMINDER_TITLE": "Reminder",
+      "SIGNUP_TITLE": " Self Signup",
+      "DEPT": "Dept",
+      "COLUMNS": {
+        "CUSTOMER_NUMBER": "Customer Number",
+        "AGRESSO_NAME": "Agresso Name",
+        "AGRESSO_ADDRESS": "Agresso Address",
+        "ENTERED_NAME": "Entered Name",
+        "WEB_ADDRESS": "Web address"
+      },
+      "BUTTONS": {
+        "GENERATE_AND_PRINT": "Generate & Print",
+        "REMOVE": "Remove"
+      }
+    },
+    "PASSWORD": {
+      "TITLE": "Change Password"
+    },
+    "MANAGEMENT": {
+      "TITLE": "Admins Management",
+      "ADMIN_NUMBER": "Admin Number"
+    },
+    "NOTIFICATIONS": {
+      "ALL_USERS": "All customers",
+      "ENTER_TITLE": "Enter Title",
+      "ENTER_TEXT": "Enter text"
+    }
+  },
+  "CHOOSE_URL": {
+    "AUTHORITY": "Authority"
+  },
+  "CONTENTS": {
+    "HEADER": {
+      "HEADER_TITLE": "Kildare Co Co Customer Payments Portal"
+    },
+    "BUTTON": {
+      "CANCEL": "CANCEL",
+      "CONTINUE": "Continue",
+      "RESET": "Reset",
+      "BACK": "Back",
+      "EDIT": "Edit",
+      "SAVE": "Save",
+      "SEND": "Send"
+    },
+    "NAV": {
+      "STATEMENT": "Statement",
+      "RENTS_TRANSACTIONS": "Transactions",
+      "MAKE_PAYMENT": "Pay",
+      "ACCOUNT": "Profile",
+      "loanInfo": "Loan Info",
+      "LOGOUT": "Logout",
+      "ACCOUNT_INF": "Account Information",
+      "CHANGE_PASSWORD": "Change Password",
+      "ADMIN": "Admin",
+      "PASSWORD": "Security",
+      "MESSAGES": "Messages",
+      "TERMS": "Terms",
+      "USERS": "Users",
+      "LETTERS": "Letters",
+      "INVITATION": "Invitation",
+      "REMINDER": "Reminder",
+      "SELF_SIGNUP": "self signup",
+      "REPORTS": "Reports",
+      "NOTIFICATIONS": "Notifications",
+      "ADMINS": "Admins",
+      "EXIT": "Logout"
+    },
+    "TITLE": {
+      "SELECT_BILLS": "Select invoices to pay",
+      "PAID_LATER": "You’ll be able to select the amount to be paid later",
+      "PUSHNOTIFICATION": "Notifications control",
+      "CHOOSE_REGION": "Choose Authority"
+    },
+    "TOOLTIP": {
+      "CUSTOMER_NUMBER": "This is your customer number. You should be able to find this on any letter that we sent to you."
+    },
+    "TABLE": {
+      "CUSTOMER": "Customer Number",
+      "EXCEL_FILE": "Excel File",
+      "MESSAGE": "Message",
+      "TITLE": "Title",
+      "NAME": "Name",
+      "ADDRESS": "Address",
+      "STATUS": "Status"
+    },
+    "REGION": {
+      "TITLE": "Please select your local Authority."
+    },
+    "VERIFICATION_INPUT": {
+      "PHONE_INPUT_SENT_LABEL": "Enter the  OTP received on your phone",
+      "EMAIL_INPUT_SENT_LABEL": "Enter the  OTP received on email",
+      "PHONE_INPUT_LABEL": "Click here to send SMS code to Phone",
+      "EMAIL_INPUT_LABEL": "Click here to send Email code"
+    },
+    "IDLE": "You will be logged out in {{time}} seconds. Do you wish to stay logged in?"
+  },
+  "DATA_PROJECTION": {
+    "SUBTITLE": "HAP WebPay Portal",
+    "TITLE": "Data Protection Statement for",
+    "INTRODUCTION": {
+      "HEADER": "Introduction",
+      "CONTENT": "This data protection statement has been created for the Housing Assistance Payment (“HAP”) WebPay portal (WebPay”)."
+    },
+    "ABOUT": {
+      "HEADER": "Who we are and why do we require your information?",
+      "CONTENT1": "The HAP Scheme is a social housing support scheme, established by the Government of Ireland within the Department of Housing, Local Government and Heritage (the “DHLGH”). The DHPLG in conjunction with the Local Authorities of Ireland are the data controllers for the HAP scheme.",
+      "CONTENT2": "he data controllers established the Housing Assistance Payment Shared Service Centre (“HAP SSC”), to provide specific financial transactional and reporting services on behalf of all Local Authorities and the DHLGH.",
+      "CONTENT3": "The HAP SSC is part of Limerick City and County Council and acts as a data processor for the data controllers.",
+      "CONTENT4": "The WebPay portal has been created as a way for people who are participating in HAP to view the transactions in their account with their Local Authority and to make online payments."
+    },
+    "WHY_STATEMENT": {
+      "HEADER": "Why do we have a data protection statement?",
+      "CONTENT": "HAP SSC has created this data protection statement in order to demonstrate our firm commitment to data protection and to assure you that in all your dealings with HAP SSC that we will ensure the security of the data you provide to us. HAP SSC creates, collects and processes a significant amount of personal data in various multiple formats on a daily basis. HAP SSC’s commitment is that the personal data you may be required to supply is:",
+      "LIST": {
+        "ITEM1": "Obtained lawfully, fairly and in a transparent manner",
+        "ITEM2": "Obtained for only specified, explicit and legitimate purposes",
+        "ITEM3": "Adequate, relevant and limited to what is necessary for purpose for which it was obtained",
+        "ITEM4": "Recorded, stored accurately and securely and where necessary kept up to date",
+        "ITEM5": "Kept only for as long as is necessary for the purposes for which it was obtained",
+        "ITEM6": "Kept in a form which permits identification of the data subject",
+        "ITEM7": "Processed only in a manner that ensures the appropriate security of the personal data including protection against unauthorised or unlawful processing"
+      }
+    },
+    "POLICY": {
+      "HEADER": "Data Protection Policy",
+      "CONTENT": "HAP SSC has a detailed Data Protection Policy which outlines how we as a public body are committed to ensuring the security of any personal data you provide to us."
+    },
+    "ACTIVITY_REFERRED": {
+      "HEADER": "What is the activity referred to in this Data Protection Statement?",
+      "CONTENT1": "The HAP SSC, as data processor, needs to process certain personal data in order to provide the WebPay portal. If you wish to make a card payment within the WebPay portal then you will need to provide card details to our card payment partner.",
+      "CONTENT2": "The WebPay portal will validate the email address that you use and may be used to communicate with you concerning your HAP account."
+    },
+    "WHAT_IS_THE_BASIC": {
+      "HEADER": "What is the basis for making the processing of personal data in this activity lawful?",
+      "CONTENT1": "The processing is necessary for the performance of a task carried out in the public interest or in the exercise of official authority vested in the controller (Article 6(e) GDPR); the official authority is based on ",
+      "LIST": {
+        "ITEM1": "Part 4 Housing (Miscellaneous Provisions) Act 2014",
+        "ITEM2": "Section 149(A) Local Government Acts 2001 to 2014",
+        "ITEM3": "Housing Authorities Functions under the Housing Acts 1966 to 2014"
+      },
+      "CONTENT2": "The Data Controllers have concluded a Data Processing Agreement with Limerick City and County Council – HAP SSC, as the Data Processor. A separate data sharing agreement has been concluded with Global Payments Inc trading as Realex Payments. Realex Payments act as a data controller and are responsible for processing your card payments."
+    },
+    "WHAT_PERSONAL_DATA": {
+      "HEADER": "What personal data will be processed within the WebPay portal?",
+      "CONTENT": "In order to provide the WebPay portal service the following personal data will be transferred securely from the existing systems of HAP SSC",
+      "LIST": {
+        "NAME": "Name",
+        "CUSTOMER_NUMBER": "Customer number",
+        "CUSTOMER_PIN": "Customer pin",
+        "CUSTOMER_PASSWORD": "Customer password",
+        "ADDRESS": "Address including Eircode",
+        "EMAIL": "Email",
+        "PHONE": "Mobile telephone number",
+        "BALANCE": "Customer balance",
+        "TRANSACTIONS": "Transactions",
+        "MESSAGES": "Messages",
+        "RECEIPTS": "Receipts"
+      },
+      "CONTENT1": "The WebPay portal can be used to make card payments. These payments can be either credit or debit card. If you choose to use this option then you will be transferred to the website of our card payment partner, Realex Payments. The WebPay portal will pass sufficient information to Realex Payments to allow them to identify you, including",
+      "LIST2": {
+        "CUSTOMER_NAME": "Customer name",
+        "CUSTOMER_NUMBER": "Customer number",
+        "CUSTOMER_ADDRESS": "Customer address",
+        "PHONE": "Phone",
+        "EMAIL": "Email",
+        "ADDRESS": "Address including Eircode"
+      },
+      "CONTENT2": "Realex Payments will securely process your card payment, including",
+      "LIST3": {
+        "ITEM1": "Name on your payment card",
+        "ITEM2": "Number of your payment",
+        "ITEM3": "payment card expiry date",
+        "ITEM4": "Card Verification Value (“CVV”) number – this is the 3 digit number on your card, and ",
+        "ITEM5": "Payment amount",
+        "ITEM6": "Currency"
+      },
+      "CONTENT3": "Your payment card details will not be shared with your Local Authority or with HAP SSC. Once Realex Payments have confirmed the transaction, the receipt details (amount and status) will be passed back to the WebPay portal and saved. Your receipt will then be transferred back to your account in the financial records of HAP SSC.",
+      "CONTENT4": "The WebPay portal also uses cookies and you can find out more about how cookies work in the WebPay portal by looking at our WebPay portal cookie statement."
+    },
+    "IS_THE_PERSONAL_DATA": {
+      "HEADER": "Is the personal data submitted as part of this activity shared with other organisations?",
+      "CONTENT1": "The receipt transaction created when you make a card payment will be stored in the WebPay Portal. The receipts transactions will be written back to our main financial systems and stored as part of your account history. Your card payment information is not stored within the WebPay portal.",
+      "CONTENT2": "Your account history will be available to other public bodies where processing is necessary for compliance with a legal obligation to which the data controller is subject. This may include your Local Authority and the Department of Housing, Planning and Local Government.",
+      "CONTENT3": "Other secondary controllers and processors to carry out processing on behalf of the data controller e.g. ICT support contractors i.e. Realex Payments and Ascendas Business Solutions.",
+      "CONTENT4": "In this activity, if the personal data is to be transferred to a different country, it will be transferred to the following countries (if there are no countries listed, it is not intended to transfer the personal data abroad).",
+      "LIST": {
+        "ITEM1": "Realex Payments is a brand of Global Payments Inc., a multinational business headquartered in the United States. Realex Payments are a data controller and further information about their data processing and any international data transfers are provided on Realex Payments own websites."
+      }
+    },
+    "HOW_LONG_IS_THE_PERSONAL_DATA": {
+      "HEADER": "How long is this personal data held by HAP SSC?",
+      "CONTENT1": "The HAP SSC will only retain your personal data as determined by the data controllers for as long as it is necessary for the purposes for which they were collected and subsequently processed, and in line with certain statutory requirements, where relevant.",
+      "CONTENT2": "The data controller will advise when the personal data is no longer required and instruct the HAP SSC to destroy or delete it in a secure manner.",
+      "CONTENT3": "The data processed as part of this activity will be retained for the following period(s):",
+      "CONTENT4": "Records are to be maintained in line with the Data Controllers records management policy."
+    },
+    "WHAT_WILL_HAPPEN_IF": {
+      "HEADER": "What will happen if the requested personal data is not provided?",
+      "CONTENT": "It will not be possible to provide you with the card payment service in the WebPay portal if you do not wish to provide your name, contact details and your card number, expiry date and CVV. Local Authorities and HAP SSC provide a number of other payment options. You can get more information about payment options at our website -"
+    },
+    "FURTHER_INFORMATION": {
+      "HEADER": "Further information",
+      "CONTENT": "You can obtain further information about ",
+      "LIST": {
+        "ITEM1": "the HAP Scheme at our website;",
+        "ITEM2": "contact details for each Local Authority;",
+        "ITEM3": "the data processing carried out by Limerick City and County Council;"
+      }
+    },
+    "YOUR_DATA_PROTECTION_RIGHTS": {
+      "HEADER": "Your Data Protection Right",
+      "CONTENT": "To the extent that the HAP SSC as Data Processor processes your personal data for or on behalf of the Data Controllers, the Data Processor undertakes to notify the relevant Data Controller if it receives any complaint, notice or communication which relates directly or indirectly to the processing of your personal data or to compliance with applicable Data Protection Law and provide the Data Controller with full co-operation and assistance in relation to any such complaint, notice or communication.\n                The HAP SSC as Data Processor can provide you with the relevant contact details for your relevant Local Authority (Data Controller).\n                ",
+      "CONTENT1": "You have the right to request access to personal data held about you, obtain confirmation as to whether data concerning you exists, be informed of the content and source of data and check its accuracy. In addition, if the data held by us is found to be inaccurate you have the right to change, remove, block, or object to the use of, personal data held by your Local Authority, which is shared with HAP SSC. You also have the right to data portability. In certain circumstances blocking access to data may delay or remove access to a service where the data is required by law or for essential purposes related to delivery of a service to you. To exercise these rights, you should contact HAP SSC at the following address:"
+    },
+    "RIGHT_OF_COMPLAINT": {
+      "HEADER": "Right of Complaint to the Data Protection Commission",
+      "CONTENT": "If you are not satisfied with the outcome of the response you received from HAP SSC in relation to your request, then you are entitled to make a complaint to the Data Protection Commission who may investigate the matter for you.",
+      "CONTENT1": "The Data Protection Commission’s website is www.dataprotection.ie or you can contact their office at:"
+    }
+  },
+  "DOCUMENTS": {
+    "DATE_CELL": "Date of upload",
+    "DOC_NAME_CELL": "Document Name"
+  },
+  "COOKIE_PAGE": {
+    "SUB_TITLE": "Cookie Statement for",
+    "TITLE": "HAP WebPay Portal",
+    "CONTENT": "<h2>Introduction</h2>\n            <p>This cookie statement has been created for the Housing Assistance Payment (“HAP”) WebPay Portal (WebPay”).</p>\n            <p>This cookie statement provides information about the use of cookies and similar technologies when someone uses the WebPay Portal and your rights. If you are looking for information about the data processing within the WebPay Portal then please go to the data protection statement. </p>\n            <h2>Who we are and why do we require your information?</h2>\n            <p>The HAP Scheme is a social housing support scheme, established by the Government of Ireland within the Department of Housing, Local Government and Heritage (the “DHLGH”). The DHPLG in conjunction with the Local Authorities of Ireland are the data controllers for the HAP scheme. </p>\n            <p>The data controllers established the Housing Assistance Payment Shared Service Centre (“HAP SSC”), to provide specific financial transactional and reporting services on behalf of all Local Authorities and the DHLGH.</p>\n            <p>The HAP SSC is part of Limerick City and County Council and acts as a data processor for the data controllers.</p>\n            <p>The WebPay portal has been created as a way for people who are participating in HAP to view the transactions in their account with their Local Authority and to make online payments.The WebPay portal has been created as a way for people who are participating in HAP to view the transactions in their account with their Local Authority and to make online payments.\n            <h2>Why do we have a cookie statement?</h2>\n            <p>When you visit any website, it may store or retrieve information on your browser, mostly in the form of cookies. This cookie statement is to give you more information about our use of cookies and similar technologies and let you know what rights you have. </p>\n            <h2>What information do we store when you visit the WebPay Portal?</h2>\n            <p>Cookies can take a variety of forms. The WebPay Portal website uses the following types of cookie technologies:</p>\n            <h3>Browser Cookies</h3>\n            <p>A cookie is a small piece of data (text file) that a website – when visited by a user – asks your browser to store on your device in order to remember this information. This information might be about you, your preferences or your device and is mostly used to make the site work as you expect it to. The information does not usually directly identify you, but it can give you a more personalized web experience. Those cookies are set by us and called first-party cookies.</p>\n            <h3>Local storage</h3>\n            <p>Local Storage is a type of web storage that allows websites and apps to store and access data right in the browser with no expiration date. This means the data stored in the browser will persist even after the browser window has been closed. The WebPay Portal needs to store essential information on your device in order to operate. The WebPay Portal will access this information whenever you login to WebPay.</p>\n            <h2>What do we use cookies for?</h2>\n            <p>The WebPay Portal uses only cookies and other technologies that are strictly necessary for the services requested by you and to make it operate safely and efficiently. We do not set any functional, performance, analytical, tracking or advertising cookies.</p>\n            <h3>Strictly Necessary Cookies</h3>\n            <p>These cookies are necessary for the website to function and cannot be switched off in our systems. They are usually only set in response to actions made by you which amount to a request for services, such as setting your privacy preferences, logging in or filling in forms. You can set your browser to block or alert you about these cookies, but some parts of the site will not then work. These cookies do not store any personally identifiable information.</p>\n            <table>\n                <tr>\n                    <th>Cookie name</th>\n                    <th>Cookie Purpose</th>\n                    <th>Lifespan</th>\n                    <th>Owner</th>\n                </tr>\n                <tr>\n                    <td>Recaptcha</td>\n                    <td>This cookie ensures that only our customers can reset their passwords and prevents automated reset password attempts.</td>\n                    <td>One Year</td>\n                    <td>First Party</td>\n                </tr>\n            </table>\n            <h3>Local storage</h3>\n            <p>The following local storage items will appear on your device</p>\n            <table>\n                <tr>\n                    <th>Host</th>\n                    <th>Key</th>\n                    <th>Purpose</th>\n                    <th>Lifespan</th>\n                </tr>\n                <tr>\n                    <td>Happayments.limerick.ie</td>\n                    <td>userName</td>\n                    <td>This records your user name</td>\n                    <td>Persistent</td>\n                </tr>\n                <tr>\n                    <td>Happayments.limerick.ie</td>\n                    <td>isLogged</td>\n                    <td>Who is logged in</td>\n                    <td>Persistent</td>\n                </tr>\n                <tr>\n                    <td>Happayments.limerick.ie</td>\n                    <td>isShowHint</td>\n                    <td>Password hint</td>\n                    <td>Persistent</td>\n                </tr>\n                <tr>\n                    <td>Happayments.limerick.ie</td>\n                    <td>token</td>\n                    <td>This is a unique ID for the session</td>\n                    <td>Persistent</td>\n                </tr>\n                \n                <tr>\n                    <td>Happayments.limerick.ie</td>\n                    <td>cookieBanner</td>\n                    <td>This records whether you have seen the cookie banner</td>\n                    <td>Persistent</td>\n                </tr>\n            </table>\n            <h3>Device data Collection and use of technical information</h3>\n            <p>WebPay uses session cookies that we transfer to your computer for the duration of your visit. We use the session cookie to track your progress through the site, allowing us to maintain the security and integrity of the data being used. Technical details in connection with visits to this website are logged by our internet service provider for our statistical purposes. The technical details logged are confined to the following items:</p>\n            <ul>\n                <li>the IP address of the visitor's web server</li>\n                <li>the top-level domain name used (for example .i.e, .com, .org, .net)</li>\n                <li>the previous website address from which the visitor reached us, including any search terms used</li>\n                <li>data which show the traffic of visitors around this web site</li>\n                <li>the type of web browser used by the website visitor. WebPay will make no attempt to identify individual visitors, or to associate the technical details listed above with any individual</li>\n            </ul>\n            <p>This information is only used for technical purposes and not used for any further processing purposes.</p>\n            <h2>Controlling cookies</h2>\n            <p>The WebPay Portal will only work if the strictly necessary cookies and local storage operate as intended. You can clear these after you have left the WebPay Portal as follows:</p>\n            <h3>How to clear browser cookies</h3>\n            <p>If you'd like to find out how to stop websites using cookies to remember what websites you visit, choose your browser from the list. This will take you to the browser's respective page where you can learn how to manage your cookies and site data:</p>\n            <ul>\n                <li>Chrome</li>\n                <li>Safari</li>\n                <li>Firefox</li>\n                <li>Internet Explorer</li>\n            </ul>\n            <p>How to clear local storage</p>\n            <ul>\n                <li>Open the Google Chrome Console by pressing F12 key</li>\n                <li>Select “Application” in the console’s top menu</li>\n                <li>Select “Local Storage” in the console’s left menu</li>\n                <li>Right click your site(s) and click clear to delete the local storage</li>\n            </ul>\n            <p>Similar options are available in other browsers.</p>\n            <h2>Further information</h2>\n            <p>You can obtain further information about </p>\n            <ul>\n                <li>the HAP Scheme at our website; <a href=\"www.hap.ie\">www.hap.ie</a></li>\n                <li>contact details for each Local Authority; <a href=\"www.hap.ie/localauthorities/\">www.hap.ie/localauthorities/</a></li>\n                <li>the data processing carried out by the HAP SSC; <a href=\"www.hap.ie/privacy\">www.hap.ie/privacy</a><br>\n                    Please be aware that a different set of cookies will be processed when you go to the HAP.ie website, you can obtain more information about the cookies on the <a href=\"HAP.ie\">HAP.ie</a> website</li>\n                <li>the data processing carried out by Limerick City and County Council; <a href=\"www.limerick.ie/council/services/your-council/privacy-statement-limerick-city-and-county-council\">www.limerick.ie/council/services/your-council/privacy-statement-limerick-city-and-county-council</a></li>\n            </ul>\n            <h2>Your Data Protection Rights</h2>\n            <p>To the extent that the HAP SSC as Data Processor processes your personal data for or on behalf of the Data Controllers, the Data Processor undertakes to notify the relevant Data Controller if it receives any complaint, notice or communication which relates directly or indirectly to the processing of your personal data or to compliance with applicable Data Protection Law and provide the Data Controller with full co-operation and assistance in relation to any such complaint, notice or communication.\n                The HAP SSC as Data Processor can provide you with the relevant contact details for your relevant Local Authority (Data Controller).\n                </p>\n            <p>You have the right to request access to personal data held about you, obtain confirmation as to whether data concerning you exists, be informed of the content and source of data and check its accuracy. In addition, if the data held by us is found to be inaccurate you have the right to change, remove, block, or object to the use of, personal data held by your Local Authority, which is shared with HAP SSC. You also have the right to data portability. In certain circumstances blocking access to data may delay or remove access to a service where the data is required by law or for essential purposes related to delivery of a service to you. To exercise these rights, you should contact Limerick City and County Council at the following address:</p>\n            <p class=\"align-center\">email: <a href=\"mailto:dataprotectionofficer@limerick.ie\">dataprotectionofficer@limerick.ie</a><br>\n                Data Protection Officer,<br>\n                Limerick City and County Council,<br>\n                Merchants Quay,<br>\n                Limerick</p>\n            <h2>Right of Complaint to the Data Protection Commission</h2>\n            <p>If you are not satisfied with the outcome of the response you received from Limerick City and County Council in relation to your request, then you are entitled to make a complaint to the Data Protection Commission who may investigate the matter for you.</p>\n            <p>The Data Protection Commission’s website is www.dataprotection.ie or you can contact their office at:</p>\n            <p class=\"align-center\">Lo Call Number: 1890 252 231<br>\n                E-mail: <a href=\"mailto:info@dataprotection.ie\">info@dataprotection.ie</a><br><br>\n                Postal Address:<br>\n                Data Protection Commission<br>\n                Canal House<br>\n                Station Road<br>\n                Portarlington<br>\n                Co. Laois. R32 AP23</p>\n            <p>Last updated December 2020</p>"
+  },
+  "INVOICE_DETAILS": {
+    "TITLE": "Invoice:",
+    "ISSUED_ON": "Issued on:",
+    "PROPERTY": "Property:",
+    "DUE_DATE": "Due date:",
+    "INVOICED": "Invoiced:",
+    "PAID": "Paid:",
+    "BALANCE": "Balance:",
+    "RELATED_PAYMENTS": "Related Payments",
+    "DOWNLOAD": "Download PDF"
+  },
+  "TOUCH_CONFIRMATION": {
+    "HEADER": "Easy login with Touch ID or password",
+    "SET_UP_NOW": "Set up now?",
+    "NOT_NOW": "Not now",
+    "YES": "Yes"
+  },
+  "HINT": {
+    "MOBILE": {
+      "STATEMENT": {
+        "TITLE": "Statement tab",
+        "DESCRIPTION": "In Statement tab you can view all your account movement and the details each one.",
+        "BUTTON_TEXT": "Next",
+        "LINK_TEXT": "Skip"
+      },
+      "MAKE_PAYMENT": {
+        "TITLE": "Make Payment",
+        "DESCRIPTION": "Simply and powerful. Quickly select pending bills and pay them fully or partially.",
+        "BUTTON_TEXT": "Done!",
+        "LINK_TEXT": "Back"
+      }
+    },
+    "DESKTOP": {
+      "STATEMENT": {
+        "TITLE": "Statement",
+        "DESCRIPTION": "Here you can view all your account movement details, filter by property and date range.",
+        "BUTTON_TEXT": "Next",
+        "LINK_TEXT": "Skip"
+      },
+      "MAKE_PAYMENT": {
+        "TITLE": "Make a payment",
+        "DESCRIPTION": "Simply and powerful. Quickly select pending bills and pay them fully or partially.",
+        "BUTTON_TEXT": "UNDERSTOOD!",
+        "LINK_TEXT": "Back"
+      }
+    }
+  },
+  "MONTH_NAMES": {
+    "0": "January",
+    "1": "February",
+    "2": "March",
+    "3": "April",
+    "4": "May",
+    "5": "June",
+    "6": "July",
+    "7": "August",
+    "8": "September",
+    "9": "October",
+    "10": "November",
+    "11": "December"
+  }
+}

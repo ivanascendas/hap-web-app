@@ -1,0 +1,58 @@
+@import "variables.scss";
+input:not([type="radio"]) {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid #dce0e2;
+  font-size: $placeholder_size;
+  color: #3c515f;
+  padding: 0 11px;
+  height: 33px;
+  width: 100%;
+  display: block;
+  padding: 20px 10px;
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+
+  &::placeholder {
+    font-size: $placeholder_size;
+  }
+
+  &::-webkit-input-placeholder {
+    font-size: $placeholder_size;
+  }
+
+  &::-moz-placeholder {
+    font-size: $placeholder_size;
+  }
+
+  &:-moz-placeholder {
+    font-size: $placeholder_size;
+  }
+
+  &:-ms-input-placeholder {
+    font-size: $placeholder_size;
+  }
+
+  &[aria-invalid="true"] {
+    border-color: $error_border;
+  }
+}
+
+.button-primary {
+  font-weight: 700;
+  background: linear-gradient(85deg, $primary_600 100%, $primary_400 0%);
+  width: 100%;
+  line-height: 35px;
+  font-size: 15px;
+  border-radius: 4px;
+  overflow: 0;
+  color: $secondary;
+  font-family: "Roboto", sans-serif;
+  border: 0;
+  height: 55px;
+  margin-top: 20px;
+  font-weight: 700;
+}

@@ -3,8 +3,8 @@ import { useLoginMutation, useLogoutMutation } from "../services/Auth.service";
 
 export type AuthContextType = {
   isAuthenticated: boolean;
-  login: () => void;
-  logout: () => void;
+  login: typeof useLoginMutation;
+  logout: typeof useLoginMutation;
 };
 
 const initialValue = {
@@ -21,7 +21,11 @@ export const useAuth = () => {
 };
 
 // Provider component
-export const AuthProvider = ({ children }: any): JSX.Element => {
+export const AuthProvider = ({
+  children,
+}: {
+  children: JSX.Element;
+}): JSX.Element => {
   return (
     <AuthContext.Provider value={initialValue}>{children}</AuthContext.Provider>
   );
