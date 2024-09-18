@@ -6,6 +6,7 @@ import {
   CheckTempPasswordRequestDto,
   CheckTempPasswordResponseDto,
 } from "../dtos/tempPassword.dto";
+import { ForgotPasswordRequestDto } from "../dtos/forgotPassword.dto";
 
 /**
  * Encodes a string to a URL-safe base64 string.
@@ -18,14 +19,21 @@ const base64EncodeUrl = (str: string): string => {
   return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/\=+$/, "");
 };
 
+const toUrlEncoded = (data: { [key: string]: string }) => {
+  return Object.keys(data)
+    .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+    .join("&");
+};
+
 /**
  * Provides a set of API endpoints for authentication-related operations, including login, logout, and checking temporary password.
  */
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.BASE_URL,
+    baseUrl: process.env.REACT_APP_BASE_URL,
   }),
+  tagTypes: ["Check", "Token", "User"],
   endpoints: (builder) => ({
     /**
      * Sends a POST request to the `/token` endpoint with the provided `LoginDto` object, and returns the `TokenDto` object.
@@ -39,8 +47,15 @@ export const authApi = createApi({
         const usernameHash = base64EncodeUrl(username);
         const passwordHash = base64EncodeUrl(password);
         return {
-          url: `/token?grant_type=password&username=${usernameHash}&password=${passwordHash}&otherway=&vr=2`,
+          url: `/token`,
           method: "POST",
+          body: toUrlEncoded({
+            grant_type: "password",
+            username: usernameHash,
+            password: passwordHash,
+            otherway: "",
+            vr: "2",
+          }),
         };
       },
     }),
@@ -70,6 +85,31 @@ export const authApi = createApi({
         method: "POST",
         body,
       }),
+      onQueryStarted: async (
+        dto: CheckTempPasswordRequestDto,
+        { dispatch, queryFulfilled },
+      ) => {
+        try {
+          const { data } = await queryFulfilled;
+          if (data.code == 1) {
+            dispatch(
+              authApi.endpoints.login.initiate({
+                username: dto.accountNumber,
+                password: dto.tempPassword,
+              }),
+            );
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    }),
+    forgotPassword: builder.mutation<void, ForgotPasswordRequestDto>({
+      query: (body) => ({
+        url: "/api/user/forgotPassword",
+        method: "POST",
+        body,
+      }),
     }),
   }),
 });
@@ -78,4 +118,5 @@ export const {
   useLoginMutation,
   useLogoutMutation,
   useCheckTempPasswordMutation,
+  useForgotPasswordMutation,
 } = authApi;

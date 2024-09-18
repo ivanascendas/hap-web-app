@@ -7,6 +7,7 @@ input:not([type="radio"]) {
   font-size: $placeholder_size;
   color: #3c515f;
   padding: 0 11px;
+  border-radius: 4px;
   height: 33px;
   width: 100%;
   display: block;
@@ -61,6 +62,39 @@ input:not([type="radio"]) {
   }
 }
 
+.button-secondary {
+  background: none;
+  border: 0;
+  width: 100%;
+  line-height: 35px;
+  font-size: 15px;
+  border-radius: 4px;
+  height: 55px;
+  margin-top: 20px;
+  font-weight: 700;
+  color: black;
+  opacity: 0.4;
+  font-weight: normal;
+  font-size: 19px;
+  text-decoration: none;
+}
+
+.back-btn {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  &::before {
+    content: "";
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    background: url(../img/back-arrow.svg);
+  }
+}
+
 .input-container {
   position: relative;
   display: block;
@@ -68,6 +102,6 @@ input:not([type="radio"]) {
   .password-icon {
     position: absolute;
     right: 10px;
-    top: 10px;
+    top: 11px;
   }
 }

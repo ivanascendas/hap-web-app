@@ -1,3 +1,4 @@
+import React from "react";
 import { Link } from "react-router-dom";
 import { LoginDto } from "../../../shared/dtos/login.dto";
 import { CheckTempPasswordRequestDto } from "../../../shared/dtos/tempPassword.dto";
@@ -5,6 +6,9 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { SelectLanguage } from "../../../shared/components/SelectLanguage";
 import { useState } from "react";
+import { TextField } from "@mui/material";
+
+import logo from "../../../assets/img/custom/logo.png";
 
 type LoginFormProps = {
   onSubmit: (dto: CheckTempPasswordRequestDto) => void;
@@ -19,7 +23,8 @@ export const LoginFormComponent = ({
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<LoginDto>();
+    formState,
+  } = useForm<LoginDto>({ mode: "all" });
 
   const submitHandler = ({ username, password }: LoginDto) => {
     const accountNumber = username;
@@ -31,10 +36,7 @@ export const LoginFormComponent = ({
     <div className="auth-container">
       <div className="login-form">
         <div className="login-form__logo">
-          <img
-            src={require("../../../assets/img/custom/logo.png")}
-            alt="logo"
-          />
+          <img src={logo} alt="logo" />
         </div>
         <div className="login-form__title">{t("SIGN_IN.TITLE")}</div>
         <div className="login-form__subtitle">{t("SIGN_IN.SUB_TITLE")}</div>
@@ -73,11 +75,19 @@ export const LoginFormComponent = ({
               </p>
             )}
           </div>
-          <button type="submit" className="button-primary" disabled={false}>
+          <button
+            type="submit"
+            className="button-primary"
+            disabled={
+              !formState.isDirty || !formState.isValid || formState.isSubmitted
+            }
+          >
             {t("SIGN_IN.BUTTONS.LOGIN")}
           </button>
           <div className="login-form__link-holder">
-            <Link to={"/"}>{t("SIGN_IN.BUTTONS.FORGOT_PASSWORD")}</Link>
+            <Link to={"/resetPassword"}>
+              {t("SIGN_IN.BUTTONS.FORGOT_PASSWORD")}
+            </Link>
           </div>
           <div className="lang-dropdown">
             <SelectLanguage />
