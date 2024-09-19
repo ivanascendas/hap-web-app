@@ -1,4 +1,4 @@
-import React, { createContext, Factory, useContext, useState } from "react";
+import React, { createContext, useContext } from "react";
 import { useLoginMutation, useLogoutMutation } from "../services/Auth.service";
 
 export type AuthContextType = {

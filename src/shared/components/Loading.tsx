@@ -1,12 +1,13 @@
 import React from "react";
 import "./Loading.scss";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
-type LoadingProps = {
-  isLoading?: boolean;
-  percent?: number;
-};
+export const Loading = (): JSX.Element => {
+  const { isLoading, percent } = useSelector(
+    (state: RootState) => state.loader,
+  );
 
-export const Loading = ({ isLoading, percent }: LoadingProps): JSX.Element => {
   return (
     <div className="loading-overlay">
       <div

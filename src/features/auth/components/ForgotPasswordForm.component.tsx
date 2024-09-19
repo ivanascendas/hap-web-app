@@ -7,15 +7,12 @@ import { useTranslation } from "react-i18next";
 import ReCAPTCHA from "react-google-recaptcha";
 
 import logo from "../../../assets/img/custom/logo.png";
-import { ForgotPasswordRequestDto } from "../../../shared/dtos/forgotPassword.dto";
+import { useForgotPasswordMutation } from "../../../shared/services/Auth.service";
+import { MainComponent } from "../../main/Main.component";
+import "../Auth.component.scss";
 
-type LoginFormProps = {
-  onSubmit: (dto: ForgotPasswordRequestDto) => void;
-};
-
-export const ForgotPasswordFormComponent = ({
-  onSubmit,
-}: LoginFormProps): JSX.Element => {
+export const ForgotPasswordFormComponent = (): JSX.Element => {
+  const [forgotPassword] = useForgotPasswordMutation();
   const { t } = useTranslation();
   const {
     register,
@@ -28,7 +25,7 @@ export const ForgotPasswordFormComponent = ({
 
   const submitHandler = ({ username }: LoginDto) => {
     const accountNumber = username;
-    onSubmit({ accountNumber, GCaptchaResponse });
+    forgotPassword({ accountNumber, GCaptchaResponse });
   };
 
   const handleRecaptchaChange = (value: string | null) => {
@@ -37,52 +34,54 @@ export const ForgotPasswordFormComponent = ({
   };
 
   return (
-    <div className="auth-container">
-      <div className="login-form forgot-password">
-        <div className="login-form__logo">
-          <img src={logo} alt="logo" />
+    <MainComponent>
+      <div className="auth-container">
+        <div className="login-form forgot-password">
+          <div className="login-form__logo">
+            <img src={logo} alt="logo" />
+          </div>
+          <div className="login-form__title">{t("FORGOT_PASSWORD.TITLE")}</div>
+          <form onSubmit={handleSubmit(submitHandler)}>
+            <div className="login-form__input-container account-number">
+              <input
+                {...register("username", { required: true })}
+                aria-invalid={errors.username ? "true" : "false"}
+                placeholder={t("LABELS.CUSTOMER_NUMBER")}
+              />
+              {errors.username?.type === "required" && (
+                <p role="alert" className="error">
+                  {t("ERRORS.REQUIRED")}
+                </p>
+              )}
+            </div>
+            <div className="login-form__input-container ">
+              <ReCAPTCHA
+                sitekey={process.env.REACT_APP_PUBLIC_KEY || ""}
+                onChange={handleRecaptchaChange}
+              />
+            </div>
+            <button
+              type="submit"
+              className="button-primary"
+              disabled={
+                !formState.isDirty ||
+                !formState.isValid ||
+                formState.isSubmitted ||
+                !GCaptchaResponse
+              }
+            >
+              {t("CONTENTS.BUTTON.RESET")}
+            </button>
+            <Link className="button-secondary back-btn" to="/login">
+              {t("BUTTONS.BACK_TO_SIGN_IN")}
+            </Link>
+          </form>
         </div>
-        <div className="login-form__title">{t("FORGOT_PASSWORD.TITLE")}</div>
-        <form onSubmit={handleSubmit(submitHandler)}>
-          <div className="login-form__input-container account-number">
-            <input
-              {...register("username", { required: true })}
-              aria-invalid={errors.username ? "true" : "false"}
-              placeholder={t("LABELS.CUSTOMER_NUMBER")}
-            />
-            {errors.username?.type === "required" && (
-              <p role="alert" className="error">
-                {t("ERRORS.REQUIRED")}
-              </p>
-            )}
-          </div>
-          <div className="login-form__input-container ">
-            <ReCAPTCHA
-              sitekey={process.env.REACT_APP_PUBLIC_KEY || ""}
-              onChange={handleRecaptchaChange}
-            />
-          </div>
-          <button
-            type="submit"
-            className="button-primary"
-            disabled={
-              !formState.isDirty ||
-              !formState.isValid ||
-              formState.isSubmitted ||
-              !GCaptchaResponse
-            }
-          >
-            {t("CONTENTS.BUTTON.RESET")}
-          </button>
-          <Link className="button-secondary back-btn" to="/login">
-            {t("BUTTONS.BACK_TO_SIGN_IN")}
-          </Link>
-        </form>
+        <footer>
+          {new Date().getFullYear()} {t("APP.FOOTER_TEXT")}{" "}
+          <Link to="/policy"> {t("MAIN.MENU.DATA_POLICY")}</Link>
+        </footer>
       </div>
-      <footer>
-        {new Date().getFullYear()} {t("APP.FOOTER_TEXT")}{" "}
-        <Link to="/policy"> {t("MAIN.MENU.DATA_POLICY")}</Link>
-      </footer>
-    </div>
+    </MainComponent>
   );
 };

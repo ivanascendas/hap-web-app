@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
 
 import { LoginDto } from "../dtos/login.dto";
 import { TokenDto } from "../dtos/token.dto";
@@ -7,6 +7,10 @@ import {
   CheckTempPasswordResponseDto,
 } from "../dtos/tempPassword.dto";
 import { ForgotPasswordRequestDto } from "../dtos/forgotPassword.dto";
+import { setloading } from "../redux/slices/loaderSlice";
+import { t } from "i18next";
+import { setError } from "../redux/slices/errorSlice";
+import customBaseQuery from "../utils/customBaseQuery";
 
 /**
  * Encodes a string to a URL-safe base64 string.
@@ -15,8 +19,8 @@ import { ForgotPasswordRequestDto } from "../dtos/forgotPassword.dto";
  * @returns The URL-safe base64 encoded string.
  */
 const base64EncodeUrl = (str: string): string => {
-  var base64 = window.btoa(str);
-  return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/\=+$/, "");
+  const base64 = window.btoa(str);
+  return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/\\=+$/, "");
 };
 
 const toUrlEncoded = (data: { [key: string]: string }) => {
@@ -30,9 +34,7 @@ const toUrlEncoded = (data: { [key: string]: string }) => {
  */
 export const authApi = createApi({
   reducerPath: "authApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: process.env.REACT_APP_BASE_URL,
-  }),
+  baseQuery: customBaseQuery,
   tagTypes: ["Check", "Token", "User"],
   endpoints: (builder) => ({
     /**
@@ -90,6 +92,7 @@ export const authApi = createApi({
         { dispatch, queryFulfilled },
       ) => {
         try {
+          dispatch(setloading(true));
           const { data } = await queryFulfilled;
           if (data.code == 1) {
             dispatch(
@@ -101,6 +104,13 @@ export const authApi = createApi({
           }
         } catch (error) {
           console.log(error);
+          if (error instanceof Error) {
+            dispatch(setError(error.message));
+          } else {
+            dispatch(setError(t("error.something_went_wrong")));
+          }
+        } finally {
+          dispatch(setloading(false));
         }
       },
     }),

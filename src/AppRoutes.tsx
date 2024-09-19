@@ -1,14 +1,15 @@
+import React from "react";
 import { createBrowserRouter, Navigate, useLocation } from "react-router-dom";
 
-import { MainComponent } from "./features/main/Main.component";
 import { Protected } from "./shared/components/Protected";
 import { StatementComponent } from "./features/statement/Statement.component";
-import { AuthComponent } from "./features/auth/Auth.component";
 import { useAuth } from "./shared/providers/Auth.provider";
+import { LoginFormComponent } from "./features/auth/components/LoginForm.component";
+import { ForgotPasswordFormComponent } from "./features/auth/components/ForgotPasswordForm.component";
 
 export const Redirect = (): JSX.Element => {
-  var auth = useAuth();
-  let location = useLocation();
+  const auth = useAuth();
+  const location = useLocation();
 
   if (!auth.isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
@@ -24,11 +25,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <AuthComponent type="login" />,
+    element: <LoginFormComponent />,
   },
   {
     path: "/resetPassword",
-    element: <AuthComponent type="forgotPassword" />,
+    element: <ForgotPasswordFormComponent />,
   },
   {
     index: true,
