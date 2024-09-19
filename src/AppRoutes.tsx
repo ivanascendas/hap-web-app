@@ -6,6 +6,7 @@ import { StatementComponent } from "./features/statement/Statement.component";
 import { useAuth } from "./shared/providers/Auth.provider";
 import { LoginFormComponent } from "./features/auth/components/LoginForm.component";
 import { ForgotPasswordFormComponent } from "./features/auth/components/ForgotPasswordForm.component";
+import { RegistrationComponent } from "./features/auth/components/Registration.components";
 
 export const Redirect = (): JSX.Element => {
   const auth = useAuth();
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
   {
     path: "/resetPassword",
     element: <ForgotPasswordFormComponent />,
+  },
+  {
+    path: "/registration/:step",
+    element: <RegistrationComponent />,
   },
   {
     index: true,

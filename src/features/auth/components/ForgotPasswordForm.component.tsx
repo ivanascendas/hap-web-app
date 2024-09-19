@@ -9,7 +9,10 @@ import ReCAPTCHA from "react-google-recaptcha";
 import logo from "../../../assets/img/custom/logo.png";
 import { useForgotPasswordMutation } from "../../../shared/services/Auth.service";
 import { MainComponent } from "../../main/Main.component";
+
+import { TextField } from "@mui/material";
 import "../Auth.component.scss";
+import { getErrorMessage } from "../../../shared/utils/getErrorMessage";
 
 export const ForgotPasswordFormComponent = (): JSX.Element => {
   const [forgotPassword] = useForgotPasswordMutation();
@@ -36,25 +39,26 @@ export const ForgotPasswordFormComponent = (): JSX.Element => {
   return (
     <MainComponent>
       <div className="auth-container">
-        <div className="login-form forgot-password">
-          <div className="login-form__logo">
+        <div className="auth-form forgot-password">
+          <div className="auth-form__logo">
             <img src={logo} alt="logo" />
           </div>
-          <div className="login-form__title">{t("FORGOT_PASSWORD.TITLE")}</div>
-          <form onSubmit={handleSubmit(submitHandler)}>
-            <div className="login-form__input-container account-number">
-              <input
+          <div className="auth-form__title">{t("FORGOT_PASSWORD.TITLE")}</div>
+          <form
+            className="auth-form__form"
+            onSubmit={handleSubmit(submitHandler)}
+          >
+            <div className="auth-form__input-container account-number">
+              <TextField
                 {...register("username", { required: true })}
+                error={!!errors.username}
                 aria-invalid={errors.username ? "true" : "false"}
-                placeholder={t("LABELS.CUSTOMER_NUMBER")}
+                label={t("LABELS.CUSTOMER_NUMBER")}
+                variant={"outlined"}
+                helperText={getErrorMessage(errors.username?.type)}
               />
-              {errors.username?.type === "required" && (
-                <p role="alert" className="error">
-                  {t("ERRORS.REQUIRED")}
-                </p>
-              )}
             </div>
-            <div className="login-form__input-container ">
+            <div className="auth-form__input-container ">
               <ReCAPTCHA
                 sitekey={process.env.REACT_APP_PUBLIC_KEY || ""}
                 onChange={handleRecaptchaChange}
