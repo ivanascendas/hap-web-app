@@ -3,11 +3,11 @@ input:not([type="radio"]) {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  border: 1px solid #dce0e2;
+  //border: 1px solid #dce0e2;
   font-size: $placeholder_size;
   color: #3c515f;
   padding: 0 11px;
-  border-radius: 4px;
+  //border-radius: 4px;
   height: 33px;
   width: 100%;
   display: block;
@@ -102,6 +102,29 @@ input:not([type="radio"]) {
   .password-icon {
     position: absolute;
     right: 10px;
-    top: 11px;
+    top: 0px;
+    @media screen and (max-width: $mobile_size) {
+      top: 8px;
+    }
+  }
+}
+.MuiFormControl-root {
+  width: 100%;
+  .MuiInputBase-root {
+    height: 33px;
+    @media screen and (max-width: $mobile_size) {
+      //      top: 16px;
+      height: 33px;
+    }
+  }
+  .MuiInputLabel-root {
+    top: -10px;
+    &.Mui-focused {
+      top: 0;
+    }
+    &.MuiFormLabel-filled {
+      top: 0;
+      left: 0;
+    }
   }
 }

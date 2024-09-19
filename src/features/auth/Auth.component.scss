@@ -78,11 +78,25 @@
       position: relative;
       display: block;
 
+      .MuiInputLabel-root {
+        left: 15px;
+
+        &.MuiFormLabel-filled {
+          top: 0;
+          left: 0;
+        }
+
+        &.Mui-focused {
+          left: 0;
+        }
+      }
+      margin-bottom: 20px;
+
       &.account-number::before {
         content: "";
         position: absolute;
         left: 5px;
-        top: 18px;
+        top: 5px;
         transform: translateY(-50%);
         background: url(../../assets/img/forms/login_acc_num.svg) no-repeat;
         background-size: contain;
@@ -91,21 +105,33 @@
         pointer-events: none;
         width: 20px;
         height: 20px;
+        @media screen and (max-width: $mobile_size) {
+          top: 16px;
+        }
       }
 
-      &.account-password::before {
-        content: "";
-        position: absolute;
-        left: 5px;
-        top: 19px;
-        transform: translateY(-50%);
-        background: url(../../assets/img/forms/password_acc.svg) no-repeat;
-        background-size: contain;
-        display: flex;
-        background-size: contain;
-        pointer-events: none;
-        width: 20px;
-        height: 20px;
+      &.account-password {
+        margin-top: 40px;
+        @media screen and (max-width: $mobile_size) {
+          margin-top: 0px;
+        }
+        &::before {
+          content: "";
+          position: absolute;
+          left: 5px;
+          top: 5px;
+          transform: translateY(-50%);
+          background: url(../../assets/img/forms/password_acc.svg) no-repeat;
+          background-size: contain;
+          display: flex;
+          background-size: contain;
+          pointer-events: none;
+          width: 20px;
+          height: 20px;
+          @media screen and (max-width: $mobile_size) {
+            top: 16px;
+          }
+        }
       }
     }
 
@@ -116,11 +142,12 @@
       height: 40px;
       display: block;
       width: 100%;
-      margin-bottom: 20px;
       padding-left: 30px;
+      margin-bottom: 20px;
       @media screen and (max-width: $mobile_size) {
         border-width: 1px;
         border-radius: 4px;
+        margin-bottom: 0;
       }
     }
 
@@ -141,6 +168,16 @@
         border-radius: 7px;
         font-size: 100%;
       }
+    }
+  }
+
+  .app-icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .android,
+    .apple {
+      width: 150px;
     }
   }
 

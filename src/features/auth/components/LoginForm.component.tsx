@@ -6,7 +6,11 @@ import { useTranslation } from "react-i18next";
 import { SelectLanguage } from "../../../shared/components/SelectLanguage";
 import { useState } from "react";
 import { TextField } from "@mui/material";
+import { isAndroid, isIOS, isMobile } from "react-device-detect";
 import "../Auth.component.scss";
+
+import androidImg from "../../../assets/img/google-img.png";
+import appleImg from "../../../assets/img/apple-img.svg";
 
 import logo from "../../../assets/img/custom/logo.png";
 import { useCheckTempPasswordMutation } from "../../../shared/services/Auth.service";
@@ -29,6 +33,21 @@ export const LoginFormComponent = (): JSX.Element => {
     checkTempPassword({ accountNumber, tempPassword });
   };
 
+  const getErrorMessage = (type?: string): string | undefined => {
+    switch (type) {
+      case "required":
+        return t("ERRORS.REQUIRED");
+      case "minLength":
+        return t("ERRORS.MIN_LENGTH");
+      case "maxLength":
+        return t("ERRORS.MAX_LENGTH");
+      case "pattern":
+        return t("ERRORS.PATTERN");
+      default:
+        return undefined;
+    }
+  };
+
   return (
     <MainComponent>
       <div className="auth-container">
@@ -40,23 +59,26 @@ export const LoginFormComponent = (): JSX.Element => {
           <div className="login-form__subtitle">{t("SIGN_IN.SUB_TITLE")}</div>
           <form onSubmit={handleSubmit(submitHandler)}>
             <div className="login-form__input-container account-number">
-              <input
+              <TextField
                 {...register("username", { required: true })}
+                error={!!errors.username}
                 aria-invalid={errors.username ? "true" : "false"}
-                placeholder={t("LABELS.CUSTOMER_NUMBER")}
+                placeholder={isMobile ? undefined : t("LABELS.CUSTOMER_NUMBER")}
+                label={isMobile ? t("LABELS.CUSTOMER_NUMBER") : undefined}
+                variant={isMobile ? "outlined" : "standard"}
+                helperText={getErrorMessage(errors.username?.type)}
               />
-              {errors.username?.type === "required" && (
-                <p role="alert" className="error">
-                  {t("ERRORS.REQUIRED")}
-                </p>
-              )}
             </div>
             <div className="input-container login-form__input-container account-password">
-              <input
+              <TextField
                 {...register("password", { required: true })}
+                error={!!errors.password}
                 aria-invalid={errors.password ? "true" : "false"}
-                placeholder={t("LABELS.PASSWORD")}
+                placeholder={isMobile ? undefined : t("LABELS.PASSWORD")}
+                label={isMobile ? t("LABELS.PASSWORD") : undefined}
                 type={showPassword ? "text" : "password"}
+                variant={isMobile ? "outlined" : "standard"}
+                helperText={getErrorMessage(errors.password?.type)}
               />
               <div
                 className="password-icon"
@@ -66,12 +88,6 @@ export const LoginFormComponent = (): JSX.Element => {
                   className={showPassword ? "fas fa-eye-slash" : "fas fa-eye"}
                 ></i>
               </div>
-
-              {errors.password?.type === "required" && (
-                <p role="alert" className="error">
-                  {t("ERRORS.REQUIRED")}
-                </p>
-              )}
             </div>
             <button
               type="submit"
@@ -88,6 +104,28 @@ export const LoginFormComponent = (): JSX.Element => {
               <Link to={"/resetPassword"}>
                 {t("SIGN_IN.BUTTONS.FORGOT_PASSWORD")}
               </Link>
+            </div>
+            <div>
+              <div className="app-icons">
+                {isAndroid && (
+                  <a href={process.env.REACT_APP_ANDROID_LINK}>
+                    <img
+                      className="android"
+                      alt="Get it on Google Play"
+                      src={androidImg}
+                    />
+                  </a>
+                )}
+                {isIOS && (
+                  <a href={process.env.REACT_APP_IOS_LINK}>
+                    <img
+                      className="apple"
+                      src={appleImg}
+                      alt="Download on the App Store"
+                    />
+                  </a>
+                )}
+              </div>
             </div>
             <div className="lang-dropdown">
               <SelectLanguage />
