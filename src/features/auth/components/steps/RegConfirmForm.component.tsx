@@ -60,6 +60,18 @@ export const RegConfirmFormComponent = (): JSX.Element => {
   };
 
   useEffect(() => {
+    resendEmail({
+      UserId: accountNumber?.toString() || "",
+      EmailId: email?.toString() || "",
+    });
+
+    resendSMS({
+      UserId: accountNumber?.toString() || "",
+      PhoneNumber: phone?.toString() || "",
+    });
+  }, []);
+
+  useEffect(() => {
     if (checkSMSResult.isSuccess) {
       setValue("phoneNumberConfirmed", true);
     }
