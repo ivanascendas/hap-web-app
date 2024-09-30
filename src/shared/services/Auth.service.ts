@@ -7,10 +7,8 @@ import {
   CheckTempPasswordResponseDto,
 } from "../dtos/tempPassword.dto";
 import { ForgotPasswordRequestDto } from "../dtos/forgotPassword.dto";
-import { setloading } from "../redux/slices/loaderSlice";
-import { t } from "i18next";
-import { setError } from "../redux/slices/errorSlice";
 import customBaseQuery from "../utils/customBaseQuery";
+import { setUser } from "../redux/slices/authSlice";
 
 /**
  * Encodes a string to a URL-safe base64 string.
@@ -60,6 +58,10 @@ export const authApi = createApi({
           }),
         };
       },
+
+      transformResponse: (response: TokenDto) => {
+        return response;
+      },
     }),
     /**
      * Logs the current user out by sending a POST request to the `/logout` endpoint.
@@ -91,29 +93,25 @@ export const authApi = createApi({
         dto: CheckTempPasswordRequestDto,
         { dispatch, queryFulfilled },
       ) => {
-        try {
-          dispatch(setloading(true));
-          const { data } = await queryFulfilled;
-          if (data.code == 1) {
-            dispatch(
-              authApi.endpoints.login.initiate({
-                username: dto.accountNumber,
-                password: dto.tempPassword,
-              }),
-            );
-          }
-        } catch (error) {
-          console.log(error);
-          if (error instanceof Error) {
-            dispatch(setError(error.message));
-          } else {
-            dispatch(setError(t("error.something_went_wrong")));
-          }
-        } finally {
-          dispatch(setloading(false));
+        const { data } = await queryFulfilled;
+        if (data.code === 1) {
+          dispatch(
+            authApi.endpoints.login.initiate({
+              username: dto.accountNumber,
+              password: dto.tempPassword,
+            }),
+          );
         }
+        dispatch(setUser({ accountNumber: parseInt(dto.accountNumber) }));
       },
     }),
+
+    /**
+     * Sends a POST request to the `/api/user/forgotPassword` endpoint with the provided `ForgotPasswordRequestDto` object, and returns `void`.
+     *
+     * @param body - The `ForgotPasswordRequestDto` object containing the data to be sent in the request body.
+     * @returns `void`
+     */
     forgotPassword: builder.mutation<void, ForgotPasswordRequestDto>({
       query: (body) => ({
         url: "/api/user/forgotPassword",

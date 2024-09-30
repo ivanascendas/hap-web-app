@@ -3,10 +3,10 @@ import { setloading } from "../redux/slices/loaderSlice";
 import { setError } from "../redux/slices/errorSlice";
 
 const baseQuery = fetchBaseQuery({ baseUrl: process.env.REACT_APP_BASE_URL });
+type BodyParams<T> = { [key: string]: string } | string | T;
 
 const customBaseQuery: BaseQueryFn<
-  | string
-  | { url: string; method: string; body?: { [key: string]: string } | string },
+  string | { url: string; method: string; body?: BodyParams<string> },
   unknown,
   unknown
 > = async (args, api, extraOptions) => {

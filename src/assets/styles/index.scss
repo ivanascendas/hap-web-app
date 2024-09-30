@@ -25,11 +25,15 @@ code {
 }
 
 a {
-  color: $primary_500;
+  color: $primary_700;
   text-decoration: none;
   cursor: pointer;
   line-height: 15.4px;
   font-size: 14px;
+}
+
+.link-underline {
+  text-decoration: underline !important;
 }
 
 .error {
@@ -41,4 +45,11 @@ a {
   padding: 0;
   position: relative;
   top: -16px;
+}
+
+.mt-20 {
+  margin-top: 20px !important;
+}
+.mb-20 {
+  margin-bottom: 20px !important;
 }

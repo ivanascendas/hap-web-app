@@ -175,20 +175,16 @@
     }
 
     .registration {
-      form {
-        padding: 0 !important;
-      }
-
-      .MuiInputBase-root {
-        height: 42px !important;
-      }
-
       &__input-container {
         margin-bottom: 20px;
 
         input:not([type="radio"], .registration__phone-input) {
           margin-bottom: 0 !important;
           padding-left: 5px !important;
+          height: 42px !important;
+        }
+
+        .MuiInputBase-root {
           height: 42px !important;
         }
       }
@@ -232,6 +228,14 @@
           width: 11px;
         }
       }
+
+      form {
+        padding: 0 !important;
+      }
+
+      &__back {
+        opacity: 1 !important;
+      }
     }
   }
 
@@ -262,5 +266,23 @@
       text-decoration: underline;
       margin-left: 5px;
     }
+
+    @media screen and (max-width: $mobile_size) {
+      color: #54585e;
+      a {
+        color: #54585e;
+      }
+    }
+  }
+
+  .h5 {
+    display: block;
+    font-size: 0.83em;
+    margin-block-start: 1.67em;
+    margin-block-end: 1.67em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
   }
 }

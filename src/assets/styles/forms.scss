@@ -54,7 +54,6 @@ input:not([type="radio"]) {
   font-family: "Roboto", sans-serif;
   border: 0;
   height: 55px;
-  margin-top: 20px;
   font-weight: 700;
 
   &:disabled {
@@ -70,9 +69,8 @@ input:not([type="radio"]) {
   font-size: 15px;
   border-radius: 4px;
   height: 55px;
-  margin-top: 20px;
   font-weight: 700;
-  color: black;
+  color: $primary_900;
   opacity: 0.4;
   font-weight: normal;
   font-size: 19px;

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
 import { LoginDto } from "../../../shared/dtos/login.dto";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -16,11 +16,17 @@ import logo from "../../../assets/img/custom/logo.png";
 import { useCheckTempPasswordMutation } from "../../../shared/services/Auth.service";
 import { MainComponent } from "../../main/Main.component";
 import { getErrorMessage } from "../../../shared/utils/getErrorMessage";
+import { useDispatch } from "react-redux";
+import { setUser } from "../../../shared/redux/slices/authSlice";
 
 export const LoginFormComponent = (): JSX.Element => {
-  const [checkTempPassword] = useCheckTempPasswordMutation();
+  const [checkTempPassword, result] = useCheckTempPasswordMutation();
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
+
+  const location = useLocation();
+
   const {
     register,
     formState: { errors },
@@ -33,15 +39,24 @@ export const LoginFormComponent = (): JSX.Element => {
     const tempPassword = password;
     checkTempPassword({ accountNumber, tempPassword });
   };
-
+  console.log(result);
+  if (
+    result.isSuccess &&
+    //!result.data?.code &&
+    result.originalArgs?.accountNumber
+  ) {
+    return (
+      <Navigate to="/registration/step1" state={{ from: location }} replace />
+    );
+  }
   return (
     <MainComponent>
       <div className="auth-container">
-        <div className="auth-form">
+        <div className="auth-form" role="main">
           <div className="auth-form__logo">
             <img src={logo} alt="logo" />
           </div>
-          <div className="auth-form__title">{t("SIGN_IN.TITLE")}</div>
+          <h1 className="auth-form__title">{t("SIGN_IN.TITLE")}</h1>
           <div className="auth-form__subtitle">{t("SIGN_IN.SUB_TITLE")}</div>
           <form
             className="auth-form__form"
@@ -80,7 +95,7 @@ export const LoginFormComponent = (): JSX.Element => {
             </div>
             <button
               type="submit"
-              className="button-primary"
+              className="button-primary mt-20"
               disabled={
                 !formState.isDirty ||
                 !formState.isValid ||
@@ -121,7 +136,7 @@ export const LoginFormComponent = (): JSX.Element => {
             </div>
           </form>
         </div>
-        <footer>
+        <footer role="contentinfo">
           {new Date().getFullYear()} {t("APP.FOOTER_TEXT")}{" "}
           <Link to="/policy"> {t("MAIN.MENU.DATA_POLICY")}</Link>
         </footer>
