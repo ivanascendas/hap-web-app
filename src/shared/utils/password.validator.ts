@@ -7,7 +7,7 @@ export type PasswordValidatorConfig = {
   hasSpecialChar?: boolean;
   hasUpperCase?: boolean;
   hasLowerCase?: boolean;
-  charRepeating?: number;
+  charRepeating?: number | false;
 };
 
 export type PasswordValidationResult = {
@@ -32,35 +32,35 @@ export const passwordValidator = (
   if (value && minLength && value.length < minLength) {
     return {
       valid: false,
-      errorMessage: `passwordValidationMinLength`,
+      errorMessage: `ERRORS.passwordValidationMinLength`,
     };
   }
 
   if (value && maxLength && value.length > maxLength) {
     return {
       valid: false,
-      errorMessage: `passwordValidationMAXLength`,
+      errorMessage: `ERRORS.passwordValidationMaxLength`,
     };
   }
 
   if (value && hasNumber && /[0-9]+/.test(value) === false) {
     return {
       valid: false,
-      errorMessage: `passwordValidationMAXLength`,
+      errorMessage: `ERRORS.passwordValidationNumbers`,
     };
   }
 
   if (value && hasUpperCase && /[A-Z]+/.test(value) === false) {
     return {
       valid: false,
-      errorMessage: `passwordValidationMAXLength`,
+      errorMessage: `ERRORS.passwordValidationUpperCase`,
     };
   }
 
   if (value && hasLowerCase && /[a-z]+/.test(value) === false) {
     return {
       valid: false,
-      errorMessage: `passwordValidationMAXLength`,
+      errorMessage: `ERRORS.passwordValidationLowerCase`,
     };
   }
 
@@ -71,7 +71,7 @@ export const passwordValidator = (
   ) {
     return {
       valid: false,
-      errorMessage: `passwordValidationMAXLength`,
+      errorMessage: `ERRORS.passwordValidationSpecialChars`,
     };
   }
 
@@ -93,7 +93,7 @@ export const passwordValidator = (
 
 export const usePasswordValidator = (
   config: PasswordValidatorConfig,
-): [(val: string) => boolean, boolean, string | undefined] => {
+): [(val: string) => boolean, string | undefined, boolean] => {
   const [isValid, setIsValid] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState<string | undefined>(
     undefined,
@@ -105,7 +105,7 @@ export const usePasswordValidator = (
       setErrorMessage(result.errorMessage);
       return result.valid;
     },
-    isValid,
     errorMessage,
+    isValid,
   ];
 };

@@ -1,16 +1,18 @@
-import { t } from "i18next";
+import { t, TFunction } from "i18next";
 
-export const getErrorMessage = (type?: string): string | undefined => {
+export const getErrorMessage = (
+  type?: string,
+  tr?: TFunction<"translation", undefined>,
+): string | undefined => {
+  const translate = tr || t;
   switch (type) {
     case "required":
-      return t("ERRORS.REQUIRED");
+      return translate("ERRORS.REQUIRED");
     case "minLength":
-      return t("ERRORS.MIN_LENGTH");
+      return translate("ERRORS.TOO_SHORT");
     case "maxLength":
-      return t("ERRORS.MAX_LENGTH");
-    case "pattern":
-      return t("ERRORS.PATTERN");
+      return translate("ERRORS.TOO_LONG");
     default:
-      return undefined;
+      return type ? translate(type) : undefined;
   }
 };

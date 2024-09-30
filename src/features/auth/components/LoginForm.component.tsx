@@ -82,7 +82,7 @@ export const LoginFormComponent = (): JSX.Element => {
                 label={isMobile ? t("LABELS.PASSWORD") : undefined}
                 type={showPassword ? "text" : "password"}
                 variant={isMobile ? "outlined" : "standard"}
-                helperText={getErrorMessage(errors.password?.type)}
+                helperText={getErrorMessage(errors.password?.type, t)}
               />
               <div
                 className="password-icon"

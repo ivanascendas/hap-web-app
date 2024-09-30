@@ -55,7 +55,7 @@ export const ForgotPasswordFormComponent = (): JSX.Element => {
                 aria-invalid={errors.username ? "true" : "false"}
                 label={t("LABELS.CUSTOMER_NUMBER")}
                 variant={"outlined"}
-                helperText={getErrorMessage(errors.username?.type)}
+                helperText={getErrorMessage(errors.username?.type, t)}
               />
             </div>
             <div className="auth-form__input-container ">

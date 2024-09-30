@@ -38,7 +38,21 @@ export const RegConfirmFormComponent = (): JSX.Element => {
   const [checkDOB, checkDOBResult] = useDobConfirmationMutation();
 
   const { email, phone, accountNumber } = useSelector(selectUser);
-  const [isPasswordValid] = usePasswordValidator({});
+  const [isPasswordValid, passwordError] = usePasswordValidator({
+    minLength: parseInt(process.env.REACT_APP_PASSWORD_MIN_LENGTH || "8"),
+    hasNumber: process.env.REACT_APP_PASSWORD_USE_NUMBERS === "true" || false,
+    hasSpecialChar:
+      process.env.REACT_APP_PASSWORD_USE__SPECIAL_CHARACTER === "true" || false,
+    hasUpperCase:
+      process.env.REACT_APP_PASSWORD_USE_UPPERCASE === "true" || false,
+    hasLowerCase:
+      process.env.REACT_APP_PASSWORD_USE_LOWERCASE === "true" || false,
+    charRepeating:
+      (process.env.REACT_APP_PASSWORD_MAX_REPEATING &&
+        process.env.REACT_APP_PASSWORD_MAX_REPEATING !== "false" &&
+        parseInt(process.env.REACT_APP_PASSWORD_MAX_REPEATING)) ||
+      undefined,
+  });
   const {
     register,
     setValue,
@@ -75,7 +89,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
     if (checkSMSResult.isSuccess) {
       setValue("phoneNumberConfirmed", true);
     }
-    if (checkDOBResult.isSuccess) {
+    if (checkEmailResult.isSuccess) {
       setValue("emailConfirmed", true);
     }
 
@@ -84,7 +98,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
     }
   }, [
     checkSMSResult.isSuccess,
-    checkDOBResult.isSuccess,
+    checkEmailResult.isSuccess,
     checkDOBResult.isSuccess,
   ]);
 
@@ -191,7 +205,12 @@ export const RegConfirmFormComponent = (): JSX.Element => {
                   validate: (value) => isPasswordValid(value),
                 })}
                 error={!!errors.password}
-                helperText={getErrorMessage(errors.password?.type)}
+                helperText={getErrorMessage(
+                  (errors.password?.type !== "validate" &&
+                    errors.password?.type) ||
+                    passwordError,
+                  t,
+                )}
                 slotProps={{
                   htmlInput: {
                     "aria-invalid": !!errors.password,
@@ -214,8 +233,12 @@ export const RegConfirmFormComponent = (): JSX.Element => {
                   required: true,
                   validate: (value) => value === getValues("password"),
                 })}
-                error={!!errors.password}
-                helperText={getErrorMessage(errors.confirmPassword?.type)}
+                error={!!errors.confirmPassword}
+                helperText={getErrorMessage(
+                  (errors.confirmPassword?.type !== "validate" &&
+                    errors.confirmPassword?.type) ||
+                    (errors.confirmPassword && "ERRORS.PASSWORD_VERIFY"),
+                )}
                 slotProps={{
                   htmlInput: {
                     "aria-invalid": !!errors.confirmPassword,
@@ -253,7 +276,12 @@ export const RegConfirmFormComponent = (): JSX.Element => {
           className="button-primary registration__button"
           role="button"
           disabled={
-            !formState.isDirty || !formState.isValid || formState.isSubmitted
+            !checkSMSResult.isSuccess ||
+            !checkEmailResult.isSuccess ||
+            !checkDOBResult.isSuccess ||
+            !formState.isDirty ||
+            !formState.isValid ||
+            formState.isSubmitted
           }
         >
           {t("SIGN_UP.BUTTONS.NEXT")}
