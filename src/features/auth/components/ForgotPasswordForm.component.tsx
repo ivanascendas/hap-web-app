@@ -8,11 +8,11 @@ import ReCAPTCHA from "react-google-recaptcha";
 
 import logo from "../../../assets/img/custom/logo.png";
 import { useForgotPasswordMutation } from "../../../shared/services/Auth.service";
-import { MainComponent } from "../../main/Main.component";
 
 import { TextField } from "@mui/material";
 import "../Auth.component.scss";
 import { getErrorMessage } from "../../../shared/utils/getErrorMessage";
+import { MainComponent } from "../../main/Main.component";
 
 export const ForgotPasswordFormComponent = (): JSX.Element => {
   const [forgotPassword] = useForgotPasswordMutation();

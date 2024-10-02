@@ -1,7 +1,7 @@
 import React from "react";
-import { MainComponent } from "../../features/main/Main.component";
 import { useAuth } from "../providers/Auth.provider";
 import { Navigate, useLocation } from "react-router-dom";
+import { MainComponent } from "../../features/main/Main.component";
 
 type ProtectedProps = {
   component: JSX.Element;
