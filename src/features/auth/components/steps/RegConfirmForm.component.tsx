@@ -21,7 +21,6 @@ import {
   useSmsOptRequestMutation,
   useSmsOtpConfirmationMutation,
 } from "../../../../shared/services/Verification.service";
-import { use } from "i18next";
 import { Dayjs } from "dayjs";
 import { getErrorMessage } from "../../../../shared/utils/getErrorMessage";
 import { usePasswordValidator } from "../../../../shared/utils/password.validator";
@@ -74,15 +73,18 @@ export const RegConfirmFormComponent = (): JSX.Element => {
   };
 
   useEffect(() => {
-    resendEmail({
-      UserId: accountNumber?.toString() || "",
-      EmailId: email?.toString() || "",
-    });
-
-    resendSMS({
-      UserId: accountNumber?.toString() || "",
-      PhoneNumber: phone?.toString() || "",
-    });
+    if (accountNumber && email) {
+      resendEmail({
+        UserId: accountNumber.toString() || "",
+        EmailId: email.toString() || "",
+      });
+    }
+    if (accountNumber && phone) {
+      resendSMS({
+        UserId: accountNumber?.toString() || "",
+        PhoneNumber: phone?.toString() || "",
+      });
+    }
   }, []);
 
   useEffect(() => {
@@ -130,9 +132,11 @@ export const RegConfirmFormComponent = (): JSX.Element => {
             btnLabel="Check"
             resendLabel="Resend OTP"
             onResend={() =>
+              accountNumber &&
+              email &&
               resendEmail({
-                UserId: accountNumber?.toString() || "",
-                EmailId: email?.toString() || "",
+                UserId: accountNumber.toString() || "",
+                EmailId: email.toString() || "",
               })
             }
             onSubmit={checkEmailCode}
@@ -152,9 +156,11 @@ export const RegConfirmFormComponent = (): JSX.Element => {
             btnLabel="Check"
             resendLabel="Resend OTP"
             onResend={() =>
+              accountNumber &&
+              phone &&
               resendSMS({
-                UserId: accountNumber?.toString() || "",
-                PhoneNumber: phone?.toString() || "",
+                UserId: accountNumber.toString() || "",
+                PhoneNumber: phone.toString() || "",
               })
             }
             onSubmit={checkSMSCode}
