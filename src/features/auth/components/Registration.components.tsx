@@ -16,7 +16,7 @@ export const RegistrationComponent = (): JSX.Element => {
     <MainComponent>
       <div className="auth-container">
         <div className="auth-form registration">
-          <div role="main">
+          <div role="main" className="auth-form__container">
             <div className="auth-form__logo">
               <img src={logo} alt="logo" />
             </div>

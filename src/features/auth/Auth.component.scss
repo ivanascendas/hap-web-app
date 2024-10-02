@@ -8,6 +8,7 @@
   height: 100%;
 
   .auth-form {
+    max-height: calc(100vh - 220px);
     position: relative;
     display: flex;
     flex-direction: column;
@@ -37,9 +38,18 @@
       background: none;
     }
 
+    &__container {
+      max-height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding-right: 20px;
+    }
+
     &__form {
       padding: 0 30px;
       margin-top: 30px;
+      max-height: 100%;
+      overflow-y: auto;
     }
 
     &__logo {
