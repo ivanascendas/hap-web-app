@@ -44,6 +44,7 @@ export const authApi = createApi({
      *
      * @param username - The username to be used for authentication.
      * @param password - The password to be used for authentication.
+     * @param mfaMethod - The MFA method to be used for authentication.
      * @returns The `TokenDto` object containing the authentication token.
      */
     login: builder.mutation<TokenDto, LoginDto>({
@@ -70,13 +71,24 @@ export const authApi = createApi({
         if (data.defaultmfa) {
           dispatch(setUser({ defaultMFA: data.defaultmfa }));
           dispatch(setTmpToken(data));
+        } else {
+          dispatch(setToken(data));
         }
+
       },
       transformResponse: (response: TokenDto) => {
         return response;
       },
     }),
 
+    /**
+     * Sends a POST request to the `/token` endpoint with the provided `LoginWithCodeDto` object, and returns the `TokenDto` object.
+     *
+     * @param code - The code to be used for authentication.
+     * @param token - The token to be used for authentication.
+     * @param mfaMethod - The MFA method to be used for authentication.
+     * @returns The `TokenDto` object containing the authentication token.
+     */
     loginWithCode: builder.mutation<TokenDto, LoginWithCodeDto>({
       query: ({ code, token, mfaMethod }) => {
         const codeHash = base64EncodeUrl(code);
