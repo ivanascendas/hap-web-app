@@ -14,7 +14,7 @@ export const RegUserDataFormComponent = (): JSX.Element => {
   const location = useLocation();
   const dispatch = useDispatch();
 
-  const { email, phone, accountNumber } = useSelector(selectUser);
+  const { email, phone, accountNumber } = useSelector(selectUser) || {};
 
   const {
     register,

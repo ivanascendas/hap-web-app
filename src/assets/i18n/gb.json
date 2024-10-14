@@ -295,6 +295,7 @@
     "NEXT": "Next",
     "PREV": "Prev",
     "CLOSE": "Close",
+    "CHECK": "Check",
     "CHANGE": "Change",
     "CHANGE_PASSWORD": "Change Password",
     "SEND_LETTER": "Send Registration Letter",

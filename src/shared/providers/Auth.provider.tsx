@@ -1,5 +1,7 @@
 import React, { createContext, useContext } from "react";
 import { useLoginMutation, useLogoutMutation } from "../services/Auth.service";
+import { useSelector } from "react-redux";
+import { selectToken } from "../redux/slices/authSlice";
 
 export type AuthContextType = {
   isAuthenticated: boolean;
@@ -26,7 +28,9 @@ export const AuthProvider = ({
 }: {
   children: JSX.Element;
 }): JSX.Element => {
+  const tokenData = useSelector(selectToken);
+
   return (
-    <AuthContext.Provider value={initialValue}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ ...initialValue, isAuthenticated: tokenData !== null }}>{children}</AuthContext.Provider>
   );
 };

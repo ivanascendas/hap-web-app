@@ -2,9 +2,11 @@ import React from "react";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./AppRoutes";
 import "./shared/utils/i18n";
-console.log(process.env);
+import { AuthProvider } from "./shared/providers/Auth.provider";
 function App() {
-  return <RouterProvider router={router} />;
+  return <AuthProvider>
+    <RouterProvider router={router} />
+  </AuthProvider>;
 }
 
 export default App;

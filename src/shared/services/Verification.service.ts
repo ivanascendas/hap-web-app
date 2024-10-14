@@ -6,7 +6,9 @@ import {
   SmsOTPRequestDto,
 } from "../dtos/verification.dtos";
 import { RootState } from "../redux/store";
-import { AuthState } from "../redux/slices/authSlice";
+import { AuthState, setUser } from "../redux/slices/authSlice";
+import { UserAuthStatusDto } from "../dtos/user.dto";
+import { createSelector } from "@reduxjs/toolkit";
 
 export const verificationApi = createApi({
   reducerPath: "verificationApi",
@@ -158,7 +160,7 @@ export const verificationApi = createApi({
         return response.success;
       },
     }),
-    verificationStatus: builder.mutation<boolean, number>({
+    verificationStatus: builder.mutation<UserAuthStatusDto, number>({
       query: (accountNumber) => ({
         url: `/api/user/CheckValidContact?AccountNumber=${accountNumber}`,
         method: "POST",
@@ -166,12 +168,22 @@ export const verificationApi = createApi({
           Authorization: undefined,
         },
       }),
-      transformResponse: (response: { success: boolean }) => {
-        return response.success;
-      },
+      onQueryStarted: async (dto, { dispatch, queryFulfilled }) => {
+
+        const { data } = await queryFulfilled;
+
+        dispatch(setUser({
+          phoneNumberConfirmed: data.isPhoneConfirmed,
+          emailConfirmed: data.isEmailConfirmed,
+          defaultMFA: data.defaultMFA,
+        }));
+      }
     }),
+
   }),
 });
+
+
 
 export const {
   useSmsOptRequestMutation,

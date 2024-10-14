@@ -3,5 +3,5 @@ export type CheckTempPasswordRequestDto = {
   tempPassword: string;
 };
 export type CheckTempPasswordResponseDto = {
-  code?: number;
+  code?: string;
 };

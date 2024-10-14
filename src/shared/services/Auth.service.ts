@@ -1,6 +1,6 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 
-import { LoginDto } from "../dtos/login.dto";
+import { LoginDto, LoginWithCodeDto } from "../dtos/login.dto";
 import { TokenDto } from "../dtos/token.dto";
 import {
   CheckTempPasswordRequestDto,
@@ -8,7 +8,11 @@ import {
 } from "../dtos/tempPassword.dto";
 import { ForgotPasswordRequestDto } from "../dtos/forgotPassword.dto";
 import customBaseQuery from "../utils/customBaseQuery";
-import { setUser } from "../redux/slices/authSlice";
+import { setTmpToken, setToken, setUser } from "../redux/slices/authSlice";
+import { verificationApi } from "./Verification.service";
+import { RootState } from "../redux/store";
+import { createSelector } from "@reduxjs/toolkit";
+import { To } from "react-router-dom";
 
 /**
  * Encodes a string to a URL-safe base64 string.
@@ -43,7 +47,7 @@ export const authApi = createApi({
      * @returns The `TokenDto` object containing the authentication token.
      */
     login: builder.mutation<TokenDto, LoginDto>({
-      query: ({ username, password }) => {
+      query: ({ username, password, mfaMethod }) => {
         const usernameHash = base64EncodeUrl(username);
         const passwordHash = base64EncodeUrl(password);
         return {
@@ -53,12 +57,47 @@ export const authApi = createApi({
             grant_type: "password",
             username: usernameHash,
             password: passwordHash,
-            otherway: "",
+            otherway: mfaMethod || "",
             vr: "2",
           }),
         };
       },
+      onQueryStarted: async (dto,
+        { dispatch, queryFulfilled },) => {
 
+        const { data } = await queryFulfilled;
+        dispatch(verificationApi.endpoints.verificationStatus.initiate(parseInt(dto.username)));
+        if (data.defaultmfa) {
+          dispatch(setUser({ defaultMFA: data.defaultmfa }));
+          dispatch(setTmpToken(data));
+        }
+      },
+      transformResponse: (response: TokenDto) => {
+        return response;
+      },
+    }),
+
+    loginWithCode: builder.mutation<TokenDto, LoginWithCodeDto>({
+      query: ({ code, token, mfaMethod }) => {
+        const codeHash = base64EncodeUrl(code);
+
+        return {
+          url: `/token`,
+          method: "POST",
+          body: toUrlEncoded({
+            grant_type: "code",
+            v: codeHash,
+            token: token,
+            otherway: mfaMethod || "",
+            vr: "2",
+          }),
+        };
+      },
+      onQueryStarted: async (dto,
+        { dispatch, queryFulfilled }) => {
+        const { data } = await queryFulfilled;
+        dispatch(setToken(data));
+      },
       transformResponse: (response: TokenDto) => {
         return response;
       },
@@ -94,7 +133,8 @@ export const authApi = createApi({
         { dispatch, queryFulfilled },
       ) => {
         const { data } = await queryFulfilled;
-        if (data.code === 1) {
+
+        if (data.code === '1') {
           dispatch(
             authApi.endpoints.login.initiate({
               username: dto.accountNumber,
@@ -122,8 +162,22 @@ export const authApi = createApi({
   }),
 });
 
+
+export const selectLoginResponse = (state: RootState): TokenDto | undefined => (state.authApi.mutations.login?.data as TokenDto);
+
+export const selectMaskedValue = createSelector(
+  selectLoginResponse,
+  (data: TokenDto | undefined) => {
+    let result: string = "";
+    result = data && (data.defaultmfa == 'SMS' ? data.phoneNumber : data.defaultmfa === 'Email' ? data.email : "") || "";
+    return result;
+
+  },
+);
+
 export const {
   useLoginMutation,
+  useLoginWithCodeMutation,
   useLogoutMutation,
   useCheckTempPasswordMutation,
   useForgotPasswordMutation,

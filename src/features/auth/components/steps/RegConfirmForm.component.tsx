@@ -36,7 +36,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
   const [checkEmailCode, checkEmailResult] = useEmailOtpConfirmationMutation();
   const [checkDOB, checkDOBResult] = useDobConfirmationMutation();
 
-  const { email, phone, accountNumber } = useSelector(selectUser);
+  const { email, phone, accountNumber } = useSelector(selectUser) || {};
   const [isPasswordValid, passwordError] = usePasswordValidator({
     minLength: parseInt(process.env.REACT_APP_PASSWORD_MIN_LENGTH || "8"),
     hasNumber: process.env.REACT_APP_PASSWORD_USE_NUMBERS === "true" || false,
@@ -214,7 +214,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
                 helperText={getErrorMessage(
                   (errors.password?.type !== "validate" &&
                     errors.password?.type) ||
-                    passwordError,
+                  passwordError,
                   t,
                 )}
                 slotProps={{
@@ -243,7 +243,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
                 helperText={getErrorMessage(
                   (errors.confirmPassword?.type !== "validate" &&
                     errors.confirmPassword?.type) ||
-                    (errors.confirmPassword && "ERRORS.PASSWORD_VERIFY"),
+                  (errors.confirmPassword && "ERRORS.PASSWORD_VERIFY"),
                 )}
                 slotProps={{
                   htmlInput: {

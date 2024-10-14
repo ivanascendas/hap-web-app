@@ -1,3 +1,5 @@
+import { MFAMethod } from "../dtos/user.dto";
+
 export type UserModel = {
   id?: string;
   username?: string;
@@ -9,4 +11,5 @@ export type UserModel = {
   emailConfirmed?: boolean;
   phoneNumberConfirmed?: boolean;
   dobIsVerified?: boolean;
+  defaultMFA?: MFAMethod;
 };

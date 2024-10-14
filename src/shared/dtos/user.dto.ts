@@ -15,3 +15,12 @@ export type UserConfirmDataModel = {
 };
 
 export type MFAMethod = "Email" | "SMS" | "None";
+
+export type UserAuthStatusDto = {
+  status: boolean;
+  errorString: string | null;
+  isPhoneConfirmed: boolean;
+  isEmailConfirmed: boolean;
+  defaultMFA: MFAMethod; // Assuming these are the possible values
+  twoFactorEnabled: boolean;
+}

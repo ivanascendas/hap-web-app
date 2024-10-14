@@ -11,11 +11,11 @@ import { RegistrationComponent } from "./features/auth/components/Registration.c
 export const Redirect = (): JSX.Element => {
   const auth = useAuth();
   const location = useLocation();
-
+  debugger
   if (!auth.isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   } else {
-    return <Navigate to="/statement" state={{ from: location }} replace />;
+    return <Navigate to="/statements" state={{ from: location }} replace />;
   }
 };
 
@@ -38,7 +38,7 @@ export const router = createBrowserRouter([
   },
   {
     index: true,
-    path: "/statement",
+    path: "/statements",
     element: <Protected component={<StatementComponent />} />,
   },
 ]);

@@ -5,11 +5,13 @@ import { RootState } from "../store";
 
 export type AuthState = {
   user: UserModel | null;
+  tmpTokenData: TokenDto | null;
   tokenData: TokenDto | null;
 };
 
 const initialState: AuthState = {
   user: null,
+  tmpTokenData: null,
   tokenData: null,
 };
 
@@ -24,7 +26,13 @@ const userSlice = createSlice({
       state: AuthState,
       action: PayloadAction<TokenDto>,
     ): AuthState => {
-      return { ...state, tokenData: action.payload };
+      return { ...state, tokenData: action.payload, tmpTokenData: null };
+    },
+    setTmpToken: (
+      state: AuthState,
+      action: PayloadAction<TokenDto>,
+    ): AuthState => {
+      return { ...state, tmpTokenData: action.payload };
     },
     clearUser: (state: AuthState) => {
       return { ...state, user: null };
@@ -32,11 +40,16 @@ const userSlice = createSlice({
     clearToken: (state: AuthState) => {
       return { ...state, tokenData: null };
     },
+    clearTmpToken: (state: AuthState) => {
+      return { ...state, tmpTokenData: null };
+    },
   },
 });
 
-export const selectUser = (state: RootState) => state.auth.user || {};
+export const selectUser = (state: RootState): UserModel | null => state.auth.user;
+export const selectTmpToken = (state: RootState): TokenDto | null => state.auth.tmpTokenData;
+export const selectToken = (state: RootState): TokenDto | null => state.auth.tokenData;
 
-export const { setUser, clearUser } = userSlice.actions;
+export const { setUser, clearUser, setTmpToken, setToken, clearTmpToken, clearToken } = userSlice.actions;
 
 export default userSlice.reducer;

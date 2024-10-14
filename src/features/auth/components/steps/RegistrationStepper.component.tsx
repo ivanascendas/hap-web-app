@@ -1,6 +1,7 @@
 import React from "react";
 import { RegUserDataFormComponent } from "./RegUserDataForm.component";
 import { RegConfirmFormComponent } from "./RegConfirmForm.component";
+import { RegMfaFormComponent } from "./RegMfaForm.component";
 
 type RegistrationStepperProps = {
   step: string;
@@ -13,7 +14,7 @@ export const RegistrationStepper = ({
     case "step2":
       return <RegConfirmFormComponent />;
     case "step3":
-      return <div>Step 3</div>;
+      return <RegMfaFormComponent />;
     case "step1":
     default:
       return <RegUserDataFormComponent />;
