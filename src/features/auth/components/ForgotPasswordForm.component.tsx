@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { LoginDto } from "../../../shared/dtos/login.dto";
 import { useForm } from "react-hook-form";
@@ -13,9 +13,15 @@ import { TextField } from "@mui/material";
 import "../Auth.component.scss";
 import { getErrorMessage } from "../../../shared/utils/getErrorMessage";
 import { MainComponent } from "../../main/Main.component";
+import { NotificationComponent } from "../../../shared/components/Notification.component";
+import { setError } from "../../../shared/redux/slices/errorSlice";
+import { setNotify } from "../../../shared/redux/slices/notifySlice";
+import { useDispatch } from "react-redux";
+import StorageService from "../../../shared/services/Storage.service";
 
 export const ForgotPasswordFormComponent = (): JSX.Element => {
-  const [forgotPassword] = useForgotPasswordMutation();
+  const [forgotPassword, result] = useForgotPasswordMutation();
+  const dispatch = useDispatch();
   const { t } = useTranslation();
   const {
     register,
@@ -27,14 +33,26 @@ export const ForgotPasswordFormComponent = (): JSX.Element => {
   const [GCaptchaResponse, setCaptchaString] = React.useState("");
 
   const submitHandler = ({ username }: LoginDto) => {
-    const accountNumber = username;
-    forgotPassword({ accountNumber, GCaptchaResponse });
+    if (StorageService.getBoolean("cookieBanner")) {
+      const accountNumber = username;
+      forgotPassword({ accountNumber, GCaptchaResponse });
+    } else {
+      dispatch(setError({ message: t("ERRORS.PLS_ACCEPT_COOKIE") }));
+    }
   };
 
   const handleRecaptchaChange = (value: string | null) => {
     console.log("Captcha value:", value);
     if (value != null) setCaptchaString(value);
   };
+  useEffect(() => {
+    console.log(result);
+    if (result.isSuccess) {
+      dispatch(setNotify({
+        message: t("MESSAGES.RESET_PASSWORD")
+      }));
+    }
+  }, [result]);
 
   return (
     <MainComponent>
@@ -43,6 +61,7 @@ export const ForgotPasswordFormComponent = (): JSX.Element => {
           <div className="auth-form__logo">
             <img src={logo} alt="logo" />
           </div>
+          <NotificationComponent />
           <div className="auth-form__title">{t("FORGOT_PASSWORD.TITLE")}</div>
           <form
             className="auth-form__form"
@@ -70,7 +89,7 @@ export const ForgotPasswordFormComponent = (): JSX.Element => {
               disabled={
                 !formState.isDirty ||
                 !formState.isValid ||
-                formState.isSubmitted ||
+                formState.isSubmitting ||
                 !GCaptchaResponse
               }
             >

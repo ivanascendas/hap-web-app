@@ -15,6 +15,23 @@ export type MfaLoginProps = {
     mfa: MFAMethod;
 };
 
+/**
+ * MfaLogin component handles the multi-factor authentication (MFA) login process.
+ * It allows users to choose an MFA method (SMS or Email) and enter a verification code.
+ * 
+ * @param {MfaLoginProps} props - The properties for the MfaLogin component.
+ * @param {string} props.username - The username of the user attempting to log in.
+ * @param {string} props.password - The password of the user attempting to log in.
+ * @param {MFAMethod} props.mfa - The initial MFA method to be used.
+ * 
+ * @returns {JSX.Element} The rendered JSX element for the MFA login process.
+ * 
+ * @component
+ * 
+ * @example
+ * // Usage example:
+ * <MfaLogin username="user123" password="password123" mfa="SMS" />
+ */
 export const MfaLogin = ({ username, password, mfa }: MfaLoginProps): JSX.Element => {
     const { t } = useTranslation();
     const dispatch = useDispatch();
@@ -28,21 +45,29 @@ export const MfaLogin = ({ username, password, mfa }: MfaLoginProps): JSX.Elemen
     const [mfaMethod, setMFA] = useState<MFAMethod>(mfa);
     const [showAnotherWay, setShowAnotherWay] = useState(false);
 
+    /**
+     * Handles the Multi-Factor Authentication (MFA) change event.
+     * This function triggers the login process with the provided username, password, and MFA method.
+     * It also hides the "Show Another Way" option after attempting the login.
+     */
     const handleChangeMFA = () => {
         login({ username, password, mfaMethod });
         setShowAnotherWay(false);
     };
 
+    /**
+     * Handles the login process using a provided MFA code.
+     *
+     * @param code - The MFA code entered by the user.
+     */
     const handleLoginWithCode = (code: string) => {
         loginWithCode({ code, token: data?.access_token as string, mfaMethod });
-
     };
-    console.log({ data });
+
     useEffect(() => {
         if (result.isSuccess) {
             dispatch(setToken(result.data));
-            navigate("/statements");
-            console.log({ result });
+            navigate("/statements/rates");
         }
     }, [result]);
 
@@ -64,7 +89,7 @@ export const MfaLogin = ({ username, password, mfa }: MfaLoginProps): JSX.Elemen
                     <button type="submit" className="button-primary mt-20" onClick={handleChangeMFA} >Send OTP</button>
                 </div>
             </> : <>
-                <label className="mfa-login__label">{maskeedValue}</label>
+                <label className="mfa-login__label">{t('MFA.ENTER_CODE')} {maskeedValue}</label>
                 <OtpInputComponent
                     btnLabel={t("BUTTONS.CHECK")}
                     resendLabel={t("MFA.VERIFICATION_INPUT.RESEND_OTP")}

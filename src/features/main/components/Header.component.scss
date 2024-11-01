@@ -1,0 +1,89 @@
+@import '../../../assets/styles/variables.scss';
+
+.MuiAppBar-root {
+    height: 77px;
+    position: absolute;
+    background: $secondary100 !important;
+    color: $secondaryGray600 !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+
+    .logo {
+        height: 44px;
+    }
+
+    .logo-mobile {
+        width: 265px;
+    }
+
+    .header_links_pay {
+        float: right;
+        margin-right: 26px;
+        width: 156px;
+        height: 46px;
+        line-height: 46px;
+        border-radius: 3px;
+        background: rgb(255, 140, 61);
+        background: linear-gradient(85deg, rgba(255, 140, 61, 1) 0%, rgba(231, 18, 0, 1) 100%);
+        color: #fff;
+        font-size: 15px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 30px;
+    }
+
+
+
+    .welcome-text {
+        font-size: 13px !important;
+        opacity: 0.7;
+    }
+
+    .customer-name {
+        display: flex;
+
+        &:after {
+            content: "";
+            right: -19px;
+            box-sizing: border-box;
+            height: 8px;
+            width: 8px;
+            border-style: solid;
+            border-color: $primary900;
+            border-width: 0px 2px 2px 0px;
+            transform: rotate(45deg);
+            transition: border-width 150ms ease-in-out;
+            top: 4px;
+            display: block;
+            margin: 3px 0 3px 10px;
+        }
+    }
+
+    .logo-text {
+
+        font-weight: 200;
+        font-size: 22px;
+        margin-left: 10px;
+        background: linear-gradient(90deg, rgba(223, 51, 36, 1) 0%, rgba(238, 106, 18, 1) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+
+
+        @media screen and (max-width: $desktopLgSize) {
+            margin-left: 10px;
+            line-height: 44px;
+            font-size: 18px;
+        }
+    }
+
+    @media screen and (min-width: $mobileSize) {
+        height: 77px !important;
+        display: block !important;
+        box-shadow: 0px 1px 18px 0px rgba(220, 224, 231, 1) !important;
+    }
+
+}

@@ -1,12 +1,18 @@
 @import "../../assets/styles/variables.scss";
 
 .auth-container {
+  background: url(../../assets/img/background.png) no-repeat !important;
+  background-size: cover !important;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
+
+  @media screen and (max-width: $mobileSize) {
+    background: $secondary !important;
+  }
 
   .auth-form {
     max-height: calc(100vh - 220px);
@@ -23,7 +29,7 @@
     background-clip: border-box;
     padding: 32px 20px 32px 40px;
 
-    @media screen and (min-height:1005px) {
+    @media screen and (min-height:$desktopMdSize) {
       padding: 32px 40px;
     }
 
@@ -49,7 +55,7 @@
         font-size: 13px;
         opacity: 0.7;
         font-family: "Roboto", sans-serif;
-        margin-bottom: 9px;
+        margin-bottom: 5px;
         display: block;
       }
 
@@ -63,20 +69,9 @@
       }
     }
 
-    &.forgot-password {
-      width: 362px !important;
 
-      input:not([type="radio"]) {
-        border-width: 1px;
-        border-radius: 4px;
-      }
 
-      .account-number::before {
-        top: 15px;
-      }
-    }
-
-    @media screen and (max-width: $mobile_size) {
+    @media screen and (max-width: $mobileSize) {
       box-shadow: none;
       background: none;
     }
@@ -89,8 +84,8 @@
     }
 
     &__form {
-      padding: 30px;
-      margin-top: 30px;
+      padding: 30px 30px 0 30px;
+      margin-top: 10px;
       max-height: 100%;
       overflow-y: auto;
     }
@@ -166,7 +161,7 @@
         width: 20px;
         height: 20px;
 
-        @media screen and (max-width: $mobile_size) {
+        @media screen and (max-width: $mobileSize) {
           top: 16px;
         }
       }
@@ -174,7 +169,7 @@
       &.account-password {
         margin-top: 40px;
 
-        @media screen and (max-width: $mobile_size) {
+        @media screen and (max-width: $mobileSize) {
           margin-top: 0px;
         }
 
@@ -192,7 +187,7 @@
           width: 20px;
           height: 20px;
 
-          @media screen and (max-width: $mobile_size) {
+          @media screen and (max-width: $mobileSize) {
             top: 16px;
           }
         }
@@ -209,7 +204,7 @@
       padding-left: 30px;
       margin-bottom: 20px;
 
-      @media screen and (max-width: $mobile_size) {
+      @media screen and (max-width: $mobileSize) {
         border-width: 1px;
         border-radius: 4px;
         margin-bottom: 0;
@@ -249,11 +244,17 @@
         .MuiInputBase-root {
           height: 42px !important;
         }
+
+        .iti {
+          display: block !important;
+        }
       }
+
+
 
       &__phone-input {
         border-width: 1px !important;
-        width: 420px !important;
+        width: 100% !important;
         border-radius: 4px !important;
       }
 
@@ -315,7 +316,7 @@
         margin: 3px;
         white-space: nowrap;
 
-        @media screen and (max-width: $mobile_size) {
+        @media screen and (max-width: $mobileSize) {
           padding: 15px;
 
           .MuiFormControlLabel-label {
@@ -330,6 +331,79 @@
 
       }
 
+
+    }
+
+    &.forgot-password {
+      width: 305px !important;
+      padding: 35px 40px;
+
+      input:not([type="radio"]) {
+        border-width: 1px;
+        border-radius: 4px;
+        padding-bottom: 0;
+      }
+
+      .account-number::before {
+        top: 15px;
+      }
+
+      .auth-form__form {
+        padding: 0px;
+        padding-top: 6px;
+      }
+    }
+
+    &.reset-password {
+      width: 362px !important;
+      padding: 30px 5px;
+
+      .auth-form__subtitle {
+        text-align: center;
+        font-size: 0.83em;
+        color: #000;
+        font-weight: 700;
+      }
+
+      .auth-form__form {
+        margin-top: 0;
+
+      }
+
+      .password-icon {
+        top: 11px;
+      }
+
+      .auth-form__input-container {
+
+
+        &.account-password {
+          margin-top: 0;
+          margin-bottom: 30px;
+
+          &::before {
+            top: 20px;
+          }
+        }
+
+      }
+
+      .MuiFormControl-root .MuiInputBase-root {
+        //  border: 1px solid #dce0e2;
+        border-radius: 6px;
+        height: 40px;
+
+        input:not([type="radio"]) {
+          border-width: 1px;
+          border-radius: 4px;
+          margin: 0;
+
+        }
+
+        &::before {
+          border: none !important;
+        }
+      }
 
     }
 
@@ -364,7 +438,7 @@
       margin-left: 5px;
     }
 
-    @media screen and (max-width: $mobile_size) {
+    @media screen and (max-width: $mobileSize) {
       color: #54585e;
 
       a {
@@ -383,4 +457,10 @@
     font-weight: bold;
     unicode-bidi: isolate;
   }
+}
+
+
+
+.MuiBox-root {
+  flex: 1;
 }

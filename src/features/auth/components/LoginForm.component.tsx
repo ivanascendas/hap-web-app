@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, Navigate, useLocation } from "react-router-dom";
 import { LoginDto } from "../../../shared/dtos/login.dto";
-import { useForm } from "react-hook-form";
+import { FieldPath, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { SelectLanguage } from "../../../shared/components/SelectLanguage";
 import { useState } from "react";
@@ -20,6 +20,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUser, setUser } from "../../../shared/redux/slices/authSlice";
 import { MfaLogin } from "./MfaLogin.component";
 import { MFAMethod } from "../../../shared/dtos/user.dto";
+import { NotificationComponent } from "../../../shared/components/Notification.component";
+import StorageService from "../../../shared/services/Storage.service";
+import { setError } from "../../../shared/redux/slices/errorSlice";
 
 export const LoginFormComponent = (): JSX.Element => {
   const [checkTempPassword, result] = useCheckTempPasswordMutation();
@@ -34,16 +37,36 @@ export const LoginFormComponent = (): JSX.Element => {
     formState: { errors },
     handleSubmit,
     formState,
-    getValues
+    getValues,
+    setError: setFromError,
   } = useForm<LoginDto>({ mode: "all" });
 
 
 
   const submitHandler = ({ username, password }: LoginDto) => {
-    const accountNumber = username;
-    const tempPassword = password;
-    checkTempPassword({ accountNumber, tempPassword });
+    if (StorageService.getBoolean("cookieBanner")) {
+      const accountNumber = username;
+      const tempPassword = password;
+      checkTempPassword({ accountNumber, tempPassword });
+    } else {
+      dispatch(setError({ message: t("ERRORS.PLS_ACCEPT_COOKIE") }));
+    }
   };
+
+  useEffect(() => {
+    if (result.isError) {
+      if ((result.error as any).data.modelState) {
+        if ((result.error as any).data.modelState.tempPassword[0]) {
+          dispatch(setError({
+            message: t((result.error as any).data.modelState.tempPassword[0]),
+          }));
+        }
+        for (const model in (result.error as any).data.modelState) {
+          setFromError(model as FieldPath<LoginDto>, (result.error as any).data.modelState[model].join('; '));
+        }
+      }
+    }
+  }, [result]);
 
   if (
     result.isSuccess &&
@@ -54,6 +77,8 @@ export const LoginFormComponent = (): JSX.Element => {
       <Navigate to="/registration/step1" state={{ from: location }} replace />
     );
   }
+
+
   return (
     <MainComponent>
       <div className="auth-container">
@@ -61,6 +86,9 @@ export const LoginFormComponent = (): JSX.Element => {
           <div className="auth-form__logo">
             <img src={logo} alt="logo" />
           </div>
+
+          <NotificationComponent />
+
           {defaultMFA && defaultMFA !== 'None' ? <MfaLogin username={getValues().username} password={getValues().password} mfa={defaultMFA} /> : <>
             <h1 className="auth-form__title">{t("SIGN_IN.TITLE")}</h1>
             <div className="auth-form__subtitle">{t("SIGN_IN.SUB_TITLE")}</div>
@@ -105,7 +133,8 @@ export const LoginFormComponent = (): JSX.Element => {
                 disabled={
                   !formState.isDirty ||
                   !formState.isValid ||
-                  formState.isSubmitted
+                  formState.isSubmitting ||
+                  result.isLoading
                 }
               >
                 {t("SIGN_IN.BUTTONS.LOGIN")}

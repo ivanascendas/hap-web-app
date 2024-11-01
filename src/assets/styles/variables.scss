@@ -1,15 +1,26 @@
 //colors
-$primary_900: #130603;
-$primary_700: #9e310f;
-$primary_600: rgb(234, 48, 31);
-$primary_500: #ef642d;
-$primary_400: rgb(246, 162, 96);
+$primary900: #130603;
+$primary700: #9e310f;
+$primary600: rgb(234, 48, 31);
+$primary500: #ef642d;
+$primary400: rgb(246, 162, 96);
+$primaryBlue: #005D8A;
+$secondaryGray: #595959;
+$secondaryGray600: #4c4c4c;
 $secondary700: #3c515f;
-$secondary: #f5f7fa;
+$secondary: #f5f7fa; //
 $secondary100: #ffffff;
 $error: #ff0000;
-$error_border: #d25422;
+$errorBorder: #d25422;
 
 //size
-$mobile_size: 767px;
+$mobileSize: 768px;
+$mobileSmallSize: 540px;
+$desktopMdSize: 900px;
+$desktopLgSize: 1200px;
 $placeholder_size: 18px;
+
+@mixin theme {
+    --mui-primary-main: #{$primary500};
+    --mui-secondary-main: #{$secondary};
+}

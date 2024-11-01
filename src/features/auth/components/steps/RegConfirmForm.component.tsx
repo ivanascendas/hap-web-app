@@ -25,6 +25,8 @@ import { Dayjs } from "dayjs";
 import { getErrorMessage } from "../../../../shared/utils/getErrorMessage";
 import { usePasswordValidator } from "../../../../shared/utils/password.validator";
 
+import checkedImg from "../../../../assets/img/forms/otp-done.svg";
+
 export const RegConfirmFormComponent = (): JSX.Element => {
   const { t } = useTranslation();
   const location = useLocation();
@@ -69,7 +71,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
     phoneNumberConfirmed,
     password,
   }: UserConfirmDataModel) => {
-    dispatch(setUser({ emailConfirmed, dobIsVerified, phoneNumberConfirmed }));
+    dispatch(setUser({ emailConfirmed, dobIsVerified, phoneNumberConfirmed, password }));
   };
 
   useEffect(() => {
@@ -116,83 +118,85 @@ export const RegConfirmFormComponent = (): JSX.Element => {
       <div className="registration__subtitle">
         {t("SIGN_UP.DESCRIPTION_STEP_3")}
       </div>
-      <form className="registration__form" onSubmit={handleSubmit(onSubmit)}>
-        <div className="registration__input-container">
-          <label
-            className="registration__label label-question required"
-            title={t("MFA.ENTER_EMAIL_OTP")}
-            htmlFor="registration-acc-email"
-            aria-label={t("MFA.ENTER_EMAIL_OTP")}
-          >
-            {t("MFA.ENTER_EMAIL_OTP")}
-          </label>
+      <div className="registration__input-container">
+        <label
+          className="registration__label label-question required"
+          title={t("MFA.ENTER_EMAIL_OTP")}
+          htmlFor="registration-acc-email"
+          aria-label={t("MFA.ENTER_EMAIL_OTP")}
+        >
+          {t("MFA.ENTER_EMAIL_OTP")}
+        </label>
 
-          <OtpInputComponent
-            isChecked={checkEmailResult.isSuccess}
-            btnLabel="Check"
-            resendLabel="Resend OTP"
-            onResend={() =>
-              accountNumber &&
-              email &&
-              resendEmail({
-                UserId: accountNumber.toString() || "",
-                EmailId: email.toString() || "",
-              })
-            }
-            onSubmit={checkEmailCode}
-          />
-        </div>
-        <div className="registration__input-container">
-          <label
-            className="registration__label label-question required"
-            title={t("MFA.ENTER_PHONE_OTP")}
-            htmlFor="registration-acc-number"
-            aria-label={t("MFA.ENTER_PHONE_OTP")}
-          >
-            {t("MFA.ENTER_PHONE_OTP")}
-          </label>
-          <OtpInputComponent
-            isChecked={checkSMSResult.isSuccess}
-            btnLabel="Check"
-            resendLabel="Resend OTP"
-            onResend={() =>
-              accountNumber &&
-              phone &&
-              resendSMS({
-                UserId: accountNumber.toString() || "",
-                PhoneNumber: phone.toString() || "",
-              })
-            }
-            onSubmit={checkSMSCode}
-          />
-        </div>
+        <OtpInputComponent
+          isChecked={checkEmailResult.isSuccess}
+          btnLabel="Check"
+          resendLabel="Resend OTP"
+          onResend={() =>
+            accountNumber &&
+            email &&
+            resendEmail({
+              UserId: accountNumber.toString() || "",
+              EmailId: email.toString() || "",
+            })
+          }
+          onSubmit={(otp) => checkEmailCode({ otp, accountNumber: accountNumber?.toString() || '' })}
+        />
+      </div>
+      <div className="registration__input-container">
+        <label
+          className="registration__label label-question required"
+          title={t("MFA.ENTER_PHONE_OTP")}
+          htmlFor="registration-acc-number"
+          aria-label={t("MFA.ENTER_PHONE_OTP")}
+        >
+          {t("MFA.ENTER_PHONE_OTP")}
+        </label>
+        <OtpInputComponent
+          isChecked={checkSMSResult.isSuccess}
+          btnLabel="Check"
+          resendLabel="Resend OTP"
+          onResend={() =>
+            accountNumber &&
+            phone &&
+            resendSMS({
+              UserId: accountNumber.toString() || "",
+              PhoneNumber: phone.toString() || "",
+            })
+          }
+          onSubmit={(otp) => checkSMSCode({ otp, accountNumber: accountNumber?.toString() || '' })}
+        />
+      </div>
 
-        <div className="registration__input-container">
-          <label
-            className="registration__label label-question required"
-            title={t("MESSAGES.REGISTRATION_BIRTH_DATES_TOOLTIP")}
-            htmlFor="phone-input"
-            aria-label={t("LABELS.ENTER_BIRTH_DATE")}
-          >
-            {t("LABELS.ENTER_BIRTH_DATE")}
-          </label>
-          <Grid container spacing={0} className="otp-input">
-            <Grid size={8}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker format="DD/MM/YYYY" value={dob} onChange={setDOB} />
-              </LocalizationProvider>
-            </Grid>
-            <Grid size={4}>
-              <button
-                className="otp-input__button"
-                onClick={() => dob && checkDOB(dob.toISOString())}
-              >
-                Check
-              </button>
-            </Grid>
-            <Grid size={8}></Grid>
+      <div className="registration__input-container">
+        <label
+          className="registration__label label-question required"
+          title={t("MESSAGES.REGISTRATION_BIRTH_DATES_TOOLTIP")}
+          htmlFor="phone-input"
+          aria-label={t("LABELS.ENTER_BIRTH_DATE")}
+        >
+          {t("LABELS.ENTER_BIRTH_DATE")}
+        </label>
+        <Grid container spacing={0} className="otp-input">
+          <Grid size={8}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker format="DD/MM/YYYY" value={dob} onChange={setDOB} />
+            </LocalizationProvider>
           </Grid>
-        </div>
+          <Grid size={4}>
+            {checkDOBResult.isSuccess ? (
+              <img src={checkedImg} className="otp-input__checked" />
+            ) : (<button
+              className="otp-input__button"
+              onClick={() => dob && checkDOB({ dob: dob.toISOString(), accountNumber: accountNumber?.toString() || '' })}
+            >
+              Check
+            </button>)}
+          </Grid>
+          <Grid size={8}></Grid>
+        </Grid>
+      </div>
+      <form className="registration__form" onSubmit={handleSubmit(onSubmit)}>
         <div className="h5">{t("LABELS.PASSWORDS_INFO")}</div>
         <div className="registration__input-container">
           <Grid container spacing={2}>
@@ -222,6 +226,8 @@ export const RegConfirmFormComponent = (): JSX.Element => {
                     "aria-invalid": !!errors.password,
                   },
                 }}
+
+                type="password"
               />
             </Grid>
             <Grid size={6}>
@@ -249,7 +255,9 @@ export const RegConfirmFormComponent = (): JSX.Element => {
                   htmlInput: {
                     "aria-invalid": !!errors.confirmPassword,
                   },
+
                 }}
+                type="password"
               />
             </Grid>
           </Grid>
@@ -286,8 +294,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
             !checkEmailResult.isSuccess ||
             !checkDOBResult.isSuccess ||
             !formState.isDirty ||
-            !formState.isValid ||
-            formState.isSubmitted
+            !formState.isValid
           }
         >
           {t("SIGN_UP.BUTTONS.NEXT")}

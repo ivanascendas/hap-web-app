@@ -8,11 +8,16 @@ import {
 } from "../dtos/tempPassword.dto";
 import { ForgotPasswordRequestDto } from "../dtos/forgotPassword.dto";
 import customBaseQuery from "../utils/customBaseQuery";
-import { setTmpToken, setToken, setUser } from "../redux/slices/authSlice";
+import { clearToken, clearUser, setTmpToken, setToken, setUser } from "../redux/slices/authSlice";
 import { verificationApi } from "./Verification.service";
 import { RootState } from "../redux/store";
-import { createSelector } from "@reduxjs/toolkit";
-import { To } from "react-router-dom";
+import { createSelector, ThunkDispatch, UnknownAction } from "@reduxjs/toolkit";
+import { RegistrationRequestDto } from "../dtos/registration.dto";
+import { setloading } from "../redux/slices/loaderSlice";
+import { ResetPasswordDto } from "../dtos/resetPassword.dto";
+import { errorHandler } from "../utils/getErrorMessage";
+import { UserModel } from "../models/user.model";
+import { notificationsApi } from "./Notifications.service";
 
 /**
  * Encodes a string to a URL-safe base64 string.
@@ -25,11 +30,31 @@ const base64EncodeUrl = (str: string): string => {
   return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/\\=+$/, "");
 };
 
+/**
+ * Converts an object of key-value pairs into a URL-encoded string.
+ *
+ * @param data - An object containing the key-value pairs to be encoded.
+ * @returns A URL-encoded string representation of the input object.
+ */
 const toUrlEncoded = (data: { [key: string]: string }) => {
   return Object.keys(data)
     .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
     .join("&");
 };
+
+/**
+ * Handles the processing of an authentication token received from the server.
+ *
+ * @param data - The `TokenDto` object containing the authentication token.
+ * @param dispatch - The Redux dispatch function to update the application state.
+ */
+export const handleToken = (data: TokenDto, dispatch: ThunkDispatch<RootState, unknown, UnknownAction>) => {
+  dispatch(setloading(true));
+  dispatch(setToken(data));
+  dispatch(authApi.endpoints.userdata.initiate());
+  dispatch(notificationsApi.endpoints.getNotificationsCount.initiate());
+};
+
 
 /**
  * Provides a set of API endpoints for authentication-related operations, including login, logout, and checking temporary password.
@@ -39,6 +64,25 @@ export const authApi = createApi({
   baseQuery: customBaseQuery,
   tagTypes: ["Check", "Token", "User"],
   endpoints: (builder) => ({
+
+    userdata: builder.query<UserModel, void>({
+      query: () => ({
+        url: "/api/user",
+        method: "GET",
+      }),
+      onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
+        try {
+          dispatch(setloading(true));
+          const { data } = await queryFulfilled;
+          dispatch(setUser(data));
+        } catch (error) {
+          dispatch(errorHandler(error));
+        } finally {
+          dispatch(setloading(false));
+        }
+      }
+    }),
+
     /**
      * Sends a POST request to the `/token` endpoint with the provided `LoginDto` object, and returns the `TokenDto` object.
      *
@@ -65,14 +109,22 @@ export const authApi = createApi({
       },
       onQueryStarted: async (dto,
         { dispatch, queryFulfilled },) => {
+        try {
+          dispatch(setloading(true));
+          const { data } = await queryFulfilled;
+          dispatch(verificationApi.endpoints.verificationStatus.initiate(parseInt(dto.username)));
+          if (data.defaultmfa) {
+            dispatch(setUser({ defaultMFA: data.defaultmfa }));
+            dispatch(setTmpToken(data));
+          } else {
+            handleToken.call(this, data, dispatch);
 
-        const { data } = await queryFulfilled;
-        dispatch(verificationApi.endpoints.verificationStatus.initiate(parseInt(dto.username)));
-        if (data.defaultmfa) {
-          dispatch(setUser({ defaultMFA: data.defaultmfa }));
-          dispatch(setTmpToken(data));
-        } else {
-          dispatch(setToken(data));
+          }
+
+        } catch (error) {
+          dispatch(errorHandler(error));
+        } finally {
+          dispatch(setloading(false));
         }
 
       },
@@ -107,8 +159,15 @@ export const authApi = createApi({
       },
       onQueryStarted: async (dto,
         { dispatch, queryFulfilled }) => {
-        const { data } = await queryFulfilled;
-        dispatch(setToken(data));
+        try {
+          dispatch(setloading(true));
+          const { data } = await queryFulfilled;
+          handleToken.call(this, data, dispatch);
+        } catch (error) {
+          dispatch(errorHandler(error));
+        } finally {
+          dispatch(setloading(false));
+        }
       },
       transformResponse: (response: TokenDto) => {
         return response;
@@ -119,11 +178,24 @@ export const authApi = createApi({
      *
      * @returns An object with the URL and HTTP method for the logout request.
      */
-    logout: builder.mutation({
+    logout: builder.mutation<void, void>({
       query: () => ({
-        url: "/logout",
+        url: "/api/user/logout",
         method: "POST",
       }),
+      onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
+        try {
+          dispatch(setloading(true));
+          await queryFulfilled;
+          dispatch(clearUser());
+          dispatch(clearToken());
+          dispatch(setloading(false));
+        } catch (error) {
+          dispatch(errorHandler(error));
+        } finally {
+          dispatch(setloading(false));
+        }
+      }
     }),
     /**
      * Sends a POST request to the `/api/user/checkTempPassword` endpoint with the provided `CheckTempPasswordRequestDto` object, and returns the `CheckTempPasswordResponseDto` object.
@@ -144,17 +216,24 @@ export const authApi = createApi({
         dto: CheckTempPasswordRequestDto,
         { dispatch, queryFulfilled },
       ) => {
-        const { data } = await queryFulfilled;
+        try {
+          dispatch(setloading(true));
+          const { data } = await queryFulfilled;
 
-        if (data.code === '1') {
-          dispatch(
-            authApi.endpoints.login.initiate({
-              username: dto.accountNumber,
-              password: dto.tempPassword,
-            }),
-          );
+          if (data && data.code === '1') {
+            dispatch(
+              authApi.endpoints.login.initiate({
+                username: dto.accountNumber,
+                password: dto.tempPassword,
+              }),
+            );
+          }
+          dispatch(setUser({ accountNumber: parseInt(dto.accountNumber), tempPassword: dto.tempPassword }));
+        } catch (error) {
+          dispatch(errorHandler(error));
+        } finally {
+          dispatch(setloading(false));
         }
-        dispatch(setUser({ accountNumber: parseInt(dto.accountNumber) }));
       },
     }),
 
@@ -171,15 +250,61 @@ export const authApi = createApi({
         body,
       }),
     }),
+
+    /**
+     * Sends a POST request to the `/api/user/register` endpoint with the provided `RegistrationRequestDto` object, and returns `void`.
+     *
+     * @param body - The `RegistrationRequestDto` object containing the data to be sent in the request body.
+     * @returns `void`
+     * @remarks
+     * After a successful registration, this method will also initiate a login request with the provided username and password.
+     */
+    regitration: builder.mutation<void, RegistrationRequestDto>({
+      query: (body) => ({
+        url: "/api/user/register",
+        method: "POST",
+        body,
+      }),
+      onQueryStarted: async (
+        dto: RegistrationRequestDto,
+        { dispatch, queryFulfilled },
+      ) => {
+        try {
+          const { data } = await queryFulfilled;
+          dispatch(authApi.endpoints.login.initiate({
+            username: dto.accountNumber,
+            password: dto.password,
+          }));
+        } catch (error) {
+          dispatch(errorHandler(error));
+        } finally {
+          dispatch(setloading(false));
+        }
+      }
+    }),
+
+    /**
+     * Sends a POST request to the `/api/user/resetPassword` endpoint with the provided `ResetPasswordDto` object, and returns `void`.
+     *
+     * @param body - The `ResetPasswordDto` object containing the data to be sent in the request body.
+     * @returns `void`
+     */
+    resetPassword: builder.mutation<void, ResetPasswordDto>({
+      query: (body) => ({
+        url: "/api/user/resetPassword",
+        method: "POST",
+        body,
+      }),
+    }),
   }),
 });
 
 
-export const selectLoginResponse = (state: RootState): TokenDto | undefined => (state.authApi.mutations.login?.data as TokenDto);
+export const selectLoginResponse = (state: RootState): TokenDto | null => (state.auth.tmpTokenData);
 
 export const selectMaskedValue = createSelector(
   selectLoginResponse,
-  (data: TokenDto | undefined) => {
+  (data: TokenDto | null) => {
     let result: string = "";
     result = data && (data.defaultmfa == 'SMS' ? data.phoneNumber : data.defaultmfa === 'Email' ? data.email : "") || "";
     return result;
@@ -193,4 +318,7 @@ export const {
   useLogoutMutation,
   useCheckTempPasswordMutation,
   useForgotPasswordMutation,
+  useRegitrationMutation,
+  useResetPasswordMutation,
+  useUserdataQuery
 } = authApi;

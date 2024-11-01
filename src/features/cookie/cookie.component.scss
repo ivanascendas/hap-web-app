@@ -1,0 +1,33 @@
+.page_wrap {
+    width: 100%;
+
+}
+
+
+.policy_btn_back {
+    font-size: 25px;
+    bottom: 55px;
+    position: fixed;
+    top: 0;
+    left: 20px;
+    line-height: 36px;
+    border: 0;
+    background: transparent;
+    outline: 0;
+    vertical-align: ceneter;
+    bottom: 80px;
+    top: auto;
+    display: flex;
+
+    img {
+        width: 30px;
+    }
+
+    span {
+        margin: 3px;
+    }
+}
+
+.data-policy-info {
+    padding-left: 25px;
+}

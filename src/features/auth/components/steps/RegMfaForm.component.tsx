@@ -1,22 +1,56 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   FormControl,
   FormControlLabel,
-  FormLabel,
   Radio,
   RadioGroup,
 } from "@mui/material";
 import { MFAMethod } from "../../../../shared/dtos/user.dto";
 import Grid from "@mui/material/Grid2";
 
-import { useDispatch } from "react-redux";
-import { Navigate, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { selectToken, selectUser } from "../../../../shared/redux/slices/authSlice";
+import { useRegitrationMutation } from "../../../../shared/services/Auth.service";
+import { UserModel } from "../../../../shared/models/user.model";
+import { RegistrationRequestDto } from "../../../../shared/dtos/registration.dto";
+
+/**
+ * RegMfaFormComponent is a React functional component that renders a form for 
+ * multi-factor authentication (MFA) registration. It allows users to select 
+ * their preferred MFA method (SMS, Email, or None) and submit their registration 
+ * details.
+ *
+ * @returns {JSX.Element} The rendered JSX element for the MFA registration form.
+ *
+ * @remarks
+ * - The component uses the `useTranslation` hook from `react-i18next` for 
+ *   internationalization.
+ * - The `useNavigate` hook from `react-router-dom` is used for navigation.
+ * - The `useDispatch` and `useSelector` hooks from `react-redux` are used for 
+ *   state management.
+ * - The `useRegitrationMutation` hook is used to trigger the registration 
+ *   mutation.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * import { RegMfaFormComponent } from './RegMfaFormComponent';
+ * 
+ * const App = () => (
+ *   <RegMfaFormComponent />
+ * );
+ * 
+ * export default App;
+ * ```
+ */
 export const RegMfaFormComponent = (): JSX.Element => {
   const { t } = useTranslation();
-  const location = useLocation();
-  const dispatch = useDispatch();
-
+  const navigate = useNavigate();
+  const user: UserModel | null = useSelector(selectUser);
+  const token = useSelector(selectToken);
+  const [register] = useRegitrationMutation();
   const MFA_SMS: MFAMethod = "SMS";
   const MFA_EMAIL: MFAMethod = "Email";
   const MFA_NONE: MFAMethod = "None";
@@ -27,8 +61,31 @@ export const RegMfaFormComponent = (): JSX.Element => {
     setMFA((event.target as HTMLInputElement).value as MFAMethod);
   };
 
+  useEffect(() => {
+    console.log({ token });
+    if (token) {
+      navigate("/statements/rates");
+      console.log({ token });
+    }
+  }, [token]);
+
   const handleGetStarted = () => {
     console.log("handleGetStarted");
+    if (user) {
+      register({
+        accountNumber: user.accountNumber?.toString(),
+        tempPassword: user.tempPassword,
+        phone: user.phone,
+        email: user.email,
+        password: user.password,
+        confirmPassword: user.password,
+        defaultMFA: mfa,
+        emailConfirmed: user.emailConfirmed ? "true" : "false",
+        phoneNumberConfirmed: user.phoneNumberConfirmed ? "true" : "false",
+        PhoneCountryCode: user.phoneCountryCode,
+        PhoneExcludingCountryCode: user.phoneExcludingCountryCode
+      } as RegistrationRequestDto);
+    }
   };
 
 
@@ -75,16 +132,22 @@ export const RegMfaFormComponent = (): JSX.Element => {
             </RadioGroup>
           </FormControl>
         </div>
-
-        <button
-          type="submit"
-          className="button-primary registration__button"
-          role="button"
-          onClick={handleGetStarted}
-        >
-          {t("SIGN_UP.BUTTONS.GET_STARTED")}
-        </button>
       </form>
+      <button
+        type="submit"
+        className="button-primary registration__button"
+        role="button"
+        onClick={handleGetStarted}
+      >
+        {t("SIGN_UP.BUTTONS.GET_STARTED")}
+      </button>
+      <Link
+        className="button-secondary back-btn registration__back"
+        to="/registration/step2"
+      >
+        {t("BUTTONS.BACK")}
+      </Link>
+
     </div>
   );
 };

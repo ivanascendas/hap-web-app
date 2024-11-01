@@ -1,0 +1,1 @@
+export type DepartmentDto = { incDept: string; balance: number; sortKey: number; displayMode: number; }

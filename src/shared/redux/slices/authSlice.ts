@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserModel } from "../../models/user.model";
 import { TokenDto } from "../../dtos/token.dto";
 import { RootState } from "../store";
+import localStorageService from "../../services/Storage.service";
 
 export type AuthState = {
   user: UserModel | null;
@@ -19,33 +20,58 @@ const userSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser: (state: AuthState, action: PayloadAction<Partial<UserModel>>) => {
-      return { ...state, user: { ...state.user, ...action.payload } };
+    /**
+     * Updates the user state in the auth slice with the provided partial user data.
+     * @param state - The current auth state.
+     * @param action - The action payload containing the partial user data to update.
+     */
+    setUser: (state, action: PayloadAction<Partial<UserModel>>) => {
+      state.user = { ...state.user, ...action.payload } as UserModel;
     },
-    setToken: (
-      state: AuthState,
-      action: PayloadAction<TokenDto>,
-    ): AuthState => {
-      return { ...state, tokenData: action.payload, tmpTokenData: null };
+    /**
+     * Updates the token data in the auth state and stores the token in local storage.
+     * @param state - The current auth state.
+     * @param action - The action payload containing the new token data to update.
+     */
+    setToken: (state, action: PayloadAction<TokenDto>) => {
+      console.log(action.payload);
+      localStorageService.setItem('token', JSON.stringify(action.payload));
+      state.tokenData = action.payload;
+      state.tmpTokenData = null;
     },
-    setTmpToken: (
-      state: AuthState,
-      action: PayloadAction<TokenDto>,
-    ): AuthState => {
-      return { ...state, tmpTokenData: action.payload };
+    /**
+     * Updates the temporary token data in the auth state.
+     * @param state - The current auth state.
+     * @param action - The action payload containing the new temporary token data to update.
+     */
+    setTmpToken: (state, action: PayloadAction<TokenDto>) => {
+      state.tmpTokenData = action.payload;
     },
-    clearUser: (state: AuthState) => {
-      return { ...state, user: null };
+    /**
+     * Clears the user data from the auth state.
+     * @param state - The current auth state.
+     */
+    clearUser: (state) => {
+      state.user = null;
     },
-    clearToken: (state: AuthState) => {
-      return { ...state, tokenData: null };
+    /**
+     * Clears the token data from the auth state and removes the token from local storage.
+     * @param state - The current auth state.
+     */
+    clearToken: (state) => {
+      console.log("clearToken");
+      localStorageService.removeItem('token');
+      state.tokenData = null;
     },
-    clearTmpToken: (state: AuthState) => {
-      return { ...state, tmpTokenData: null };
+    /**
+     * Clears the temporary token data from the auth state.
+     * @param state - The current auth state.
+     */
+    clearTmpToken: (state) => {
+      state.tmpTokenData = null;
     },
-  },
+  }
 });
-
 export const selectUser = (state: RootState): UserModel | null => state.auth.user;
 export const selectTmpToken = (state: RootState): TokenDto | null => state.auth.tmpTokenData;
 export const selectToken = (state: RootState): TokenDto | null => state.auth.tokenData;

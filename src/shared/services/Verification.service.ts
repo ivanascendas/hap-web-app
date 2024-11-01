@@ -5,10 +5,10 @@ import {
   EmailOTPRequestDto,
   SmsOTPRequestDto,
 } from "../dtos/verification.dtos";
-import { RootState } from "../redux/store";
-import { AuthState, setUser } from "../redux/slices/authSlice";
+import { setUser } from "../redux/slices/authSlice";
 import { UserAuthStatusDto } from "../dtos/user.dto";
-import { createSelector } from "@reduxjs/toolkit";
+import { MfaDto } from "../dtos/mfa.dto";
+import { DobDto } from "../dtos/dob.dto";
 
 export const verificationApi = createApi({
   reducerPath: "verificationApi",
@@ -31,9 +31,6 @@ export const verificationApi = createApi({
           },
         };
       },
-      transformResponse: (response: { success: boolean }) => {
-        return response.success;
-      },
     }),
     /**
      * Sends a request to initiate an email one-time password (OTP) verification.
@@ -49,9 +46,6 @@ export const verificationApi = createApi({
           body,
         };
       },
-      transformResponse: (response: { success: boolean }) => {
-        return response.success;
-      },
     }),
     /**
      * Sends a request to confirm a SMS one-time password (OTP) verification.
@@ -59,33 +53,15 @@ export const verificationApi = createApi({
      * @param otp - The SMS OTP code to be verified.
      * @returns A boolean indicating whether the SMS OTP verification was successful.
      */
-    smsOtpConfirmation: builder.mutation<boolean, string>({
-      query: (otp: string) => {
+    smsOtpConfirmation: builder.mutation<boolean, MfaDto>({
+      query: ({ otp, accountNumber }) => {
         return {
-          url: `/api/user/PhoneConfirmation?userid=&token=${otp}`,
+          url: `/api/user/PhoneConfirmation?userid=${accountNumber}&token=${otp}`,
           method: "POST",
           headers: {
             Authorization: undefined,
           },
         };
-      },
-      async onQueryStarted(otp, { dispatch, getState, queryFulfilled }) {
-        const { user }: AuthState = (getState() as RootState).auth;
-        if (user) {
-          dispatch(
-            verificationApi.util.updateQueryData(
-              "smsOtpConfirmation" as never,
-              otp as never,
-              (draft: { url: string }) => {
-                draft.url = `/api/user/PhoneConfirmation?userid=${user.accountNumber}&token=${otp}`;
-              },
-            ),
-          );
-        }
-        await queryFulfilled;
-      },
-      transformResponse: (response: { success: boolean }) => {
-        return response.success;
       },
     }),
     /**
@@ -94,34 +70,15 @@ export const verificationApi = createApi({
      * @param otp - The email OTP code to be verified.
      * @returns A boolean indicating whether the email OTP verification was successful.
      */
-    emailOtpConfirmation: builder.mutation<boolean, string>({
-      query: (otp: string) => {
+    emailOtpConfirmation: builder.mutation<boolean, MfaDto>({
+      query: ({ otp, accountNumber }) => {
         return {
-          url: `/api/user/EmailRegConfirmation?userid=&token=${otp}`,
+          url: `/api/user/EmailRegConfirmation?userid=${accountNumber}&token=${otp}`,
           method: "POST",
           headers: {
             Authorization: undefined,
           },
         };
-      },
-
-      async onQueryStarted(otp, { dispatch, getState, queryFulfilled }) {
-        const { user }: AuthState = (getState() as RootState).auth;
-        if (user) {
-          dispatch(
-            verificationApi.util.updateQueryData(
-              "emailOtpConfirmation" as never,
-              otp as never,
-              (draft: { url: string }) => {
-                draft.url = `/api/user/EmailRegConfirmation?userid=${user.accountNumber}&token=${otp}`;
-              },
-            ),
-          );
-        }
-        await queryFulfilled;
-      },
-      transformResponse: (response: { success: boolean }) => {
-        return response.success;
       },
     }),
 
@@ -131,35 +88,23 @@ export const verificationApi = createApi({
      * @param dob - The DOB OTP code to be verified.
      * @returns A boolean indicating whether the DOB OTP verification was successful.
      */
-    dobConfirmation: builder.mutation<boolean, string>({
-      query: (dob: string) => {
+    dobConfirmation: builder.mutation<boolean, DobDto>({
+      query: ({ dob, accountNumber }) => {
         return {
-          url: `/api/user/DOBRegConfirmation?userid=&dob=${dob}`,
+          url: `/api/user/DOBRegConfirmation?userid=${accountNumber}&dob=${dob}`,
           method: "POST",
           headers: {
             Authorization: undefined,
           },
         };
       },
-      async onQueryStarted(dob, { dispatch, getState, queryFulfilled }) {
-        const { user }: AuthState = (getState() as RootState).auth;
-        if (user) {
-          dispatch(
-            verificationApi.util.updateQueryData(
-              "dobConfirmation" as never,
-              dob as never,
-              (draft: { url: string }) => {
-                draft.url = `/api/user/DOBRegConfirmation?userid=${user.accountNumber}&dob=${dob}`;
-              },
-            ),
-          );
-        }
-        await queryFulfilled;
-      },
-      transformResponse: (response: { success: boolean }) => {
-        return response.success;
-      },
     }),
+    /**
+     * Sends a request to check the verification status of a user's account.
+     *
+     * @param accountNumber - The account number of the user to check.
+     * @returns A `UserAuthStatusDto` object containing the user's phone number and email confirmation status, as well as the default MFA method.
+     */
     verificationStatus: builder.mutation<UserAuthStatusDto, number>({
       query: (accountNumber) => ({
         url: `/api/user/CheckValidContact?AccountNumber=${accountNumber}`,

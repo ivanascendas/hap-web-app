@@ -1,0 +1,77 @@
+@import '../../../assets/styles/variables.scss';
+
+.drawer-container {
+    overflow: visible !important;
+    display: flex;
+    border-right: 1px solid rgb(218, 218, 218);
+    flex-direction: column;
+    background: rgb(245, 247, 250);
+    background: linear-gradient(85deg,
+            rgba(245, 247, 250, 1) 0%,
+            rgba(235, 237, 240, 1) 100%);
+
+    .welcome-block {
+        margin-left: 15px;
+
+        .welcome-text {
+            font-size: 13px !important;
+            opacity: 0.7;
+        }
+    }
+}
+
+
+
+.MuiDrawer-paper {
+
+    @media screen and (min-width: $mobileSize) {
+        background: none !important;
+        border: none !important;
+        overflow: visible !important;
+    }
+
+
+    .MuiListItemButton-root {
+
+        .MuiTypography-root {
+            font-weight: 700 !important;
+            font-size: 14px;
+        }
+
+        @media screen and (min-width: $mobileSize) {
+            overflow: visible !important;
+        }
+
+        &.active,
+        &.Mui-selected {
+            background: rgb(245, 247, 250);
+            position: relative;
+            color: $primary700 !important;
+            fill: $primary700 !important;
+            background: linear-gradient(85deg,
+                    rgba(245, 247, 250, 1) 0%,
+                    rgba(222, 224, 227, 1) 100%);
+
+            svg {
+                font-weight: 700 !important;
+                color: $primary700 !important;
+                fill: $primary700 !important;
+            }
+
+            &:after {
+                content: "";
+                right: -29px;
+                border-top: 25px solid transparent;
+                border-bottom: 25px solid transparent;
+                border-left: 29px solid #dee0e3;
+                position: absolute;
+
+
+                @media screen and (max-width: $desktopMdSize) {
+                    display: none;
+                }
+            }
+        }
+    }
+
+}

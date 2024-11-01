@@ -1,0 +1,9 @@
+import React from "react";
+import './Account.component.scss';
+import { Box } from "@mui/material";
+
+export const AccountComponent = (): JSX.Element => {
+    return (<Box sx={{ flexGrow: 1 }} >
+        Account
+    </Box>);
+};

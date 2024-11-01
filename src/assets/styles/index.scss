@@ -3,6 +3,7 @@
 @import "forms.scss";
 
 body {
+  @include theme;
   margin: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -24,12 +25,22 @@ code {
     monospace;
 }
 
-a {
-  color: $primary_700;
+a,
+.link-element {
+  color: $primary700;
   text-decoration: none;
   cursor: pointer;
   line-height: 15.4px;
   font-size: 14px;
+
+  p {
+    color: $primary700;
+  }
+
+  svg {
+    fill: $primary700;
+    color: $primary700;
+  }
 }
 
 .link-underline {
@@ -50,6 +61,111 @@ a {
 .mt-20 {
   margin-top: 20px !important;
 }
+
 .mb-20 {
   margin-bottom: 20px !important;
+}
+
+.h_title {
+  display: inline-flex;
+  padding-bottom: 4px;
+  font-size: 26px;
+  color: $primary900;
+  font-weight: bold;
+}
+
+.personal_box {
+  box-shadow: 0 0 9px 0px rgba(220, 224, 231, 0.85);
+  border-radius: 11px;
+  padding: 20px;
+  background: $secondary100;
+  margin-bottom: 74px;
+  line-height: 1.2;
+  max-width: 93%;
+  margin: 0 35px;
+
+
+}
+
+.page_wrap {
+
+  @media screen and (min-width: $mobileSize) {
+    height: 100vh;
+    background: $secondary;
+    box-sizing: border-box;
+    padding: 80px 0 50px 0;
+    position: relative;
+  }
+
+  &_height {
+    box-sizing: border-box;
+    max-width: 1040px;
+    margin: auto;
+    padding-bottom: 1px;
+
+    &_title {
+      @media screen and (min-width: 768px) {
+        display: flex;
+        margin-top: 4px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 35px 0;
+        background: #f5f7fa;
+      }
+
+      .policy_title {
+        margin-top: 77px;
+      }
+
+      .h_title.cookie_title {
+        display: block;
+
+        span {
+          font-weight: 400;
+          font-size: 20px;
+        }
+      }
+    }
+
+
+
+    .personal_box {
+      table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+      }
+
+      td,
+      th {
+        padding: 5px;
+        border: 1px solid #ccc;
+      }
+    }
+
+  }
+}
+
+.clr_black {
+  color: #000;
+}
+
+.clr_grey {
+  color: #7f7f7f;
+}
+
+._light_grey {
+  background-color: #e0e0e0;
+}
+
+.clr_orange {
+  color: #ef642d;
+}
+
+.clr_green {
+  color: #23af2d;
+}
+
+.text_red {
+  color: #ee1616;
 }

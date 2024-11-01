@@ -7,6 +7,7 @@ import { RegistrationStepper } from "./steps/RegistrationStepper.component";
 
 import "../Auth.component.scss";
 import { useTranslation } from "react-i18next";
+import { NotificationComponent } from "../../../shared/components/Notification.component";
 
 export const RegistrationComponent = (): JSX.Element => {
   const { t } = useTranslation();
@@ -20,6 +21,8 @@ export const RegistrationComponent = (): JSX.Element => {
             <div className="auth-form__logo">
               <img src={logo} alt="logo" />
             </div>
+            <NotificationComponent />
+
             <div className="auth-form__subtitle" role="navigation">
               {t("SIGN_UP.ALREADY_REGISTERED")}
               <Link to="/login" className="link-underline">

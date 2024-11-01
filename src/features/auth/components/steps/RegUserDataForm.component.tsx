@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IntlTelInput } from "../../../../shared/components/IntlTelInput.component";
 import { Checkbox, FormControlLabel, TextField } from "@mui/material";
@@ -9,11 +9,14 @@ import { useForm } from "react-hook-form";
 import { getErrorMessage } from "../../../../shared/utils/getErrorMessage";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate, useLocation } from "react-router-dom";
+import { Iti } from "intl-tel-input";
+import { setError } from "../../../../shared/redux/slices/errorSlice";
+import StorageService from "../../../../shared/services/Storage.service";
 export const RegUserDataFormComponent = (): JSX.Element => {
   const { t } = useTranslation();
   const location = useLocation();
   const dispatch = useDispatch();
-
+  const [iniTelReff, setIti] = useState<Iti>();
   const { email, phone, accountNumber } = useSelector(selectUser) || {};
 
   const {
@@ -24,7 +27,12 @@ export const RegUserDataFormComponent = (): JSX.Element => {
   } = useForm<UserDataDto>({ mode: "all", defaultValues: { accountNumber } });
 
   const onSubmit = ({ accountNumber, email, phone }: UserDataDto) => {
-    dispatch(setUser({ accountNumber, email, phone }));
+    if (StorageService.getBoolean("cookieBanner")) {
+      const countryData = iniTelReff?.getSelectedCountryData();
+      dispatch(setUser({ accountNumber, email, phone, phoneCountryCode: countryData?.dialCode, phoneExcludingCountryCode: phone.replace(countryData?.dialCode || '353', '') }));
+    } else {
+      dispatch(setError({ message: t("ERRORS.PLS_ACCEPT_COOKIE") }));
+    }
   };
 
   if (!accountNumber) {
@@ -32,11 +40,12 @@ export const RegUserDataFormComponent = (): JSX.Element => {
   }
 
   if (formState.isSubmitted && email && phone) {
-    console.log({ isSubmitted: formState.isSubmitted, email, phone });
     return (
       <Navigate to="/registration/step2" state={{ from: location }} replace />
     );
   }
+
+
 
   return (
     <div role="form">
@@ -113,6 +122,7 @@ export const RegUserDataFormComponent = (): JSX.Element => {
               initialCountry: "ie",
               separateDialCode: true,
             }}
+            getIti={setIti}
           />
         </div>
         <div className="registration__input-container">
@@ -136,7 +146,7 @@ export const RegUserDataFormComponent = (): JSX.Element => {
           className="button-primary registration__button"
           role="button"
           disabled={
-            !formState.isDirty || !formState.isValid || formState.isSubmitted
+            !formState.isDirty || !formState.isValid || iniTelReff?.isValidNumber() === false
           }
         >
           {t("SIGN_UP.BUTTONS.NEXT")}
