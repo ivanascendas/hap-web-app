@@ -1,0 +1,58 @@
+@import '../../assets/styles/variables.scss';
+
+table {
+    margin-bottom: 20px;
+
+
+    th {
+        font-size: 13px;
+        font-weight: 400;
+        color: $secondaryGray;
+        background-color: #f1f3f5 !important;
+        border: none !important;
+        font-size: 14px;
+        color: #3c3e3f;
+        font-weight: bold;
+        padding: 12px 17px 12px;
+    }
+
+    tbody {
+        cursor: pointer;
+
+        .MuiTableRow-root {
+            border: 1px solid #fbfbfb;
+            border-bottom: 0px;
+        }
+
+        .MuiTableRow-root:hover {
+            border: 1px solid #e09d8e;
+        }
+
+        tr {
+            background: #fbfbfb;
+            border: 1px solid #fbfbfb;
+            border-bottom: 0px;
+            z-index: 1;
+
+            &:hover {
+                background: #fdf9f8;
+                border: 1px solid #e09d8e;
+                z-index: 2;
+            }
+
+        }
+
+        td {
+            border: none !important;
+            padding: 12px 17px 12px;
+
+            &.clr_green {
+                color: $success;
+            }
+
+            &.text_red {
+                color: $error;
+            }
+        }
+    }
+}

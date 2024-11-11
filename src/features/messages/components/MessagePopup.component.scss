@@ -1,0 +1,62 @@
+@import '../../../assets/styles/variables.scss';
+
+.message {
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid $secondary400;
+    margin: 5px 0;
+    background: $secondary100;
+
+    &_popup {
+        max-width: 500px;
+
+        .message_date {
+            font-size: 0.7em;
+            font-weight: 700;
+            color: $secondary500;
+        }
+
+        .message_title {
+            font-weight: 700;
+            color: $secondaryGray600;
+        }
+    }
+
+    &_icon {
+        flex: none;
+        margin-left: auto;
+        color: $secondary600;
+
+        &.unread {
+            color: $primary500;
+        }
+
+    }
+
+    &_title {
+        padding: 3px 15px;
+        font-weight: 700;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        background: linear-gradient(180deg, $secondary 0, $secondary100 50%, $secondary 100%);
+
+        span {
+            flex: 1;
+        }
+    }
+
+    &_date {
+        flex: 1;
+        color: $primary700;
+        font-size: 0.6em;
+        font-weight: 700;
+        text-align: right;
+    }
+
+    &_body {
+        padding: 15px 30px;
+        font-size: 0.8em;
+    }
+}

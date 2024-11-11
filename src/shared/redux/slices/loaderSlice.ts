@@ -3,10 +3,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export type loaderState = {
   isLoading: boolean;
   percent?: number;
+  pendingRequests: number;
 };
 
 const initialState: loaderState = {
   isLoading: false,
+  pendingRequests: 0,
 };
 
 const loaderSlice = createSlice({
@@ -20,8 +22,25 @@ const loaderSlice = createSlice({
       return { ...state, percent: action.payload };
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addMatcher(
+        (action) => action.type.endsWith('/pending'),
+        (state) => {
+          state.pendingRequests++;
+          state.isLoading = true;
+        }
+      )
+      .addMatcher(
+        (action) => action.type.endsWith('/fulfilled') || action.type.endsWith('/rejected'),
+        (state) => {
+          state.pendingRequests--;
+          state.isLoading = state.pendingRequests > 0;
+        }
+      );
+  },
 });
 
-export const { setloading, setPercent } = loaderSlice.actions;
+//export const { setloading, setPercent } = loaderSlice.actions;
 
 export default loaderSlice.reducer;

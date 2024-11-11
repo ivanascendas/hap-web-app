@@ -27,6 +27,7 @@ import logo from '../../../assets/img/logo_new_2.png';
 import logoTransparent from '../../../assets/img/logo-Transparent.png';
 import { useLogoutMutation } from '../../../shared/services/Auth.service';
 import { selectUnreadNotificationsCount } from '../../../shared/redux/slices/notificationsSlice';
+import { Skeleton } from '@mui/material';
 
 export type HeaderProps = {
     toogleDrawer?: (event?: React.MouseEvent<HTMLElement>) => void;
@@ -108,10 +109,10 @@ export const HeaderComponent = ({ toogleDrawer }: HeaderProps): JSX.Element => {
                             <MenuItem>
                                 <IconButton
                                     size="large"
-                                    aria-label="show 17 new notifications"
+                                    aria-label={`show ${unreadCount} new notifications`}
                                     color="inherit"
                                 >
-                                    <Badge badgeContent={17} color="error">
+                                    <Badge badgeContent={unreadCount} color="error">
                                         <NotificationsIcon />
                                     </Badge>
                                 </IconButton>
@@ -166,7 +167,7 @@ export const HeaderComponent = ({ toogleDrawer }: HeaderProps): JSX.Element => {
 
                         <div onClick={handleOpenUserMenu} className="welcome-block">
                             <span className="welcome-text" > {t('APP.WELCOME')}</span><br />
-                            <span className="customer-name">{user?.customerName}</span>
+                            <span className="customer-name">{user ? user.customerName : <Skeleton aria-label="Customer Name" role="progressbar" width="128px" height={18} />}</span>
                         </div>
 
 

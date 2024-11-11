@@ -34,6 +34,7 @@ export const getErrorMessage = (
 export const errorHandler = (
   error: unknown
 ) => {
+  console.log(error);
   if ((error as any).data) {
     if ((error as any).data.status == 400) {
       return setError({ message: t("ERRORS.ACCESS_DENIED") });

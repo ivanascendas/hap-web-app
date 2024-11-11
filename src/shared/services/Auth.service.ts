@@ -13,7 +13,7 @@ import { verificationApi } from "./Verification.service";
 import { RootState } from "../redux/store";
 import { createSelector, ThunkDispatch, UnknownAction } from "@reduxjs/toolkit";
 import { RegistrationRequestDto } from "../dtos/registration.dto";
-import { setloading } from "../redux/slices/loaderSlice";
+//import { setloading } from "../redux/slices/loaderSlice";
 import { ResetPasswordDto } from "../dtos/resetPassword.dto";
 import { errorHandler } from "../utils/getErrorMessage";
 import { UserModel } from "../models/user.model";
@@ -49,7 +49,7 @@ const toUrlEncoded = (data: { [key: string]: string }) => {
  * @param dispatch - The Redux dispatch function to update the application state.
  */
 export const handleToken = (data: TokenDto, dispatch: ThunkDispatch<RootState, unknown, UnknownAction>) => {
-  dispatch(setloading(true));
+  //dispatch(setloading(true));
   dispatch(setToken(data));
   dispatch(authApi.endpoints.userdata.initiate());
   dispatch(notificationsApi.endpoints.getNotificationsCount.initiate());
@@ -72,14 +72,14 @@ export const authApi = createApi({
       }),
       onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
         try {
-          dispatch(setloading(true));
+          //  dispatch(setloading(true));
           const { data } = await queryFulfilled;
           dispatch(setUser(data));
         } catch (error) {
           dispatch(errorHandler(error));
-        } finally {
+        } /*finally {
           dispatch(setloading(false));
-        }
+        }*/
       }
     }),
 
@@ -110,7 +110,7 @@ export const authApi = createApi({
       onQueryStarted: async (dto,
         { dispatch, queryFulfilled },) => {
         try {
-          dispatch(setloading(true));
+          // dispatch(setloading(true));
           const { data } = await queryFulfilled;
           dispatch(verificationApi.endpoints.verificationStatus.initiate(parseInt(dto.username)));
           if (data.defaultmfa) {
@@ -123,9 +123,10 @@ export const authApi = createApi({
 
         } catch (error) {
           dispatch(errorHandler(error));
-        } finally {
-          dispatch(setloading(false));
         }
+        /*finally {
+          dispatch(setloading(false));
+        }*/
 
       },
       transformResponse: (response: TokenDto) => {
@@ -160,14 +161,14 @@ export const authApi = createApi({
       onQueryStarted: async (dto,
         { dispatch, queryFulfilled }) => {
         try {
-          dispatch(setloading(true));
+          //dispatch(setloading(true));
           const { data } = await queryFulfilled;
           handleToken.call(this, data, dispatch);
         } catch (error) {
           dispatch(errorHandler(error));
-        } finally {
+        } /*finally {
           dispatch(setloading(false));
-        }
+        }*/
       },
       transformResponse: (response: TokenDto) => {
         return response;
@@ -185,16 +186,16 @@ export const authApi = createApi({
       }),
       onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
         try {
-          dispatch(setloading(true));
+          // dispatch(setloading(true));
           await queryFulfilled;
           dispatch(clearUser());
           dispatch(clearToken());
-          dispatch(setloading(false));
+
         } catch (error) {
           dispatch(errorHandler(error));
-        } finally {
+        } /*finally {
           dispatch(setloading(false));
-        }
+        }*/
       }
     }),
     /**
@@ -217,7 +218,7 @@ export const authApi = createApi({
         { dispatch, queryFulfilled },
       ) => {
         try {
-          dispatch(setloading(true));
+          // dispatch(setloading(true));
           const { data } = await queryFulfilled;
 
           if (data && data.code === '1') {
@@ -231,9 +232,9 @@ export const authApi = createApi({
           dispatch(setUser({ accountNumber: parseInt(dto.accountNumber), tempPassword: dto.tempPassword }));
         } catch (error) {
           dispatch(errorHandler(error));
-        } finally {
+        } /*finally {
           dispatch(setloading(false));
-        }
+        }*/
       },
     }),
 
@@ -277,9 +278,9 @@ export const authApi = createApi({
           }));
         } catch (error) {
           dispatch(errorHandler(error));
-        } finally {
+        } /*finally {
           dispatch(setloading(false));
-        }
+        }*/
       }
     }),
 

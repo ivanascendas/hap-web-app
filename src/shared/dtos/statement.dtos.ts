@@ -1,4 +1,4 @@
-import { PaggingBaseDto } from "./pagging-base.request";
+import { PaggingBaseDto, PaggingResponse } from "./pagging-base.request";
 
 export interface StatementDto {
     voucherNo: number;
@@ -13,10 +13,7 @@ export interface StatementDto {
     balance: number;
 }
 
-export interface StatementResponse {
-    items: StatementDto[];
-    nextPageLink: string | null;
-    count: number;
+export interface StatementResponse extends PaggingResponse<StatementDto> {
 }
 
 

@@ -6,6 +6,8 @@ import { useLazyGetBalanceQuery, useLazyGetLoanInfoQuery, useLazyGetPropertiesQu
 import moment from "moment";
 import currency from "../../../shared/utils/currency";
 import { useAuth } from "../../../shared/providers/Auth.provider";
+import { LoanInfoDto } from "../../../shared/dtos/statement.dtos";
+import { ColumnItem, TableComponent } from "../../../shared/components/Table.component";
 
 
 export type RentsStatementProps = {
@@ -18,8 +20,25 @@ export const LoanInfoStatementComponent = ({ department }: RentsStatementProps):
     const { t } = useTranslation();
 
     const { isAuthenticated } = useAuth();
-    const [getLoanInfo, { data: loanInfo }] = useLazyGetLoanInfoQuery();
+    const [getLoanInfo, { data: loanInfo, isFetching }] = useLazyGetLoanInfoQuery();
 
+    const columns: ColumnItem<LoanInfoDto>[] = [
+        {
+            key: 'loanNumber', label: 'LOAN_INFO.COLUMNS.LOAN_NUMBER',
+        },
+        {
+            key: 'capitalBalance',
+            label: 'LOAN_INFO.COLUMNS.CAPITAL_BALANCE',
+            rowRender: (row: LoanInfoDto) => currency.format(row.capitalBalance)
+        },
+        { key: 'interestRate', label: 'LOAN_INFO.COLUMNS.INTEREST_RATE' },
+        {
+            key: 'loanEndDate',
+            label: 'LOAN_INFO.COLUMNS.LOAN_END_DATE',
+            rowRender: (row: LoanInfoDto) => moment(row.loanEndDate).format("DD/MM/YYYY")
+        },
+
+    ];
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -32,39 +51,7 @@ export const LoanInfoStatementComponent = ({ department }: RentsStatementProps):
     return (<Box className="personal_box ">
 
         <Box className="personal_box_content">
-            <TableContainer>
-                <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>{t('LOAN_INFO.COLUMNS.LOAN_NUMBER')}</TableCell>
-                            <TableCell >{t('LOAN_INFO.COLUMNS.CAPITAL_BALANCE')}</TableCell>
-                            <TableCell >{t('LOAN_INFO.COLUMNS.INTEREST_RATE')}</TableCell>
-                            <TableCell >{t('LOAN_INFO.COLUMNS.LOAN_END_DATE')}</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {loanInfo ?
-                            <TableRow >
-                                <TableCell scope="row">
-                                    {loanInfo.loanNumber}
-                                </TableCell>
-                                <TableCell scope="row">
-                                    {currency.format(loanInfo.capitalBalance)}
-                                </TableCell>
-                                <TableCell scope="row">
-                                    {loanInfo.interestRate}
-                                </TableCell>
-                                <TableCell scope="row">
-                                    {moment(loanInfo.loanEndDate).format("DD MMM YYYY")}
-                                </TableCell>
-                            </TableRow> : <TableRow >
-                                <TableCell scope="row" colSpan={4}>
-                                    loading ...
-                                </TableCell>
-                            </TableRow>}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+            <TableComponent isLoading={isFetching} aria-label="loans table" columns={columns} rows={loanInfo ? [loanInfo] : []} />
 
         </Box>
     </Box>);

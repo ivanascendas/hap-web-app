@@ -38,7 +38,7 @@ export const MainComponent = ({
       <Loading />
       {isAuthenticated && <HeaderComponent toogleDrawer={openMenuDrawer} />}
       {isAuthenticated && <DrawerComponent ref={drawerRef} open={openMenu} onClose={openMenuDrawer} />}
-      <Box sx={{ marginLeft: { md: '0px', lg: isAuthenticated ? `${drawerWidth}px` : '0px' } }} className="main-container">{children}</Box>
+      <Box role="main" sx={{ marginLeft: { md: '0px', lg: isAuthenticated ? `${drawerWidth}px` : '0px' } }} className="main-container">{children}</Box>
       {isAuthenticated && <BottomBarСomponent />}
       <CookieBannerComponent />
     </Paper>

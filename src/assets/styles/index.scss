@@ -84,6 +84,9 @@ a,
   max-width: 93%;
   margin: 0 35px;
 
+  @media screen and (max-width: $mobileSize) {
+    margin: 0 10px;
+  }
 
 }
 
@@ -104,6 +107,8 @@ a,
     padding-bottom: 1px;
 
     &_title {
+      padding-bottom: 10px;
+
       @media screen and (min-width: 768px) {
         display: flex;
         margin-top: 4px;
@@ -129,19 +134,7 @@ a,
 
 
 
-    .personal_box {
-      table {
-        border-collapse: collapse;
-        border-spacing: 0;
-        width: 100%;
-      }
 
-      td,
-      th {
-        padding: 5px;
-        border: 1px solid #ccc;
-      }
-    }
 
   }
 }
@@ -163,9 +156,52 @@ a,
 }
 
 .clr_green {
-  color: #23af2d;
+  color: $success;
 }
 
 .text_red {
-  color: #ee1616;
+  color: $error;
+}
+
+.ripple {
+  position: relative;
+  overflow: hidden;
+  transform: translate3d(0, 0, 0);
+}
+
+.ripple:after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, #000 10%, transparent 10.01%);
+  background-repeat: no-repeat;
+  background-position: 50%;
+  transform: scale(10, 10);
+  opacity: 0;
+  transition: transform .5s, opacity 1s;
+}
+
+.ripple:active:after {
+  transform: scale(0, 0);
+  opacity: 0.2;
+  transition: 0s;
+}
+
+.popup {
+  position: absolute;
+  background: #fff;
+  border: none;
+  border-radius: 6px;
+  width: 458px;
+  min-height: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  box-shadow: 0 24px 24px 0 rgba(0, 0, 0, 0.3), 0 0 24px 0 rgba(0, 0, 0, 0.22);
 }

@@ -1,0 +1,93 @@
+@import '../../../assets/styles/variables.scss';
+
+.table-statements-mobile {
+    background: $secondary !important;
+    padding: 0 10px;
+
+    &_group {
+
+        &_header {
+            padding: 14px 0 7px 0;
+            color: $secondary600;
+            font-size: 16px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        &_list {
+            .MuiButtonBase-root {
+                color: #36383d;
+                text-transform: none;
+
+                &:not(:hover) {
+                    background: $secondary100;
+                }
+
+                .table-statements-mobile_group_list_item_date {
+                    line-height: 14px;
+                    background-color: $secondary400 !important;
+                    border-radius: 50%;
+                    width: 30px;
+                    height: 30px;
+                    display: block;
+                    text-align: center;
+                    padding: 7px;
+                    font-size: 12px !important;
+                    font-weight: 700;
+
+                    span {
+                        font-size: 17px !important;
+                        display: block;
+                    }
+                }
+            }
+
+            &_item {
+                display: flex;
+                width: 100% !important;
+                box-shadow: 0 0 9px 0px rgba(220, 224, 231, 0.85);
+                background: $secondary100;
+                border-radius: 5px;
+                padding: 10px 5px;
+                align-items: center;
+
+                &_date {
+                    background-color: $secondary400 !important;
+                    border-radius: 50%;
+                    width: 30px;
+                    height: 30px;
+                    display: block;
+                    text-align: center;
+                    padding: 7px;
+                    font-size: 12px !important;
+                    font-weight: 700;
+
+                    span {
+                        font-size: 17px !important;
+                        display: block;
+                    }
+                }
+
+                &_referance {
+                    color: #36383d;
+                    text-transform: uppercase;
+                    flex: 1;
+                    font-size: 14px;
+                    white-space: nowrap;
+                    font-weight: 700;
+                }
+
+                &_amount {
+                    flex: none !important;
+                    margin-right: 20px;
+                }
+
+                &_chevron {
+                    flex: none !important;
+                    display: flex;
+                    margin-right: 20px;
+                }
+            }
+        }
+    }
+}

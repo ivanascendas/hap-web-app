@@ -6,43 +6,76 @@ import { useLazyGetBalanceQuery, useLazyGetPropertiesQuery, useLazyGetStatements
 import moment from "moment";
 import currency from "../../../shared/utils/currency";
 import { useAuth } from "../../../shared/providers/Auth.provider";
+import { ColumnItem, TableComponent } from "../../../shared/components/Table.component";
+import { StatementDto } from "../../../shared/dtos/statement.dtos";
+import { BaseQueryFn, QueryActionCreatorResult } from "@reduxjs/toolkit/query";
+import { BalanceRequestDto } from "../../../shared/dtos/balance-request.dto";
+import { BalanceDto } from "../../../shared/dtos/balance.dto";
+import { MobileStatementsListComponent } from "./MobileStatementsList.component";
+import { useDispatch, useSelector } from "react-redux";
+import { clearStatements, selectStatements, selectStatementsCount } from "../../../shared/redux/slices/statementSlice";
 
 
 export type RentsStatementProps = {
     department: string;
+    getBalance: (dto: BalanceRequestDto) => QueryActionCreatorResult<any>;
+    balance: BalanceDto | undefined;
 };
 
-export const LoansStatementComponent = ({ department }: RentsStatementProps): JSX.Element => {
+export const LoansStatementComponent = ({ department, getBalance, balance }: RentsStatementProps): JSX.Element => {
 
     const [selectedPeriod, setSelectedPeriod] = useState<number>(6);
     const [page, setPage] = useState(0);
     const { t } = useTranslation();
 
     const { isAuthenticated } = useAuth();
+    const dispatch = useDispatch();
+    const statements = useSelector(selectStatements);
+    const statementCount = useSelector(selectStatementsCount);
+    const [getStatements, { isFetching }] = useLazyGetStatementsQuery();
 
-    const [getProperties, { data: properties }] = useLazyGetPropertiesQuery();
-    const [getBalance, { data: balance }] = useLazyGetBalanceQuery();
-    const [getStatements, { data: statements }] = useLazyGetStatementsQuery();
-
-
+    const columns: ColumnItem<StatementDto>[] = [
+        {
+            key: 'statementDate', label: 'RATES.COLUMNS.DATE',
+            rowRender: (row: StatementDto) => moment(row.statementDate).format("DD/MM/YYYY")
+        },
+        { key: 'transType', label: 'RATES.COLUMNS.TRANSACTION' },
+        { key: 'invoiceNo', label: 'RATES.COLUMNS.REFERENCE' },
+        {
+            key: 'amount',
+            label: 'RATES.COLUMNS.AMOUNT',
+            rowRender: (row: StatementDto) => currency.format(row.amount),
+            rowClassName: (row: StatementDto) => row.transType == 'Invoice' ? 'text_red' : 'clr_green'
+        },
+        {
+            key: 'balance',
+            label: 'RATES.COLUMNS.BALANCE',
+            rowRender: (row: StatementDto) => currency.format(row.balance)
+        },
+    ];
     useEffect(() => {
         if (isAuthenticated) {
-            getProperties();
-            getBalance({
+            const balanceReq = getBalance({
                 incDept: department.toUpperCase(),
                 PropertyNumber: "0",
-                from: moment().subtract(selectedPeriod, 'month').startOf('month').format("YYYY-MM-DD"),
+                from: moment().subtract(selectedPeriod, 'month').format("YYYY-MM-DD"),
                 to: moment().format("YYYY-MM-DD")
             });
-            getStatements({
+            const statementsReq = getStatements({
                 $inlinecount: "allpages",
                 IncDept: department.toUpperCase(),
                 $orderby: "ROW_NUMBER asc",
                 $skip: (page) * 50,
                 $top: 50,
-                from: moment().subtract(selectedPeriod, 'month').startOf('month').format("YYYY-MM-DD"),
+                from: moment().subtract(selectedPeriod, 'month').format("YYYY-MM-DD"),
                 to: moment().format("YYYY-MM-DD")
             });
+
+            return () => {
+                balanceReq.abort();
+                statementsReq.abort();
+                dispatch(clearStatements());
+            };
         }
     }, [isAuthenticated, selectedPeriod]);
 
@@ -54,7 +87,9 @@ export const LoansStatementComponent = ({ department }: RentsStatementProps): JS
         setPage(0);
     };
 
-    return (<Box className="personal_box ">
+    const handleLoadMore = () => { }
+
+    return (<><Box className="personal_box ">
         <Box className="personal_box_filter">
 
             <Box>
@@ -71,62 +106,27 @@ export const LoansStatementComponent = ({ department }: RentsStatementProps): JS
                     </Select>
                 </FormControl>
             </Box>
-            <Box className="personal_box_filter_balance">
+            <Box className="personal_box_filter_balance" sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                 <span className="personal_box_filter_title">{t('INVOICES.RATES.CURRENT_BALANCE')}</span>
                 <span className="personal_box_filter_value">
                     {currency.format(balance?.currentBalance || 0)}
                 </span>
             </Box>
         </Box>
-        <Box className="personal_box_content">
-            <TableContainer>
-                <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>{t('RATES.COLUMNS.DATE')}</TableCell>
-                            <TableCell >{t('RATES.COLUMNS.TRANSACTION')}</TableCell>
-                            <TableCell >{t('RATES.COLUMNS.REFERENCE')}</TableCell>
-                            <TableCell >{t('RATES.COLUMNS.PROPERTY')}</TableCell>
-                            <TableCell >{t('RATES.COLUMNS.AMOUNT')}</TableCell>
-                            <TableCell >{t('RATES.COLUMNS.BALANCE')}</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {statements?.items.map((row, i) => (
-                            <TableRow key={i}>
-                                <TableCell scope="row">
-                                    {moment(row.statementDate).format("DD MMM YYYY")}
-                                </TableCell>
-                                <TableCell scope="row">
-                                    {row.transType}
-                                </TableCell>
-                                <TableCell scope="row">
-                                    {row.invoiceNo}
-                                </TableCell>
-                                <TableCell scope="row">
-                                    {row.propertyDescription}
-                                </TableCell>
-                                <TableCell scope="row" className={row.transType == 'Invoice' ? 'text_red' : 'clr_green'}>
-                                    {currency.format(row.amount)}
-                                </TableCell>
-                                <TableCell scope="row">
-                                    {currency.format(row.balance)}
-                                </TableCell>
-                            </TableRow>))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <Box className="personal_box_footer" sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Box className="personal_box_content" sx={{ display: { xs: 'none', md: 'block' } }}>
+            <TableComponent isLoading={isFetching} aria-label="loans table" columns={columns} rows={statements.slice((page * 50), (page * 50) + 50) || []} />
+
+            <Box className="personal_box_footer" sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'space-between' }}>
                 <TablePagination
                     rowsPerPageOptions={[50]}
                     component="div"
-                    count={statements?.count || 0}
+                    count={statementCount || 0}
                     rowsPerPage={50}
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
-                <Box className="personal_box_filter_balance">
+                <Box className="personal_box_filter_balance" sx={{ display: 'flex' }}>
                     <span className="personal_box_filter_title">{t('RATES.CLOSING_BALANCE')}</span>
                     <span className="personal_box_filter_value">
                         {currency.format(balance?.closingBalance || 0)}
@@ -134,5 +134,9 @@ export const LoansStatementComponent = ({ department }: RentsStatementProps): JS
                 </Box>
             </Box>
         </Box>
-    </Box>);
+    </Box>
+        <Box className="personal_box_content" sx={{ display: { xs: 'flex', md: 'none' } }}>
+            <MobileStatementsListComponent list={statements || []} loadMore={handleLoadMore} />
+        </Box>
+    </>);
 };

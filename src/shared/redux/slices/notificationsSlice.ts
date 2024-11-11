@@ -2,15 +2,19 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { RootState } from "../store";
 import { notificationsApi } from "../../services/Notifications.service";
+import { NotificationDto } from "../../dtos/messages.dtos";
+import { stat } from "fs";
 
 export type NotificationsState = {
-    list: never[];
+    list: NotificationDto[];
     unreadCount: number;
+    count: number;
 };
 
 const initialState: NotificationsState = {
     list: [],
-    unreadCount: 0
+    unreadCount: 0,
+    count: 0,
 };
 
 /**
@@ -35,7 +39,7 @@ const notificationsSlice = createSlice({
          * @returns The updated state with the new list of notifications.
          */
         setNotifications: (state: NotificationsState, action: PayloadAction<NotificationsState>) => {
-            return { ...state, notifications: action.payload.list };
+            return { ...state, list: action.payload.list };
         },
         /**
          * Clears the list of notifications in the state.
@@ -57,6 +61,35 @@ const notificationsSlice = createSlice({
                 state.unreadCount = action.payload;
             }
         );
+
+
+        /**
+         *  Handles the fulfilled action from the `getNotifications ` API endpoint.
+         */
+        builder.addMatcher(
+            notificationsApi.endpoints.getNotifications.matchFulfilled,
+            (state, { payload }) => {
+                state.list = payload.items;
+                state.count = payload.count;
+            }
+        );
+
+        /**
+         *  Handles the fulfilled action from the `markAsRead` API endpoint.
+         */
+        builder.addMatcher(
+            notificationsApi.endpoints.markAsRead.matchFulfilled,
+            (state, { payload, meta }) => {
+                const readedNotifications: Array<number> = meta.arg.originalArgs
+                state.unreadCount -= readedNotifications.length;
+                state.list = [...state.list.map((notification: NotificationDto) => {
+                    if (!notification.isRead) {
+                        notification.isRead = readedNotifications.includes(notification.notificationId);
+                    }
+                    return notification;
+                })];
+            }
+        );
     },
 });
 
@@ -68,6 +101,21 @@ const notificationsSlice = createSlice({
  * @returns The list of notifications.
  */
 export const selectUnreadNotificationsCount = (state: RootState): number => state.notifications.unreadCount;
+
+/**
+ * Selects the list of notifications from the Redux store.
+ *
+ * @param state - The root state of the Redux store.
+ * @returns The list of notifications.
+ */
+export const selectNotifications = (state: RootState): NotificationDto[] => state.notifications.list;
+/**
+ * Selects the total count of notifications from the Redux store.
+ *
+ * @param state - The root state of the Redux store.
+ * @returns The total count of notifications.
+ */
+export const selectNotificationsCount = (state: RootState): number => state.notifications.count;
 
 export const { setNotifications, clearNotifications } = notificationsSlice.actions;
 

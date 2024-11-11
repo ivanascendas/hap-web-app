@@ -1,6 +1,5 @@
 
 import { fetchBaseQuery, BaseQueryFn } from "@reduxjs/toolkit/query/react";
-import { setloading } from "../redux/slices/loaderSlice";
 import { errorHandler } from "./getErrorMessage";
 import { authApi } from "../services/Auth.service";
 import { RootState } from "../redux/store";
@@ -66,7 +65,7 @@ const customBaseQuery: BaseQueryFn<
   const { dispatch } = api;
 
   try {
-    dispatch(setloading(true));
+    //dispatch(setloading(true));
     const result = await baseQuery(args, api, extraOptions);
     if (result.error) {
       if (result.error.status === 403 && typeof args !== 'string' && (
@@ -85,9 +84,9 @@ const customBaseQuery: BaseQueryFn<
   } catch (error) {
     dispatch(errorHandler(error));
     return { error: { status: "FETCH_ERROR", error: String(error) } };
-  } finally {
+  } /*finally {
     dispatch(setloading(false));
-  }
+  }*/
 };
 
 export default customBaseQuery;

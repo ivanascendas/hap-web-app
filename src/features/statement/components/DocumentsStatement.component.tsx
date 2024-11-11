@@ -2,10 +2,12 @@ import { Box, FormControl, InputLabel, MenuItem, Select, Table, TableBody, Table
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import '../Statement.component.scss';
-import { useLazyGetBalanceQuery, useLazyGetDocumentsQuery, useLazyGetPropertiesQuery, useLazyGetStatementsQuery } from "../../../shared/services/Statements.service";
+import { useLazyDownloadDocumentsPdfQuery, useLazyGetBalanceQuery, useLazyGetDocumentsQuery, useLazyGetPropertiesQuery, useLazyGetStatementsQuery } from "../../../shared/services/Statements.service";
 import moment from "moment";
 import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
 import { useAuth } from "../../../shared/providers/Auth.provider";
+import { ColumnItem, TableComponent } from "../../../shared/components/Table.component";
+import { DocumentDto } from "../../../shared/dtos/documents.dto";
 
 
 export type RentsStatementProps = {
@@ -16,10 +18,10 @@ export const DocumentsStatementComponent = ({ department }: RentsStatementProps)
 
     const [page, setPage] = useState(0);
     const { t } = useTranslation();
-
+    const [downloadPdf] = useLazyDownloadDocumentsPdfQuery();
     const { isAuthenticated } = useAuth();
 
-    const [getDocuments, { data: documents }] = useLazyGetDocumentsQuery();
+    const [getDocuments, { data: documents, isFetching }] = useLazyGetDocumentsQuery();
 
 
     useEffect(() => {
@@ -28,43 +30,40 @@ export const DocumentsStatementComponent = ({ department }: RentsStatementProps)
         }
     }, [isAuthenticated]);
 
-    // const handleChangePage = (event: unknown, newPage: number) => {
-    //     setPage(newPage);
-    // };
+    const columns: ColumnItem<DocumentDto>[] = [
+        {
+            key: 'CreatedOn', label: 'DOCUMENTS.DATE_CELL',
+            rowRender: (row: DocumentDto) => moment(row.CreatedOn).format("DD/MM/YYYY")
+        },
+        { key: 'HAPDocumentName', label: 'DOCUMENTS.DOC_NAME_CELL' },
+        {
+            key: 'Id',
+            label: 'RATES.COLUMNS.REFERENCE',
+            colRnder: () => <>Download</>,
+            rowRender: (row: DocumentDto) => <DownloadForOfflineIcon />,
 
-    // const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     setPage(0);
-    // };
+        },
+
+    ];
+
+    const hadleDownloadDocument = async (dto: DocumentDto) => {
+        const result = await downloadPdf(dto.Id);
+        if (result.data) {
+            const downloadUrl = window.URL.createObjectURL(result.data);
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.download = dto.HAPDocumentName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
 
     return (<Box className="personal_box ">
 
         <Box className="personal_box_content">
-            <TableContainer>
-                <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>{t('DOCUMENTS.DATE_CELL')}</TableCell>
-                            <TableCell >{t('DOCUMENTS.DOC_NAME_CELL')}</TableCell>
-                            <TableCell >&nbsp;</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {documents?.map((row, i) => (
-                            <TableRow key={i}>
-                                <TableCell scope="row">
-                                    {moment(row.CreatedOn).format("DD MMM YYYY")}
-                                </TableCell>
-                                <TableCell scope="row">
-                                    {row.HAPDocumentName}
-                                </TableCell>
-                                <TableCell scope="row">
-                                    <DownloadForOfflineIcon />
-                                </TableCell>
+            <TableComponent isLoading={isFetching} aria-label="documents table" onItemClick={hadleDownloadDocument} columns={columns} rows={documents || []} />
 
-                            </TableRow>))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
             {/* <Box className="personal_box_footer" sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <TablePagination
                     rowsPerPageOptions={[50]}

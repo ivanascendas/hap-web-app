@@ -115,7 +115,7 @@ export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(({
                             </ListItemButton>
                         </ListItem>
                     ))}
-                    <ListItem disablePadding>
+                    <ListItem disablePadding sx={{ display: { xs: 'none', md: 'flex' } }}>
                         <ListItemButton onClick={() => handleClick('/statements/loan-info')} selected={location.pathname.includes(`/statements/loan-info`)}>
                             <ListItemIcon>
                                 <ErrorRoundedIcon />

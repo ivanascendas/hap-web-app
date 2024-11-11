@@ -5,6 +5,7 @@ import loaderReducer from "./slices/loaderSlice";
 import userReducer from "./slices/authSlice";
 import notifyReducer from "./slices/notifySlice";
 import departmentsReducer from "./slices/departmentsSlice";
+import staementsReducer from "./slices/statementSlice";
 
 import notificationsReducer from "./slices/notificationsSlice";
 import { authApi } from "../services/Auth.service";
@@ -27,6 +28,7 @@ export const store = configureStore({
     auth: userReducer,
     notify: notifyReducer,
     notifications: notificationsReducer,
+    statements: staementsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
