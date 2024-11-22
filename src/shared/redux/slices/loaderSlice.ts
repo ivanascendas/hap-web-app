@@ -43,4 +43,6 @@ const loaderSlice = createSlice({
 
 //export const { setloading, setPercent } = loaderSlice.actions;
 
+export const selectLoading = (state: { loader: loaderState }) => state.loader.isLoading;
+
 export default loaderSlice.reducer;

@@ -3,6 +3,7 @@ import { UserModel } from "../../models/user.model";
 import { TokenDto } from "../../dtos/token.dto";
 import { RootState } from "../store";
 import localStorageService from "../../services/Storage.service";
+import { authApi } from "../../services/Auth.service";
 
 export type AuthState = {
   user: UserModel | null;
@@ -70,6 +71,52 @@ const userSlice = createSlice({
     clearTmpToken: (state) => {
       state.tmpTokenData = null;
     },
+  }, extraReducers: (builder) => {
+
+    /** Handles the fulfilled action from the `getUserData` API endpoint. */
+    builder.addMatcher(authApi.endpoints.userdata.matchFulfilled, (state, action) => {
+      state.user = action.payload;
+    });
+    /** Handles the rejected action from the `getUserData` API endpoint. */
+    builder.addMatcher(authApi.endpoints.userdata.matchRejected, (state, action) => {
+
+      if ((action.payload as any)?.data?.status === 401) {
+        localStorageService.removeItem('token');
+        state.user = null;
+        state.tokenData = null;
+        state.tmpTokenData = null;
+      }
+    });
+    /** Handles the fulfilled action from the `logout` API endpoint. */
+    builder.addMatcher(authApi.endpoints.logout.matchFulfilled, (state, action) => {
+      localStorageService.removeItem('token');
+      state.user = null;
+      state.tokenData = null;
+      state.tmpTokenData = null;
+    });
+
+    /** Handles the rejected action from the `logout` API endpoint. */
+    builder.addMatcher(authApi.endpoints.logout.matchRejected, (state, action) => {
+
+      if ((action.payload as any)?.data?.status === 401) {
+        localStorageService.removeItem('token');
+        state.user = null;
+        state.tokenData = null;
+        state.tmpTokenData = null;
+      }
+    });
+
+    /** Handles the fulfilled action from the `checkValidContact` API endpoint. */
+    builder.addMatcher(authApi.endpoints.checkValidContact.matchFulfilled, (state, action) => {
+      state.user = {
+        ...state.user,
+        defaultMFA: action.payload.defaultMFA,
+        emailConfirmed: action.payload.isEmailConfirmed,
+        phoneNumberConfirmed: action.payload.isPhoneConfirmed
+      } as UserModel;
+    });
+
+
   }
 });
 export const selectUser = (state: RootState): UserModel | null => state.auth.user;

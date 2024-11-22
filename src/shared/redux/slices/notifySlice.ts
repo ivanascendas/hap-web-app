@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
+import { authApi } from "../../services/Auth.service";
 
 export type NotifyState = {
     message: string | null;
@@ -54,6 +55,15 @@ const notifySlice = createSlice({
             state.message = null;
         },
     },
+    extraReducers: (builder) => {
+
+        builder.addMatcher(authApi.endpoints.saveUserData.matchFulfilled, (state: NotifyState, action: PayloadAction<any>) => {
+            state.message = "MESSAGES.SUCCESS_DATA_UPDATED";
+        });
+        builder.addMatcher(authApi.endpoints.changePassword.matchFulfilled, (state: NotifyState, action: PayloadAction<any>) => {
+            state.message = "MESSAGES.PASSWORD_SUCCESSFULLY_CHANGED";
+        });
+    }
 });
 
 export const selectNotify = (state: RootState): string | null => state.notify.message;

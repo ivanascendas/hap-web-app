@@ -256,6 +256,11 @@
         border-width: 1px !important;
         width: 100% !important;
         border-radius: 4px !important;
+        border-color: $border-input-color !important;
+
+        &:hover {
+          border-color: $border-input-color-hover !important;
+        }
       }
 
       &__subtitle {

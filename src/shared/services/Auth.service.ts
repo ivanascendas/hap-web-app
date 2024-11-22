@@ -18,6 +18,9 @@ import { ResetPasswordDto } from "../dtos/resetPassword.dto";
 import { errorHandler } from "../utils/getErrorMessage";
 import { UserModel } from "../models/user.model";
 import { notificationsApi } from "./Notifications.service";
+import { CheckValidContactDto, ExsistingTenantDto } from "../dtos/existing-tenant.dto";
+import { ChangePasswordDto } from "../dtos/change-password.dto";
+import { use } from "i18next";
 
 /**
  * Encodes a string to a URL-safe base64 string.
@@ -65,6 +68,13 @@ export const authApi = createApi({
   tagTypes: ["Check", "Token", "User"],
   endpoints: (builder) => ({
 
+    /**
+     * Fetches the current user's data from the server and updates the application state.
+     *
+     * This endpoint is used to retrieve the current user's data, such as their profile information, permissions, and other relevant details. The fetched data is then dispatched to update the application state.
+     *
+     * @returns The current user's data as a `UserModel` object.
+     */
     userdata: builder.query<UserModel, void>({
       query: () => ({
         url: "/api/user",
@@ -72,14 +82,14 @@ export const authApi = createApi({
       }),
       onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
         try {
-          //  dispatch(setloading(true));
+          dispatch(clearUser());
           const { data } = await queryFulfilled;
-          dispatch(setUser(data));
+          if (data && data.customerNo) {
+            dispatch(authApi.endpoints.checkValidContact.initiate(parseInt(data.customerNo)));
+          }
         } catch (error) {
           dispatch(errorHandler(error));
-        } /*finally {
-          dispatch(setloading(false));
-        }*/
+        }
       }
     }),
 
@@ -110,7 +120,6 @@ export const authApi = createApi({
       onQueryStarted: async (dto,
         { dispatch, queryFulfilled },) => {
         try {
-          // dispatch(setloading(true));
           const { data } = await queryFulfilled;
           dispatch(verificationApi.endpoints.verificationStatus.initiate(parseInt(dto.username)));
           if (data.defaultmfa) {
@@ -118,15 +127,11 @@ export const authApi = createApi({
             dispatch(setTmpToken(data));
           } else {
             handleToken.call(this, data, dispatch);
-
           }
 
         } catch (error) {
           dispatch(errorHandler(error));
         }
-        /*finally {
-          dispatch(setloading(false));
-        }*/
 
       },
       transformResponse: (response: TokenDto) => {
@@ -145,7 +150,6 @@ export const authApi = createApi({
     loginWithCode: builder.mutation<TokenDto, LoginWithCodeDto>({
       query: ({ code, token, mfaMethod }) => {
         const codeHash = base64EncodeUrl(code);
-
         return {
           url: `/token`,
           method: "POST",
@@ -161,14 +165,11 @@ export const authApi = createApi({
       onQueryStarted: async (dto,
         { dispatch, queryFulfilled }) => {
         try {
-          //dispatch(setloading(true));
           const { data } = await queryFulfilled;
           handleToken.call(this, data, dispatch);
         } catch (error) {
           dispatch(errorHandler(error));
-        } /*finally {
-          dispatch(setloading(false));
-        }*/
+        }
       },
       transformResponse: (response: TokenDto) => {
         return response;
@@ -184,19 +185,6 @@ export const authApi = createApi({
         url: "/api/user/logout",
         method: "POST",
       }),
-      onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
-        try {
-          // dispatch(setloading(true));
-          await queryFulfilled;
-          dispatch(clearUser());
-          dispatch(clearToken());
-
-        } catch (error) {
-          dispatch(errorHandler(error));
-        } /*finally {
-          dispatch(setloading(false));
-        }*/
-      }
     }),
     /**
      * Sends a POST request to the `/api/user/checkTempPassword` endpoint with the provided `CheckTempPasswordRequestDto` object, and returns the `CheckTempPasswordResponseDto` object.
@@ -218,7 +206,6 @@ export const authApi = createApi({
         { dispatch, queryFulfilled },
       ) => {
         try {
-          // dispatch(setloading(true));
           const { data } = await queryFulfilled;
 
           if (data && data.code === '1') {
@@ -232,9 +219,7 @@ export const authApi = createApi({
           dispatch(setUser({ accountNumber: parseInt(dto.accountNumber), tempPassword: dto.tempPassword }));
         } catch (error) {
           dispatch(errorHandler(error));
-        } /*finally {
-          dispatch(setloading(false));
-        }*/
+        }
       },
     }),
 
@@ -297,6 +282,47 @@ export const authApi = createApi({
         body,
       }),
     }),
+
+    /**
+     * Sends a POST request to the `/api/user/changePassword` endpoint with the provided `ChangePasswordDto` object, and returns `void`.
+     *
+     * @param body - The `ChangePasswordDto` object containing the data to be sent in the request body.
+     * @returns `void`
+     */
+    changePassword: builder.mutation<void, ChangePasswordDto>({
+      query: (body) => ({
+        url: "/api/user/changePassword",
+        method: "POST",
+        body,
+      }),
+    }),
+
+    /** Sends a POST request to the `/api/user/SaveExistingTenantMFA` endpoint with the provided `ExsistingTenantDto` object, and returns `void`. */
+    saveUserData: builder.mutation<void, ExsistingTenantDto>({
+      query: (body: ExsistingTenantDto) => ({
+        url: "/api/user/SaveExistingTenantMFA",
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }),
+    }),
+    /**
+     * Sends a POST request to the `/api/user/CheckValidContact` endpoint with the provided `accountNumber` parameter, and returns a `CheckValidContactDto` object.
+     *
+     * @param accountNumber - The account number to be used in the request.
+     * @returns A `CheckValidContactDto` object containing the response data.
+     */
+    checkValidContact: builder.mutation<CheckValidContactDto, number>({
+      query: (accountNumber: number) => ({
+        url: `/api/user/CheckValidContact?AccountNumber=${accountNumber}`,
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }),
+    }),
   }),
 });
 
@@ -321,5 +347,8 @@ export const {
   useForgotPasswordMutation,
   useRegitrationMutation,
   useResetPasswordMutation,
-  useUserdataQuery
+  useUserdataQuery,
+  useSaveUserDataMutation,
+  useChangePasswordMutation,
+  useCheckValidContactMutation
 } = authApi;

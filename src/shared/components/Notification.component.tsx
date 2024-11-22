@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectNotify, selectNotifyDuration, clearNotify } from '../redux/slices/notifySlice';
 import { clearError, selectError, selectErrorDuration } from '../redux/slices/errorSlice';
 import './Notification.compomnent.scss';
+import { useTranslation } from 'react-i18next';
 
 export const NotificationComponent = (): JSX.Element => {
     const notify = useSelector(selectNotify);
@@ -11,6 +12,7 @@ export const NotificationComponent = (): JSX.Element => {
     const notifyDuration = useSelector(selectNotifyDuration);
     const dispatch = useDispatch();
     const [show, setShow] = React.useState(false);
+    const { t } = useTranslation();
     useEffect(() => {
         if (notify || error) {
             setShow(true);
@@ -41,11 +43,10 @@ export const NotificationComponent = (): JSX.Element => {
 
     return (
         <>
-            <div className={`message_wrap error_message ${show && error && 'show'}`} >{error}</div>
-            <div className={`message_wrap  ${show && notify && 'show'}`} >{notify}</div>
+            <div className={`message_wrap error_message ${show && error && 'show'}`} >{error ? t(error) : ''}</div>
+            <div className={`message_wrap  ${show && notify && 'show'}`} >{notify ? t(notify) : ''}</div>
         </>
     )
 }
-
 
 

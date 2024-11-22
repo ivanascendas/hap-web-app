@@ -67,7 +67,9 @@ export const MfaLogin = ({ username, password, mfa }: MfaLoginProps): JSX.Elemen
     useEffect(() => {
         if (result.isSuccess) {
             dispatch(setToken(result.data));
-            navigate("/statements/rates");
+            setTimeout(() => {
+                navigate("/statements/rates");
+            }, 0);
         }
     }, [result]);
 
