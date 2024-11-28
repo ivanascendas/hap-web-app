@@ -8,7 +8,13 @@ import {
 } from "../dtos/tempPassword.dto";
 import { ForgotPasswordRequestDto } from "../dtos/forgotPassword.dto";
 import customBaseQuery from "../utils/customBaseQuery";
-import { clearToken, clearUser, setTmpToken, setToken, setUser } from "../redux/slices/authSlice";
+import {
+  clearToken,
+  clearUser,
+  setTmpToken,
+  setToken,
+  setUser,
+} from "../redux/slices/authSlice";
 import { verificationApi } from "./Verification.service";
 import { RootState } from "../redux/store";
 import { createSelector, ThunkDispatch, UnknownAction } from "@reduxjs/toolkit";
@@ -18,9 +24,20 @@ import { ResetPasswordDto } from "../dtos/resetPassword.dto";
 import { errorHandler } from "../utils/getErrorMessage";
 import { UserModel } from "../models/user.model";
 import { notificationsApi } from "./Notifications.service";
-import { CheckValidContactDto, ExsistingTenantDto } from "../dtos/existing-tenant.dto";
+import {
+  CheckValidContactDto,
+  ExsistingTenantDto,
+} from "../dtos/existing-tenant.dto";
 import { ChangePasswordDto } from "../dtos/change-password.dto";
 import { use } from "i18next";
+import {
+  PhoneConfirmationDto,
+  PhoneConfirmationRequestDto,
+} from "../dtos/phone-confirmation.dtos";
+import {
+  EmailConfirmationDto,
+  EmailConfirmationRequestDto,
+} from "../dtos/email-confirmation.dtos";
 
 /**
  * Encodes a string to a URL-safe base64 string.
@@ -51,13 +68,15 @@ const toUrlEncoded = (data: { [key: string]: string }) => {
  * @param data - The `TokenDto` object containing the authentication token.
  * @param dispatch - The Redux dispatch function to update the application state.
  */
-export const handleToken = (data: TokenDto, dispatch: ThunkDispatch<RootState, unknown, UnknownAction>) => {
+export const handleToken = (
+  data: TokenDto,
+  dispatch: ThunkDispatch<RootState, unknown, UnknownAction>,
+) => {
   //dispatch(setloading(true));
   dispatch(setToken(data));
   dispatch(authApi.endpoints.userdata.initiate());
   dispatch(notificationsApi.endpoints.getNotificationsCount.initiate());
 };
-
 
 /**
  * Provides a set of API endpoints for authentication-related operations, including login, logout, and checking temporary password.
@@ -67,7 +86,6 @@ export const authApi = createApi({
   baseQuery: customBaseQuery,
   tagTypes: ["Check", "Token", "User"],
   endpoints: (builder) => ({
-
     /**
      * Fetches the current user's data from the server and updates the application state.
      *
@@ -85,12 +103,16 @@ export const authApi = createApi({
           dispatch(clearUser());
           const { data } = await queryFulfilled;
           if (data && data.customerNo) {
-            dispatch(authApi.endpoints.checkValidContact.initiate(parseInt(data.customerNo)));
+            dispatch(
+              authApi.endpoints.checkValidContact.initiate(
+                parseInt(data.customerNo),
+              ),
+            );
           }
         } catch (error) {
           dispatch(errorHandler(error));
         }
-      }
+      },
     }),
 
     /**
@@ -117,22 +139,23 @@ export const authApi = createApi({
           }),
         };
       },
-      onQueryStarted: async (dto,
-        { dispatch, queryFulfilled },) => {
+      onQueryStarted: async (dto, { dispatch, queryFulfilled }) => {
         try {
           const { data } = await queryFulfilled;
-          dispatch(verificationApi.endpoints.verificationStatus.initiate(parseInt(dto.username)));
+          dispatch(
+            verificationApi.endpoints.verificationStatus.initiate(
+              parseInt(dto.username),
+            ),
+          );
           if (data.defaultmfa) {
             dispatch(setUser({ defaultMFA: data.defaultmfa }));
             dispatch(setTmpToken(data));
           } else {
             handleToken.call(this, data, dispatch);
           }
-
         } catch (error) {
           dispatch(errorHandler(error));
         }
-
       },
       transformResponse: (response: TokenDto) => {
         return response;
@@ -162,8 +185,7 @@ export const authApi = createApi({
           }),
         };
       },
-      onQueryStarted: async (dto,
-        { dispatch, queryFulfilled }) => {
+      onQueryStarted: async (dto, { dispatch, queryFulfilled }) => {
         try {
           const { data } = await queryFulfilled;
           handleToken.call(this, data, dispatch);
@@ -208,7 +230,7 @@ export const authApi = createApi({
         try {
           const { data } = await queryFulfilled;
 
-          if (data && data.code === '1') {
+          if (data && data.code === "1") {
             dispatch(
               authApi.endpoints.login.initiate({
                 username: dto.accountNumber,
@@ -216,7 +238,12 @@ export const authApi = createApi({
               }),
             );
           }
-          dispatch(setUser({ accountNumber: parseInt(dto.accountNumber), tempPassword: dto.tempPassword }));
+          dispatch(
+            setUser({
+              accountNumber: parseInt(dto.accountNumber),
+              tempPassword: dto.tempPassword,
+            }),
+          );
         } catch (error) {
           dispatch(errorHandler(error));
         }
@@ -257,16 +284,18 @@ export const authApi = createApi({
       ) => {
         try {
           const { data } = await queryFulfilled;
-          dispatch(authApi.endpoints.login.initiate({
-            username: dto.accountNumber,
-            password: dto.password,
-          }));
+          dispatch(
+            authApi.endpoints.login.initiate({
+              username: dto.accountNumber,
+              password: dto.password,
+            }),
+          );
         } catch (error) {
           dispatch(errorHandler(error));
         } /*finally {
           dispatch(setloading(false));
         }*/
-      }
+      },
     }),
 
     /**
@@ -305,7 +334,7 @@ export const authApi = createApi({
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
-        }
+        },
       }),
     }),
     /**
@@ -320,22 +349,86 @@ export const authApi = createApi({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-        }
+        },
+      }),
+    }),
+
+    /**
+     * Sends a POST request to the `/api/user/PhoneConfirmationRequest` endpoint with the provided `PhoneConfirmationRequestDto` object, and returns `void`.
+     *
+     * @param body - The `PhoneConfirmationRequestDto` object containing the data to be sent in the request body.
+     * @returns `void`
+     */
+    phoneConfirmationRequest: builder.mutation<
+      void,
+      PhoneConfirmationRequestDto
+    >({
+      query: (body) => ({
+        url: "/api/user/PhoneConfirmationRequest",
+        method: "POST",
+        body,
+      }),
+    }),
+    /**
+     * Sends a POST request to the `/api/user/PhoneConfirmationRequest` endpoint with the provided `PhoneConfirmationDto` object, and returns `void`.
+     *
+     * @param body - The `PhoneConfirmationDto` object containing the `userId` and `code` to be sent in the request body.
+     * @returns `void`
+     */
+    phoneConfirmation: builder.mutation<void, PhoneConfirmationDto>({
+      query: (body) => ({
+        url: `/api/user/PhoneConfirmationRequest?userId=${body.userId}&token=${body.code}`,
+        method: "POST",
+      }),
+    }),
+
+    /**
+     * Sends a POST request to the `/api/user/EmailRegConfirmationRequest` endpoint with the provided `EmailConfirmationRequestDto` object, and returns `void`.
+     *
+     * @param body - The `EmailConfirmationRequestDto` object containing the data to be sent in the request body.
+     * @returns `void`
+     */
+    emailConfirmationRequest: builder.mutation<
+      void,
+      EmailConfirmationRequestDto
+    >({
+      query: (body) => ({
+        url: "/api/user/EmailRegConfirmationRequest",
+        method: "POST",
+        body,
+      }),
+    }),
+    /**
+     * Sends a POST request to the `/api/user/EmailRegConfirmation` endpoint with the provided `EmailConfirmationDto` object, and returns `void`.
+     *
+     * @param body - The `EmailConfirmationDto` object containing the `userId` and `code` to be sent in the request body.
+     * @returns `void`
+     */
+    emailConfirmation: builder.mutation<void, EmailConfirmationDto>({
+      query: (body) => ({
+        url: `/api/user/EmailRegConfirmation?userId=${body.userId}&token=${body.code}`,
+        method: "POST",
       }),
     }),
   }),
 });
 
-
-export const selectLoginResponse = (state: RootState): TokenDto | null => (state.auth.tmpTokenData);
+export const selectLoginResponse = (state: RootState): TokenDto | null =>
+  state.auth.tmpTokenData;
 
 export const selectMaskedValue = createSelector(
   selectLoginResponse,
   (data: TokenDto | null) => {
     let result: string = "";
-    result = data && (data.defaultmfa == 'SMS' ? data.phoneNumber : data.defaultmfa === 'Email' ? data.email : "") || "";
+    result =
+      (data &&
+        (data.defaultmfa == "SMS"
+          ? data.phoneNumber
+          : data.defaultmfa === "Email"
+            ? data.email
+            : "")) ||
+      "";
     return result;
-
   },
 );
 
@@ -350,5 +443,9 @@ export const {
   useUserdataQuery,
   useSaveUserDataMutation,
   useChangePasswordMutation,
-  useCheckValidContactMutation
+  useCheckValidContactMutation,
+  usePhoneConfirmationRequestMutation,
+  useEmailConfirmationRequestMutation,
+  usePhoneConfirmationMutation,
+  useEmailConfirmationMutation,
 } = authApi;

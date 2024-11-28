@@ -1,5 +1,9 @@
 import React, { createContext, useContext, useEffect } from "react";
-import { handleToken, useLoginMutation, useLogoutMutation } from "../services/Auth.service";
+import {
+  handleToken,
+  useLoginMutation,
+  useLogoutMutation,
+} from "../services/Auth.service";
 import { useDispatch, useSelector } from "react-redux";
 import { selectToken } from "../redux/slices/authSlice";
 import StorageService from "../services/Storage.service";
@@ -25,7 +29,6 @@ const AuthContext = createContext<AuthContextType>(initialValue);
 export const useAuth = () => {
   return useContext(AuthContext);
 };
-
 
 /**
  * AuthProvider component that provides authentication context to its children.
@@ -55,11 +58,9 @@ export const AuthProvider = ({
   let tokenData = useSelector(selectToken);
   const [isTokenRecived, setTokenRecived] = React.useState(false);
 
-
   useEffect(() => {
     if (!tokenData) {
       tokenData = StorageService.getObject<TokenDto>("token");
-      console.log(tokenData);
       if (tokenData) {
         handleToken(tokenData, dispatch);
       }
@@ -67,9 +68,15 @@ export const AuthProvider = ({
     setTokenRecived(true);
   }, [tokenData]);
 
-
-
   return (
-    <AuthContext.Provider value={{ ...initialValue, isTokenRecived, isAuthenticated: tokenData !== null }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider
+      value={{
+        ...initialValue,
+        isTokenRecived,
+        isAuthenticated: tokenData !== null,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
   );
 };

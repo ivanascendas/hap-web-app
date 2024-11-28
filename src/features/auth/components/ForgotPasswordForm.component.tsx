@@ -42,15 +42,16 @@ export const ForgotPasswordFormComponent = (): JSX.Element => {
   };
 
   const handleRecaptchaChange = (value: string | null) => {
-    console.log("Captcha value:", value);
     if (value != null) setCaptchaString(value);
   };
   useEffect(() => {
     console.log(result);
     if (result.isSuccess) {
-      dispatch(setNotify({
-        message: t("MESSAGES.RESET_PASSWORD")
-      }));
+      dispatch(
+        setNotify({
+          message: t("MESSAGES.RESET_PASSWORD"),
+        }),
+      );
     }
   }, [result]);
 
@@ -62,7 +63,7 @@ export const ForgotPasswordFormComponent = (): JSX.Element => {
             <img src={logo} alt="logo" />
           </div>
           <NotificationComponent />
-          <div className="auth-form__title">{t("FORGOT_PASSWORD.TITLE")}</div>
+          <h1 className="auth-form__title">{t("FORGOT_PASSWORD.TITLE")}</h1>
           <form
             className="auth-form__form"
             onSubmit={handleSubmit(submitHandler)}
@@ -100,10 +101,6 @@ export const ForgotPasswordFormComponent = (): JSX.Element => {
             </Link>
           </form>
         </div>
-        <footer>
-          {new Date().getFullYear()} {t("APP.FOOTER_TEXT")}{" "}
-          <Link to="/policy"> {t("MAIN.MENU.DATA_POLICY")}</Link>
-        </footer>
       </div>
     </MainComponent>
   );

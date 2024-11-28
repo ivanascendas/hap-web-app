@@ -71,7 +71,14 @@ export const RegConfirmFormComponent = (): JSX.Element => {
     phoneNumberConfirmed,
     password,
   }: UserConfirmDataModel) => {
-    dispatch(setUser({ emailConfirmed, dobIsVerified, phoneNumberConfirmed, password }));
+    dispatch(
+      setUser({
+        emailConfirmed,
+        dobIsVerified,
+        phoneNumberConfirmed,
+        password,
+      }),
+    );
   };
 
   useEffect(() => {
@@ -122,7 +129,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
         <label
           className="registration__label label-question required"
           title={t("MFA.ENTER_EMAIL_OTP")}
-          htmlFor="registration-acc-email"
+          htmlFor="registration-acc-email-otp"
           aria-label={t("MFA.ENTER_EMAIL_OTP")}
         >
           {t("MFA.ENTER_EMAIL_OTP")}
@@ -130,8 +137,11 @@ export const RegConfirmFormComponent = (): JSX.Element => {
 
         <OtpInputComponent
           isChecked={checkEmailResult.isSuccess}
-          btnLabel="Check"
-          resendLabel="Resend OTP"
+          input={{
+            id: "registration-acc-email-otp",
+          }}
+          btnLabel={t("BUTTONS.CHECK")}
+          resendLabel={t("MFA.VERIFICATION_INPUT.RESEND_OTP")}
           onResend={() =>
             accountNumber &&
             email &&
@@ -140,22 +150,30 @@ export const RegConfirmFormComponent = (): JSX.Element => {
               EmailId: email.toString() || "",
             })
           }
-          onSubmit={(otp) => checkEmailCode({ otp, accountNumber: accountNumber?.toString() || '' })}
+          onSubmit={(otp) =>
+            checkEmailCode({
+              otp,
+              accountNumber: accountNumber?.toString() || "",
+            })
+          }
         />
       </div>
       <div className="registration__input-container">
         <label
           className="registration__label label-question required"
           title={t("MFA.ENTER_PHONE_OTP")}
-          htmlFor="registration-acc-number"
+          htmlFor="registration-acc-number-otp"
           aria-label={t("MFA.ENTER_PHONE_OTP")}
         >
           {t("MFA.ENTER_PHONE_OTP")}
         </label>
         <OtpInputComponent
           isChecked={checkSMSResult.isSuccess}
-          btnLabel="Check"
-          resendLabel="Resend OTP"
+          input={{
+            id: "registration-acc-number-otp",
+          }}
+          btnLabel={t("BUTTONS.CHECK")}
+          resendLabel={t("MFA.VERIFICATION_INPUT.RESEND_OTP")}
           onResend={() =>
             accountNumber &&
             phone &&
@@ -164,7 +182,12 @@ export const RegConfirmFormComponent = (): JSX.Element => {
               PhoneNumber: phone.toString() || "",
             })
           }
-          onSubmit={(otp) => checkSMSCode({ otp, accountNumber: accountNumber?.toString() || '' })}
+          onSubmit={(otp) =>
+            checkSMSCode({
+              otp,
+              accountNumber: accountNumber?.toString() || "",
+            })
+          }
         />
       </div>
 
@@ -186,12 +209,20 @@ export const RegConfirmFormComponent = (): JSX.Element => {
           <Grid size={4}>
             {checkDOBResult.isSuccess ? (
               <img src={checkedImg} className="otp-input__checked" />
-            ) : (<button
-              className="otp-input__button"
-              onClick={() => dob && checkDOB({ dob: dob.toISOString(), accountNumber: accountNumber?.toString() || '' })}
-            >
-              Check
-            </button>)}
+            ) : (
+              <button
+                className="otp-input__button"
+                onClick={() =>
+                  dob &&
+                  checkDOB({
+                    dob: dob.toISOString(),
+                    accountNumber: accountNumber?.toString() || "",
+                  })
+                }
+              >
+                Check
+              </button>
+            )}
           </Grid>
           <Grid size={8}></Grid>
         </Grid>
@@ -218,7 +249,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
                 helperText={getErrorMessage(
                   (errors.password?.type !== "validate" &&
                     errors.password?.type) ||
-                  passwordError,
+                    passwordError,
                   t,
                 )}
                 slotProps={{
@@ -226,7 +257,6 @@ export const RegConfirmFormComponent = (): JSX.Element => {
                     "aria-invalid": !!errors.password,
                   },
                 }}
-
                 type="password"
               />
             </Grid>
@@ -249,13 +279,12 @@ export const RegConfirmFormComponent = (): JSX.Element => {
                 helperText={getErrorMessage(
                   (errors.confirmPassword?.type !== "validate" &&
                     errors.confirmPassword?.type) ||
-                  (errors.confirmPassword && "ERRORS.PASSWORD_VERIFY"),
+                    (errors.confirmPassword && "ERRORS.PASSWORD_VERIFY"),
                 )}
                 slotProps={{
                   htmlInput: {
                     "aria-invalid": !!errors.confirmPassword,
                   },
-
                 }}
                 type="password"
               />

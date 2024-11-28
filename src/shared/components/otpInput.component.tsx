@@ -12,13 +12,27 @@ type OtpInputProps = {
   resendLabel: string;
   extraLinnk?: string;
   isChecked?: boolean;
+  startCountdown?: boolean;
   onExtraLinkClick?: () => void;
   onResend: () => void;
   onSubmit: (otp: string) => void;
 };
 
 export const OtpInputComponent = forwardRef<HTMLInputElement, OtpInputProps>(
-  ({ input, btnLabel, isChecked, resendLabel, extraLinnk, onExtraLinkClick, onResend, onSubmit }, ref) => {
+  (
+    {
+      input,
+      btnLabel,
+      isChecked,
+      resendLabel,
+      extraLinnk,
+      startCountdown,
+      onExtraLinkClick,
+      onResend,
+      onSubmit,
+    },
+    ref,
+  ) => {
     const { t } = useTranslation();
     const [countdown, setCountdown] = useState(0);
     const [otp, setOtp] = useState("");
@@ -30,6 +44,13 @@ export const OtpInputComponent = forwardRef<HTMLInputElement, OtpInputProps>(
         }, 1000);
       }
     }, [countdown]);
+
+    useEffect(() => {
+      if (startCountdown) {
+        console.log("start countdown");
+        setCountdown(90);
+      }
+    }, []);
 
     const resend = () => {
       setCountdown(90);
@@ -60,8 +81,13 @@ export const OtpInputComponent = forwardRef<HTMLInputElement, OtpInputProps>(
             <span>
               {t("MFA.VERIFICATION_INPUT.SECOND_LEFT", { seconds: countdown })}
             </span>
-          ) : extraLinnk && onExtraLinkClick && (
-            <a onClick={onExtraLinkClick} style={{ textAlign: 'start' }}>{extraLinnk}</a>
+          ) : (
+            extraLinnk &&
+            onExtraLinkClick && (
+              <a onClick={onExtraLinkClick} style={{ textAlign: "start" }}>
+                {extraLinnk}
+              </a>
+            )
           )}
         </Grid>
         <Grid size={4}>

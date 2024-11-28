@@ -1,0 +1,25 @@
+@import "../../../assets/styles/variables.scss";
+
+.otp-popup {
+  position: absolute;
+  width: auto;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 367px;
+
+  label {
+    font-size: 14px !important;
+  }
+
+  &_send-box {
+    button {
+      color: $secondary100;
+      text-transform: none;
+    }
+  }
+
+  &_confirm-box {
+    padding-right: 15px;
+  }
+}

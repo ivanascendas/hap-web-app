@@ -9,13 +9,15 @@ import { DrawerComponent } from "./components/Drawer.component";
 import { Box, Paper } from "@mui/material";
 import { BottomBarСomponent } from "./components/BottomBar.component";
 import useWindowDimensions from "../../shared/hooks/useWindowDimensions";
+import { t } from "i18next";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { FooterCompoment } from "./components/Footer.component";
 export type MainProps = {
   children: JSX.Element;
 };
 
-export const MainComponent = ({
-  children,
-}: MainProps): JSX.Element => {
+export const MainComponent = ({ children }: MainProps): JSX.Element => {
   const { isAuthenticated } = useAuth();
   const [openMenu, setOpenMenu] = React.useState(false);
   const { width } = useWindowDimensions();
@@ -31,17 +33,35 @@ export const MainComponent = ({
     }
   }, [openMenu, drawerRef.current, width]);
 
-
   return (
-
-    <Paper square className="page">
+    <Paper square className={`page ${isAuthenticated ? "authenticated" : ""}`}>
       <Loading />
       {isAuthenticated && <HeaderComponent toogleDrawer={openMenuDrawer} />}
-      {isAuthenticated && <DrawerComponent ref={drawerRef} open={openMenu} onClose={openMenuDrawer} />}
-      <Box role="main" sx={{ marginLeft: { md: '0px', lg: isAuthenticated ? `${drawerWidth}px` : '0px' } }} className="main-container">{children}</Box>
+      {isAuthenticated && (
+        <DrawerComponent
+          ref={drawerRef}
+          open={openMenu}
+          onClose={openMenuDrawer}
+        />
+      )}
+      <Box
+        role="main"
+        sx={{
+          marginLeft: {
+            md: "0px",
+            lg: isAuthenticated ? `${drawerWidth}px` : "0px",
+          },
+        }}
+        className="main-container"
+      >
+        {children}
+      </Box>
+      <FooterCompoment
+        drawerWidth={drawerWidth}
+        isAuthenticated={isAuthenticated}
+      />
       {isAuthenticated && <BottomBarСomponent />}
       <CookieBannerComponent />
     </Paper>
-
   );
 };

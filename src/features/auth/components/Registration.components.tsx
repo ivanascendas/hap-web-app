@@ -17,7 +17,7 @@ export const RegistrationComponent = (): JSX.Element => {
     <MainComponent>
       <div className="auth-container">
         <div className="auth-form registration">
-          <div role="main" className="auth-form__container">
+          <div className="auth-form__container">
             <div className="auth-form__logo">
               <img src={logo} alt="logo" />
             </div>
@@ -45,10 +45,6 @@ export const RegistrationComponent = (): JSX.Element => {
               <SelectLanguage />
             </div> */}
           </div>
-          <footer role="contentinfo">
-            {new Date().getFullYear()} {t("APP.FOOTER_TEXT")}{" "}
-            <Link to="/policy"> {t("MAIN.MENU.DATA_POLICY")}</Link>
-          </footer>
         </div>
       </div>
     </MainComponent>

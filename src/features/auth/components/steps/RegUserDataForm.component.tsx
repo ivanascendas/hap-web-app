@@ -18,7 +18,6 @@ export const RegUserDataFormComponent = (): JSX.Element => {
   const dispatch = useDispatch();
   const [iniTelReff, setIti] = useState<Iti>();
   const { email, phone, accountNumber } = useSelector(selectUser) || {};
-
   const {
     register,
     formState: { errors },
@@ -29,7 +28,18 @@ export const RegUserDataFormComponent = (): JSX.Element => {
   const onSubmit = ({ accountNumber, email, phone }: UserDataDto) => {
     if (StorageService.getBoolean("cookieBanner")) {
       const countryData = iniTelReff?.getSelectedCountryData();
-      dispatch(setUser({ accountNumber, email, phone, phoneCountryCode: countryData?.dialCode, phoneExcludingCountryCode: phone.replace(countryData?.dialCode || '353', '') }));
+      dispatch(
+        setUser({
+          accountNumber,
+          email,
+          phone,
+          phoneCountryCode: countryData?.dialCode,
+          phoneExcludingCountryCode: phone.replace(
+            countryData?.dialCode || "353",
+            "",
+          ),
+        }),
+      );
     } else {
       dispatch(setError({ message: t("ERRORS.PLS_ACCEPT_COOKIE") }));
     }
@@ -44,8 +54,6 @@ export const RegUserDataFormComponent = (): JSX.Element => {
       <Navigate to="/registration/step2" state={{ from: location }} replace />
     );
   }
-
-
 
   return (
     <div role="form">
@@ -146,7 +154,9 @@ export const RegUserDataFormComponent = (): JSX.Element => {
           className="button-primary registration__button"
           role="button"
           disabled={
-            !formState.isDirty || !formState.isValid || iniTelReff?.isValidNumber() === false
+            !formState.isDirty ||
+            !formState.isValid ||
+            iniTelReff?.isValidNumber() === false
           }
         >
           {t("SIGN_UP.BUTTONS.NEXT")}

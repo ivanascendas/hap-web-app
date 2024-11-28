@@ -1,7 +1,7 @@
 @import "../../assets/styles/variables.scss";
 
 .auth-container {
-  background: url(../../assets/img/background.png) no-repeat !important;
+  /*background: url(../../assets/img/background.png) no-repeat !important;*/
   background-size: cover !important;
   position: relative;
   display: flex;
@@ -29,17 +29,16 @@
     background-clip: border-box;
     padding: 32px 20px 32px 40px;
 
-    @media screen and (min-height:$desktopMdSize) {
+    @media screen and (min-height: $desktopMdSize) {
       padding: 32px 40px;
     }
-
 
     .mfa-login {
       margin: auto;
       margin-right: 55px;
       width: 340px;
 
-      input:not([type=radio]) {
+      input:not([type="radio"]) {
         padding-bottom: 0 !important;
         padding-left: 5px !important;
       }
@@ -68,8 +67,6 @@
         height: 42px !important;
       }
     }
-
-
 
     @media screen and (max-width: $mobileSize) {
       box-shadow: none;
@@ -250,8 +247,6 @@
         }
       }
 
-
-
       &__phone-input {
         border-width: 1px !important;
         width: 100% !important;
@@ -325,7 +320,6 @@
           padding: 15px;
 
           .MuiFormControlLabel-label {
-
             font-size: 14px;
           }
         }
@@ -333,10 +327,7 @@
         &:has(input:checked) {
           background: rgba(210, 84, 34, 0.125);
         }
-
       }
-
-
     }
 
     &.forgot-password {
@@ -357,6 +348,10 @@
         padding: 0px;
         padding-top: 6px;
       }
+
+      a.button-secondary {
+        opacity: 0.7;
+      }
     }
 
     &.reset-password {
@@ -372,7 +367,6 @@
 
       .auth-form__form {
         margin-top: 0;
-
       }
 
       .password-icon {
@@ -380,8 +374,6 @@
       }
 
       .auth-form__input-container {
-
-
         &.account-password {
           margin-top: 0;
           margin-bottom: 30px;
@@ -390,7 +382,6 @@
             top: 20px;
           }
         }
-
       }
 
       .MuiFormControl-root .MuiInputBase-root {
@@ -402,16 +393,13 @@
           border-width: 1px;
           border-radius: 4px;
           margin: 0;
-
         }
 
         &::before {
           border: none !important;
         }
       }
-
     }
-
   }
 
   .app-icons {
@@ -422,33 +410,6 @@
     .android,
     .apple {
       width: 150px;
-    }
-  }
-
-  footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 50px;
-    color: #a6abb0;
-    background: none;
-
-    a {
-      color: #a6abb0;
-      text-decoration: underline;
-      margin-left: 5px;
-    }
-
-    @media screen and (max-width: $mobileSize) {
-      color: #54585e;
-
-      a {
-        color: #54585e;
-      }
     }
   }
 
@@ -463,8 +424,6 @@
     unicode-bidi: isolate;
   }
 }
-
-
 
 .MuiBox-root {
   flex: 1;
