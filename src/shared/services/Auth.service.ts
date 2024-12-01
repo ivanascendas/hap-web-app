@@ -377,7 +377,7 @@ export const authApi = createApi({
      */
     phoneConfirmation: builder.mutation<void, PhoneConfirmationDto>({
       query: (body) => ({
-        url: `/api/user/PhoneConfirmationRequest?userId=${body.userId}&token=${body.code}`,
+        url: `/api/user/PhoneConfirmation?userId=${body.userId}&token=${body.code}`,
         method: "POST",
       }),
     }),
@@ -440,7 +440,7 @@ export const {
   useForgotPasswordMutation,
   useRegitrationMutation,
   useResetPasswordMutation,
-  useUserdataQuery,
+  useLazyUserdataQuery,
   useSaveUserDataMutation,
   useChangePasswordMutation,
   useCheckValidContactMutation,

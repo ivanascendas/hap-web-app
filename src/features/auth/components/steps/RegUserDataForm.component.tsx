@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { IntlTelInput } from "../../../../shared/components/IntlTelInput.component";
+import { IntlTelInputComponent } from "../../../../shared/components/IntlTelInput.component";
 import { Checkbox, FormControlLabel, TextField } from "@mui/material";
 import { UserDataDto } from "../../../../shared/dtos/user.dto";
 import { selectUser, setUser } from "../../../../shared/redux/slices/authSlice";
@@ -118,7 +118,7 @@ export const RegUserDataFormComponent = (): JSX.Element => {
           >
             {t("LABELS.ENTER_PHONE")}
           </label>
-          <IntlTelInput
+          <IntlTelInputComponent
             id="phone-input"
             className="registration__phone-input"
             {...register("phone", {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./Account.component.scss";
 import {
   Box,
@@ -15,12 +15,16 @@ import {
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser, setUser } from "../../shared/redux/slices/authSlice";
-import { selectLoading } from "../../shared/redux/slices/loaderSlice";
+import {
+  selectLoading,
+  selectUserLoading,
+} from "../../shared/redux/slices/loaderSlice";
 import {
   useChangePasswordMutation,
   useCheckValidContactMutation,
   useEmailConfirmationMutation,
   useEmailConfirmationRequestMutation,
+  useLazyUserdataQuery,
   usePhoneConfirmationMutation,
   usePhoneConfirmationRequestMutation,
   useSaveUserDataMutation,
@@ -32,21 +36,22 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import UserIcon from "@mui/icons-material/Person";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { IntlTelInput } from "../../shared/components/IntlTelInput.component";
+import { IntlTelInputComponent } from "../../shared/components/IntlTelInput.component";
 import { Iti } from "intl-tel-input";
 import { ChangePasswordDto } from "../../shared/dtos/change-password.dto";
 import { use } from "i18next";
 import { NotificationComponent } from "../../shared/components/Notification.component";
-import { de } from "intl-tel-input/i18n";
+import { de, fr } from "intl-tel-input/i18n";
 import { MFAMethod } from "../../shared/dtos/user.dto";
 import { OTPConfirmPopupComponent } from "./compomnents/OTPConfirmPopup.component";
+import { MFAControlComponent } from "./compomnents/MFAControl.component";
+import { PasswordsFormComponent } from "./compomnents/PasswordsForm.component";
 
 export const AccountComponent = (): JSX.Element => {
   const { t } = useTranslation();
   const user = useSelector(selectUser);
-  const isLoading = useSelector(selectLoading);
+  const isLoading = useSelector(selectUserLoading);
   const [updateUser, result] = useSaveUserDataMutation();
-  const [changePassword, changePassResult] = useChangePasswordMutation();
   const [smsRequest] = usePhoneConfirmationRequestMutation();
   const [emailRequest] = useEmailConfirmationRequestMutation();
   const [smsConfirm, smsConfirmResult] = usePhoneConfirmationMutation();
@@ -54,6 +59,7 @@ export const AccountComponent = (): JSX.Element => {
   const [iniTelReff, setIti] = useState<Iti>();
   const [tabValue, setTabValue] = useState(0);
   const [showOtpPopup, setShowOtpPopup] = useState(false);
+  const isPhoneDirty = useRef<boolean>(false);
   const dispatch = useDispatch();
   const {
     register,
@@ -68,17 +74,16 @@ export const AccountComponent = (): JSX.Element => {
     trigger,
   } = useForm<ExsistingTenantDto>({
     mode: "all",
-  });
-
-  const {
-    register: registerPasswords,
-    formState: { errors: errorsPasswords },
-    handleSubmit: handleSubmitPasswords,
-    formState: formStatePasswords,
-    getValues: getValuesPasswords,
-    setError: setPasswordsFromError,
-  } = useForm<ChangePasswordDto>({
-    mode: "all",
+    defaultValues: {
+      EmailId: user?.email || "",
+      PhoneNumber: user?.phone || "",
+      PhoneNumberConfirmed: user?.phoneNumberConfirmed || false,
+      EmailConfirmed: user?.emailConfirmed || false,
+      DefaultMFA: user?.defaultMFA || "Email",
+      PhoneCountryCode: user?.phoneCountryCode || "353",
+      PhoneExcludingCountryCode:
+        user?.phone?.replace(user?.phoneCountryCode || "353", "") || "",
+    },
   });
 
   const onSubmit = ({
@@ -127,14 +132,6 @@ export const AccountComponent = (): JSX.Element => {
     }
   };
 
-  const onPasswordSubmit = ({
-    oldPassword,
-    newPassword,
-    confirmPassword,
-  }: ChangePasswordDto) => {
-    changePassword({ oldPassword, newPassword, confirmPassword });
-  };
-
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
@@ -153,7 +150,10 @@ export const AccountComponent = (): JSX.Element => {
           user?.phone?.replace(user?.phoneCountryCode || "353", "") || "",
       };
 
+      iniTelReff?.setNumber(data.PhoneNumber);
       reset(data);
+      console.log("reset", { data });
+      isPhoneDirty.current = false;
     }
   }, [user, isLoading]);
 
@@ -164,7 +164,8 @@ export const AccountComponent = (): JSX.Element => {
   }, [formState]);
 
   useEffect(() => {
-    if (changePassResult.isSuccess) {
+    if (smsConfirmResult.isSuccess) {
+      console.log({ smsConfirmResult });
       setValue("PhoneNumberConfirmed", true, { shouldValidate: true });
     }
     if (emailConfirmResult.isSuccess) {
@@ -172,13 +173,20 @@ export const AccountComponent = (): JSX.Element => {
     }
   }, [smsConfirmResult.isSuccess, emailConfirmResult.isSuccess]);
 
-  const onChangePhoneValidation = (isValid: boolean, errorCode?: number) => {
-    console.log({ isValid, errorCode });
-    // trigger('PhoneNumber');
+  const onChangePhoneHandler = ({
+    target: { value },
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    const { PhoneNumber } = getValues();
+    if (!isPhoneDirty.current && value.replace("+", "") !== PhoneNumber) {
+      console.log({
+        value: value.replace("+", ""),
+        isPhoneDirty: isPhoneDirty.current,
+        PhoneNumber,
+      });
+      isPhoneDirty.current = true;
+    }
   };
 
-  const { isDirty, isValid, isSubmitting } = formState;
-  console.log({ values: getValues(), isDirty, isValid, isSubmitting });
   return (
     <Box sx={{ flexGrow: 1 }}>
       <NotificationComponent />
@@ -308,29 +316,20 @@ export const AccountComponent = (): JSX.Element => {
                   {t("LABELS.ENTER_PHONE")}
                 </label>
                 <Box>
-                  {" "}
-                  <IntlTelInput
+                  <IntlTelInputComponent
                     id="phone-input"
                     className={`account_form__phone-input`}
                     {...register("PhoneNumber", {
                       required: true,
                       validate: (value) => {
                         if (iniTelReff?.isValidNumber()) {
-                          console.log(
-                            "valid phone number:",
-                            getValues().PhoneNumber,
-                          );
-
                           return true;
                         } else {
-                          console.log(
-                            "invalid phone number:",
-                            iniTelReff?.getNumber(),
-                          );
                           return t("ERRORS.INVALID_PHONE");
                         }
                       },
                     })}
+                    error={!!errors.PhoneNumber}
                     aria-invalid={!!errors.PhoneNumber}
                     options={{
                       initialCountry: "ie",
@@ -338,8 +337,8 @@ export const AccountComponent = (): JSX.Element => {
                       formatOnDisplay: true,
                       formatAsYouType: true,
                     }}
-                    onValidation={onChangePhoneValidation}
                     getIti={setIti}
+                    onChange={onChangePhoneHandler}
                   />
                   <FormHelperText error={!!errors.PhoneNumber}>
                     {!!errors.PhoneNumber && t("ERRORS.INVALID_PHONE")}
@@ -354,40 +353,16 @@ export const AccountComponent = (): JSX.Element => {
                 className="account_form_row MFA"
               >
                 {!isLoading ? (
-                  <FormControl>
-                    <FormLabel id="demo-radio-buttons-group-userdata-label">
-                      {t("MFA.INFO")}
-                    </FormLabel>
-                    <RadioGroup
-                      aria-labelledby="demo-radio-buttons-group-userdata-label"
-                      {...register("DefaultMFA")}
-                      value={watch("DefaultMFA")} // Add this line
-                      onChange={(e) =>
-                        setValue("DefaultMFA", e.target.value, {
-                          shouldDirty: true,
-                          shouldTouch: true,
-                          shouldValidate: true,
-                        })
-                      } // Add this line
-                      name="radio-buttons-userdata-group"
-                    >
-                      <FormControlLabel
-                        value="SMS"
-                        control={<Radio />}
-                        label={t("MFA.TYPES.SMS_OTP")}
-                      />
-                      <FormControlLabel
-                        value="Email"
-                        control={<Radio />}
-                        label={t("MFA.TYPES.EMAIL_OTP")}
-                      />
-                      <FormControlLabel
-                        value="None"
-                        control={<Radio />}
-                        label={t("MFA.TYPES.NO_OTP")}
-                      />
-                    </RadioGroup>
-                  </FormControl>
+                  <MFAControlComponent
+                    defaultValue={watch("DefaultMFA")} // Add this line
+                    onChange={(e) =>
+                      setValue("DefaultMFA", e.target.value, {
+                        shouldDirty: true,
+                        shouldTouch: true,
+                        shouldValidate: true,
+                      })
+                    }
+                  />
                 ) : (
                   <Skeleton
                     width={"324px"}
@@ -400,7 +375,7 @@ export const AccountComponent = (): JSX.Element => {
                 <button
                   className="button-primary mt-20"
                   disabled={
-                    !formState.isDirty ||
+                    (isPhoneDirty.current === false && !formState.isDirty) ||
                     !formState.isValid ||
                     formState.isSubmitting ||
                     isLoading
@@ -417,158 +392,24 @@ export const AccountComponent = (): JSX.Element => {
             }}
             className={`account_form `}
           >
-            <form onSubmit={handleSubmitPasswords(onPasswordSubmit)}>
-              <Typography
-                variant="body2"
-                className="account_form_password_info"
-              >
-                {t("LABELS.PASSWORDS_INFO")}
-              </Typography>
-              <Box className="account_form_row">
-                <label
-                  className=" required"
-                  title={t("ACCOUNT.CURRENT_PASSWORD")}
-                  htmlFor="account-current-password"
-                  aria-label={t("ACCOUNT.CURRENT_PASSWORD")}
-                >
-                  {t("ACCOUNT.CURRENT_PASSWORD")}
-                </label>
-                {!isLoading && user?.defaultMFA ? (
-                  <TextField
-                    id="account-current-password"
-                    placeholder={t("ACCOUNT.CURRENT_PASSWORD")}
-                    {...registerPasswords("oldPassword", {
-                      required: true,
-                    })}
-                    type="password"
-                    helperText={getErrorMessage(
-                      errorsPasswords.oldPassword?.type,
-                    )}
-                    slotProps={{
-                      htmlInput: {
-                        "aria-invalid": !!errorsPasswords.oldPassword,
-                      },
-                    }}
-                  />
-                ) : (
-                  <Skeleton width={"100%"} height={"42px"} variant="rounded" />
-                )}
-              </Box>
-              <Box className="account_form_row">
-                <label
-                  className=" required"
-                  title={t("ACCOUNT.NEW_PASSWORD")}
-                  htmlFor="account-new-password"
-                  aria-label={t("ACCOUNT.NEW_PASSWORD")}
-                >
-                  {t("ACCOUNT.NEW_PASSWORD")}
-                </label>
-                {!isLoading ? (
-                  <TextField
-                    id="account-new-password"
-                    {...registerPasswords("newPassword", {
-                      required: true,
-                    })}
-                    placeholder={t("ACCOUNT.NEW_PASSWORD")}
-                    type="password"
-                    helperText={getErrorMessage(
-                      errorsPasswords.newPassword?.type,
-                    )}
-                    slotProps={{
-                      htmlInput: {
-                        "aria-invalid": !!errorsPasswords.newPassword,
-                      },
-                    }}
-                  />
-                ) : (
-                  <Skeleton width={"100%"} height={"42px"} variant="rounded" />
-                )}
-              </Box>
-              <Box className="account_form_row">
-                <label
-                  className=" required"
-                  title={t("ACCOUNT.CONFIRM_PASSWORD")}
-                  htmlFor="account-confirm-password"
-                  aria-label={t("ACCOUNT.CONFIRM_PASSWORD")}
-                >
-                  {t("ACCOUNT.CONFIRM_PASSWORD")}
-                </label>
-                {!isLoading ? (
-                  <TextField
-                    id="account-confirm-password"
-                    placeholder={t("ACCOUNT.CONFIRM_PASSWORD")}
-                    {...registerPasswords("confirmPassword", {
-                      required: true,
-                    })}
-                    type="password"
-                    helperText={getErrorMessage(
-                      errorsPasswords.confirmPassword?.type,
-                    )}
-                    slotProps={{
-                      htmlInput: {
-                        "aria-invalid": !!errorsPasswords.confirmPassword,
-                      },
-                    }}
-                  />
-                ) : (
-                  <Skeleton width={"100%"} height={"42px"} variant="rounded" />
-                )}
-              </Box>
-
-              <Box className="account_form_row">
-                <button
-                  className="button-primary mt-20"
-                  disabled={
-                    !formStatePasswords.isDirty ||
-                    !formStatePasswords.isValid ||
-                    formStatePasswords.isSubmitting ||
-                    changePassResult.isLoading
-                  }
-                >
-                  {t("BUTTONS.CHANGE")}
-                </button>
-              </Box>
-            </form>
+            <PasswordsFormComponent isLoading={isLoading} />
             <form onSubmit={handleSubmit(onSubmit)}>
               <Box
                 sx={{ display: { sm: "none", md: "block" } }}
                 className="account_form_row MFA"
               >
                 {!isLoading ? (
-                  <FormControl>
-                    <FormLabel id="demo-radio-buttons-group-label">
-                      {t("MFA.INFO")}
-                    </FormLabel>
-                    <RadioGroup
-                      aria-labelledby="demo-radio-buttons-group-label"
-                      {...register("DefaultMFA")}
-                      value={watch("DefaultMFA")} // Add this line
-                      onChange={(e) =>
-                        setValue("DefaultMFA", e.target.value, {
-                          shouldDirty: true,
-                          shouldTouch: true,
-                          shouldValidate: true,
-                        })
-                      } // Add this line
-                      name="radio-buttons-group"
-                    >
-                      <FormControlLabel
-                        value="SMS"
-                        control={<Radio />}
-                        label={t("MFA.TYPES.SMS_OTP")}
-                      />
-                      <FormControlLabel
-                        value="Email"
-                        control={<Radio />}
-                        label={t("MFA.TYPES.EMAIL_OTP")}
-                      />
-                      <FormControlLabel
-                        value="None"
-                        control={<Radio />}
-                        label={t("MFA.TYPES.NO_OTP")}
-                      />
-                    </RadioGroup>
-                  </FormControl>
+                  <MFAControlComponent
+                    //{...register("DefaultMFA")}
+                    defaultValue={watch("DefaultMFA")} // Add this line
+                    onChange={(e) => {
+                      setValue("DefaultMFA", e.target.value, {
+                        shouldDirty: true,
+                        shouldTouch: true,
+                        shouldValidate: true,
+                      });
+                    }}
+                  />
                 ) : (
                   <Skeleton
                     width={"324px"}
