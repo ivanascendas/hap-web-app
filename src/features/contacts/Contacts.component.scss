@@ -1,0 +1,39 @@
+.contact-us {
+  background-image: url(../../assets/img/bg_desktop.png);
+  background-size: cover;
+  display: flex;
+  flex: 1;
+  height: 100%;
+  align-items: center;
+
+  justify-content: center;
+
+  .personal_box {
+    flex: none;
+    position: relative;
+    width: 80%;
+    min-width: 360px;
+    max-height: 300px;
+    max-width: 700px;
+
+    .title {
+      h1 {
+        text-align: center;
+        margin: 0;
+        font-size: 26px;
+        align-self: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    div:not(.title) {
+      margin: 15px 0;
+
+      a {
+        font-weight: 700;
+      }
+    }
+  }
+}
