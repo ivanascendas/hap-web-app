@@ -1,159 +1,162 @@
-@import '../../assets/styles/variables.scss';
+@import "../../assets/styles/variables.scss";
 
 .account {
-    padding: 15px 35px;
+  padding: 15px 35px;
+
+  &_header {
+    color: $primary900;
+    font-size: 40px !important;
+    margin: 0.53em 0 !important;
+    font-weight: bold !important;
+  }
+
+  &_content {
+    margin: 0 !important;
+    display: flex;
+    justify-content: space-between;
+
+    @media screen and (max-width: $mobileSize) {
+      flex-direction: column;
+      border-top-left-radius: 0px;
+      border-top-right-radius: 0px;
+      max-width: 100%;
+    }
+  }
+
+  &_form {
+    flex: 1;
+
+    padding: 20px 40px 0 40px;
+
+    @media screen and (max-width: $mobileSize) {
+      padding: 0;
+      display: none;
+
+      &.active {
+        display: block;
+      }
+
+      &:last-child {
+        .MFA {
+          display: none;
+        }
+      }
+    }
+
+    &.passwords-managment {
+      @media screen and (max-width: $mobileSize) {
+        display: none;
+      }
+    }
+
+    &_password_info {
+      color: $primary900;
+      display: block;
+      font-size: 0.83em;
+      margin-block-start: 1.67em;
+      margin-block-end: 1.67em;
+      margin-inline-start: 0px;
+      margin-inline-end: 0px;
+      font-weight: bold !important;
+      unicode-bidi: isolate;
+      margin-bottom: 20px !important;
+    }
+
+    &:first-child {
+      border-right: 1px solid;
+      border-image: $devider-bg 2;
+
+      @media screen and (max-width: $mobileSize) {
+        border: none;
+      }
+    }
+
+    &.loading {
+      .account_form__phone-input {
+        display: none !important;
+      }
+
+      .iti__country-container {
+        opacity: 0;
+      }
+    }
 
     &_header {
+      box-sizing: border-box;
+      line-height: 1.1 !important;
+      padding: 0 0 24px;
+      color: $primary900;
+      font-size: 26px !important;
+      font-weight: bold !important;
+      padding-bottom: 15px !important;
+    }
+
+    &_row {
+      display: flex;
+      flex-direction: column;
+
+      label:not(.MuiFormControlLabel-root) {
+        font-size: 13px;
         color: $primary900;
-        font-size: 40px !important;
-        margin: 0.53em 0 !important;
+        margin: 9px 0;
+      }
+
+      .iti {
+        display: block !important;
+      }
+
+      .MuiInputBase-root {
+        height: 42px !important;
+      }
+
+      button {
+        max-width: 150px;
+
+        @media screen and (max-width: $mobileSize) {
+          max-width: 100%;
+        }
+      }
+    }
+
+    &__phone-input {
+      border-width: 1px !important;
+      width: 100% !important;
+      border-radius: 4px !important;
+
+      &:not([aria-invalid="true"]) {
+        border-color: $border-input-color !important;
+      }
+
+      &.loading {
+        display: none;
+      }
+
+      &:hover {
+        border-color: $border-input-color-hover !important;
+      }
+    }
+
+    .MFA {
+      margin-top: 20px;
+
+      .MuiFormLabel-root {
+        font-size: 16px;
+        color: $primary900;
         font-weight: bold !important;
+      }
     }
+  }
 
-    &_content {
-        margin: 0 !important;
-        display: flex;
-        justify-content: space-between;
+  .MuiTabs-root {
+    button {
+      flex: 1;
+      width: 100% !important;
 
-        @media screen and (max-width: $mobileSize ) {
-            flex-direction: column;
-            border-top-left-radius: 0px;
-            border-top-right-radius: 0px;
-            max-width: 100%;
-        }
+      &.Mui-selected {
+        background: $secondary100;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+      }
     }
-
-    &_form {
-        flex: 1;
-        padding: 20px 40px 0 40px;
-
-        @media screen and (max-width: $mobileSize ) {
-            padding: 0;
-        }
-
-        &.passwords-managment {
-            @media screen and (max-width: $mobileSize ) {
-                display: none;
-
-            }
-        }
-
-
-        &_password_info {
-            color: $primary900;
-            display: block;
-            font-size: 0.83em;
-            margin-block-start: 1.67em;
-            margin-block-end: 1.67em;
-            margin-inline-start: 0px;
-            margin-inline-end: 0px;
-            font-weight: bold !important;
-            unicode-bidi: isolate;
-            margin-bottom: 20px !important;
-        }
-
-        &:first-child {
-            border-right: 1px solid;
-            border-image: $devider-bg 2;
-
-            @media screen and (max-width: $mobileSize ) {
-                border: none;
-            }
-        }
-
-
-
-        &.loading {
-
-            .account_form__phone-input {
-                display: none !important;
-            }
-
-            .iti__country-container {
-                opacity: 0;
-            }
-        }
-
-        &_header {
-            box-sizing: border-box;
-            line-height: 1.1 !important;
-            padding: 0 0 24px;
-            color: $primary900;
-            font-size: 26px !important;
-            font-weight: bold !important;
-            padding-bottom: 15px !important;
-        }
-
-        &_row {
-            display: flex;
-            flex-direction: column;
-
-            label:not(.MuiFormControlLabel-root) {
-                font-size: 13px;
-                color: $primary900;
-                margin: 9px 0;
-            }
-
-            .iti {
-                display: block !important;
-            }
-
-            .MuiInputBase-root {
-                height: 42px !important;
-            }
-
-            button {
-                max-width: 150px;
-
-                @media screen and (max-width: $mobileSize ) {
-                    max-width: 100%;
-                }
-            }
-        }
-
-        &__phone-input {
-            border-width: 1px !important;
-            width: 100% !important;
-            border-radius: 4px !important;
-
-            &:not([aria-invalid=true]) {
-                border-color: $border-input-color !important;
-            }
-
-            &.loading {
-                display: none;
-            }
-
-            &:hover {
-                border-color: $border-input-color-hover !important;
-            }
-        }
-
-        .MFA {
-            margin-top: 20px;
-
-            .MuiFormLabel-root {
-                font-size: 16px;
-                color: $primary900;
-                font-weight: bold !important;
-            }
-        }
-
-
-    }
-
-    .MuiTabs-root {
-
-
-        button {
-            flex: 1;
-            width: 100% !important;
-
-            &.Mui-selected {
-                background: $secondary100;
-                border-top-left-radius: 10px;
-                border-top-right-radius: 10px;
-            }
-        }
-    }
+  }
 }

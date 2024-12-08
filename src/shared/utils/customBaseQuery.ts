@@ -1,4 +1,3 @@
-
 import { fetchBaseQuery, BaseQueryFn } from "@reduxjs/toolkit/query/react";
 import { errorHandler } from "./getErrorMessage";
 import { authApi } from "../services/Auth.service";
@@ -23,12 +22,11 @@ const baseQuery = fetchBaseQuery({
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth.tokenData?.access_token;
     if (token) {
-      headers.set('Authorization', `Bearer ${token}`);
+      headers.set("Authorization", `Bearer ${token}`);
     }
     return headers;
-  }
+  },
 });
-
 
 type BodyParams<T> = { [key: string]: string } | string | T;
 
@@ -68,15 +66,23 @@ const customBaseQuery: BaseQueryFn<
     //dispatch(setloading(true));
     const result = await baseQuery(args, api, extraOptions);
     if (result.error) {
-      if (result.error.status === 403 && typeof args !== 'string' && (
-        args.url.includes("/api/user/logout") ||
-        args.url.includes("/api/user")
-      )) {
+      if (
+        result.error.status === 403 &&
+        typeof args !== "string" &&
+        (args.url.includes("/api/user/logout") ||
+          args.url.includes("/api/user"))
+      ) {
         dispatch(clearToken());
       }
       if (result.error.status === 401) {
         dispatch(authApi.endpoints.logout.initiate());
-      } else {
+      } else if (
+        !(
+          typeof args !== "string" &&
+          args.url.includes("/api/statement/details/invoice/file") &&
+          result.error.status === 404
+        )
+      ) {
         dispatch(errorHandler(result.error));
       }
     }

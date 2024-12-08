@@ -5,6 +5,7 @@ import {
   UserConfirmDataModel,
   UserDataDto,
 } from "../../../../shared/dtos/user.dto";
+
 import { selectUser, setUser } from "../../../../shared/redux/slices/authSlice";
 import Grid from "@mui/material/Grid2";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -121,7 +122,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
   }
 
   return (
-    <div role="form">
+    <div role="form" style={{ padding: "0 15px" }}>
       <div className="registration__subtitle">
         {t("SIGN_UP.DESCRIPTION_STEP_3")}
       </div>

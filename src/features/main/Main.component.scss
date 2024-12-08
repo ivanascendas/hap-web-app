@@ -80,7 +80,6 @@
     footer {
       background: none !important;
       color: #a6abb0;
-
       box-shadow: none;
 
       a {
@@ -103,16 +102,17 @@
     flex: 1;
     align-items: center;
     justify-content: center;
-    margin-bottom: 50px;
-
-    @media screen and (max-width: $mobileSize) {
-      padding-bottom: 115px;
-    }
+    margin-bottom: 0px;
   }
 
   &.authenticated {
     .main-container {
       background-color: $secondary;
+
+      @media screen and (max-width: $mobileSize) {
+        padding-bottom: 115px;
+        z-index: 0;
+      }
     }
   }
 }

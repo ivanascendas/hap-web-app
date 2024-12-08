@@ -29,6 +29,10 @@
     background-clip: border-box;
     padding: 32px 20px 32px 40px;
 
+    @media screen and (max-width: $mobileSize) {
+      padding: 10px;
+    }
+
     @media screen and (min-height: $desktopMdSize) {
       padding: 32px 40px;
     }
@@ -38,9 +42,17 @@
       margin-right: 55px;
       width: 340px;
 
+      @media screen and (max-width: $mobileSize) {
+        margin-right: 15px;
+      }
+
       input:not([type="radio"]) {
         padding-bottom: 0 !important;
         padding-left: 5px !important;
+
+        @media screen and (max-width: $mobileSize) {
+          padding: 5px;
+        }
       }
 
       &__info {
@@ -85,6 +97,10 @@
       margin-top: 10px;
       max-height: 100%;
       overflow-y: auto;
+
+      @media screen and (max-width: $mobileSize) {
+        padding: 10px 30px;
+      }
     }
 
     &__logo {

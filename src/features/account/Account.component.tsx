@@ -214,10 +214,10 @@ export const AccountComponent = (): JSX.Element => {
         </Box>
         <Box className="personal_box account_content">
           <Box
+            className={`account_form ${tabValue === 0 ? "active" : ""} ${isLoading && "loading"}`}
             sx={{
-              display: { sm: tabValue == 0 ? "block" : "none", md: "block" },
+              display: { sm: tabValue === 0 ? "block" : "none", md: "block" },
             }}
-            className={`account_form  ${isLoading && "loading"}`}
           >
             <form onSubmit={handleSubmit(onSubmit)}>
               <Box sx={{ display: { sm: "none", md: "block" } }}>
@@ -388,9 +388,9 @@ export const AccountComponent = (): JSX.Element => {
           </Box>
           <Box
             sx={{
-              display: { sm: tabValue == 1 ? "block" : "none", md: "block" },
+              display: { sm: tabValue === 1 ? "block" : "none", md: "block" },
             }}
-            className={`account_form `}
+            className={`account_form ${tabValue === 1 ? "active" : ""} `}
           >
             <PasswordsFormComponent isLoading={isLoading} />
             <form onSubmit={handleSubmit(onSubmit)}>

@@ -1,0 +1,186 @@
+@import "../../../assets/styles/variables.scss";
+
+.invoice_popup {
+  border: none !important;
+  display: flex;
+  flex-direction: column;
+
+  @media screen and (max-width: $mobileSize) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: none;
+    width: 100%;
+  }
+
+  &_header {
+    flex: none !important;
+    font-size: 20px;
+    color: $primary900;
+    border-radius: 6px 6px 0 0;
+    background-color: #e8eaed;
+    padding: 20px 15px;
+    display: flex;
+    justify-content: space-between;
+
+    &_title {
+      color: #555860;
+    }
+  }
+
+  &_content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 16px;
+    position: relative;
+    overflow-y: auto;
+    gap: 15px;
+
+    &_block {
+      flex: none;
+      display: flex;
+      flex-direction: row;
+      position: relative;
+      gap: 10px;
+      padding-left: 30px; // Add space for the number
+      border-bottom: 1px solid #eaeaea;
+      color: $primary900;
+      font-size: 16px;
+      padding: 10px 0;
+      // Add counter
+      counter-increment: invoice-item;
+
+      // Add numbered pseudo-element
+      &::before {
+        content: counter(invoice-item);
+        left: 0;
+        position: relative;
+        top: 0px;
+        width: 24px;
+        height: 24px;
+        background: $primary500;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: $secondary;
+        padding-top: 2px;
+      }
+
+      &:first-child {
+        padding-top: 0;
+      }
+
+      &_content {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+
+        &_amount {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 10px;
+          padding: 15px 0;
+
+          &_title {
+            font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+            font-weight: 400;
+            font-size: 13px !important;
+            font-weight: 700 !important;
+          }
+
+          &_value {
+            flex: 1;
+            color: $error;
+            text-align: end;
+            font-size: 12px;
+          }
+
+          &_label {
+            font-size: 11px;
+            color: #7f7f7f;
+            position: absolute;
+            top: -14px;
+          }
+
+          &_input {
+            width: 115px;
+          }
+        }
+      }
+    }
+
+    &_row {
+      flex: none !important;
+      justify-content: space-between;
+      padding: 15px 0;
+
+      &_label {
+        color: #7f7f7f;
+      }
+
+      &:last-child {
+        flex: 1;
+        flex-direction: column;
+
+        @media screen and (max-width: $mobileSize) {
+          margin-top: auto;
+        }
+      }
+    }
+
+    &_footer {
+      flex: none;
+      position: relative;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-top: 1px solid #eaeaea;
+
+      &_total {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px;
+        text-transform: uppercase;
+      }
+
+      button {
+        border-radius: 0;
+        font-size: 20px;
+        height: 55px;
+
+        svg {
+          width: 1.2em;
+          height: 1.2em;
+        }
+      }
+    }
+
+    Button {
+      text-transform: none;
+      padding: 10px 20px;
+
+      &.download {
+        background: linear-gradient(
+          85deg,
+          rgba(101, 152, 255, 1) 0%,
+          rgba(55, 110, 202, 1) 100%
+        );
+        margin-bottom: 8px;
+
+        &:hover {
+          background: linear-gradient(
+            85deg,
+            rgb(41, 100, 217) 0%,
+            rgb(15, 77, 184) 100%
+          );
+        }
+      }
+    }
+  }
+}

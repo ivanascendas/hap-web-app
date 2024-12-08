@@ -10,7 +10,7 @@ import { Box, Paper } from "@mui/material";
 import { BottomBarСomponent } from "./components/BottomBar.component";
 import useWindowDimensions from "../../shared/hooks/useWindowDimensions";
 import { t } from "i18next";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FooterCompoment } from "./components/Footer.component";
 export type MainProps = {
@@ -23,6 +23,7 @@ export const MainComponent = ({ children }: MainProps): JSX.Element => {
   const { width } = useWindowDimensions();
   const [drawerWidth, setDrawerWidth] = React.useState(0);
   const drawerRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const openMenuDrawer = () => {
     setOpenMenu(!openMenu);
   };
@@ -36,7 +37,17 @@ export const MainComponent = ({ children }: MainProps): JSX.Element => {
   return (
     <Paper square className={`page ${isAuthenticated ? "authenticated" : ""}`}>
       <Loading />
-      {isAuthenticated && <HeaderComponent toogleDrawer={openMenuDrawer} />}
+      {isAuthenticated && !window.location.pathname.startsWith("/invoices") && (
+        <HeaderComponent toogleDrawer={openMenuDrawer} />
+      )}
+      {isAuthenticated && window.location.pathname.startsWith("/invoices") && (
+        <HeaderComponent
+          onBack={() => {
+            navigate(-1);
+          }}
+          title={t("INVOICES.RATES.TITLE")}
+        />
+      )}
       {isAuthenticated && (
         <DrawerComponent
           ref={drawerRef}
@@ -59,8 +70,11 @@ export const MainComponent = ({ children }: MainProps): JSX.Element => {
       <FooterCompoment
         drawerWidth={drawerWidth}
         isAuthenticated={isAuthenticated}
+        isInvoicesPage={!window.location.pathname.startsWith("/invoices")}
       />
-      {isAuthenticated && <BottomBarСomponent />}
+      {isAuthenticated && !window.location.pathname.startsWith("/invoices") && (
+        <BottomBarСomponent />
+      )}
       <CookieBannerComponent />
     </Paper>
   );

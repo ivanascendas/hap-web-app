@@ -4,24 +4,32 @@ $primary700: #9e310f;
 $primary600: rgb(234, 48, 31);
 $primary500: #ef642d;
 $primary400: rgb(246, 162, 96);
-$primaryBlue: #005D8A;
+$primaryBlue: #005d8a;
 $secondaryGray: #595959;
 $secondaryGray600: #4c4c4c;
 $secondary700: #3c515f;
 $secondary400: #edf0f4;
 $secondary500: #c1c1c1;
 $secondary600: #5e636b;
+$secondary650: #7f7f7f;
+$secondary200: #f7f8f9;
 $secondary: #f5f7fa; //
 $secondary100: #ffffff;
 $success: #116419;
-$error: #AC1111;
+$error: #ac1111;
 $errorBorder: #d25422;
+$referenceColor: #ef642d;
 
 $border-input-color: rgba(0, 0, 0, 0.23);
 
 $border-input-color-hover: rgba(0, 0, 0, 0.87);
 
-$devider-bg: linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(0, 0, 0, 0.2) 50%, rgba(255, 255, 255, 1) 100%);
+$devider-bg: linear-gradient(
+  0deg,
+  rgba(255, 255, 255, 1) 0%,
+  rgba(0, 0, 0, 0.2) 50%,
+  rgba(255, 255, 255, 1) 100%
+);
 
 //size
 $mobileSize: 768px;
@@ -31,6 +39,6 @@ $desktopLgSize: 1200px;
 $placeholder_size: 18px;
 
 @mixin theme {
-    --mui-primary-main: #{$primary500};
-    --mui-secondary-main: #{$secondary};
+  --mui-primary-main: #{$primary500};
+  --mui-secondary-main: #{$secondary};
 }

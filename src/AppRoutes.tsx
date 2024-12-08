@@ -12,14 +12,15 @@ import { DataComponent } from "./features/cookie/data.component";
 import { AccountComponent } from "./features/account/Account.component";
 import { MessagesComponent } from "./features/messages/Messages.component";
 import { ContactsComponent } from "./features/contacts/Contacts.component";
+import { InvoicesComponent } from "./features/invoices/Invoices.component";
 
 /**
  * Redirect component that handles user authentication and navigation.
- * 
+ *
  * This component checks if the user is authenticated using the `useAuth` hook.
  * If the user is not authenticated, it redirects them to the login page.
  * If the user is authenticated, it redirects them to the statements/rates page.
- * 
+ *
  * @returns {JSX.Element} A <Navigate> component that redirects the user based on their authentication status.
  */
 export const Redirect = (): JSX.Element => {
@@ -29,13 +30,15 @@ export const Redirect = (): JSX.Element => {
   if (!auth.isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   } else {
-    return <Navigate to="/statements/rates" state={{ from: location }} replace />;
+    return (
+      <Navigate to="/statements/rates" state={{ from: location }} replace />
+    );
   }
 };
 
 /**
  * Defines the routes for the application using `createBrowserRouter`.
- * 
+ *
  * Routes:
  * - `/`: Redirects to another route.
  * - `/login`: Displays the login form.
@@ -72,16 +75,21 @@ export const router = createBrowserRouter([
   },
   {
     path: "/cookie",
-    element: <CookieComponent />
+    element: <CookieComponent />,
   },
   {
     path: "/data",
-    element: <DataComponent />
+    element: <DataComponent />,
   },
   {
     index: true,
     path: "/statements/:department",
     element: <Protected component={<StatementComponent />} />,
+  },
+
+  {
+    path: "/invoices/:department",
+    element: <Protected component={<InvoicesComponent />} />,
   },
   {
     path: "/account",

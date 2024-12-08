@@ -1,4 +1,3 @@
-
 import { configureStore } from "@reduxjs/toolkit";
 import errorReducer from "./slices/errorSlice";
 import loaderReducer from "./slices/loaderSlice";
@@ -6,7 +5,7 @@ import userReducer from "./slices/authSlice";
 import notifyReducer from "./slices/notifySlice";
 import departmentsReducer from "./slices/departmentsSlice";
 import staementsReducer from "./slices/statementSlice";
-
+import paymentsReducer from "./slices/paymentSlice";
 import notificationsReducer from "./slices/notificationsSlice";
 import { authApi } from "../services/Auth.service";
 import { setupListeners } from "@reduxjs/toolkit/query";
@@ -14,6 +13,7 @@ import { verificationApi } from "../services/Verification.service";
 import { departmentsApi } from "../services/Department.service";
 import { notificationsApi } from "../services/Notifications.service";
 import { statementsApi } from "../services/Statements.service";
+import { paymentsApi } from "../services/Payment.service";
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +22,7 @@ export const store = configureStore({
     [departmentsApi.reducerPath]: departmentsApi.reducer,
     [notificationsApi.reducerPath]: notificationsApi.reducer,
     [statementsApi.reducerPath]: statementsApi.reducer,
+    [paymentsApi.reducerPath]: paymentsApi.reducer,
     error: errorReducer,
     department: departmentsReducer,
     loader: loaderReducer,
@@ -29,6 +30,7 @@ export const store = configureStore({
     notify: notifyReducer,
     notifications: notificationsReducer,
     statements: staementsReducer,
+    payments: paymentsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -36,7 +38,8 @@ export const store = configureStore({
       verificationApi.middleware,
       departmentsApi.middleware,
       notificationsApi.middleware,
-      statementsApi.middleware
+      statementsApi.middleware,
+      paymentsApi.middleware,
     ),
 });
 

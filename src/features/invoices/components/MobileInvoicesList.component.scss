@@ -1,14 +1,10 @@
 @import "../../../assets/styles/variables.scss";
 
-.table-statements-mobile {
-  display: flex;
-  flex: 1;
+.table-invoices-mobile {
   background: $secondary !important;
   padding: 0 10px;
 
   &_group {
-    max-width: 100%;
-
     &_header {
       padding: 14px 0 7px 0;
       color: $secondary600;
@@ -19,7 +15,7 @@
 
     &_list {
       .MuiButtonBase-root {
-        color: #36383d;
+        //color: #36383d;
         text-transform: none;
 
         &:not(:hover) {
@@ -52,10 +48,16 @@
         background: $secondary100;
         border-radius: 5px;
         padding: 10px 0px;
-        gap: 10px;
         align-items: center;
+        gap: 10px;
+        border-left: 4px solid $secondary100;
+
+        &.selected {
+          border-left: 4px solid $primary500;
+        }
 
         &_date {
+          margin: auto;
           background-color: $secondary400 !important;
           border-radius: 50%;
           width: 30px;
@@ -65,6 +67,7 @@
           padding: 7px;
           font-size: 12px !important;
           font-weight: 700;
+          margin-left: 10px;
 
           span {
             font-size: 17px !important;
@@ -76,21 +79,41 @@
           color: #36383d;
           text-transform: uppercase;
           flex: 1;
-          font-size: 13px;
+          font-size: 14px;
           white-space: nowrap;
           font-weight: 700;
-          margin-left: 0px;
+          align-items: start;
+          justify-content: start;
+          display: flex;
         }
 
         &_amount {
           flex: none !important;
-          margin-right: 0px;
+          margin-right: 20px;
+          line-height: 1;
+
+          .balance {
+            align-items: start;
+          }
         }
 
         &_chevron {
           flex: none !important;
           display: flex;
-          margin-right: 0px;
+          margin-right: 20px;
+        }
+
+        .balance {
+          display: flex;
+          flex-direction: column;
+          color: $error;
+          font-size: 16px;
+          font-weight: 300;
+
+          span {
+            color: $success;
+            font-size: 10px;
+          }
         }
       }
     }
