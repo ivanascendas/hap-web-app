@@ -1,94 +1,89 @@
-@import '../../assets/styles/variables.scss';
+@import "../../assets/styles/variables.scss";
 
 .statement-container {
-    padding: 30px 0;
+  padding: 1.875rem 0;
 
-    .header-balance-text {
-        display: flex;
-        justify-content: flex-end;
-        color: black;
-        opacity: 0.6;
+  .header-balance-text {
+    display: flex;
+    justify-content: flex-end;
+    color: black;
+    opacity: 0.6;
+  }
+
+  .header-balance-value {
+    display: flex;
+    justify-content: flex-end;
+    color: black;
+    font-weight: bold;
+    font-size: 1.1875rem;
+  }
+
+  .h_title {
+    display: flex;
+    padding-bottom: 0.25rem;
+    font-size: 1.625rem;
+    color: #000;
+    font-weight: bold;
+    margin-left: 2.1875rem;
+
+    @media screen and (max-width: $mobileSize) {
+      margin-left: 0.625rem;
     }
 
-    .header-balance-value {
-        display: flex;
-        justify-content: flex-end;
-        color: black;
-        font-weight: bold;
-        font-size: 19px;
+    p {
+      font-weight: 400;
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  .h_title_right {
+    justify-content: center;
+    align-items: end;
+
+    .print-text {
+      margin-left: auto;
     }
 
-    .h_title {
-        display: flex;
-        padding-bottom: 4px;
-        font-size: 26px;
-        color: #000;
-        font-weight: bold;
-        margin-left: 35px;
+    .print_btn {
+      margin-left: auto;
+      color: $secondary700 !important;
+      text-transform: none;
+      margin-right: 1.875rem;
 
-        @media screen and (max-width: $mobileSize) {
-            margin-left: 10px;
-
-        }
-
-        p {
-            font-weight: 400;
-            padding: 0;
-            margin: 0;
-        }
+      svg {
+        fill: $secondary700 !important;
+      }
     }
+  }
 
-    .h_title_right {
-        justify-content: center;
+  .personal_box {
+    &_filter {
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+
+      &_balance {
+        flex: 3;
         align-items: end;
+        flex-direction: column;
+        color: $primary900;
+      }
 
-        .print-text {
-            margin-left: auto;
-        }
+      &_title {
+        font-size: 0.8125rem;
+        margin-right: 1.4375rem;
+        opacity: 0.6;
+      }
 
-
-        .print_btn {
-            margin-left: auto;
-            color: $secondary700 !important;
-            text-transform: none;
-            margin-right: 30px;
-
-            svg {
-                fill: $secondary700 !important;
-            }
-        }
+      &_value {
+        font-size: 1.625rem;
+        font-weight: bold;
+      }
     }
 
-    .personal_box {
-        &_filter {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-
-            &_balance {
-                flex: 3;
-                align-items: end;
-                flex-direction: column;
-                color: $primary900;
-
-            }
-
-            &_title {
-                font-size: 13px;
-                margin-right: 23px;
-                opacity: 0.6;
-            }
-
-            &_value {
-                font-size: 26px;
-                font-weight: bold;
-            }
-        }
-
-        &_content {
-            margin-top: 20px;
-        }
+    &_content {
+      margin-top: 1.25rem;
     }
-
-
+  }
 }

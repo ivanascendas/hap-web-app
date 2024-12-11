@@ -1,7 +1,7 @@
 @import "../../assets/styles/variables.scss";
 
 .invoices-container {
-  padding: 30px 0;
+  padding: 1.875rem 0;
 
   .header-balance-text {
     display: flex;
@@ -15,19 +15,19 @@
     justify-content: flex-end;
     color: black;
     font-weight: bold;
-    font-size: 19px;
+    font-size: 1.1875rem;
   }
 
   .h_title {
     display: flex;
-    padding-bottom: 4px;
-    font-size: 26px;
+    padding-bottom: 0.25rem;
+    font-size: 1.625rem;
     color: #000;
     font-weight: bold;
-    margin-left: 35px;
+    margin-left: 2.1875rem;
 
     @media screen and (max-width: $mobileSize) {
-      margin-left: 10px;
+      margin-left: 0.625rem;
     }
 
     p {
@@ -49,7 +49,7 @@
       margin-left: auto;
       color: $secondary700 !important;
       text-transform: none;
-      margin-right: 30px;
+      margin-right: 1.875rem;
 
       svg {
         fill: $secondary700 !important;
@@ -60,7 +60,7 @@
   .personal_box {
     &_filter {
       display: flex;
-      gap: 20px;
+      gap: 1.25rem;
       align-items: center;
 
       &_balance {
@@ -71,19 +71,19 @@
       }
 
       &_title {
-        font-size: 13px;
-        margin-right: 23px;
+        font-size: 0.8125rem;
+        margin-right: 1.4375rem;
         opacity: 0.6;
       }
 
       &_value {
-        font-size: 26px;
+        font-size: 1.625rem;
         font-weight: bold;
       }
     }
 
     &_content {
-      margin-top: 20px;
+      margin-top: 1.25rem;
 
       .rates_invoice_table {
         tr {
@@ -98,7 +98,7 @@
             color: $primary700;
 
             .MuiIconButton-root {
-              margin-left: 5px;
+              margin-left: 0.3125rem;
 
               svg {
                 color: $secondary600;
@@ -107,18 +107,18 @@
           }
 
           .MuiFormControl-root {
-            width: 127px;
+            width: 7.9375rem;
           }
 
           td {
             flex: 1;
 
             &:nth-child(3) {
-              width: 250px;
+              width: 15.625rem;
             }
 
             &:nth-child(6) {
-              width: 40px;
+              width: 2.5rem;
             }
           }
         }
@@ -128,12 +128,12 @@
         display: flex;
         flex-direction: column;
         color: $error;
-        font-size: 16px;
+        font-size: 1rem;
         font-weight: 300;
 
         span {
           color: $success;
-          font-size: 10px;
+          font-size: 0.625rem;
         }
       }
     }
@@ -152,11 +152,11 @@
   right: 0;
   bottom: 0;
   z-index: 100;
-  box-shadow: 0 0 9px 0px rgba(220, 224, 231, 0.85);
+  box-shadow: 0 0 0.5625rem 0px rgba(220, 224, 231, 0.85);
 
   button {
     width: 100%;
-    padding: 15px;
-    box-shadow: 0 0 9px 0px rgba(220, 224, 231, 0.85);
+    padding: 0.9375rem;
+    box-shadow: 0 0 0.5625rem 0px rgba(220, 224, 231, 0.85);
   }
 }

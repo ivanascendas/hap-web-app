@@ -1,0 +1,73 @@
+.registration {
+  &__input-container {
+    margin-bottom: 1.25rem;
+
+    input:not([type="radio"], .registration__phone-input) {
+      margin-bottom: 0 !important;
+      padding-left: 0.3125rem !important;
+      height: 2.625rem !important;
+    }
+
+    .MuiInputBase-root {
+      height: 2.625rem !important;
+    }
+
+    .iti {
+      display: block !important;
+    }
+  }
+
+  &__phone-input {
+    border-width: 0.0625rem !important;
+    width: 100% !important;
+    border-radius: 0.25rem !important;
+    border-color: $border-input-color !important;
+
+    &:hover {
+      border-color: $border-input-color-hover !important;
+    }
+  }
+
+  &__subtitle {
+    text-align: start;
+    color: #5a5a5a;
+    margin-bottom: 1.25rem;
+    font-size: 0.75rem;
+  }
+
+  &__label {
+    position: relative;
+    font-family: "Roboto", sans-serif;
+    font-size: 0.8125rem;
+    margin-bottom: 0.5625rem;
+    color: #000;
+    display: block;
+    opacity: 0.7;
+
+    &.required:before {
+      content: " * ";
+      color: red;
+    }
+
+    &.label-question:after {
+      content: "";
+      cursor: pointer;
+      background-image: url(../../assets/img/info.svg);
+      background-size: 100%;
+      display: inline-block;
+      position: absolute;
+      height: 0.6875rem;
+      margin-top: 0.125rem;
+      margin-left: 0.25rem;
+      width: 0.6875rem;
+    }
+  }
+
+  form {
+    padding: 0 !important;
+  }
+
+  &__back {
+    opacity: 1 !important;
+  }
+}

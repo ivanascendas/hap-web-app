@@ -5,41 +5,39 @@
 }
 
 .policy_btn_back {
-  font-size: 25px;
-  bottom: 55px;
+  font-size: 1.5625rem;
+  bottom: 5rem;
   position: fixed;
-  top: 0;
-  left: 20px;
-  line-height: 36px;
+  top: auto;
+  left: 1.25rem;
+  line-height: 2.25rem;
   border: 0;
   background: transparent;
   outline: 0;
-  vertical-align: ceneter;
-  bottom: 80px;
-  top: auto;
+  vertical-align: center;
   display: flex;
 
   img {
-    width: 30px;
+    width: 1.875rem;
   }
 
   span {
-    margin: 3px;
+    margin: 0.1875rem;
   }
 }
 
 .data-policy-info {
-  padding-left: 25px;
+  padding-left: 1.5625rem;
 
   .h_title {
-    margin: 0 35px;
+    margin: 0 2.1875rem;
   }
 
   @media screen and (max-width: $mobileSize) {
     padding: 0;
 
     .h_title {
-      margin: 0 10px;
+      margin: 0 0.625rem;
     }
   }
 }

@@ -6,10 +6,10 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  max-width: 367px;
+  max-width: 22.9375rem;
 
   label {
-    font-size: 14px !important;
+    font-size: 0.875rem !important;
   }
 
   &_send-box {
@@ -20,6 +20,6 @@
   }
 
   &_confirm-box {
-    padding-right: 15px;
+    padding-right: 0.9375rem;
   }
 }

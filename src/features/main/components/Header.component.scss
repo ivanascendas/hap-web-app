@@ -1,7 +1,7 @@
 @import "../../../assets/styles/variables.scss";
 
 .MuiAppBar-root {
-  height: 77px;
+  height: 4.8125rem;
   position: absolute;
   background: $secondary100 !important;
   color: $secondaryGray600 !important;
@@ -33,26 +33,26 @@
   .header-title {
     align-items: center;
     justify-content: center;
-    font-size: 23px;
+    font-size: 1.4375rem;
     font-weight: bold;
     color: $primary900;
   }
 
   .logo {
-    height: 44px;
+    height: 2.75rem;
   }
 
   .logo-mobile {
-    width: 265px;
+    width: 16.5625rem;
   }
 
   .header_links_pay {
     float: right;
-    margin-right: 26px;
-    width: 156px;
-    height: 46px;
-    line-height: 46px;
-    border-radius: 3px;
+    margin-right: 1.625rem;
+    width: 9.75rem;
+    height: 2.875rem;
+    line-height: 2.875rem;
+    border-radius: 0.1875rem;
     background: rgb(255, 140, 61);
     background: linear-gradient(
       85deg,
@@ -60,17 +60,17 @@
       rgba(231, 18, 0, 1) 100%
     );
     color: #fff;
-    font-size: 15px;
+    font-size: 0.9375rem;
     text-align: center;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 30px;
+    margin: 0 1.875rem;
     text-transform: none;
   }
 
   .welcome-text {
-    font-size: 13px !important;
+    font-size: 0.8125rem !important;
     opacity: 0.7;
   }
 
@@ -79,43 +79,44 @@
 
     &:after {
       content: "";
-      right: -19px;
+      right: -1.1875rem;
       box-sizing: border-box;
-      height: 8px;
-      width: 8px;
+      height: 0.5rem;
+      width: 0.5rem;
       border-style: solid;
       border-color: $primary900;
-      border-width: 0px 2px 2px 0px;
+      border-width: 0px 0.125rem 0.125rem 0px;
       transform: rotate(45deg);
       transition: border-width 150ms ease-in-out;
-      top: 4px;
+      top: 0.25rem;
       display: block;
-      margin: 3px 0 3px 10px;
+      margin: 0.1875rem 0 0.1875rem 0.625rem;
     }
   }
 
   .logo-text {
     font-weight: 200;
-    font-size: 22px;
-    margin-left: 10px;
+    font-size: 1.375rem;
+    margin-left: 0.625rem;
     background: linear-gradient(
       90deg,
       rgba(223, 51, 36, 1) 0%,
       rgba(238, 106, 18, 1) 100%
     );
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 
     @media screen and (max-width: $desktopLgSize) {
-      margin-left: 10px;
-      line-height: 44px;
-      font-size: 18px;
+      margin-left: 0.625rem;
+      line-height: 2.75rem;
+      font-size: 1.125rem;
     }
   }
 
   @media screen and (min-width: $mobileSize) {
-    height: 77px !important;
+    height: 4.8125rem !important;
     display: flex !important;
-    box-shadow: 0px 1px 18px 0px rgba(220, 224, 231, 1) !important;
+    box-shadow: 0px 0.0625rem 1.125rem 0px rgba(220, 224, 231, 1) !important;
   }
 }

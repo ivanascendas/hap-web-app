@@ -1,6 +1,6 @@
 import React, { useEffect, useTransition } from "react";
 import moment from "moment";
-import { Box, Button, Checkbox } from "@mui/material";
+import { Box, Button, Checkbox, Skeleton } from "@mui/material";
 import currency from "../../../shared/utils/currency";
 import "./MobileInvoicesList.component.scss";
 import { InvoiceDto } from "../../../shared/dtos/invoice.dtos";
@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 
 export type MobileInvoicesListProps = {
   list: InvoiceDto[];
+  isLoading: boolean;
   selectedInvoices: { [key: string]: number };
   onClick?: (e: React.ChangeEvent<HTMLInputElement>, row: InvoiceDto) => void;
   loadMore?: () => void;
@@ -16,6 +17,7 @@ export type MobileInvoicesListProps = {
 export const MobileInvoicesListComponent = ({
   list,
   loadMore,
+  isLoading,
   onClick,
   selectedInvoices,
 }: MobileInvoicesListProps): JSX.Element => {
@@ -50,54 +52,90 @@ export const MobileInvoicesListComponent = ({
 
   return (
     <Box className="table-invoices-mobile">
-      {Object.keys(statements).map((yearMounth: string) => (
-        <Box className="table-invoices-mobile_group" key={yearMounth}>
-          <Box className="table-invoices-mobile_group_header">{yearMounth}</Box>
+      {!isLoading &&
+        Object.keys(statements).map((yearMounth: string) => (
+          <Box className="table-invoices-mobile_group" key={yearMounth}>
+            <Box className="table-invoices-mobile_group_header">
+              {yearMounth}
+            </Box>
 
-          <Box className="table-invoices-mobile_group_list">
-            {statements[yearMounth].map((statemet, i) => (
-              <Box
-                onClick={handleWrapperClick}
-                key={yearMounth + i}
-                className={`MuiButtonBase-root MuiButton-root  MuiButton-colorPrimary table-invoices-mobile_group_list_item ${Object.keys(selectedInvoices).some((s) => s === `${statemet.invoiceNo}_${statemet.sequenceNo}_input`) ? "selected" : ""} ripple`}
-              >
+            <Box className="table-invoices-mobile_group_list">
+              {statements[yearMounth].map((statemet, i) => (
                 <Box
-                  sx={{ width: "60px !important", flex: "none", marginLeft: 1 }}
+                  onClick={handleWrapperClick}
+                  key={yearMounth + i}
+                  className={`MuiButtonBase-root MuiButton-root  MuiButton-colorPrimary table-invoices-mobile_group_list_item ${Object.keys(selectedInvoices).some((s) => s === `${statemet.invoiceNo}_${statemet.sequenceNo}_input`) ? "selected" : ""} ripple`}
                 >
-                  <Box className="table-invoices-mobile_group_list_item_date">
-                    <span>{moment(statemet.statementDate).format("DD")}</span>
-                    {moment(statemet.statementDate).format("MMM")}
+                  <Box
+                    sx={{
+                      width: "3.75rem !important",
+                      flex: "none",
+                      marginLeft: 1,
+                    }}
+                  >
+                    <Box className="table-invoices-mobile_group_list_item_date">
+                      <span>{moment(statemet.statementDate).format("DD")}</span>
+                      {moment(statemet.statementDate).format("MMM")}
+                    </Box>
+                  </Box>
+
+                  <Box className="table-invoices-mobile_group_list_item_referance">
+                    {statemet.invoiceNo}
+                  </Box>
+
+                  <Box
+                    className={`table-invoices-mobile_group_list_item_amount `}
+                  >
+                    <Box className="balance">
+                      {currency.format(statemet.total || 0)}
+                      <span>
+                        {currency.format(statemet.totalPaid || 0)} paid
+                      </span>
+                    </Box>
+                  </Box>
+                  <Box className="table-invoices-mobile_group_list_item_chevron">
+                    <Checkbox
+                      id={`${statemet.invoiceNo}_${statemet.sequenceNo}_input`}
+                      onChange={(e) => onClick && onClick(e, statemet)}
+                      checked={
+                        !!selectedInvoices[
+                          `${statemet.invoiceNo}_${statemet.sequenceNo}_input`
+                        ]
+                      }
+                    />
                   </Box>
                 </Box>
+              ))}
+            </Box>
+          </Box>
+        ))}
+      {isLoading && (
+        <Box className="table-statements-mobile_group">
+          <Box className="table-statements-mobile_group_header">
+            <Skeleton variant="text" />
+          </Box>
 
-                <Box className="table-invoices-mobile_group_list_item_referance">
-                  {statemet.invoiceNo}
-                </Box>
-
-                <Box
-                  className={`table-invoices-mobile_group_list_item_amount `}
-                >
-                  <Box className="balance">
-                    {currency.format(statemet.total || 0)}
-                    <span>{currency.format(statemet.totalPaid || 0)} paid</span>
-                  </Box>
-                </Box>
-                <Box className="table-invoices-mobile_group_list_item_chevron">
-                  <Checkbox
-                    id={`${statemet.invoiceNo}_${statemet.sequenceNo}_input`}
-                    onChange={(e) => onClick && onClick(e, statemet)}
-                    checked={
-                      !!selectedInvoices[
-                        `${statemet.invoiceNo}_${statemet.sequenceNo}_input`
-                      ]
-                    }
-                  />
-                </Box>
+          <Box className="table-statements-mobile_group_list">
+            <Box
+              className={`MuiButtonBase-root MuiButton-root  MuiButton-colorPrimary table-invoices-mobile_group_list_item `}
+            >
+              <Box style={{ width: "2.75rem !important", flex: "none" }}>
+                <Skeleton
+                  variant="rounded"
+                  className="table-statements-mobile_group_list_item_date"
+                />
               </Box>
-            ))}
+              <Box className="table-statements-mobile_group_list_item_referance">
+                <Skeleton variant="text" />
+              </Box>
+
+              <Box className="table-statements-mobile_group_list_item_chevron">
+                <Skeleton variant="rectangular" width={20} height={20} /> &nbsp;
+              </Box>
+            </Box>
           </Box>
         </Box>
-      ))}
+      )}
     </Box>
   );
 };

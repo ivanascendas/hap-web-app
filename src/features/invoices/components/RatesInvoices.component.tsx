@@ -331,7 +331,7 @@ export const RatesInvoicesComponent = ({
           display: { xs: "none", md: "flex" },
           justifyContent: "space-between",
           alignItems: "center",
-          margin: "10px 35px",
+          margin: "0.625rem 2.1875rem",
         }}
       >
         <Button
@@ -341,7 +341,7 @@ export const RatesInvoicesComponent = ({
           {t("BUTTONS.BACK_TO_STATEMENTS")}
         </Button>
         <Button
-          sx={{ width: "33%", padding: "15px" }}
+          sx={{ width: "33%", padding: "0.9375rem" }}
           disabled={Object.values(selectedInvoices).length === 0}
           className="btn btn-primary"
           variant="contained"
@@ -356,6 +356,7 @@ export const RatesInvoicesComponent = ({
         sx={{ display: { xs: "flex", md: "none" } }}
       >
         <MobileInvoicesListComponent
+          isLoading={isRatesLoading}
           selectedInvoices={selectedInvoices}
           list={payments || []}
           onClick={checkBoxHandler}

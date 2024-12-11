@@ -30,13 +30,12 @@ $devider-bg: linear-gradient(
   rgba(0, 0, 0, 0.2) 50%,
   rgba(255, 255, 255, 1) 100%
 );
-
 //size
-$mobileSize: 768px;
-$mobileSmallSize: 540px;
-$desktopMdSize: 900px;
-$desktopLgSize: 1200px;
-$placeholder_size: 18px;
+$mobileSize: 48rem; // 768px ÷ 16
+$mobileSmallSize: 33.75rem; // 540px ÷ 16
+$desktopMdSize: 56.25rem; // 900px ÷ 16
+$desktopLgSize: 75rem; // 1200px ÷ 16
+$placeholder_size: 1.125rem; // 18px ÷ 16
 
 @mixin theme {
   --mui-primary-main: #{$primary500};

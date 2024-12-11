@@ -1,99 +1,99 @@
-@import '../../../assets/styles/variables.scss';
+@import "../../../assets/styles/variables.scss";
 
 .invoice_popup {
-    border: none !important;
+  border: none !important;
+  display: flex;
+  flex-direction: column;
+
+  @media screen and (max-width: $mobileSize) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: none;
+    width: 100%;
+  }
+
+  &_header {
+    flex: none !important;
+    font-size: 1.25rem;
+    color: $primary900;
+    border-radius: 0.375rem 0.375rem 0 0;
+    background-color: #e8eaed;
+    padding: 1.25rem 0.9375rem;
+    display: flex;
+    justify-content: space-between;
+
+    &_title {
+      color: #555860;
+    }
+  }
+
+  &_content {
+    flex: 1;
     display: flex;
     flex-direction: column;
+    padding: 1.25rem 2.25rem;
 
-    @media screen and (max-width: $mobileSize) {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        transform: none;
-        width: 100%;
+    &_block {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+
+      &:not(:last-child) {
+        flex: none;
+        border-bottom: 0.0625rem solid #eaeaea;
+      }
+
+      color: $primary900;
+      font-size: 1rem;
+      padding: 0.9375rem 0;
+
+      &:first-child {
+        padding-top: 0;
+      }
     }
 
-    &_header {
-        flex: none !important;
-        font-size: 20px;
-        color: $primary900;
-        border-radius: 6px 6px 0 0;
-        background-color: #e8eaed;
-        padding: 20px 15px;
-        display: flex;
-        justify-content: space-between;
+    &_row {
+      flex: none !important;
+      justify-content: space-between;
+      padding: 0.9375rem 0;
 
-        &_title {
-            color: #555860;
-        }
-    }
+      &_label {
+        color: #7f7f7f;
+      }
 
-    &_content {
+      &:last-child {
         flex: 1;
-        display: flex;
         flex-direction: column;
-        padding: 20px 36px;
 
-        &_block {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-
-            &:not(:last-child) {
-                flex: none;
-                border-bottom: 1px solid #eaeaea;
-            }
-
-            color: $primary900;
-            font-size: 16px;
-            padding: 15px 0;
-
-            &:first-child {
-                padding-top: 0;
-            }
+        @media screen and (max-width: $mobileSize) {
+          margin-top: auto;
         }
-
-        &_row {
-            flex: none !important;
-            justify-content: space-between;
-            padding: 15px 0;
-
-            &_label {
-                color: #7f7f7f;
-            }
-
-            &:last-child {
-                flex: 1;
-                flex-direction: column;
-
-                @media screen and (max-width: $mobileSize) {
-                    margin-top: auto;
-
-                }
-            }
-        }
-
-
-        Button {
-            text-transform: none;
-            padding: 10px 20px;
-
-            &.download {
-                background: linear-gradient(85deg,
-                        rgba(101, 152, 255, 1) 0%,
-                        rgba(55, 110, 202, 1) 100%);
-                margin-bottom: 8px;
-
-                &:hover {
-                    background: linear-gradient(85deg,
-                            rgb(41, 100, 217) 0%,
-                            rgb(15, 77, 184) 100%);
-                }
-            }
-        }
-
+      }
     }
 
+    Button {
+      text-transform: none;
+      padding: 0.625rem 1.25rem;
+
+      &.download {
+        background: linear-gradient(
+          85deg,
+          rgba(101, 152, 255, 1) 0%,
+          rgba(55, 110, 202, 1) 100%
+        );
+        margin-bottom: 0.5rem;
+
+        &:hover {
+          background: linear-gradient(
+            85deg,
+            rgb(41, 100, 217) 0%,
+            rgb(15, 77, 184) 100%
+          );
+        }
+      }
+    }
+  }
 }

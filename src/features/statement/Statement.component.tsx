@@ -86,7 +86,7 @@ export const StatementComponent = (): JSX.Element => {
                   md: "none",
                 },
                 flexDirection: "column",
-                marginRight: "10px",
+                marginRight: "0.625rem",
               }}
               className="h_title_right"
             >

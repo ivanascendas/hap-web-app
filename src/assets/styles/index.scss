@@ -30,8 +30,8 @@ a,
   color: $primary700;
   text-decoration: none;
   cursor: pointer;
-  line-height: 15.4px;
-  font-size: 14px;
+  line-height: 0.9625rem; // 15.4px
+  font-size: 0.875rem; // 14px
 
   p {
     color: $primary700;
@@ -48,44 +48,44 @@ a,
 }
 
 .error {
-  margin-top: 8px;
+  margin-top: 0.5rem; // 8px
   color: $error;
-  font-size: 13px;
+  font-size: 0.8125rem; // 13px
   text-align: center;
   margin: 0;
   padding: 0;
   position: relative;
-  top: -16px;
+  top: -1rem; // -16px
 }
 
 .mt-20 {
-  margin-top: 20px !important;
+  margin-top: 1.25rem !important; // 20px
 }
 
 .mb-20 {
-  margin-bottom: 20px !important;
+  margin-bottom: 1.25rem !important; // 20px
 }
 
 .h_title {
   display: inline-flex;
-  padding-bottom: 4px;
-  font-size: 26px;
+  padding-bottom: 0.25rem; // 4px
+  font-size: 1.625rem; // 26px
   color: $primary900;
   font-weight: bold;
 }
 
 .personal_box {
-  box-shadow: 0 0 9px 0px rgba(220, 224, 231, 0.85);
-  border-radius: 11px;
-  padding: 20px;
+  box-shadow: 0 0 0.5625rem 0 rgba(220, 224, 231, 0.85); // 9px
+  border-radius: 0.6875rem; // 11px
+  padding: 1.25rem; // 20px
   background: $secondary100;
-  margin-bottom: 74px;
+  margin-bottom: 4.625rem; // 74px
   line-height: 1.2;
   max-width: 93%;
-  margin: 0 35px;
+  margin: 0 2.1875rem; // 35px
 
   @media screen and (max-width: $mobileSize) {
-    margin: 0 10px;
+    margin: 0 0.625rem; // 10px
   }
 }
 
@@ -94,30 +94,31 @@ a,
     height: 100vh;
     background: $secondary;
     box-sizing: border-box;
-    padding: 80px 0 50px 0;
+    padding: 5rem 0 3.125rem 0; // 80px 0 50px 0
     position: relative;
   }
 
   &_height {
     box-sizing: border-box;
-    max-width: 1040px;
+    max-width: 65rem; // 1040px
     margin: auto;
-    padding-bottom: 1px;
+    padding-bottom: 0.0625rem; // 1px
 
     &_title {
-      padding-bottom: 10px;
+      padding-bottom: 0.625rem; // 10px
 
-      @media screen and (min-width: 768px) {
+      @media screen and (min-width: 48rem) {
+        // 768px
         display: flex;
-        margin-top: 4px;
+        margin-top: 0.25rem; // 4px
         align-items: center;
         justify-content: space-between;
-        padding: 35px 0;
+        padding: 2.1875rem 0; // 35px
         background: #f5f7fa;
       }
 
       .policy_title {
-        margin-top: 77px;
+        margin-top: 4.8125rem; // 77px
       }
 
       .h_title.cookie_title {
@@ -125,7 +126,7 @@ a,
 
         span {
           font-weight: 400;
-          font-size: 20px;
+          font-size: 1.25rem; // 20px
         }
       }
     }
@@ -204,11 +205,11 @@ a,
 }
 
 .header_links_pay {
-  margin-right: 26px;
-  width: 156px;
-  height: 46px;
-  line-height: 46px;
-  border-radius: 3px;
+  margin-right: 1.625rem; // 26px
+  width: 9.75rem; // 156px
+  height: 2.875rem; // 46px
+  line-height: 2.875rem; // 46px
+  border-radius: 0.1875rem; // 3px
   background: rgb(255, 140, 61);
   background: linear-gradient(
     85deg,
@@ -216,11 +217,11 @@ a,
     rgba(231, 18, 0, 1) 100%
   );
   color: #fff;
-  font-size: 15px;
+  font-size: 0.9375rem; // 15px
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 30px;
+  margin: 0 1.875rem; // 0 30px
   text-transform: none;
 }

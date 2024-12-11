@@ -224,7 +224,7 @@ export const HeaderComponent = ({
             sx={{
               flexGrow: 1,
               display: { xs: "none", md: "none", lg: "flex" },
-              width: "260px",
+              width: "16.25rem",
             }}
           >
             <div onClick={handleOpenUserMenu} className="welcome-block">
@@ -237,7 +237,7 @@ export const HeaderComponent = ({
                   <Skeleton
                     aria-label="Customer Name"
                     role="progressbar"
-                    width="128px"
+                    width="8rem"
                     height={18}
                   />
                 )}
@@ -245,7 +245,7 @@ export const HeaderComponent = ({
             </div>
 
             <Menu
-              sx={{ mt: "45px" }}
+              sx={{ mt: "2.8125rem" }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{

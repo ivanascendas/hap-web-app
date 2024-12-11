@@ -4,15 +4,13 @@ input:not([type="radio"]) {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  //border: 1px solid #dce0e2;
   font-size: $placeholder_size;
   color: #3c515f;
-  padding: 0 11px;
-  //border-radius: 4px;
-  height: 33px;
+  padding: 0 0.688rem;
+  height: 2.063rem;
   width: 100%;
   display: block;
-  padding: 20px 10px;
+  padding: 1.25rem 0.625rem;
   appearance: none;
   -moz-appearance: none;
   -webkit-appearance: none;
@@ -47,14 +45,14 @@ input:not([type="radio"]) {
   font-weight: 700;
   background: linear-gradient(85deg, $primary600 100%, $primary400 0%);
   width: 100%;
-  line-height: 35px;
-  font-size: 15px;
-  border-radius: 4px;
+  line-height: 2.188rem;
+  font-size: 0.938rem;
+  border-radius: 0.25rem;
   overflow: 0;
   color: $secondary;
   font-family: "Roboto", sans-serif;
   border: 0;
-  height: 55px;
+  height: 3.438rem;
   font-weight: 700;
 
   &:disabled {
@@ -66,15 +64,15 @@ input:not([type="radio"]) {
   background: none;
   border: 0;
   width: 100%;
-  line-height: 35px;
-  font-size: 15px;
-  border-radius: 4px;
-  height: 55px;
+  line-height: 2.188rem;
+  font-size: 0.938rem;
+  border-radius: 0.25rem;
+  height: 3.438rem;
   font-weight: 700;
   color: $primary900;
   opacity: 0.4;
   font-weight: normal;
-  font-size: 19px;
+  font-size: 1.188rem;
   text-decoration: none;
 }
 
@@ -87,9 +85,9 @@ input:not([type="radio"]) {
 
   &::before {
     content: "";
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.625rem;
     background: url(../img/back-arrow.svg);
   }
 }
@@ -100,11 +98,11 @@ input:not([type="radio"]) {
 
   .password-icon {
     position: absolute;
-    right: 10px;
-    top: 0px;
+    right: 0.625rem;
+    top: 0;
 
     @media screen and (max-width: $mobileSize) {
-      top: 8px;
+      top: 0.5rem;
     }
   }
 }
@@ -113,16 +111,15 @@ input:not([type="radio"]) {
   width: 100%;
 
   .MuiInputBase-root {
-    height: 33px;
+    height: 2.063rem;
 
     @media screen and (max-width: $mobileSize) {
-      //      top: 16px;
-      height: 33px;
+      height: 2.063rem;
     }
   }
 
   .MuiInputLabel-root {
-    top: -10px;
+    top: -0.625rem;
 
     &.Mui-focused {
       top: 0;

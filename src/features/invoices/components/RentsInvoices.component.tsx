@@ -162,6 +162,7 @@ export const RentsInvoiceComponent = ({
         sx={{ display: { xs: "flex", md: "none" } }}
       >
         <MobileInvoicesListComponent
+          isLoading={isFetching}
           selectedInvoices={{}}
           list={statements || []}
           loadMore={handleLoadMore}

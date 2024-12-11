@@ -69,7 +69,7 @@ export const PasswordsFormComponent = ({
             }}
           />
         ) : (
-          <Skeleton width={"100%"} height={"42px"} variant="rounded" />
+          <Skeleton width={"100%"} height={" 2.625rem"} variant="rounded" />
         )}
       </Box>
       <Box className="account_form_row">
@@ -97,7 +97,7 @@ export const PasswordsFormComponent = ({
             }}
           />
         ) : (
-          <Skeleton width={"100%"} height={"42px"} variant="rounded" />
+          <Skeleton width={"100%"} height={" 2.625rem"} variant="rounded" />
         )}
       </Box>
       <Box className="account_form_row">
@@ -125,7 +125,7 @@ export const PasswordsFormComponent = ({
             }}
           />
         ) : (
-          <Skeleton width={"100%"} height={"42px"} variant="rounded" />
+          <Skeleton width={"100%"} height={" 2.625rem"} variant="rounded" />
         )}
       </Box>
 

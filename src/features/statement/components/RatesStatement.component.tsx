@@ -289,6 +289,7 @@ export const RatesStatementComponent = ({
         sx={{ display: { xs: "flex", md: "none" } }}
       >
         <MobileStatementsListComponent
+          isLoading={isFetching}
           onClick={rateClickHandler}
           list={statements || []}
           loadMore={handleLoadMore}
