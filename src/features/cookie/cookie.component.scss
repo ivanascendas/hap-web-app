@@ -41,3 +41,16 @@
     }
   }
 }
+
+.authenticated {
+  .data-policy-info {
+    @media screen and (max-width: $mobileSize) {
+      max-height: calc(100vh - 9.7rem);
+      overflow: auto;
+
+      .personal_box {
+        margin-bottom: pxToRem(50) !important;
+      }
+    }
+  }
+}

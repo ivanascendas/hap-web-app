@@ -70,11 +70,16 @@ export const MainComponent = ({ children }: MainProps): JSX.Element => {
       <FooterCompoment
         drawerWidth={drawerWidth}
         isAuthenticated={isAuthenticated}
-        isInvoicesPage={!window.location.pathname.startsWith("/invoices")}
+        showFooter={
+          !window.location.pathname.startsWith("/invoices") &&
+          !window.location.pathname.startsWith("/payment")
+        }
       />
-      {isAuthenticated && !window.location.pathname.startsWith("/invoices") && (
-        <BottomBarСomponent />
-      )}
+      {isAuthenticated &&
+        !window.location.pathname.startsWith("/invoices") &&
+        !window.location.pathname.startsWith("/payment") && (
+          <BottomBarСomponent />
+        )}
       <CookieBannerComponent />
     </Paper>
   );

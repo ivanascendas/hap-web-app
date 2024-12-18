@@ -13,6 +13,8 @@ import { AccountComponent } from "./features/account/Account.component";
 import { MessagesComponent } from "./features/messages/Messages.component";
 import { ContactsComponent } from "./features/contacts/Contacts.component";
 import { InvoicesComponent } from "./features/invoices/Invoices.component";
+import { PaymentComponent } from "./features/payment/payment.component";
+import { PayComponent } from "./features/payment/pay.component";
 
 /**
  * Redirect component that handles user authentication and navigation.
@@ -102,5 +104,13 @@ export const router = createBrowserRouter([
   {
     path: "/contacts",
     element: <Protected component={<ContactsComponent />} />,
+  },
+  {
+    path: "/payment/info",
+    element: <Protected component={<PaymentComponent />} />,
+  },
+  {
+    path: "/payment/pay",
+    element: <Protected component={<PayComponent />} />,
   },
 ]);

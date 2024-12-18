@@ -5,23 +5,23 @@ import { Link, useParams } from "react-router-dom";
 export type FooterProps = {
   drawerWidth?: number;
   isAuthenticated?: boolean;
-  isInvoicesPage: boolean;
+  showFooter: boolean;
 };
 
 export const FooterCompoment = ({
   drawerWidth,
   isAuthenticated,
-  isInvoicesPage,
+  showFooter,
 }: FooterProps): JSX.Element => {
   const { t } = useTranslation();
 
-  return isInvoicesPage ? (
+  return showFooter ? (
     <Box
       component="footer"
       role="contentinfo"
       sx={{
         display: {
-          xs: isInvoicesPage ? "none" : "flex",
+          xs: showFooter ? "none" : "flex",
           md: "flex",
         },
         left: {

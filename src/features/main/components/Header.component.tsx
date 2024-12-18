@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../../shared/redux/slices/authSlice";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -43,6 +43,8 @@ export const HeaderComponent = ({
   const user = useSelector(selectUser);
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
+
+  const { department } = useParams();
   const unreadCount = useSelector(selectUnreadNotificationsCount);
   const [anchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
@@ -88,7 +90,18 @@ export const HeaderComponent = ({
   ];
 
   return (
-    <AppBar position="static" className="app-header">
+    <AppBar
+      position="static"
+      className="app-header"
+      sx={{
+        display: {
+          xs: window.location.pathname.startsWith("/payment/pay")
+            ? "none"
+            : "flex",
+          md: "flex",
+        },
+      }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box sx={{ flex: "none", display: { md: "flex", lg: "none" } }}>
@@ -192,6 +205,7 @@ export const HeaderComponent = ({
 
             <Button
               className="header_links_pay"
+              onClick={() => navigate(`/invoices/${department || "rates"}`)}
               sx={{ display: title ? "none !important" : "flex" }}
             >
               {t("CONTENTS.NAV.MAKE_PAYMENT")}

@@ -1,7 +1,16 @@
 @import "../../assets/styles/variables.scss";
+@import "../../assets/styles/functions.scss";
 
 .account {
   padding: 0.9375rem 2.1875rem; // 15px 35px
+  padding-bottom: pxToRem(55);
+  max-height: calc(100vh - 11.8rem);
+  overflow: auto;
+
+  @media screen and (max-width: $mobileSize) {
+    max-height: calc(100vh - 13.7rem);
+    padding-bottom: pxToRem(50);
+  }
 
   &_header {
     color: $primary900;

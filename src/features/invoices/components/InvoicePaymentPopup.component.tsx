@@ -20,6 +20,7 @@ import { InvoiceDto } from "../../../shared/dtos/invoice.dtos";
 export type InvoicePaymentPopupProps = {
   open: boolean;
   selectedInvoices: { [key: string]: number };
+  payHandler: () => void;
   handleAmountChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     row: InvoiceDto,
@@ -30,6 +31,7 @@ export type InvoicePaymentPopupProps = {
 export const InvoicePaymentPopupСomponent = ({
   open,
   onClose,
+  payHandler,
   selectedInvoices,
   handleAmountChange,
 }: InvoicePaymentPopupProps): JSX.Element => {
@@ -119,7 +121,7 @@ export const InvoicePaymentPopupСomponent = ({
                 fullWidth
                 color="primary"
                 className="header_links_pay"
-                onClick={onClose}
+                onClick={payHandler}
               >
                 {t("PAYMENT.PAY_NOW")}
               </Button>

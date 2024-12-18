@@ -31,7 +31,7 @@ export enum TTI_ERROR_CODES {
 
 interface IntlTelInputProps extends TextFieldProps<"standard"> {
   options?: SomeOptions;
-  getIti: (iti: Iti) => void;
+  getIti?: (iti: Iti) => void;
   onValidation?: (isValid: boolean, errorCode?: TTI_ERROR_CODES) => void;
 }
 
@@ -71,7 +71,7 @@ export const IntlTelInputComponent = forwardRef<
           refRef.current?.blur();
           refRef.current?.focus();
         };
-        if (iti) {
+        if (iti && props.getIti) {
           setIti(iti);
           props.getIti(iti);
 

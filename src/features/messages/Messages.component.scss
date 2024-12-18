@@ -2,6 +2,14 @@
 
 .messages {
   padding: 0.9375rem 2.1875rem;
+  max-height: calc(100vh - 9.7rem);
+  overflow: auto;
+  padding-bottom: pxToRem(50);
+
+  @media screen and (max-width: $mobileSize) {
+    max-height: calc(100vh - 11.7rem);
+    overflow: auto;
+  }
 
   &_header {
     color: $primary900;

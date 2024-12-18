@@ -2,15 +2,18 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { InvoiceDto, InvoiceQueryParams } from "../../dtos/invoice.dtos";
 import { paymentsApi } from "../../services/Payment.service";
+import { PaymentDto } from "../../dtos/payments.dto";
 
 export type InvoicesState = {
   list: InvoiceDto[];
+  invoicesToPay: PaymentDto[];
   incDept: string;
   count: number;
 };
 
 const initialState: InvoicesState = {
   list: [],
+  invoicesToPay: [],
   incDept: "",
   count: 0,
 };
@@ -42,6 +45,20 @@ const paymentsSlice = createSlice({
     ) => {
       return { ...state, payments: action.payload.list };
     },
+
+    /**
+     * Sets the list of invoices to pay in the state.
+     *
+     * @param state - The current state of the payments slice.
+     * @param action - The action that contains the new list of invoices to pay.
+     * @returns The updated state with the new list of invoices to pay.
+     */
+    setInvoicesToPay: (
+      state: InvoicesState,
+      action: PayloadAction<PaymentDto[]>,
+    ) => {
+      state.invoicesToPay = action.payload;
+    },
     /**
      * Clears the list of payments in the state.
      *
@@ -50,6 +67,15 @@ const paymentsSlice = createSlice({
      */
     clearInvoices: (state: InvoicesState) => {
       state.list = [];
+    },
+    /**
+     * Clears the list of invoices to pay in the state.
+     *
+     * @param state - The current state of the payments slice.
+     * @returns The updated state with an empty list of invoices to pay.
+     */
+    clearInvoicesToPay: (state: InvoicesState) => {
+      state.invoicesToPay = [];
     },
   },
   extraReducers(builder) {
@@ -82,9 +108,17 @@ const paymentsSlice = createSlice({
  */
 export const selectInvoices = (state: RootState): InvoiceDto[] =>
   state.payments.list;
+
+export const selectInvoicesToPay = (state: RootState): PaymentDto[] =>
+  state.payments.invoicesToPay;
 export const selectInvoicesCount = (state: RootState): number =>
   state.payments.count;
 
-export const { setInvoices, clearInvoices } = paymentsSlice.actions;
+export const {
+  setInvoices,
+  clearInvoices,
+  setInvoicesToPay,
+  clearInvoicesToPay,
+} = paymentsSlice.actions;
 
 export default paymentsSlice.reducer;
