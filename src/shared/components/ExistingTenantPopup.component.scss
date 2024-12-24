@@ -1,0 +1,102 @@
+@import "../../assets/styles/variables.scss";
+@import "../../assets/styles/functions.scss";
+
+.existing_tenant_popup {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  min-width: 37.5rem;
+  height: fit-content;
+  min-height: auto;
+
+  &_header {
+    flex: none;
+
+    h1 {
+      color: $primary900;
+      font-size: 23px !important;
+      margin: 25px 0 20px 0;
+      font-family: "robotobold";
+      text-align: center;
+    }
+
+    button {
+      display: block;
+      position: absolute;
+      right: 5px;
+      top: 5px;
+      border-radius: 50%;
+      padding: 4px 4px 0 4px;
+      background-color: rgb(240, 240, 240);
+      cursor: pointer;
+
+      svg {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  &_content {
+    flex: 1;
+
+    .tenant-info {
+      font-size: 0.9rem;
+    }
+
+    strong.tenant-info {
+      font-weight: 600;
+    }
+
+    &_form {
+      .MuiFormControlLabel-asterisk {
+        color: $error;
+      }
+
+      &_row {
+        margin-top: 1.5rem;
+
+        label {
+          position: relative;
+          font-family: "Roboto", sans-serif;
+          font-size: 0.8125rem;
+          margin-bottom: 0.5625rem;
+          color: #000;
+          display: flex;
+          opacity: 0.7;
+          gap: 4px;
+        }
+      }
+    }
+
+    .confirmation-block {
+      margin-top: 1.2rem;
+      display: flex;
+      gap: 2rem;
+
+      label {
+        font-size: 0.8rem;
+      }
+
+      .button-primary {
+        height: 3rem;
+      }
+    }
+
+    label#demo-radio-buttons-group-userdata-label {
+      display: none;
+    }
+
+    .MuiFormGroup-row {
+      justify-content: space-between;
+    }
+  }
+
+  &_footer {
+    flex: none;
+    margin: 1.5rem 0;
+
+    .button-primary {
+      color: $secondary100;
+    }
+  }
+}

@@ -18,6 +18,9 @@ import {
   selectInvoicesToPay,
   setInvoicesToPay,
 } from "../../shared/redux/slices/paymentSlice";
+import { IntlTelInputRef } from "intl-tel-input/react";
+import { getErrorMessage } from "../../shared/utils/getErrorMessage";
+const { default: utils } = require("intl-tel-input/build/js/utils.js");
 
 export type PaymentProps = {};
 
@@ -26,7 +29,9 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
   const user = useSelector(selectUser);
   const isLoading = useSelector(selectUserLoading);
   const payments = useSelector(selectInvoicesToPay);
-  const [iniTelReff, setIti] = useState<Iti>();
+
+  const iniTelReff = useRef<IntlTelInputRef>();
+  const iniTelinst = useRef<Iti>();
   const form = useRef<HTMLFormElement>(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -34,6 +39,7 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
     handleSubmit,
     register,
     reset,
+    setValue,
     formState: { errors, isValid },
   } = useForm<PaymentDto>({
     mode: "all",
@@ -52,7 +58,7 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
       City: "City",
       Country: "Ireland",
       Email: user?.email,
-      Phone: user?.phone,
+      Phone: user ? `+${user?.phone}` : "",
       Zipcode: "NA",
     },
   });
@@ -74,9 +80,12 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
         City: "City",
         Country: "Ireland",
         Email: user?.email,
-        Phone: user?.phone,
+        Phone: `+${user?.phone}`,
         Zipcode: "NA",
       });
+      if (iniTelReff.current && user.phone) {
+        iniTelReff.current?.getInstance()?.setNumber(`+${user.phone}`);
+      }
     }
   }, [user, isLoading]);
 
@@ -316,33 +325,73 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
                 </label>
 
                 <Box>
-                  <IntlTelInputComponent
+                  <TextField
                     id="phone-input"
-                    className={`payment_form__phone-input`}
+                    error={!!errors.Phone}
+                    helperText={getErrorMessage(errors.Phone?.message)}
+                    slotProps={{
+                      htmlInput: {
+                        "aria-invalid": !!errors.Phone,
+                      },
+                      input: {
+                        inputComponent: IntlTelInputComponent,
+                        inputProps: {
+                          options: {
+                            initialCountry: "ie",
+                            separateDialCode: true,
+                            formatOnDisplay: true,
+                            formatAsYouType: true,
+                          },
+                          getIti: (obj: IntlTelInputRef) => {
+                            console.log("set IntlTelInputRef", {
+                              input: obj.getInput(),
+                              instance: obj.getInstance(),
+                            });
+                            iniTelReff.current = obj;
+                            const instance = obj.getInstance();
+                            if (instance) {
+                              iniTelinst.current = instance;
+                            }
+                          },
+                          onChange: (
+                            e: React.ChangeEvent<HTMLInputElement>,
+                          ) => {
+                            const { value } = e.target;
+                            const countryData = iniTelReff.current
+                              ?.getInstance()
+                              ?.getSelectedCountryData();
+                            const phone = `+${countryData?.dialCode}${value}`;
+                            console.log(
+                              "onChange",
+                              phone,
+                              value,
+                              utils,
+                              countryData,
+                            );
+
+                            setValue("Phone", phone);
+                          },
+                        },
+                      },
+                    }}
                     {...register("Phone", {
                       required: true,
                       validate: (value) => {
-                        if (iniTelReff?.isValidNumber()) {
+                        const countryData = iniTelReff.current
+                          ?.getInstance()
+                          ?.getSelectedCountryData();
+                        let isValid = utils.isValidNumber(
+                          value,
+                          countryData?.iso2,
+                        );
+                        if (isValid) {
                           return true;
                         } else {
                           return t("ERRORS.INVALID_PHONE");
                         }
                       },
                     })}
-                    error={!!errors.Phone}
-                    aria-invalid={!!errors.Phone}
-                    options={{
-                      initialCountry: "ie",
-                      separateDialCode: true,
-                      formatOnDisplay: true,
-                      formatAsYouType: true,
-                    }}
-                    getIti={setIti}
-                    // onChange={onChangePhoneHandler}
                   />
-                  <FormHelperText error={!!errors.Phone}>
-                    {!!errors.Phone && t("ERRORS.INVALID_PHONE")}
-                  </FormHelperText>
                 </Box>
               </Box>
             </Grid>

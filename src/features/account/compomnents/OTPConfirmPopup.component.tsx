@@ -7,8 +7,10 @@ import { useNavigate } from "react-router-dom";
 import "./OTPConfirmPopup.component.scss";
 import { MFAMethod } from "../../../shared/dtos/user.dto";
 import { OtpInputComponent } from "../../../shared/components/otpInput.component";
+import { VerificationInputComponent } from "../../../shared/components/VerificationInput.component";
 export type OTPConfirmPopupProps = {
   open: boolean;
+  isChecked: boolean;
   type: MFAMethod;
   onClose?: () => void;
   onSendOtp?: () => void;
@@ -18,6 +20,7 @@ export type OTPConfirmPopupProps = {
 export const OTPConfirmPopupComponent = ({
   open,
   type,
+  isChecked,
   onClose,
   onConfirm,
   onSendOtp,
@@ -56,51 +59,12 @@ export const OTPConfirmPopupComponent = ({
         >
           <CloseIcon />
         </IconButton>
-
-        {!isSent ? (
-          <Box className="otp-popup_send-box">
-            {type === "SMS" && (
-              <Typography variant="h6" component="label">
-                {" "}
-                {t("MFA.VERIFICATION_INPUT.PHONE_INPUT_LABEL")}{" "}
-              </Typography>
-            )}
-            {type === "Email" && (
-              <Typography variant="h6" component="label">
-                {" "}
-                {t("MFA.VERIFICATION_INPUT.EMAIL_INPUT_LABEL")}{" "}
-              </Typography>
-            )}
-            <Button className="button-primary" onClick={sendHandler}>
-              {" "}
-              {t("MFA.SEND_OTP")}{" "}
-            </Button>
-          </Box>
-        ) : (
-          <Box className="otp-popup_confirm-box">
-            {type === "SMS" && (
-              <Typography variant="h6" component="label">
-                {" "}
-                {t("MFA.VERIFICATION_INPUT.PHONE_INPUT_SENT_LABEL")}{" "}
-              </Typography>
-            )}
-            {type === "Email" && (
-              <Typography variant="h6" component="label">
-                {" "}
-                {t("MFA.VERIFICATION_INPUT.EMAIL_INPUT_SENT_LABEL")}{" "}
-              </Typography>
-            )}
-
-            <OtpInputComponent
-              isChecked={false}
-              startCountdown={true}
-              btnLabel={t("BUTTONS.CHECK")}
-              resendLabel={t("MFA.VERIFICATION_INPUT.RESEND_OTP")}
-              onResend={sendHandler}
-              onSubmit={sendConfirmationHandler}
-            />
-          </Box>
-        )}
+        <VerificationInputComponent
+          isChecked={isChecked}
+          type={type}
+          onSendOtp={onSendOtp}
+          onConfirm={sendConfirmationHandler}
+        />
       </Box>
     </Modal>
   );

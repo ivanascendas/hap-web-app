@@ -2,12 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import "./Account.component.scss";
 import {
   Box,
-  FormControl,
-  FormControlLabel,
   FormHelperText,
-  FormLabel,
-  Radio,
-  RadioGroup,
   Skeleton,
   TextField,
   Typography,
@@ -15,22 +10,17 @@ import {
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser, setUser } from "../../shared/redux/slices/authSlice";
+import { selectUserLoading } from "../../shared/redux/slices/loaderSlice";
+
 import {
-  selectLoading,
-  selectUserLoading,
-} from "../../shared/redux/slices/loaderSlice";
-import {
-  useChangePasswordMutation,
-  useCheckValidContactMutation,
   useEmailConfirmationMutation,
   useEmailConfirmationRequestMutation,
-  useLazyUserdataQuery,
   usePhoneConfirmationMutation,
   usePhoneConfirmationRequestMutation,
   useSaveUserDataMutation,
 } from "../../shared/services/Auth.service";
 import { ExsistingTenantDto } from "../../shared/dtos/existing-tenant.dto";
-import { FieldPath, set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { getErrorMessage } from "../../shared/utils/getErrorMessage";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import UserIcon from "@mui/icons-material/Person";
@@ -38,14 +28,14 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import { IntlTelInputComponent } from "../../shared/components/IntlTelInput.component";
 import { Iti } from "intl-tel-input";
-import { ChangePasswordDto } from "../../shared/dtos/change-password.dto";
-import { use } from "i18next";
 import { NotificationComponent } from "../../shared/components/Notification.component";
-import { de, fr } from "intl-tel-input/i18n";
 import { MFAMethod } from "../../shared/dtos/user.dto";
 import { OTPConfirmPopupComponent } from "./compomnents/OTPConfirmPopup.component";
 import { MFAControlComponent } from "./compomnents/MFAControl.component";
 import { PasswordsFormComponent } from "./compomnents/PasswordsForm.component";
+import { IntlTelInputRef } from "intl-tel-input/react";
+
+const { default: utils } = require("intl-tel-input/build/js/utils.js");
 
 export const AccountComponent = (): JSX.Element => {
   const { t } = useTranslation();
@@ -56,7 +46,8 @@ export const AccountComponent = (): JSX.Element => {
   const [emailRequest] = useEmailConfirmationRequestMutation();
   const [smsConfirm, smsConfirmResult] = usePhoneConfirmationMutation();
   const [emailConfirm, emailConfirmResult] = useEmailConfirmationMutation();
-  const [iniTelReff, setIti] = useState<Iti>();
+  const iniTelReff = useRef<IntlTelInputRef>();
+  const iniTelinst = useRef<Iti>();
   const [tabValue, setTabValue] = useState(0);
   const [showOtpPopup, setShowOtpPopup] = useState(false);
   const isPhoneDirty = useRef<boolean>(false);
@@ -93,12 +84,15 @@ export const AccountComponent = (): JSX.Element => {
     PhoneNumberConfirmed,
     DefaultMFA,
   }: ExsistingTenantDto) => {
-    const countryData = iniTelReff?.getSelectedCountryData();
+    const countryData = iniTelReff.current
+      ?.getInstance()
+      ?.getSelectedCountryData();
+    const phone = PhoneNumber.replace("+", "");
     const model: ExsistingTenantDto = {
       EmailId,
-      PhoneNumber: `${countryData?.dialCode || "353"}${PhoneNumber}`,
+      PhoneNumber: `${phone}`,
       PhoneCountryCode: countryData?.dialCode || "353",
-      PhoneExcludingCountryCode: PhoneNumber.replace(
+      PhoneExcludingCountryCode: phone.replace(
         countryData?.dialCode || "353",
         "",
       ),
@@ -138,7 +132,6 @@ export const AccountComponent = (): JSX.Element => {
 
   useEffect(() => {
     if (!isLoading && user?.defaultMFA) {
-      console.log({ user });
       const data: ExsistingTenantDto = {
         EmailConfirmed: user?.emailConfirmed || false,
         PhoneNumberConfirmed: user?.phoneNumberConfirmed || false,
@@ -150,43 +143,47 @@ export const AccountComponent = (): JSX.Element => {
           user?.phone?.replace(user?.phoneCountryCode || "353", "") || "",
       };
 
-      iniTelReff?.setNumber(data.PhoneNumber);
       reset(data);
-      console.log("reset", { data });
-      isPhoneDirty.current = false;
+      // console.log("reset", { data, iniTelReff: iniTelReff ? 'initalized' : 'not initalized' });
+      iniTelReff.current?.getInstance()?.setNumber(`+${data.PhoneNumber}`);
+
+      if (isPhoneDirty.current) {
+        isPhoneDirty.current = !(
+          formState.submitCount === 0 &&
+          (smsConfirmResult.isSuccess || emailConfirmResult.isSuccess)
+        );
+      }
     }
   }, [user, isLoading]);
 
   useEffect(() => {
     const values = getValues();
-    setValue("PhoneNumberConfirmed", values.PhoneNumber === user?.phone);
-    setValue("EmailConfirmed", values.EmailId === user?.email);
+    const isPhoneNumberConfirmed =
+      values.PhoneNumber.replace("+", "") === user?.phone?.replace("+", "");
+    const isEmailConfirmed = values.EmailId === user?.email;
+    // console.log({ isPhoneNumberConfirmed, isEmailConfirmed, compares: [values.PhoneNumber, user?.phone, values.EmailId, user?.email] });
+    setValue("PhoneNumberConfirmed", isPhoneNumberConfirmed);
+    setValue("EmailConfirmed", isEmailConfirmed);
   }, [formState]);
 
   useEffect(() => {
     if (smsConfirmResult.isSuccess) {
       console.log({ smsConfirmResult });
-      setValue("PhoneNumberConfirmed", true, { shouldValidate: true });
+      dispatch(
+        setUser({
+          phone: getValues("PhoneNumber").replace("+", ""),
+          phoneNumberConfirmed: true,
+        }),
+      );
+      setShowOtpPopup(false);
     }
     if (emailConfirmResult.isSuccess) {
-      setValue("EmailConfirmed", true, { shouldValidate: true });
+      dispatch(setUser({ email: getValues("EmailId"), emailConfirmed: true }));
+      setShowOtpPopup(false);
     }
   }, [smsConfirmResult.isSuccess, emailConfirmResult.isSuccess]);
 
-  const onChangePhoneHandler = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) => {
-    const { PhoneNumber } = getValues();
-    if (!isPhoneDirty.current && value.replace("+", "") !== PhoneNumber) {
-      console.log({
-        value: value.replace("+", ""),
-        isPhoneDirty: isPhoneDirty.current,
-        PhoneNumber,
-      });
-      isPhoneDirty.current = true;
-    }
-  };
-
+  //  console.log({ values: getValues(), formState, submitDis: !((smsConfirmResult.isSuccess || emailConfirmResult.isSuccess) && formState.submitCount === 0), smsisSuccess: smsConfirmResult.isSuccess, emailisSuccess: emailConfirmResult.isSuccess });
   return (
     <Box sx={{ flexGrow: 1 }}>
       <NotificationComponent />
@@ -327,40 +324,80 @@ export const AccountComponent = (): JSX.Element => {
                 >
                   {t("LABELS.ENTER_PHONE")}
                 </label>
-                <Box>
-                  <IntlTelInputComponent
+
+                {isLoading ? (
+                  <Skeleton
+                    width={"100%"}
+                    height={"2.625rem"}
+                    variant="rounded"
+                  />
+                ) : (
+                  <TextField
                     id="phone-input"
-                    className={`account_form__phone-input`}
+                    error={!!errors.PhoneNumber}
+                    helperText={getErrorMessage(errors.PhoneNumber?.message)}
+                    slotProps={{
+                      htmlInput: {
+                        "aria-invalid": !!errors.PhoneNumber,
+                      },
+                      input: {
+                        inputComponent: IntlTelInputComponent,
+                        inputProps: {
+                          options: {
+                            initialCountry: "ie",
+                            separateDialCode: true,
+                            formatOnDisplay: true,
+                            formatAsYouType: true,
+                          },
+                          getIti: (obj: IntlTelInputRef) => {
+                            console.log("set IntlTelInputRef", {
+                              input: obj.getInput(),
+                              instance: obj.getInstance(),
+                            });
+                            iniTelReff.current = obj;
+                            const instance = obj.getInstance();
+                            if (instance) {
+                              iniTelinst.current = instance;
+                            }
+                          },
+                          onChange: (
+                            e: React.ChangeEvent<HTMLInputElement>,
+                          ) => {
+                            const { value } = e.target;
+                            const countryData = iniTelReff.current
+                              ?.getInstance()
+                              ?.getSelectedCountryData();
+                            const phone = `+${countryData?.dialCode}${value}`;
+                            console.log(
+                              "onChange",
+                              phone,
+                              value,
+                              utils,
+                              countryData,
+                            );
+
+                            setValue("PhoneNumber", phone);
+                          },
+                        },
+                      },
+                    }}
                     {...register("PhoneNumber", {
                       required: true,
                       validate: (value) => {
-                        if (iniTelReff?.isValidNumber()) {
+                        const countryData = iniTelReff.current
+                          ?.getInstance()
+                          ?.getSelectedCountryData();
+                        let isValid = utils.isValidNumber(
+                          value,
+                          countryData?.iso2,
+                        );
+                        if (isValid) {
                           return true;
                         } else {
                           return t("ERRORS.INVALID_PHONE");
                         }
                       },
                     })}
-                    error={!!errors.PhoneNumber}
-                    aria-invalid={!!errors.PhoneNumber}
-                    options={{
-                      initialCountry: "ie",
-                      separateDialCode: true,
-                      formatOnDisplay: true,
-                      formatAsYouType: true,
-                    }}
-                    getIti={setIti}
-                    onChange={onChangePhoneHandler}
-                  />
-                  <FormHelperText error={!!errors.PhoneNumber}>
-                    {!!errors.PhoneNumber && t("ERRORS.INVALID_PHONE")}
-                  </FormHelperText>
-                </Box>
-                {isLoading && (
-                  <Skeleton
-                    width={"100%"}
-                    height={" 2.625rem"}
-                    variant="rounded"
                   />
                 )}
               </Box>
@@ -439,6 +476,7 @@ export const AccountComponent = (): JSX.Element => {
         </Box>
       </Box>
       <OTPConfirmPopupComponent
+        isChecked={getValues().PhoneNumberConfirmed}
         open={showOtpPopup && !getValues().PhoneNumberConfirmed}
         onClose={() => setShowOtpPopup(false)}
         onSendOtp={() =>
@@ -453,6 +491,7 @@ export const AccountComponent = (): JSX.Element => {
         type="SMS"
       />
       <OTPConfirmPopupComponent
+        isChecked={getValues().EmailConfirmed}
         onClose={() => setShowOtpPopup(false)}
         onSendOtp={() =>
           emailRequest({

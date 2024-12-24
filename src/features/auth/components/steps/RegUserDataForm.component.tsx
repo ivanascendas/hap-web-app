@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IntlTelInputComponent } from "../../../../shared/components/IntlTelInput.component";
 import { Checkbox, FormControlLabel, TextField } from "@mui/material";
@@ -12,22 +12,28 @@ import { Navigate, useLocation } from "react-router-dom";
 import { Iti } from "intl-tel-input";
 import { setError } from "../../../../shared/redux/slices/errorSlice";
 import StorageService from "../../../../shared/services/Storage.service";
+import { IntlTelInputRef } from "intl-tel-input/react";
+const { default: utils } = require("intl-tel-input/build/js/utils.js");
 export const RegUserDataFormComponent = (): JSX.Element => {
   const { t } = useTranslation();
   const location = useLocation();
   const dispatch = useDispatch();
-  const [iniTelReff, setIti] = useState<Iti>();
+  const iniTelReff = useRef<IntlTelInputRef>();
+  const iniTelinst = useRef<Iti>();
   const { email, phone, accountNumber } = useSelector(selectUser) || {};
   const {
     register,
     formState: { errors },
     handleSubmit,
+    setValue,
     formState,
   } = useForm<UserDataDto>({ mode: "all", defaultValues: { accountNumber } });
 
   const onSubmit = ({ accountNumber, email, phone }: UserDataDto) => {
     if (StorageService.getBoolean("cookieBanner")) {
-      const countryData = iniTelReff?.getSelectedCountryData();
+      const countryData = iniTelReff.current
+        ?.getInstance()
+        ?.getSelectedCountryData();
       dispatch(
         setUser({
           accountNumber,
@@ -118,19 +124,61 @@ export const RegUserDataFormComponent = (): JSX.Element => {
           >
             {t("LABELS.ENTER_PHONE")}
           </label>
-          <IntlTelInputComponent
+          <TextField
             id="phone-input"
-            className="registration__phone-input"
+            error={!!errors.phone}
+            helperText={getErrorMessage(errors.phone?.message)}
+            slotProps={{
+              htmlInput: {
+                "aria-invalid": !!errors.phone,
+              },
+              input: {
+                inputComponent: IntlTelInputComponent,
+                inputProps: {
+                  options: {
+                    initialCountry: "ie",
+                    separateDialCode: true,
+                    formatOnDisplay: true,
+                    formatAsYouType: true,
+                  },
+                  getIti: (obj: IntlTelInputRef) => {
+                    console.log("set IntlTelInputRef", {
+                      input: obj.getInput(),
+                      instance: obj.getInstance(),
+                    });
+                    iniTelReff.current = obj;
+                    const instance = obj.getInstance();
+                    if (instance) {
+                      iniTelinst.current = instance;
+                    }
+                  },
+                  onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                    const { value } = e.target;
+                    const countryData = iniTelReff.current
+                      ?.getInstance()
+                      ?.getSelectedCountryData();
+                    const phone = `+${countryData?.dialCode}${value}`;
+                    console.log("onChange", phone, value, utils, countryData);
+
+                    setValue("phone", phone);
+                  },
+                },
+              },
+            }}
             {...register("phone", {
               required: true,
-              pattern: /^[0-9]+$/,
+              validate: (value) => {
+                const countryData = iniTelReff.current
+                  ?.getInstance()
+                  ?.getSelectedCountryData();
+                let isValid = utils.isValidNumber(value, countryData?.iso2);
+                if (isValid) {
+                  return true;
+                } else {
+                  return t("ERRORS.INVALID_PHONE");
+                }
+              },
             })}
-            aria-invalid={!!errors.phone}
-            options={{
-              initialCountry: "ie",
-              separateDialCode: true,
-            }}
-            getIti={setIti}
           />
         </div>
         <div className="registration__input-container">
@@ -156,7 +204,7 @@ export const RegUserDataFormComponent = (): JSX.Element => {
           disabled={
             !formState.isDirty ||
             !formState.isValid ||
-            iniTelReff?.isValidNumber() === false
+            iniTelReff.current?.getInstance()?.isValidNumber() === false
           }
         >
           {t("SIGN_UP.BUTTONS.NEXT")}

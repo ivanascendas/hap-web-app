@@ -7,19 +7,9 @@ import React, {
   useRef,
   useState,
 } from "react";
-
-import { Control, Controller, FieldValues, Path } from "react-hook-form";
 import "intl-tel-input/build/css/intlTelInput.min.css";
-import intlTelInput, { Iti, SomeOptions } from "intl-tel-input";
-import {
-  Box,
-  FormControl,
-  FormHelperText,
-  TextFieldProps,
-} from "@mui/material";
-import { Form } from "react-router-dom";
-import { TextField } from "@mui/material";
-import { useTranslation } from "react-i18next";
+import { Iti, SomeOptions } from "intl-tel-input";
+import IntlTelInput, { IntlTelInputRef } from "intl-tel-input/react";
 export enum TTI_ERROR_CODES {
   IS_POSSIBLE, // Number length is valid
   INVALID_COUNTRY_CODE, // No country matching the country code
@@ -29,9 +19,9 @@ export enum TTI_ERROR_CODES {
   NOT_A_NUMBER, // Input contains invalid characters
 }
 
-interface IntlTelInputProps extends TextFieldProps<"standard"> {
+interface IntlTelInputProps extends InputHTMLAttributes<HTMLInputElement> {
   options?: SomeOptions;
-  getIti?: (iti: Iti) => void;
+  getIti?: (iti: IntlTelInputRef) => void;
   onValidation?: (isValid: boolean, errorCode?: TTI_ERROR_CODES) => void;
 }
 
@@ -41,95 +31,130 @@ export const IntlTelInputComponent = forwardRef<
 >((props: IntlTelInputProps, ref: ForwardedRef<HTMLInputElement>) => {
   const refRef = useRef<HTMLInputElement>(null);
   const [iniTelReff, setIti] = useState<Iti>();
+  const itiInputfRef = useRef<IntlTelInputRef>(null);
 
-  useEffect(() => {
-    if (refRef && typeof refRef === "object" && refRef.current) {
-      try {
-        const iti = intlTelInput(refRef.current, {
-          ...props.options,
-          utilsScript:
-            "https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/utils.js",
-        });
+  const { options, getIti, onValidation, ...inputProps } = props;
 
-        const handleOnNumberChange = (e: Event) => {
-          if (props.onValidation && iti) {
-            const isValid = iti.isValidNumber() || false;
-            const errorCode = isValid ? -1 : iti.getValidationError();
-            //console.log('isValid:', isValid, 'errorCode:', errorCode, 'phone:', iti.getNumber());
-            if (props.onValidation) {
-              props.onValidation(
-                isValid,
-                errorCode > 0 ? errorCode : undefined,
-              );
-            }
-          }
-          if (props.onChange) {
-            props.onChange({
-              target: { value: iti.getNumber() },
-            } as React.ChangeEvent<HTMLInputElement>);
-          }
-          refRef.current?.blur();
-          refRef.current?.focus();
-        };
-        if (iti && props.getIti) {
-          setIti(iti);
-          props.getIti(iti);
-
-          refRef.current.addEventListener("input", handleOnNumberChange);
-
-          refRef.current.addEventListener(
-            "countrychange",
-            handleOnNumberChange,
+  /*
+    const handleOnNumberChange = (e: Event) => {
+      if (props.onValidation && iniTelReff) {
+        const isValid = iniTelReff.isValidNumber() || false;
+        const errorCode = isValid ? -1 : iniTelReff.getValidationError();
+        //console.log('isValid:', isValid, 'errorCode:', errorCode, 'phone:', iti.getNumber());
+        if (props.onValidation) {
+          props.onValidation(
+            isValid,
+            errorCode > 0 ? errorCode : undefined,
           );
-          return () => {
-            refRef.current?.removeEventListener("input", handleOnNumberChange);
-            refRef.current?.removeEventListener(
+        }
+      }
+      if (props.onChange) {
+        props.onChange({
+          target: { value: iniTelReff?.getNumber() },
+        } as React.ChangeEvent<HTMLInputElement>);
+      }
+      refRef.current?.blur();
+      refRef.current?.focus();
+    };
+  
+    useEffect(() => {
+      if (refRef && typeof refRef === "object" && refRef.current) {
+        try {
+          const iti = intlTelInput(refRef.current, {
+            ...props.options,
+            utilsScript:
+              "https://cdn.jsdelivr.net/npm/intl-tel-input@24.5.0/build/js/utils.js",
+          });
+  
+  
+          if (iti && props.getIti) {
+            setIti(iti);
+            props.getIti(iti);
+  
+            refRef.current.addEventListener("input", handleOnNumberChange);
+  
+            refRef.current.addEventListener(
               "countrychange",
               handleOnNumberChange,
             );
-          };
+            return () => {
+              refRef.current?.removeEventListener("input", handleOnNumberChange);
+              refRef.current?.removeEventListener(
+                "countrychange",
+                handleOnNumberChange,
+              );
+            };
+          }
+        } catch (error) {
+          console.log("IntlTelInput initialization error:", error);
         }
-      } catch (error) {
-        console.log("IntlTelInput initialization error:", error);
       }
-    }
-  }, [refRef.current]);
+    }, [refRef.current]);
+  */
 
   useImperativeHandle(ref, () => {
     const input = refRef.current as HTMLInputElement;
-
-    return {
-      ...input,
-      get value() {
-        const val = iniTelReff?.getNumber() || input.value;
-        //  console.log('get value:', val);
-        return val;
-      },
-      set value(val: string) {
-        // console.log('set value:', val);
-        if (iniTelReff) {
-          iniTelReff.setNumber(val);
-        } else {
-          input.value = val;
+    return itiInputfRef.current?.getInput() as HTMLInputElement;
+    return input
+      ? {
+          ...input,
+          get value() {
+            const val = iniTelReff?.getNumber() || input.value;
+            //  console.log('get value:', val);
+            return val;
+          },
+          set value(val: string) {
+            // console.log('set value:', val);
+            if (iniTelReff) {
+              iniTelReff.setNumber(val);
+            } else {
+              input.value = val;
+            }
+          },
         }
-      },
-    };
+      : input;
   });
 
-  const {
-    options,
-    getIti,
-    onValidation,
-    label,
-    error,
-    helperText,
-    ...inputProps
-  } = props;
+  useEffect(() => {
+    if (itiInputfRef.current) {
+      if (getIti) {
+        getIti(itiInputfRef.current);
+      }
+      const input = itiInputfRef.current.getInput();
+      if (input && props?.onChange) {
+        input.addEventListener(
+          "input",
+          (e) =>
+            props?.onChange &&
+            props?.onChange(
+              e as unknown as React.ChangeEvent<HTMLInputElement>,
+            ),
+        );
+        return () => {
+          input.removeEventListener(
+            "input",
+            (e) =>
+              props?.onChange &&
+              props?.onChange(
+                e as unknown as React.ChangeEvent<HTMLInputElement>,
+              ),
+          );
+        };
+      }
+    }
+  }, [itiInputfRef.current]);
 
+  /* return (
+ 
+     <input  {...inputProps} ref={refRef} />
+ 
+   );*/
   return (
-    <FormControl fullWidth>
-      <TextField {...inputProps} inputRef={refRef} />
-    </FormControl>
+    <IntlTelInput
+      initOptions={options}
+      inputProps={{ ...inputProps }}
+      ref={itiInputfRef}
+    />
   );
 });
 

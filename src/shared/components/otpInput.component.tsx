@@ -77,7 +77,7 @@ export const OtpInputComponent = forwardRef<HTMLInputElement, OtpInputProps>(
           )}
         </Grid>
         <Grid size={8}>
-          {countdown > 0 ? (
+          {!isChecked && countdown > 0 ? (
             <span>
               {t("MFA.VERIFICATION_INPUT.SECOND_LEFT", { seconds: countdown })}
             </span>

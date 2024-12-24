@@ -13,6 +13,10 @@ import { t } from "i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FooterCompoment } from "./components/Footer.component";
+import { ExistingTenantPopupComponent } from "../../shared/components/ExistingTenantPopup.component";
+import { useSelector } from "react-redux";
+import { selectUserLoading } from "../../shared/redux/slices/loaderSlice";
+import { selectUser } from "../../shared/redux/slices/authSlice";
 export type MainProps = {
   children: JSX.Element;
 };
@@ -20,6 +24,10 @@ export type MainProps = {
 export const MainComponent = ({ children }: MainProps): JSX.Element => {
   const { isAuthenticated } = useAuth();
   const [openMenu, setOpenMenu] = React.useState(false);
+  const isLoading = useSelector(selectUserLoading);
+  const user = useSelector(selectUser);
+  const [openExistingTenantPopup, setOpenExistingTenantPopup] =
+    React.useState(false);
   const { width } = useWindowDimensions();
   const [drawerWidth, setDrawerWidth] = React.useState(0);
   const drawerRef = useRef<HTMLDivElement>(null);
@@ -33,6 +41,14 @@ export const MainComponent = ({ children }: MainProps): JSX.Element => {
       setDrawerWidth(drawerRef.current.offsetWidth);
     }
   }, [openMenu, drawerRef.current, width]);
+
+  useEffect(() => {
+    if (isAuthenticated && !isLoading && user) {
+      setOpenExistingTenantPopup(
+        !user.emailConfirmed || !user.phoneNumberConfirmed,
+      );
+    }
+  }, [isLoading, user]);
 
   return (
     <Paper square className={`page ${isAuthenticated ? "authenticated" : ""}`}>
@@ -81,6 +97,12 @@ export const MainComponent = ({ children }: MainProps): JSX.Element => {
           <BottomBarСomponent />
         )}
       <CookieBannerComponent />
+      {isAuthenticated && (
+        <ExistingTenantPopupComponent
+          open={openExistingTenantPopup}
+          onClose={() => setOpenExistingTenantPopup(false)}
+        />
+      )}
     </Paper>
   );
 };
