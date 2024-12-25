@@ -43,7 +43,7 @@ export const MainComponent = ({ children }: MainProps): JSX.Element => {
   }, [openMenu, drawerRef.current, width]);
 
   useEffect(() => {
-    if (isAuthenticated && !isLoading && user) {
+    if (!openExistingTenantPopup && isAuthenticated && !isLoading && user) {
       setOpenExistingTenantPopup(
         !user.emailConfirmed || !user.phoneNumberConfirmed,
       );

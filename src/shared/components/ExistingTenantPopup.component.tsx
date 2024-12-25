@@ -59,8 +59,7 @@ export const ExistingTenantPopupComponent = ({
   const [emailConfirm, emailConfirmResult] = useEmailConfirmationMutation();
   const iniTelReff = useRef<IntlTelInputRef>();
   const iniTelinst = useRef<Iti>();
-  const [tabValue, setTabValue] = useState(0);
-  const [showOtpPopup, setShowOtpPopup] = useState(false);
+  // const [showOtpPopup, setShowOtpPopup] = useState(false);
   const isPhoneDirty = useRef<boolean>(false);
   const dispatch = useDispatch();
   const {
@@ -78,13 +77,15 @@ export const ExistingTenantPopupComponent = ({
     mode: "all",
     defaultValues: {
       EmailId: user?.email || "",
-      PhoneNumber: user?.phone || "",
+      PhoneNumber: user ? `+${user?.phone?.replace("+", "")}` : "",
       PhoneNumberConfirmed: user?.phoneNumberConfirmed || false,
       EmailConfirmed: user?.emailConfirmed || false,
       DefaultMFA: user?.defaultMFA || "Email",
       PhoneCountryCode: user?.phoneCountryCode || "353",
       PhoneExcludingCountryCode:
-        user?.phone?.replace(user?.phoneCountryCode || "353", "") || "",
+        user?.phone
+          ?.replace("+", "")
+          .replace(user?.phoneCountryCode || "353", "") || "",
     },
   });
 
@@ -98,14 +99,15 @@ export const ExistingTenantPopupComponent = ({
     const countryData = iniTelReff.current
       ?.getInstance()
       ?.getSelectedCountryData();
+    const phone = PhoneNumber.replace("+", "").replace(
+      countryData?.dialCode || "353",
+      "",
+    );
     const model: ExsistingTenantDto = {
       EmailId,
-      PhoneNumber: `${countryData?.dialCode || "353"}${PhoneNumber}`,
+      PhoneNumber: `${countryData?.dialCode || "353"}${phone}`,
       PhoneCountryCode: countryData?.dialCode || "353",
-      PhoneExcludingCountryCode: PhoneNumber.replace(
-        countryData?.dialCode || "353",
-        "",
-      ),
+      PhoneExcludingCountryCode: phone,
       DefaultMFA,
       EmailConfirmed,
       PhoneNumberConfirmed,
@@ -122,8 +124,8 @@ export const ExistingTenantPopupComponent = ({
           phoneNumberConfirmed: model.PhoneNumberConfirmed,
         }),
       );
-
-      updateUser(model).then(() => {
+      console.log("updateUser", { model });
+      return updateUser(model).then(() => {
         console.log({ model });
         reset(model, {
           keepValues: true,
@@ -132,7 +134,9 @@ export const ExistingTenantPopupComponent = ({
         });
       });
     } else {
-      setShowOtpPopup(true);
+      return Promise.reject(
+        new Error("Please confirm your email and phone number to continue"),
+      );
     }
   };
 
@@ -142,7 +146,7 @@ export const ExistingTenantPopupComponent = ({
       const data: ExsistingTenantDto = {
         EmailConfirmed: user?.emailConfirmed || false,
         PhoneNumberConfirmed: user?.phoneNumberConfirmed || false,
-        PhoneNumber: user?.phone || "",
+        PhoneNumber: user ? `+${user?.phone?.replace("+", "")}` : "",
         EmailId: user?.email || "",
         DefaultMFA: user?.defaultMFA || "Email",
         PhoneCountryCode: user?.phoneCountryCode || "353",
@@ -151,7 +155,7 @@ export const ExistingTenantPopupComponent = ({
       };
 
       reset(data);
-      iniTelReff.current?.getInstance()?.setNumber(`+${data.PhoneNumber}`);
+      iniTelReff.current?.getInstance()?.setNumber(data.PhoneNumber);
       console.log("reset", { data });
       if (isPhoneDirty.current) {
         isPhoneDirty.current = !(
@@ -167,10 +171,14 @@ export const ExistingTenantPopupComponent = ({
     const isPhoneNumberConfirmed =
       values.PhoneNumber.replace("+", "") === user?.phone?.replace("+", "");
     const isEmailConfirmed = values.EmailId === user?.email;
-    // console.log({ isPhoneNumberConfirmed, isEmailConfirmed, compares: [values.PhoneNumber, user?.phone, values.EmailId, user?.email] });
+    console.log({
+      isPhoneNumberConfirmed,
+      isEmailConfirmed,
+      compares: [values.PhoneNumber, user?.phone, values.EmailId, user?.email],
+    });
     setValue("PhoneNumberConfirmed", isPhoneNumberConfirmed);
     setValue("EmailConfirmed", isEmailConfirmed);
-  }, [formState]);
+  }, [formState, user]);
 
   useEffect(() => {
     if (smsConfirmResult.isSuccess) {
@@ -181,11 +189,11 @@ export const ExistingTenantPopupComponent = ({
           phoneNumberConfirmed: true,
         }),
       );
-      setShowOtpPopup(false);
+      setValue("PhoneNumberConfirmed", true);
     }
     if (emailConfirmResult.isSuccess) {
       dispatch(setUser({ email: getValues("EmailId"), emailConfirmed: true }));
-      setShowOtpPopup(false);
+      setValue("EmailConfirmed", true);
     }
   }, [smsConfirmResult.isSuccess, emailConfirmResult.isSuccess]);
 
@@ -193,20 +201,34 @@ export const ExistingTenantPopupComponent = ({
     e.preventDefault();
     trigger();
     if (isValid) {
-      onSubmit(getValues());
-      onClose();
+      handleSubmit(onSubmit)()
+        .then(() => {
+          console.log("submitted");
+          onClose();
+        })
+        .catch((err) => {
+          console.log({ err });
+        });
+    } else {
+      console.log("not valid");
     }
   };
   return (
     <Modal
       open={open}
       onClose={onClose}
-      aria-labelledby="existing tenant modal"
+      aria-label={t("MFA.EXISTING_TENANT_TITLE")}
       aria-describedby="existing tenant modal description"
     >
-      <Box className="popup existing_tenant_popup">
+      <Box
+        className="popup existing_tenant_popup"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
         <Box className="existing_tenant_popup_header">
-          <Typography variant="h1" component="h1">
+          <Typography id="modal-title" variant="h1" component="h1">
             {t("MFA.EXISTING_TENANT_TITLE")}
           </Typography>
           <Tooltip title={t("BUTTONS.CLOSE")}>
@@ -219,6 +241,7 @@ export const ExistingTenantPopupComponent = ({
           <Box>
             <Box className="existing_tenant_popup_content">
               <Typography
+                id="modal-description"
                 variant="body1"
                 component="span"
                 className="tenant-info"
@@ -382,6 +405,7 @@ export const ExistingTenantPopupComponent = ({
           <Box>
             <Box className="existing_tenant_popup_content">
               <Typography
+                id="modal-description"
                 variant="body1"
                 component="span"
                 className="tenant-info"
@@ -441,6 +465,7 @@ export const ExistingTenantPopupComponent = ({
           <Box>
             <Box className="existing_tenant_popup_content">
               <Typography
+                id="modal-description"
                 variant="body1"
                 component="strong"
                 className="tenant-info"
