@@ -1,0 +1,51 @@
+@import "../../../assets/styles/variables.scss";
+@import "../../../assets/styles/functions.scss";
+
+header.MuiAppBar-root {
+  .MuiToolbar-root {
+    display: flex;
+    justify-content: space-between;
+    color: $primary900 !important;
+  }
+
+  .logo {
+    margin: 1rem;
+  }
+
+  nav {
+    justify-content: space-between;
+    margin: 0 2.25rem;
+    max-width: 33.75rem;
+
+    a {
+      display: block;
+      color: $primary900 !important;
+      text-transform: uppercase;
+
+      &.active {
+        color: $primary700 !important;
+      }
+    }
+  }
+}
+
+.MuiList-root {
+  li.MuiMenuItem-root {
+    a {
+      display: block;
+      color: $primary900 !important;
+
+      p {
+        color: $primary900 !important;
+      }
+
+      &.active {
+        color: $primary700 !important;
+
+        p {
+          color: $primary700 !important;
+        }
+      }
+    }
+  }
+}

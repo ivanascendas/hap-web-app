@@ -387,7 +387,7 @@ export const AccountComponent = (): JSX.Element => {
                         const countryData = iniTelReff.current
                           ?.getInstance()
                           ?.getSelectedCountryData();
-                        let isValid = utils.isValidNumber(
+                        const isValid = utils.isValidNumber(
                           value,
                           countryData?.iso2,
                         );

@@ -15,6 +15,15 @@ import { ContactsComponent } from "./features/contacts/Contacts.component";
 import { InvoicesComponent } from "./features/invoices/Invoices.component";
 import { PaymentComponent } from "./features/payment/payment.component";
 import { PayComponent } from "./features/payment/pay.component";
+import { AdminComponent } from "./features/admin/admin.component";
+import { UsersComponent } from "./features/admin/pages/users.component";
+import { LettersComponent } from "./features/admin/pages/letters.component";
+import { ReportsComponent } from "./features/admin/pages/reports.component";
+import { NotificationsComponent } from "./features/admin/pages/notifications.component";
+import { AdminsComponent } from "./features/admin/pages/admins.component";
+import { PasswordComponent } from "./features/admin/pages/password.component";
+import { AdminMessagesComponent } from "./features/admin/pages/messages.component";
+import { TermsComponent } from "./features/admin/pages/terms.copmonent";
 
 /**
  * Redirect component that handles user authentication and navigation.
@@ -61,7 +70,51 @@ export const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <LoginFormComponent />,
+    element: <LoginFormComponent successUrl={"/statements/rates"} />,
+  },
+
+  {
+    path: "/loginAdmin",
+    element: <LoginFormComponent successUrl={"/admin/users"} />,
+  },
+  {
+    path: "/admin",
+    element: <AdminComponent />,
+    children: [
+      {
+        index: true,
+        path: "users",
+        element: <UsersComponent />,
+      },
+      {
+        path: "letters",
+        element: <LettersComponent />,
+      },
+      {
+        path: "reports",
+        element: <ReportsComponent />,
+      },
+      {
+        path: "notifications",
+        element: <NotificationsComponent />,
+      },
+      {
+        path: "admins",
+        element: <AdminsComponent />,
+      },
+      {
+        path: "security",
+        element: <PasswordComponent />,
+      },
+      {
+        path: "messages",
+        element: <AdminMessagesComponent />,
+      },
+      {
+        path: "terms",
+        element: <TermsComponent />,
+      },
+    ],
   },
   {
     path: "/resetPassword",

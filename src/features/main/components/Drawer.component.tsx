@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Badge,
   Box,
@@ -98,13 +99,15 @@ export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(
 
     useEffect(() => {
       if (
+        user &&
         isAuthenticated &&
         result.isUninitialized &&
-        departments.length === 0
+        departments.length === 0 &&
+        !location.pathname.startsWith("/admin")
       ) {
         getDepartments();
       }
-    }, [isAuthenticated, result]);
+    }, [isAuthenticated, result, user, departments.length, location.pathname]);
 
     return (
       <Drawer
@@ -194,3 +197,5 @@ export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(
     );
   },
 );
+
+DrawerComponent.displayName = "DrawerComponent";

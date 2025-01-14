@@ -75,7 +75,6 @@ export const handleToken = (
   //dispatch(setloading(true));
   dispatch(setToken(data));
   dispatch(authApi.endpoints.userdata.initiate());
-  dispatch(notificationsApi.endpoints.getNotificationsCount.initiate());
 };
 
 /**
@@ -102,11 +101,15 @@ export const authApi = createApi({
         try {
           dispatch(clearUser());
           const { data } = await queryFulfilled;
-          if (data && data.customerNo) {
+          console.log({ userdata: data });
+          if (data && !data.isSuperAdmin && data.customerNo) {
             dispatch(
               authApi.endpoints.checkValidContact.initiate(
                 parseInt(data.customerNo),
               ),
+            );
+            dispatch(
+              notificationsApi.endpoints.getNotificationsCount.initiate(),
             );
           }
         } catch (error) {

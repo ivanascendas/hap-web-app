@@ -13,7 +13,10 @@ import androidImg from "../../../assets/img/google-img.png";
 import appleImg from "../../../assets/img/apple-img.svg";
 import logo from "../../../assets/img/custom/logo.png";
 
-import { useCheckTempPasswordMutation } from "../../../shared/services/Auth.service";
+import {
+  useCheckTempPasswordMutation,
+  useLoginMutation,
+} from "../../../shared/services/Auth.service";
 import { MainComponent } from "../../main/Main.component";
 import { getErrorMessage } from "../../../shared/utils/getErrorMessage";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,8 +28,21 @@ import StorageService from "../../../shared/services/Storage.service";
 import { setError } from "../../../shared/redux/slices/errorSlice";
 import { useAuth } from "../../../shared/providers/Auth.provider";
 
-export const LoginFormComponent = (): JSX.Element => {
+export type LoginFormProps = {
+  successUrl?: string;
+};
+
+/**
+ * Login form component.
+ *
+ * @returns {JSX.Element} A login form component.
+ */
+
+export const LoginFormComponent = ({
+  successUrl,
+}: LoginFormProps): JSX.Element => {
   const [checkTempPassword, result] = useCheckTempPasswordMutation();
+  const [login, loginResult] = useLoginMutation();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
@@ -54,6 +70,14 @@ export const LoginFormComponent = (): JSX.Element => {
     }
   };
 
+  const submitAdminHandler = ({ username, password }: LoginDto) => {
+    if (StorageService.getBoolean("cookieBanner")) {
+      login({ username, password });
+    } else {
+      dispatch(setError({ message: t("ERRORS.PLS_ACCEPT_COOKIE") }));
+    }
+  };
+
   useEffect(() => {
     if (result.isError) {
       if ((result.error as any).data.modelState) {
@@ -76,7 +100,9 @@ export const LoginFormComponent = (): JSX.Element => {
 
   useEffect(() => {
     if (auth.isTokenRecived && auth.isAuthenticated) {
-      navigate("/statements/rates", { state: { from: location } });
+      navigate(successUrl || "/statements/rates", {
+        state: { from: location },
+      });
     }
   }, [auth]);
 
@@ -109,12 +135,18 @@ export const LoginFormComponent = (): JSX.Element => {
           ) : (
             <>
               <h1 className="auth-form__title">{t("SIGN_IN.TITLE")}</h1>
-              <div className="auth-form__subtitle">
-                {t("SIGN_IN.SUB_TITLE")}
-              </div>
+              {(!successUrl || successUrl === "/statements/rates") && (
+                <div className="auth-form__subtitle">
+                  {t("SIGN_IN.SUB_TITLE")}
+                </div>
+              )}
               <form
                 className="auth-form__form"
-                onSubmit={handleSubmit(submitHandler)}
+                onSubmit={handleSubmit(
+                  !successUrl || successUrl === "/statements/rates"
+                    ? submitHandler
+                    : submitAdminHandler,
+                )}
               >
                 <div className="auth-form__input-container account-number">
                   <TextField
