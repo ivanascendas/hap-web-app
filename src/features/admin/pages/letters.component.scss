@@ -1,0 +1,47 @@
+@import "../../../assets/styles/variables.scss";
+
+.letters {
+  &__container {
+    overflow: auto;
+    max-height: calc(100vh - 130px);
+  }
+
+  &__header {
+    background-color: #677e90;
+
+    .MuiToggleButton-root {
+      color: $secondary100;
+
+      &.Mui-selected {
+        background-color: $primary500;
+        color: $secondary100;
+      }
+    }
+  }
+
+  &__filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10%;
+    background-color: #3c515f;
+    padding: 1rem;
+
+    .MuiFormControl-root {
+      label {
+        color: $primary500;
+      }
+
+      fieldset {
+        border-color: $primary500;
+      }
+    }
+
+    .MuiInputBase-root {
+      background-color: #fff;
+      min-width: 200px;
+      height: 40px;
+      border-color: $primary500;
+    }
+  }
+}

@@ -11,13 +11,26 @@ export const lettersApi = createApi({
      * @param params - The query parameters to filter the list of invitation letters.
      * @returns A promise that resolves to the invitation letters response data.
      */
-    letters: builder.query<LettersResponse, LettersQueryParams>({
-      query: () => ({
+    getLetters: builder.query<LettersResponse, LettersQueryParams>({
+      query: (params) => ({
         url: "/api/letters/invitation",
         method: "GET",
+        params,
+      }),
+    }),
+    /**
+     * Fetches a list of invitation letters based on the provided query parameters.
+     * @param params - The query parameters to filter the list of invitation letters.
+     * @returns A promise that resolves to the invitation letters response data.
+     */
+    getRemainders: builder.query<LettersResponse, LettersQueryParams>({
+      query: (params) => ({
+        url: "/api/letters/reminder",
+        method: "GET",
+        params,
       }),
     }),
   }),
 });
 
-export const {} = lettersApi;
+export const { useGetLettersQuery, useLazyGetLettersQuery } = lettersApi;

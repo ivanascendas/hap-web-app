@@ -1,16 +1,35 @@
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Launch Server",
       "type": "node",
+      "preLaunchTask": "Launch Server"
+    },
+    {
+      "name": "Launch Chrome",
+      "type": "chrome",
       "request": "launch",
-      "name": "Launch Program",
-      "skipFiles": ["<node_internals>/**"],
-      "program": "${workspaceFolder}\\src\\features\\admin\\pages\\components\\user-details.modal.tsx",
-      "outFiles": ["${workspaceFolder}/**/*.js"]
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "npm: start",
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "webpack:///src/*": "${webRoot}/src/*"
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Full Stack: React + Server",
+      "configurations": ["Launch Server", "Launch Chrome"],
+      "preLaunchTask": "npm: start",
+      "presentation": {
+        "hidden": false,
+        "group": "dev",
+        "order": 1
+      },
+      "stopAll": true
     }
   ]
 }

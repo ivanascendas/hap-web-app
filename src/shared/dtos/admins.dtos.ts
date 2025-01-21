@@ -22,7 +22,25 @@ export interface CreateAdminDto {
 }
 
 export interface UpdatePasswordByAdminDto {
-  Id: string;
+  Id?: string;
   Password: string;
   ConfirmPassword: string;
+}
+
+interface AdminRequestDto {
+  Phone: string;
+  Email: string;
+  TwoFactorEnabled: boolean;
+  LockoutEnabled: boolean;
+  IncDepts: string[];
+}
+
+export interface UpdateAdminDto extends AdminRequestDto {
+  Id?: string;
+}
+
+export interface CreateAdminDto
+  extends AdminRequestDto,
+    UpdatePasswordByAdminDto {
+  UserName: string;
 }

@@ -15,8 +15,15 @@ import logo from "../../../assets/img/logo_new_2.png";
 import { selectUser } from "../../../shared/redux/slices/authSlice";
 import { useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
+import { title } from "process";
 
-const pages = ["Users", "Letters", "Reports", "Notifications", "Admins"];
+const pages = [
+  { link: "users", title: "Users" },
+  { link: "letters/InvitationLetter", title: "Letters" },
+  { link: "reports", title: "Reports" },
+  { link: "notifications", title: "Notifications" },
+  { link: "admins", title: "Admins" },
+];
 const settings = ["Security", "Messages", "Terms", "Logout"];
 
 const HeaderComponent = (): JSX.Element => {
@@ -140,8 +147,11 @@ const HeaderComponent = (): JSX.Element => {
               sx={{ display: { xs: "block", md: "none" } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={() => handleCloseNavMenu(page)}>
-                  <NavLink to={`/admin/${page.toLowerCase()}`}>{page}</NavLink>
+                <MenuItem
+                  key={page.link}
+                  onClick={() => handleCloseNavMenu(page.title)}
+                >
+                  <NavLink to={`/admin/${page.link}`}>{page.title}</NavLink>
                 </MenuItem>
               ))}
             </Menu>
@@ -180,11 +190,11 @@ const HeaderComponent = (): JSX.Element => {
           >
             {pages.map((page) => (
               <NavLink
-                to={`/admin/${page.toLowerCase()}`}
-                key={page}
-                onClick={() => handleCloseNavMenu(page)}
+                to={`/admin/${page.link}`}
+                key={page.link}
+                onClick={() => handleCloseNavMenu(page.title)}
               >
-                {page}
+                {page.title}
               </NavLink>
             ))}
           </Box>

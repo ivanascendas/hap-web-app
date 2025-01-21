@@ -1,0 +1,48 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "start",
+      "label": "npm: start",
+      "detail": "react-scripts start",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Starting the development server",
+          "endsPattern": "Compiled successfully|Failed to compile"
+        }
+      }
+    },
+    {
+      "type": "shell",
+      "label": "Launch Server",
+      "command": "C:\\Program Files (x86)\\IIS Express\\iisexpress.exe",
+      "args": [
+        "/path:\"C:\\projects\\unifiedpayments\\UnifiedPayments.WebPortal\"",
+        "/port:48408"
+      ],
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Starting IIS Express ...",
+          "endsPattern": "IIS Express is running."
+        }
+      }
+    }
+  ]
+}

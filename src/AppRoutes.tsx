@@ -87,7 +87,7 @@ export const router = createBrowserRouter([
         element: <UsersComponent />,
       },
       {
-        path: "letters",
+        path: "letters/:type",
         element: <LettersComponent />,
       },
       {

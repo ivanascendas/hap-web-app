@@ -1,6 +1,11 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import customBaseQuery from "../utils/customBaseQuery";
-import { AdminDto, UpdatePasswordByAdminDto } from "../dtos/admins.dtos";
+import {
+  AdminDto,
+  CreateAdminDto,
+  UpdateAdminDto,
+  UpdatePasswordByAdminDto,
+} from "../dtos/admins.dtos";
 
 export const adminsApi = createApi({
   reducerPath: "adminsApi",
@@ -12,7 +17,7 @@ export const adminsApi = createApi({
         method: "GET",
       }),
     }),
-    createAdmin: builder.mutation<void, AdminDto>({
+    createAdmin: builder.mutation<void, CreateAdminDto>({
       query: (body) => ({
         url: "/api/user/CreateAdmin",
         method: "POST",
@@ -23,7 +28,7 @@ export const adminsApi = createApi({
         },
       }),
     }),
-    updateAdmin: builder.mutation<void, AdminDto>({
+    updateAdmin: builder.mutation<void, UpdateAdminDto>({
       query: (body) => ({
         url: "/api/user/UpdateAdmin",
         method: "POST",

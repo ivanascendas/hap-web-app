@@ -101,11 +101,12 @@ export const UsersComponent = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "100%",
+        overflow: "auto",
+        maxHeight: "calc(100vh - 130px)",
       }}
     >
       <CssBaseline />
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" sx={{ mt: "4rem ", mb: "2rem" }}>
         <Box className="personal_box ">
           <Box
             className="personal_box_filter"

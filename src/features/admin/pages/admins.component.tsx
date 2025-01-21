@@ -57,7 +57,7 @@ export const AdminsComponent = () => {
 
   const handleSave = async () => {
     await fetchAdmins();
-    handleCloseModal();
+    // handleCloseModal();
   };
 
   return (
