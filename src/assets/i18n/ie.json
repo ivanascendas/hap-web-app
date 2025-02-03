@@ -673,7 +673,17 @@
     "NOTIFICATIONS": {
       "ALL_USERS": "Gach custaiméir",
       "ENTER_TITLE": "Cuir isteach Teideal",
-      "ENTER_TEXT": "Cuir isteach téacs"
+      "ENTER_TEXT": "Cuir isteach téacs",
+      "SUMMARY_TABLE": {
+        "TITLE": "Notifications Summary Report",
+        "COLUMNS": {
+          "NOTIFICATION_DATE": "Date",
+          "NOTIFICATION_MESSAGE": "Message",
+          "NOTIFICATION_STATUS": " Status",
+          "NOTIFICATION_AMOUNT": "No Acs",
+          "NOTIFICATION_DEVICES": "Device Summary"
+        }
+      }
     }
   },
   "CHOOSE_URL": {

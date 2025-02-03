@@ -4,6 +4,7 @@ import {
   MessagesRequestDto,
   NotificationDto,
   NotificationReportDto,
+  NotificationsExcelSendDto,
   NotificationsSendDto,
 } from "../dtos/messages.dtos";
 import { PaggingBaseDto, PaggingResponse } from "../dtos/pagging-base.request";
@@ -61,20 +62,17 @@ export const notificationsApi = createApi({
         },
       }),
     }),
-    sendExcelNotification: builder.mutation<
-      void,
-      { file: File; model: NotificationsSendDto }
-    >({
+    sendExcelNotification: builder.mutation<void, NotificationsExcelSendDto>({
       query: ({ file, model }) => {
         const formData = new FormData();
-        // formData.append('file', file);
-        // formData.append('model', JSON.stringify(model));
-        Object.keys(model).forEach((key) => {
+        formData.append("file", file);
+        formData.append("model", JSON.stringify(model));
+        /*Object.keys(model).forEach((key) => {
           formData.append(
             key,
             model[key as keyof NotificationsSendDto] as string,
           );
-        });
+        });*/
         formData.append("cutdata", "it will removed");
         return {
           url: "/api/pushNotification/sendByExcel",
@@ -90,6 +88,8 @@ export const notificationsApi = createApi({
 });
 
 export const {
+  useSendExcelNotificationMutation,
+  useSendNotificationMutation,
   useMarkAsReadMutation,
   useGetNotificationsCountQuery,
   useLazyGetNotificationsQuery,

@@ -23,6 +23,8 @@ import {
   ColumnItem,
   TableComponent,
 } from "../../../shared/components/Table.component";
+import { InvitionLettersComponent } from "../components/InvitionLetters.component";
+import { ReminderLettersComponent } from "../components/ReminderLetters.component";
 
 export const LettersComponent = () => {
   const { type } = useParams();
@@ -94,7 +96,7 @@ export const LettersComponent = () => {
 
   return (
     <Box className="letters">
-      <Box className="letters__header">
+      <Box className="admin-container__header">
         <ToggleButtonGroup
           color="primary"
           value={type}
@@ -114,58 +116,55 @@ export const LettersComponent = () => {
         </ToggleButtonGroup>
       </Box>
       <CssBaseline />
-      <Container maxWidth="xl" className="letters__container">
-        <Box className="letters__filters">
-          <TextField
-            label={t("ADMIN.LETTER.CUSTOMER_FROM")}
-            value={customerFrom}
-            onChange={(e) => setCustomerFrom(e.target.value)}
-          />
-          <TextField
-            value={customerTo}
-            onChange={(e) => setCustomerTo(e.target.value)}
-            label={t("ADMIN.LETTER.CUSTOMER_TO")}
-          />
-          <TextField
-            value={counter}
-            onChange={(e) => setCounter(e.target.value)}
-            label={t("ADMIN.LETTER.COUNTER")}
-          />
-          <Select
-            labelId="property-select-label"
-            label={t("ADMIN.LETTER.DEPT")}
-            value={selectedIncDepts}
-            onChange={(e) => setIncDepts(e.target.value)}
-          >
-            {properties?.map((property) => (
-              <MenuItem key={property.incDept} value={property.incDept}>
-                {property.incDept}
-              </MenuItem>
-            ))}
-          </Select>
-        </Box>
-
-        {letters?.count && (
-          <>
-            <TableComponent
-              aria-label="rates table"
-              isLoading={isFetching}
-              columns={columns}
-              rows={letters?.items || []}
-              className="rates_table"
+      <Box className="letters__container">
+        <Container maxWidth="xl">
+          <Box className="letters__filters">
+            <TextField
+              label={t("ADMIN.LETTER.CUSTOMER_FROM")}
+              value={customerFrom}
+              onChange={(e) => setCustomerFrom(e.target.value)}
             />
-            <Button
-              variant="outlined"
-              color="secondary"
-              sx={{ width: "250px" }}
-              className="header_links_pay"
+            <TextField
+              value={customerTo}
+              onChange={(e) => setCustomerTo(e.target.value)}
+              label={t("ADMIN.LETTER.CUSTOMER_TO")}
+            />
+            <TextField
+              value={counter}
+              onChange={(e) => setCounter(e.target.value)}
+              label={t("ADMIN.LETTER.COUNTER")}
+            />
+            <Select
+              labelId="property-select-label"
+              label={t("ADMIN.LETTER.DEPT")}
+              value={selectedIncDepts}
+              onChange={(e) => setIncDepts(e.target.value)}
             >
-              {" "}
-              {t("ADMIN.LETTER.BUTTONS.GENERATE_AND_PRINT")}
-            </Button>
-          </>
-        )}
-      </Container>
+              {properties?.map((property) => (
+                <MenuItem key={property.incDept} value={property.incDept}>
+                  {property.incDept}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+          {type === "InvitationLetter" && selectedIncDepts && (
+            <InvitionLettersComponent
+              selectedIncDepts={selectedIncDepts}
+              customerFrom={customerFrom}
+              customerTo={customerTo}
+              counter={counter}
+            />
+          )}
+          {type === "ReminderLetter" && selectedIncDepts && (
+            <ReminderLettersComponent
+              selectedIncDepts={selectedIncDepts}
+              customerFrom={customerFrom}
+              customerTo={customerTo}
+              counter={counter}
+            />
+          )}
+        </Container>
+      </Box>
     </Box>
   );
 };

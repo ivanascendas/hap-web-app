@@ -674,7 +674,17 @@
     "NOTIFICATIONS": {
       "ALL_USERS": "All customers",
       "ENTER_TITLE": "Enter Title",
-      "ENTER_TEXT": "Enter text"
+      "ENTER_TEXT": "Enter text",
+      "SUMMARY_TABLE": {
+        "TITLE": "Notifications Summary Report",
+        "COLUMNS": {
+          "NOTIFICATION_DATE": "Date",
+          "NOTIFICATION_MESSAGE": "Message",
+          "NOTIFICATION_STATUS": " Status",
+          "NOTIFICATION_AMOUNT": "No Acs",
+          "NOTIFICATION_DEVICES": "Device Summary"
+        }
+      }
     }
   },
   "CHOOSE_URL": {

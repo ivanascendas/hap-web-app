@@ -14,14 +14,13 @@ import "./Headers.component.scss";
 import logo from "../../../assets/img/logo_new_2.png";
 import { selectUser } from "../../../shared/redux/slices/authSlice";
 import { useSelector } from "react-redux";
-import { Link, NavLink } from "react-router-dom";
-import { title } from "process";
+import { NavLink } from "react-router-dom";
 
 const pages = [
   { link: "users", title: "Users" },
   { link: "letters/InvitationLetter", title: "Letters" },
   { link: "reports", title: "Reports" },
-  { link: "notifications", title: "Notifications" },
+  { link: "notifications/forms", title: "Notifications" },
   { link: "admins", title: "Admins" },
 ];
 const settings = ["Security", "Messages", "Terms", "Logout"];

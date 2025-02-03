@@ -10,6 +10,11 @@ export interface NotificationsSendDto {
   message: string;
 }
 
+export interface NotificationsExcelSendDto {
+  file: File;
+  model: NotificationsSendDto;
+}
+
 export interface NotificationDto {
   notificationId: number;
   title: string;

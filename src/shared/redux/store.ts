@@ -17,6 +17,7 @@ import { paymentsApi } from "../services/Payment.service";
 import { customersApi } from "../services/Customers.service";
 import { lettersApi } from "../services/Letters.service";
 import { adminsApi } from "../services/Admins.service";
+import { reportsApi } from "../services/Report.service";
 
 export const store = configureStore({
   reducer: {
@@ -29,6 +30,7 @@ export const store = configureStore({
     [customersApi.reducerPath]: customersApi.reducer,
     [lettersApi.reducerPath]: lettersApi.reducer,
     [adminsApi.reducerPath]: adminsApi.reducer,
+    [reportsApi.reducerPath]: reportsApi.reducer,
     error: errorReducer,
     department: departmentsReducer,
     loader: loaderReducer,
@@ -49,6 +51,7 @@ export const store = configureStore({
       customersApi.middleware,
       lettersApi.middleware,
       adminsApi.middleware,
+      reportsApi.middleware,
     ),
 });
 

@@ -33,4 +33,15 @@ export interface LettersDto {
   tempPassword: string;
 }
 
+export interface ResendLettersDto extends LettersDto {
+  enteredName: string;
+  enteredPhone: string;
+  enteredAddress: string;
+}
+
+export interface LettersPdfRequest {
+  ids: number[];
+  incDept: string;
+}
+
 export interface LettersResponse extends PaggingResponse<LettersDto> {}

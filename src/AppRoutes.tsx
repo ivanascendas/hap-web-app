@@ -19,7 +19,7 @@ import { AdminComponent } from "./features/admin/admin.component";
 import { UsersComponent } from "./features/admin/pages/users.component";
 import { LettersComponent } from "./features/admin/pages/letters.component";
 import { ReportsComponent } from "./features/admin/pages/reports.component";
-import { NotificationsComponent } from "./features/admin/pages/notifications.component";
+import { AdminNotificationsComponent } from "./features/admin/pages/notifications.component";
 import { AdminsComponent } from "./features/admin/pages/admins.component";
 import { PasswordComponent } from "./features/admin/pages/password.component";
 import { AdminMessagesComponent } from "./features/admin/pages/messages.component";
@@ -95,8 +95,8 @@ export const router = createBrowserRouter([
         element: <ReportsComponent />,
       },
       {
-        path: "notifications",
-        element: <NotificationsComponent />,
+        path: "notifications/:type",
+        element: <AdminNotificationsComponent />,
       },
       {
         path: "admins",

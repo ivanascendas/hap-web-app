@@ -7,6 +7,19 @@
   height: 100vh;
   background-color: $secondary !important;
 
+  &__header {
+    background-color: #677e90;
+
+    .MuiToggleButton-root {
+      color: $secondary100;
+
+      &.Mui-selected {
+        background-color: $primary500;
+        color: $secondary100;
+      }
+    }
+  }
+
   footer {
     flex: none;
     display: flex;

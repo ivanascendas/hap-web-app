@@ -1,0 +1,46 @@
+.report {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f1f3f5 !important;
+  color: #3c515f;
+  border-radius: 5px;
+  border: 1px solid rgb(200, 200, 200);
+  margin-bottom: 10px;
+  gap: 30px;
+  padding: 10px;
+
+  &:hover {
+    box-shadow: 0 0 0.1625rem 0 rgba(205, 59, 26, 0.85);
+  }
+
+  &_name {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    text-align: start;
+    text-transform: none;
+  }
+
+  &_sort {
+    color: #766c6c;
+    text-transform: none;
+    font-size: 11px;
+  }
+
+  svg.MuiSvgIcon-root {
+    &:first-child {
+      fill: #076aef;
+      width: 48px !important;
+      height: 48px !important;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+  }
+
+  &_arrow {
+    width: 18px !important;
+    height: 18px !important;
+    fill: #dad9d9 !important;
+  }
+}

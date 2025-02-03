@@ -110,7 +110,7 @@ input:not([type="radio"]) {
 .MuiFormControl-root {
   width: 100%;
 
-  .MuiInputBase-root {
+  .MuiInputBase-root:not(.MuiInputBase-multiline) {
     height: 2.063rem;
 
     @media screen and (max-width: $mobileSize) {
