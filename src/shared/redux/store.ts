@@ -18,6 +18,8 @@ import { customersApi } from "../services/Customers.service";
 import { lettersApi } from "../services/Letters.service";
 import { adminsApi } from "../services/Admins.service";
 import { reportsApi } from "../services/Report.service";
+import { messagesApi } from "../services/Messages.service";
+import { termsApi } from "../services/Terms.service";
 
 export const store = configureStore({
   reducer: {
@@ -31,6 +33,8 @@ export const store = configureStore({
     [lettersApi.reducerPath]: lettersApi.reducer,
     [adminsApi.reducerPath]: adminsApi.reducer,
     [reportsApi.reducerPath]: reportsApi.reducer,
+    [messagesApi.reducerPath]: messagesApi.reducer,
+    [termsApi.reducerPath]: termsApi.reducer,
     error: errorReducer,
     department: departmentsReducer,
     loader: loaderReducer,
@@ -52,6 +56,8 @@ export const store = configureStore({
       lettersApi.middleware,
       adminsApi.middleware,
       reportsApi.middleware,
+      messagesApi.middleware,
+      termsApi.middleware,
     ),
 });
 

@@ -72,6 +72,7 @@ label {
     &::after {
       content: "*";
       color: $error;
+      margin-left: 0.2rem;
     }
   }
 }

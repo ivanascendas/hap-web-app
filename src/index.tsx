@@ -6,6 +6,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import { store } from "./shared/redux/store";
+import { AuthProvider } from "./shared/providers/Auth.provider";
 
 const axeConf = {
   rules: [
@@ -26,7 +27,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <Provider store={store}>
-    <App />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </Provider>,
 );
 
