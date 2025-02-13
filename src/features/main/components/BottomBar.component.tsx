@@ -15,7 +15,7 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import MenuIcon from "@mui/icons-material/Menu";
 import UserIcon from "@mui/icons-material/Person";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
-import "../Main.component.scss";
+import "../main.component.scss";
 import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useLogoutMutation } from "../../../shared/services/Auth.service";

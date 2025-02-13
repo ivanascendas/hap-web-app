@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { MainComponent } from "../../main/Main.component";
+import { MainComponent } from "../../main/main.component";
 import { TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";

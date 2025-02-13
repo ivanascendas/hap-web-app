@@ -1,5 +1,5 @@
 import React from "react";
-import { MainComponent } from "../../main/Main.component";
+import { MainComponent } from "../../main/main.component";
 import { Link, useParams } from "react-router-dom";
 import { SelectLanguage } from "../../../shared/components/SelectLanguage";
 import logo from "../../../assets/img/custom/logo.png";

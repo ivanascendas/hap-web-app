@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useAuth } from "../providers/Auth.provider";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { MainComponent } from "../../features/main/Main.component";
+import { MainComponent } from "../../features/main/main.component";
 
 type ProtectedProps = {
   component: JSX.Element;

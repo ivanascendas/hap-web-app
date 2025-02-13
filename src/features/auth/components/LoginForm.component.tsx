@@ -17,7 +17,7 @@ import {
   useCheckTempPasswordMutation,
   useLoginMutation,
 } from "../../../shared/services/Auth.service";
-import { MainComponent } from "../../main/Main.component";
+import { MainComponent } from "../../main/main.component";
 import { getErrorMessage } from "../../../shared/utils/getErrorMessage";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser, setUser } from "../../../shared/redux/slices/authSlice";

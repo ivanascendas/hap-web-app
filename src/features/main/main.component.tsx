@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import "./Main.component.scss";
+import "./main.component.scss";
 import { Loading } from "../../shared/components/Loading";
 import { CookieBannerComponent } from "./components/CookieBanner.component";
 import { useAuth } from "../../shared/providers/Auth.provider";
@@ -10,8 +10,7 @@ import { Box, Paper } from "@mui/material";
 import { BottomBarСomponent } from "./components/BottomBar.component";
 import useWindowDimensions from "../../shared/hooks/useWindowDimensions";
 import { t } from "i18next";
-import { Link, useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { FooterCompoment } from "./components/Footer.component";
 import { ExistingTenantPopupComponent } from "../../shared/components/ExistingTenantPopup.component";
 import { useSelector } from "react-redux";

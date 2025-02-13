@@ -12,7 +12,7 @@ import { useForgotPasswordMutation } from "../../../shared/services/Auth.service
 import { TextField } from "@mui/material";
 import "../Auth.component.scss";
 import { getErrorMessage } from "../../../shared/utils/getErrorMessage";
-import { MainComponent } from "../../main/Main.component";
+import { MainComponent } from "../../main/main.component";
 import { NotificationComponent } from "../../../shared/components/Notification.component";
 import { setError } from "../../../shared/redux/slices/errorSlice";
 import { setNotify } from "../../../shared/redux/slices/notifySlice";
