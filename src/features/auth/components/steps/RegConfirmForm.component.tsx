@@ -44,7 +44,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
     minLength: parseInt(process.env.REACT_APP_PASSWORD_MIN_LENGTH || "8"),
     hasNumber: process.env.REACT_APP_PASSWORD_USE_NUMBERS === "true" || false,
     hasSpecialChar:
-      process.env.REACT_APP_PASSWORD_USE__SPECIAL_CHARACTER === "true" || false,
+      process.env.REACT_APP_PASSWORD_USE_SPECIAL_CHARACTER === "true" || false,
     hasUpperCase:
       process.env.REACT_APP_PASSWORD_USE_UPPERCASE === "true" || false,
     hasLowerCase:
