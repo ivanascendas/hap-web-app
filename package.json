@@ -2,6 +2,7 @@
   "name": "hap-web-app",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://ivanascendas.github.io/hap-web-app/",
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
@@ -43,7 +44,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint  ./src/**/*.{ts,tsx}",
-    "prepare": "husky"
+    "prepare": "husky",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -71,6 +74,7 @@
     "@types/react-google-recaptcha": "^2.1.9",
     "eslint": "^8.57.1",
     "eslint-plugin-react": "^7.36.1",
+    "gh-pages": "^6.3.0",
     "globals": "^15.9.0",
     "husky": "^9.1.6",
     "lint-staged": "^15.2.10",
