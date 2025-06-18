@@ -1,0 +1,30 @@
+@import "../../../assets/styles/variables.scss";
+
+.messages {
+  padding: 0.9375rem 2.1875rem;
+  max-height: calc(100vh - 9.7rem);
+  overflow: auto;
+  padding-bottom: pxToRem(50);
+
+  @media screen and (max-width: $mobileSize) {
+    max-height: calc(100vh - 11.7rem);
+    overflow: auto;
+  }
+
+  &_header {
+    color: $primary900;
+    font-size: 1.5em !important;
+    margin: 0.83em 0 !important;
+    font-weight: bold !important;
+  }
+
+  &_content {
+    margin: 0 !important;
+  }
+
+  &_list {
+    & > * {
+      cursor: pointer;
+    }
+  }
+}

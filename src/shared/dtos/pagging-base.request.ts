@@ -1,6 +1,6 @@
 export interface PaggingBaseDto {
   $filter?: string;
-  $inlinecount?: string;
+  $count?: boolean;
   $orderby?: string;
   $skip?: number;
   $top?: number;

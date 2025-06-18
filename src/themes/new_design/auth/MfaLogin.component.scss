@@ -1,0 +1,41 @@
+.mfa-login {
+  margin: auto;
+  width: 24.25rem;
+
+  @media screen and (max-width: $mobileSize) {
+    width: 17.25rem;
+  }
+
+  input:not([type="radio"]) {
+    padding-bottom: 0 !important;
+    padding-left: 0.3125rem !important;
+
+    @media screen and (max-width: $mobileSize) {
+      padding: 0.3125rem;
+    }
+  }
+
+  &__info {
+    text-align: start;
+    color: #5a5a5a;
+    margin-bottom: 1.25rem;
+    font-size: 0.75rem;
+  }
+
+  &__label {
+    font-size: 0.8125rem;
+    opacity: 0.7;
+    font-family: "Roboto", sans-serif;
+    margin-bottom: 0.3125rem;
+    display: block;
+  }
+
+  .mfa-ways {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .MuiFormControl-root .MuiInputBase-root {
+    height: 2.625rem !important;
+  }
+}

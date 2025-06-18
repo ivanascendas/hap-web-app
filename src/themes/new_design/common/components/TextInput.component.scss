@@ -1,0 +1,52 @@
+@import "../../../../assets/styles/variables.scss";
+
+.text-input-container {
+  .MuiInputBase-root {
+    border-radius: 1.5rem;
+    height: 2.863rem;
+
+    legend {
+      display: none;
+    }
+  }
+}
+
+.text-input-password {
+  position: relative;
+
+  input:not([type="radio"]) {
+    border-width: 0;
+    border-bottom-width: 0.0625rem;
+    border-radius: 2rem;
+    height: 2rem;
+    display: block;
+    width: 100%;
+    padding-left: 1.875rem !important;
+    margin-bottom: 0.225rem;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0.3125rem;
+    top: 1.18rem;
+    transform: translateY(-50%);
+    background: url(../../../../assets/img/forms/password_acc.svg) no-repeat;
+    background-size: contain;
+    display: flex;
+    background-size: contain;
+    pointer-events: none;
+    width: 1.25rem;
+    height: 1.25rem;
+
+    @media screen and (max-width: $mobileSize) {
+      top: 1rem;
+    }
+  }
+
+  .password-icon {
+    top: 0.6rem;
+    position: absolute;
+    right: 0.625rem;
+  }
+}

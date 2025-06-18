@@ -91,9 +91,9 @@ export const LoansStatementComponent = ({
         to: moment().format("YYYY-MM-DD"),
       });
       const statementsReq = getStatements({
-        $inlinecount: "allpages",
+        $count: true,
         IncDept: department.toUpperCase(),
-        $orderby: "ROW_NUMBER asc",
+        $orderby: "sequenceNo asc",
         $skip: page * 50,
         $top: 50,
         from: moment().subtract(selectedPeriod, "month").format("YYYY-MM-DD"),

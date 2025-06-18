@@ -30,7 +30,7 @@ export const NotificationsReportComponent = (): JSX.Element => {
   useEffect(() => {
     if (isAuthenticated) {
       fetch({
-        $inlinecount: "allpages",
+        $count: true,
         $orderby: `SentDate desc`,
         $skip: page * top,
         $top: top,

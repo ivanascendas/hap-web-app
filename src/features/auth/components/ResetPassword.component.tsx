@@ -58,22 +58,28 @@ export const ResetPasswordComponent = (): JSX.Element => {
         }),
       );
     } else if (result.isError) {
-      if ((result.error as any).data.modelState) {
-        if ((result.error as any).data.modelState["model.ConfirmPassword"]) {
+      if ((result.error as any).data?.modelState) {
+        if ((result.error as any).data?.modelState["model.ConfirmPassword"]) {
           setFromError("confirmPassword", {
             type: t(
-              (result.error as any).data.modelState["model.ConfirmPassword"][0],
+              (result.error as any).data?.modelState[
+                "model.ConfirmPassword"
+              ][0],
             ),
           });
         }
-        if ((result.error as any).data.modelState["model.Password"]) {
+        if ((result.error as any).data?.modelState["model.Password"]) {
           setFromError("password", {
-            type: t((result.error as any).data.modelState["model.Password"][0]),
+            type: t(
+              (result.error as any).data?.modelState["model.Password"][0],
+            ),
           });
         }
-        if ((result.error as any).data.modelState[""]) {
+        if ((result.error as any).data?.modelState[""]) {
           dispatch(
-            setError({ message: t((result.error as any).data.modelState[""]) }),
+            setError({
+              message: t((result.error as any).data?.modelState[""]),
+            }),
           );
         }
       }

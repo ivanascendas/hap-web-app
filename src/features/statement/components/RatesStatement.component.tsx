@@ -115,9 +115,11 @@ export const RatesStatementComponent = ({
         to: moment().format("YYYY-MM-DD"),
       });
       var statementsReq = getStatements({
-        $inlinecount: "allpages",
+        $count: true,
         IncDept: department.toUpperCase(),
-        $orderby: "ROW_NUMBER asc",
+        $orderby: "SequenceNumber asc",
+        // $orderby: "roW_NUMBER asc",
+
         $skip: page * 50,
         $top: 50,
         from:

@@ -1,0 +1,7 @@
+.MuiFormControl-root .MuiInputBase-root:not(.MuiInputBase-multiline) {
+  height: 2.5rem;
+}
+
+input:not([type="radio"]) {
+  height: 1.2rem;
+}

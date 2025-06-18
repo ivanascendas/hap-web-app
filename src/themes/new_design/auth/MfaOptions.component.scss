@@ -1,0 +1,27 @@
+.mfa-optgions {
+  &__label {
+    width: 80%;
+    display: inline-block;
+    color: black;
+    border-width: 0.0625rem; // 1px
+    border-style: solid;
+    border-color: black;
+    border-image: initial;
+    padding: 1.25rem; // 20px
+    border-radius: 0.625rem; // 10px
+    margin: 0.1875rem; // 3px
+    white-space: nowrap;
+
+    @media screen and (max-width: $mobileSize) {
+      padding: 0.9375rem; // 15px
+
+      .MuiFormControlLabel-label {
+        font-size: 0.875rem; // 14px
+      }
+    }
+
+    &:has(input:checked) {
+      background: rgba(210, 84, 34, 0.125);
+    }
+  }
+}

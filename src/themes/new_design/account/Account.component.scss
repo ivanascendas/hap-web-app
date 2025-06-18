@@ -1,0 +1,170 @@
+@import "../../../assets/styles/variables.scss";
+@import "../../../assets/styles/functions.scss";
+
+.account {
+  padding: 0.9375rem 2.1875rem; // 15px 35px
+  padding-bottom: pxToRem(55);
+  max-height: calc(100vh - 11.8rem);
+  overflow: auto;
+
+  @media screen and (max-width: $mobileSize) {
+    max-height: calc(100vh - 13.7rem);
+    padding-bottom: pxToRem(50);
+  }
+
+  &_header {
+    color: $primary900;
+    font-size: 2.5rem !important; // 40px
+    margin: 0.53em 0 !important;
+    font-weight: bold !important;
+  }
+
+  &_content {
+    margin: 0 !important;
+    display: flex;
+    justify-content: space-between;
+
+    @media screen and (max-width: $mobileSize) {
+      flex-direction: column;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      max-width: 100%;
+    }
+  }
+
+  &_form {
+    flex: 1;
+    padding: 1.25rem 2.5rem 0 2.5rem; // 20px 40px 0 40px
+
+    @media screen and (max-width: $mobileSize) {
+      padding: 0;
+      display: none;
+
+      &.active {
+        display: block;
+      }
+
+      &:last-child {
+        .MFA {
+          display: none;
+        }
+      }
+    }
+
+    &.passwords-managment {
+      @media screen and (max-width: $mobileSize) {
+        display: none;
+      }
+    }
+
+    &_password_info {
+      color: $primary900;
+      display: block;
+      font-size: 0.83em;
+      margin-block-start: 1.67em;
+      margin-block-end: 1.67em;
+      margin-inline-start: 0;
+      margin-inline-end: 0;
+      font-weight: bold !important;
+      unicode-bidi: isolate;
+      margin-bottom: 1.25rem !important; // 20px
+    }
+
+    &:first-child {
+      border-right: 1px solid;
+      border-image: $devider-bg 2;
+
+      @media screen and (max-width: $mobileSize) {
+        border: none;
+      }
+    }
+
+    &.loading {
+      .account_form__phone-input {
+        display: none !important;
+      }
+
+      .iti__country-container {
+        opacity: 0;
+      }
+    }
+
+    &_header {
+      box-sizing: border-box;
+      line-height: 1.1 !important;
+      padding: 0 0 1.5rem; // 24px
+      color: $primary900;
+      font-size: 1.625rem !important; // 26px
+      font-weight: bold !important;
+      padding-bottom: 0.9375rem !important; // 15px
+    }
+
+    &_row {
+      display: flex;
+      flex-direction: column;
+
+      label:not(.MuiFormControlLabel-root) {
+        font-size: 0.8125rem; // 13px
+        color: $primary900;
+        margin: 0.5625rem 0; // 9px 0
+      }
+
+      .iti {
+        display: block !important;
+      }
+
+      .MuiInputBase-root {
+        height: 2.625rem !important; // 42px
+      }
+
+      button {
+        max-width: 9.375rem; // 150px
+
+        @media screen and (max-width: $mobileSize) {
+          max-width: 100%;
+        }
+      }
+    }
+
+    &__phone-input {
+      border-width: 1px !important;
+      width: 100% !important;
+      border-radius: 0.25rem !important; // 4px
+
+      &:not([aria-invalid="true"]) {
+        border-color: $border-input-color !important;
+      }
+
+      &.loading {
+        display: none;
+      }
+
+      &:hover {
+        border-color: $border-input-color-hover !important;
+      }
+    }
+
+    .MFA {
+      margin-top: 1.25rem; // 20px
+
+      .MuiFormLabel-root {
+        font-size: 1rem; // 16px
+        color: $primary900;
+        font-weight: bold !important;
+      }
+    }
+  }
+
+  .MuiTabs-root {
+    button {
+      flex: 1;
+      width: 100% !important;
+
+      &.Mui-selected {
+        background: $secondary100;
+        border-top-left-radius: 0.625rem; // 10px
+        border-top-right-radius: 0.625rem; // 10px
+      }
+    }
+  }
+}

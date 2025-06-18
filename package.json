@@ -2,7 +2,7 @@
   "name": "hap-web-app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://ivanascendas.github.io/hap-web-app/",
+  "config-overrides-path": "webpack-config.js",
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
@@ -39,9 +39,9 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start --config-overrides=webpack-config.js",
+    "build": "react-app-rewired build --config-overrides=webpack-config.js",
+    "test": "react-app-rewired test --config-overrides=webpack-config.js",
     "eject": "react-scripts eject",
     "lint": "eslint  ./src/**/*.{ts,tsx}",
     "prepare": "husky",
@@ -81,6 +81,7 @@
     "nth-check": "^2.1.1",
     "postcss": "^8.4.47",
     "prettier": "3.3.3",
+    "react-app-rewired": "^2.2.1",
     "sass": "^1.78.0",
     "typescript-eslint": "^8.6.0"
   },

@@ -80,15 +80,17 @@ export const LoginFormComponent = ({
 
   useEffect(() => {
     if (result.isError) {
-      if ((result.error as any).data.modelState) {
-        if ((result.error as any).data.modelState.tempPassword[0]) {
+      if ((result.error as any).data?.modelState) {
+        if ((result.error as any).data?.modelState.tempPassword[0]) {
           dispatch(
             setError({
-              message: t((result.error as any).data.modelState.tempPassword[0]),
+              message: t(
+                (result.error as any).data?.modelState.tempPassword[0],
+              ),
             }),
           );
         }
-        for (const model in (result.error as any).data.modelState) {
+        for (const model in (result.error as any).data?.modelState) {
           setFromError(
             model as FieldPath<LoginDto>,
             (result.error as any).data.modelState[model].join("; "),

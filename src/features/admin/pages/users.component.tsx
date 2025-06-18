@@ -75,7 +75,7 @@ export const UsersComponent = () => {
       fetch({
         $filter: `substringof('${filterValue}',CustomerName) or substringof('${filterValue}',Address) or substringof('${filterValue}',UserName)`,
         incDepts: selectedIncDepts,
-        $inlinecount: "allpages",
+        $count: true,
         $orderby: `UserName ${orderUserName}`,
         $skip: page * top,
         $top: top,

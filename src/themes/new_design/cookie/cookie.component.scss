@@ -1,0 +1,56 @@
+@import "../../../assets/styles/variables.scss";
+
+.page_wrap {
+  width: 100%;
+}
+
+.policy_btn_back {
+  font-size: 1.5625rem;
+  bottom: 5rem;
+  position: fixed;
+  top: auto;
+  left: 1.25rem;
+  line-height: 2.25rem;
+  border: 0;
+  background: transparent;
+  outline: 0;
+  vertical-align: center;
+  display: flex;
+
+  img {
+    width: 1.875rem;
+  }
+
+  span {
+    margin: 0.1875rem;
+  }
+}
+
+.data-policy-info {
+  padding-left: 1.5625rem;
+
+  .h_title {
+    margin: 0 2.1875rem;
+  }
+
+  @media screen and (max-width: $mobileSize) {
+    padding: 0;
+
+    .h_title {
+      margin: 0 0.625rem;
+    }
+  }
+}
+
+.authenticated {
+  .data-policy-info {
+    @media screen and (max-width: $mobileSize) {
+      max-height: calc(100vh - 9.7rem);
+      overflow: auto;
+
+      .personal_box {
+        margin-bottom: pxToRem(50) !important;
+      }
+    }
+  }
+}

@@ -1,12 +1,12 @@
 import { RouterProvider } from "react-router-dom";
 import { router } from "./AppRoutes";
-import "./shared/utils/i18n";
+import "@shared/utils/i18n";
 import { IdleTimerProvider } from "react-idle-timer";
-import { useAuth } from "./shared/providers/Auth.provider";
+import { useAuth } from "@shared/providers/Auth.provider";
 import { ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { useState } from "react";
-import { IdlePopupModal } from "./shared/components/IdlePopup.modal";
+import { IdlePopupModal } from "@shared/components/IdlePopup.modal";
 function App() {
   const [shoeIDLE, setShowIDLE] = useState(false);
   const { isAuthenticated } = useAuth();
@@ -33,7 +33,6 @@ function App() {
   const handleOnIdle = async () => {
     setShowIDLE(isAuthenticated);
   };
-  console.log(process.env.REACT_APP_IDLE);
 
   return (
     <ThemeProvider theme={theme}>

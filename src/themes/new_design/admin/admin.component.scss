@@ -1,0 +1,33 @@
+@import "../../../assets/styles/variables.scss";
+@import "../../../assets/styles/functions.scss";
+
+.admin-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: $secondary !important;
+
+  &__header {
+    background-color: #677e90;
+
+    .MuiToggleButton-root {
+      color: $secondary100;
+
+      &.Mui-selected {
+        background-color: $primary500;
+        color: $secondary100;
+      }
+    }
+  }
+
+  footer {
+    flex: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    gap: 5px;
+    background-color: $secondary100;
+    font-size: 0.93rem;
+  }
+}

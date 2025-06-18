@@ -67,20 +67,13 @@ export const notificationsApi = createApi({
         const formData = new FormData();
         formData.append("file", file);
         formData.append("model", JSON.stringify(model));
-        /*Object.keys(model).forEach((key) => {
-          formData.append(
-            key,
-            model[key as keyof NotificationsSendDto] as string,
-          );
-        });*/
+
         formData.append("cutdata", "it will removed");
+
         return {
           url: "/api/pushNotification/sendByExcel",
           method: "POST",
           body: formData as any,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
         };
       },
     }),

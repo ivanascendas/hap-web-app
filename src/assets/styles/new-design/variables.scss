@@ -1,0 +1,117 @@
+//colors
+$primary900: #130603;
+$primary700: #9e310f;
+$primary600: rgb(234, 48, 31);
+$primary500: #ef642d;
+$primary400: rgb(246, 162, 96);
+$primaryBlue: #005d8a;
+$secondaryGray: #595959;
+$secondaryGray600: #4c4c4c;
+$secondary700: #3c515f;
+$secondary400: #edf0f4;
+$secondary500: #c1c1c1;
+$secondary600: #5e636b;
+$secondary650: #7f7f7f;
+$secondary200: #f7f8f9;
+$secondary: #f5f7fa; //
+$secondary100: #ffffff;
+$success: #116419;
+$error: #ac1111;
+$errorBorder: #d25422;
+$referenceColor: #ef642d;
+
+$border-input-color: rgba(0, 0, 0, 0.23);
+
+$border-input-color-hover: rgba(0, 0, 0, 0.87);
+
+$devider-bg: linear-gradient(
+  0deg,
+  rgba(255, 255, 255, 1) 0%,
+  rgba(0, 0, 0, 0.2) 50%,
+  rgba(255, 255, 255, 1) 100%
+);
+//size
+$mobileSize: 48rem; // 768px ÷ 16
+$mobileSmallSize: 33.75rem; // 540px ÷ 16
+$desktopMdSize: 56.25rem; // 900px ÷ 16
+$desktopLgSize: 75rem; // 1200px ÷ 16
+$placeholder_size: 1.125rem; // 18px ÷ 16
+
+@mixin theme {
+  --mui-primary-main: #{$primary500};
+  --mui-secondary-main: #{$secondary};
+}
+
+// Base variables
+$light-text: #000000;
+$dark-text: #ffffff;
+
+$button-color-main: #7a003c; // main button color (from images)
+$button-color-hover: #8b0045; // hover or active state (approx)
+$button-color-disabled: #d8d8d8; // disabled button (light gray)
+
+// Base box shadow mixin
+@mixin themed-box-shadow($color) {
+  box-shadow: 0 4px 6px #{rgba($color, 0.53)};
+}
+
+// Named color map
+$theme-colors: (
+  light-gray: #d2d2d4,
+  dark-gray: #434343,
+  soft-gray: #f5f5f7,
+  mid-gray: #444444,
+  pale-gray: #f4f4f6,
+  silver: #dadada,
+  steel-gray: #d2d2d3,
+  charcoal: #414141,
+  blush: #f9f2f5,
+  black: #1e1e1e,
+  almost-white: #fefefe,
+  light-silver: #dbdbdb,
+  graphite: #454545,
+  white: #ffffff,
+  button-main: $button-color-main,
+  button-hover: $button-color-hover,
+  button-disabled: $button-color-disabled,
+);
+
+// Function to determine text color
+@function get-text-color($bg) {
+  @if (lightness($bg) > 50) {
+    @return $light-text;
+  } @else {
+    @return $dark-text;
+  }
+}
+
+// Generate classes with clear names
+@each $name, $color in $theme-colors {
+  .theme-#{$name} {
+    background-color: $color !important;
+    color: get-text-color($color) !important;
+    border-color: $color !important;
+    @include themed-box-shadow($color);
+  }
+}
+
+// Button-specific styles
+.button {
+  background-color: $button-color-main;
+  color: $dark-text;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: $button-color-hover;
+  }
+
+  &:disabled {
+    background-color: $button-color-disabled;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}

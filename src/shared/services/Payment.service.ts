@@ -6,7 +6,7 @@ import {
   InvoiceQueryParams,
   InvoicesResponse,
 } from "../dtos/invoice.dtos";
-import { PaymentModel } from "../../features/payment/payment.model";
+import { PaymentModel } from "@components/payment/payment.model";
 import {
   PaymentDto,
   PaymentResponseDto,

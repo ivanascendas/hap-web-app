@@ -127,12 +127,15 @@ export const authApi = createApi({
      * @returns The `TokenDto` object containing the authentication token.
      */
     login: builder.mutation<TokenDto, LoginDto>({
-      query: ({ username, password, mfaMethod }) => {
+      query: ({ username, password, mfaMethod }: LoginDto) => {
         const usernameHash = base64EncodeUrl(username);
         const passwordHash = base64EncodeUrl(password);
         return {
           url: `/token`,
           method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
           body: toUrlEncoded({
             grant_type: "password",
             username: usernameHash,
@@ -179,6 +182,9 @@ export const authApi = createApi({
         return {
           url: `/token`,
           method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
           body: toUrlEncoded({
             grant_type: "code",
             v: codeHash,

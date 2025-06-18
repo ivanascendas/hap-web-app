@@ -34,7 +34,7 @@ import {
 
 import WestIcon from "@mui/icons-material/West";
 import { VerificationInputComponent } from "./VerificationInput.component";
-import { MFAControlComponent } from "../../features/account/compomnents/MFAControl.component";
+import { MFAControlComponent } from "@components/account/compomnents/MFAControl.component";
 import { IntlTelInputRef } from "intl-tel-input/react";
 const { default: utils } = require("intl-tel-input/build/js/utils.js");
 

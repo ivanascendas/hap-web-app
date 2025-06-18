@@ -50,7 +50,7 @@ export const MainComponent = ({ children }: MainProps): JSX.Element => {
   }, [isLoading, user]);
   // console.trace();
   return (
-    <Paper square className={`page ${isAuthenticated ? "authenticated" : ""}`}>
+    <Paper square className={`page  ${isAuthenticated ? "authenticated" : ""}`}>
       <Loading />
       {isAuthenticated && !window.location.pathname.startsWith("/invoices") && (
         <HeaderComponent toogleDrawer={openMenuDrawer} />

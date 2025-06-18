@@ -1,0 +1,4 @@
+@function pxToRem($pixels) {
+  $remSize: $pixels / 16;
+  @return #{$remSize}rem;
+}
