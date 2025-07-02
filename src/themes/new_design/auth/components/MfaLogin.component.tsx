@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import { MFAMethod } from "@shared/dtos/user.dto";
-import { OtpInputComponent } from "@shared/components/otpInput.component";
 import {
   selectLoginResponse,
   selectMaskedValue,
@@ -13,6 +12,7 @@ import {
 } from "@shared/services/Auth.service";
 import { TokenDto } from "@shared/dtos/token.dto";
 import { selectTmpToken, setToken } from "@shared/redux/slices/authSlice";
+import { OtpInputComponent } from "@components/common/components/otpInput.component";
 
 export type MfaLoginProps = {
   username: string;
@@ -113,7 +113,7 @@ export const MfaLogin = ({
             </label>
             <button
               type="submit"
-              className="button-primary mt-20"
+              className="button mt-20"
               onClick={handleChangeMFA}
             >
               Send OTP
@@ -126,6 +126,7 @@ export const MfaLogin = ({
             {t("MFA.ENTER_CODE")} {maskeedValue}
           </label>
           <OtpInputComponent
+            countNumbers={6}
             btnLabel={t("BUTTONS.CHECK")}
             resendLabel={t("MFA.VERIFICATION_INPUT.RESEND_OTP")}
             extraLinnk={t("MFA.VERIFICATION_INPUT.TRY_ANOTHER_WAY")}

@@ -16,6 +16,12 @@
   width: 100%;
   height: 100%;
 
+  .login-page {
+    h1 {
+      padding: 0.3125rem 0rem 0rem 1.8rem !important;
+    }
+  }
+
   .back-button {
     justify-content: start !important;
   }
@@ -44,9 +50,10 @@
   }
 
   .auth-form {
-    max-height: calc(100vh - 13.75rem);
+    // max-height: calc(100vh - 13.75rem);
     position: relative;
     display: flex;
+    height: 100%;
     flex-direction: column;
     width: 33.25rem;
     // background: $secondary100;
@@ -55,15 +62,15 @@
     // box-shadow: 0 1.5rem 1.5rem 0 rgba(0, 0, 0, 0.3);
     background-origin: border-box;
     background-clip: border-box;
-    padding: 2rem 1.25rem 2rem 2.5rem;
+    padding: 0rem 1.25rem 0rem 2.5rem;
 
     @media screen and (max-width: $mobileSize) {
-      padding: 0.625rem;
+      padding: 0rem 1rem;
       width: 100%;
     }
 
     @media screen and (min-height: $desktopMdSize) {
-      padding: 2rem 2.5rem;
+      padding: 0rem 2.5rem;
     }
 
     @import "./MfaLogin.component.scss";
@@ -78,6 +85,7 @@
       overflow-x: hidden;
       overflow-y: auto;
       padding-right: 1.25rem;
+      margin: 6rem 0 3rem 0;
     }
 
     &__form {
@@ -93,20 +101,34 @@
 
     &__help {
       position: absolute;
-      right: 2.625rem;
-      top: 0.8625rem;
+      right: 5rem;
+      top: 0rem;
       border: 1px solid $mid-gray;
       border-radius: 1.2rem;
       padding: 0.4875rem 0.625rem;
       font-weight: bold;
+
+      &::before {
+        margin-right: 0.5rem;
+      }
+
+      @media screen and (max-width: $mobileSize) {
+        right: 1rem;
+        top: 0rem;
+      }
     }
 
     &__logo {
       position: absolute;
-      left: calc(100% - 38.5rem);
-      top: 0.8625rem;
+      left: -0.8rem;
+
+      top: 1rem;
       justify-content: start;
       align-items: start;
+
+      @media screen and (max-width: $mobileSize) {
+        left: -2.25rem;
+      }
 
       img {
         display: flex;
@@ -121,7 +143,11 @@
       font-size: 1.4375rem;
       margin: 0.3125rem 0 0.625rem 0;
       font-family: "robotobold";
-      padding: 0 1.875rem;
+      //padding: 0 1.875rem;
+
+      @media screen and (max-width: $mobileSize) {
+        padding: 0;
+      }
     }
 
     &__subtitle {
@@ -161,7 +187,7 @@
         content: "";
         position: absolute;
         left: 0.3125rem;
-        top: 1.5rem;
+        top: 1.3rem;
         transform: translateY(-50%);
         background: url(../../../assets/img/forms/login_acc_num.svg) no-repeat;
         background-size: contain;
@@ -187,7 +213,7 @@
           content: "";
           position: absolute;
           left: 0.3125rem;
-          top: 1.5rem;
+          top: 1.3rem !important;
           transform: translateY(-50%);
           background: url(../../../assets/img/forms/password_acc.svg) no-repeat;
           background-size: contain;
@@ -203,7 +229,7 @@
         }
 
         .password-icon {
-          top: 1rem;
+          top: 0.8rem;
         }
       }
     }
@@ -249,6 +275,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 1.5rem;
 
     .android,
     .apple {

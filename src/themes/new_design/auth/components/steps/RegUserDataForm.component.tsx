@@ -13,6 +13,7 @@ import { Iti } from "intl-tel-input";
 import { setError } from "@shared/redux/slices/errorSlice";
 import StorageService from "@shared/services/Storage.service";
 import { IntlTelInputRef } from "intl-tel-input/react";
+import { TextInput } from "@components/common/components/TextInput.component";
 const { default: utils } = require("intl-tel-input/build/js/utils.js");
 export const RegUserDataFormComponent = (): JSX.Element => {
   const { t } = useTranslation();
@@ -67,14 +68,14 @@ export const RegUserDataFormComponent = (): JSX.Element => {
       <form className="registration__form" onSubmit={handleSubmit(onSubmit)}>
         <div className="registration__input-container">
           <label
-            className="registration__label label-question required"
+            className="registration__label  required"
             title={t("MESSAGES.REGISTRATION_NUMBER_TOOLTIP")}
             htmlFor="registration-number"
             aria-label={t("LABELS.CUSTOMER_NUMBER")}
           >
             {t("LABELS.CUSTOMER_NUMBER")}
           </label>
-          <TextField
+          <TextInput
             id="registration-number"
             {...register("accountNumber", {
               required: true,
@@ -92,14 +93,14 @@ export const RegUserDataFormComponent = (): JSX.Element => {
         </div>
         <div className="registration__input-container">
           <label
-            className="registration__label label-question required"
+            className="registration__label  required"
             title={t("MESSAGES.REGISTRATION_EMAIL_TOOLTIP")}
             htmlFor="registration-email"
             aria-label={t("LABELS.ENTER_EMAIL")}
           >
             {t("LABELS.ENTER_EMAIL")}
           </label>
-          <TextField
+          <TextInput
             id="registration-email"
             {...register("email", {
               required: true,
@@ -117,14 +118,14 @@ export const RegUserDataFormComponent = (): JSX.Element => {
 
         <div className="registration__input-container">
           <label
-            className="registration__label label-question required"
+            className="registration__label  required"
             title={t("MESSAGES.REGISTRATION_PHONE_TOOLTIP")}
             htmlFor="phone-input"
             aria-label={t("LABELS.ENTER_PHONE")}
           >
             {t("LABELS.ENTER_PHONE")}
           </label>
-          <TextField
+          <TextInput
             id="phone-input"
             error={!!errors.phone}
             helperText={getErrorMessage(errors.phone?.message)}
@@ -199,7 +200,7 @@ export const RegUserDataFormComponent = (): JSX.Element => {
         </div>
         <button
           type="submit"
-          className="button-primary registration__button"
+          className="button registration__button"
           role="button"
           disabled={
             !formState.isDirty ||

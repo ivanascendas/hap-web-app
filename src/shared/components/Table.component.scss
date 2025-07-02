@@ -5,9 +5,9 @@ table {
 
   th {
     font-size: 0.8125rem;
-    font-weight: 400;
+    font-weight: 500 !important;
     color: $secondaryGray;
-    background-color: #f1f3f5 !important;
+    //  background-color: #f1f3f5 !important;
     border: none !important;
     font-size: 0.875rem;
     color: #3c3e3f;
@@ -19,22 +19,28 @@ table {
     cursor: pointer;
 
     .MuiTableRow-root {
-      border: 0.0625rem solid #fbfbfb;
-      border-bottom: 0;
+      border: 0.0625rem solid $light-gray;
+      border-left: 0.0625rem solid transparent;
+      border-right: 0.0625rem solid transparent;
+      border-top: 0.0625rem solid transparent;
+
+      &:first-child {
+        border-top: 0.0625rem solid $light-gray;
+      }
     }
 
     .MuiTableRow-root:hover {
-      border: 0.0625rem solid #e09d8e;
+      border: 0.0625rem solid rgba($color: $button-color-main, $alpha: 0.8);
     }
 
     tr {
-      background: #fbfbfb;
-      border: 0.0625rem solid #fbfbfb;
+      //background: #fbfbfb;
+      border: 1.625rem solid $dark-gray;
       border-bottom: 0;
       z-index: 1;
 
       &:hover {
-        background: #fdf9f8;
+        background: rgba($color: $button-color-main, $alpha: 0.025);
         border: 0.0625rem solid #e09d8e;
         z-index: 2;
       }
@@ -51,6 +57,21 @@ table {
       &.text_red {
         color: $error;
       }
+    }
+  }
+}
+
+.MuiTablePagination-root {
+  display: flex;
+  flex: 1;
+
+  .MuiToolbar-root {
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+
+    .MuiTablePagination-spacer {
+      display: none;
     }
   }
 }

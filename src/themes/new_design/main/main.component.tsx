@@ -16,11 +16,16 @@ import { ExistingTenantPopupComponent } from "@shared/components/ExistingTenantP
 import { useSelector } from "react-redux";
 import { selectUserLoading } from "@shared/redux/slices/loaderSlice";
 import { selectUser } from "@shared/redux/slices/authSlice";
+import { NotificationComponent } from "@shared/components/Notification.component";
 export type MainProps = {
   children: JSX.Element;
+  showFooter?: boolean;
 };
 
-export const MainComponent = ({ children }: MainProps): JSX.Element => {
+export const MainComponent = ({
+  children,
+  showFooter,
+}: MainProps): JSX.Element => {
   const { isAuthenticated } = useAuth();
   const [openMenu, setOpenMenu] = React.useState(false);
   const isLoading = useSelector(selectUserLoading);
@@ -54,9 +59,15 @@ export const MainComponent = ({ children }: MainProps): JSX.Element => {
       square
       className={`page theme-soft-gray ${isAuthenticated ? "authenticated" : ""}`}
     >
-      <Loading />
+      {!isAuthenticated && (
+        <header>
+          <Loading />
+        </header>
+      )}
       {isAuthenticated && !window.location.pathname.startsWith("/invoices") && (
-        <HeaderComponent toogleDrawer={openMenuDrawer} />
+        <HeaderComponent toogleDrawer={openMenuDrawer}>
+          {isAuthenticated && <Loading />}
+        </HeaderComponent>
       )}
       {isAuthenticated && window.location.pathname.startsWith("/invoices") && (
         <HeaderComponent
@@ -64,7 +75,9 @@ export const MainComponent = ({ children }: MainProps): JSX.Element => {
             navigate(-1);
           }}
           title={t("INVOICES.RATES.TITLE")}
-        />
+        >
+          {isAuthenticated && <Loading />}
+        </HeaderComponent>
       )}
       {isAuthenticated && (
         <DrawerComponent
@@ -85,14 +98,16 @@ export const MainComponent = ({ children }: MainProps): JSX.Element => {
       >
         {children}
       </Box>
-      <FooterCompoment
-        drawerWidth={drawerWidth}
-        isAuthenticated={isAuthenticated}
-        showFooter={
-          !window.location.pathname.startsWith("/invoices") &&
-          !window.location.pathname.startsWith("/payment")
-        }
-      />
+      {showFooter === true && (
+        <FooterCompoment
+          drawerWidth={drawerWidth}
+          isAuthenticated={isAuthenticated}
+          showFooter={
+            !window.location.pathname.startsWith("/invoices") &&
+            !window.location.pathname.startsWith("/payment")
+          }
+        />
+      )}
       {isAuthenticated &&
         !window.location.pathname.startsWith("/invoices") &&
         !window.location.pathname.startsWith("/payment") && (
@@ -105,6 +120,7 @@ export const MainComponent = ({ children }: MainProps): JSX.Element => {
           onClose={() => setOpenExistingTenantPopup(false)}
         />
       )}
+      <NotificationComponent />
     </Paper>
   );
 };

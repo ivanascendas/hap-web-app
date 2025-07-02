@@ -66,5 +66,9 @@
     opacity: 1 !important;
     justify-content: start !important;
     margin-left: 1rem;
+
+    @media screen and (max-width: $mobileSize) {
+      margin-left: 0 !important;
+    }
   }
 }

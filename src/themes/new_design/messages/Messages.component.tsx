@@ -1,7 +1,13 @@
 import React, { useEffect } from "react";
 import "./Messages.component.scss";
 import "./components/MessagePopup.component.scss";
-import { Box, Skeleton, TablePagination, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Skeleton,
+  TablePagination,
+  Typography,
+} from "@mui/material";
 import { useLazyGetNotificationsQuery } from "@shared/services/Notifications.service";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -14,10 +20,13 @@ import { Message } from "@mui/icons-material";
 import { MessagePopupComponent } from "./components/MessagePopup.component";
 import { NotificationDto } from "@shared/dtos/messages.dtos";
 import { getSubstringWithLastWord } from "@shared/utils/string.utils";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+
 import {
   selectNotifications,
   selectNotificationsCount,
 } from "@shared/redux/slices/notificationsSlice";
+import { TablePaginationActions } from "@shared/components/TablePaginationActions";
 
 export const MessagesComponent = (): JSX.Element => {
   const { isAuthenticated } = useAuth();
@@ -30,14 +39,17 @@ export const MessagesComponent = (): JSX.Element => {
   const [open, setOpen] = React.useState(false);
   const [selectedNotification, setSelectedNotification] =
     React.useState<NotificationDto | null>(null);
+
+  const rowsPerPage = 5;
+
   useEffect(() => {
     if (isAuthenticated) {
       const request = getNotificaitons({
         apar_id: user?.accountNumber || parseInt(user?.customerNo || "0"),
         $count: true,
         $orderby: "SentDate desc",
-        $skip: page * 10,
-        $top: 10,
+        $skip: page * rowsPerPage,
+        $top: rowsPerPage,
       });
 
       return () => {
@@ -71,12 +83,15 @@ export const MessagesComponent = (): JSX.Element => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }} className="messages">
-      <Typography variant="h1" className="messages_header">
+    <Box sx={{ flexGrow: 1 }} className="messages rates_statement_container ">
+      <Box className="messages_header">
         {t("MESSAGE_PAGE.TITLE")}
-      </Typography>
+        <Button startIcon={<CheckBoxIcon />} className="btn-secondary">
+          Mark All as Read
+        </Button>
+      </Box>
       <Box className="personal_box messages_content">
-        <Box className="messages_list">
+        <Box className="messages_list" sx={{ paddingTop: "1rem" }}>
           {!isFetching &&
             notifications.map((item, index) => (
               <Box
@@ -88,20 +103,15 @@ export const MessagesComponent = (): JSX.Element => {
                 <Typography
                   variant="h6"
                   component="div"
-                  className="message_title"
+                  className={`message_title ${item.isRead ? "read" : "unread"}`}
                 >
                   <span>{item.title}</span>
                   <Typography variant="body2" className="message_date">
-                    {moment(item.sentDate).format("DD MMM YYYY ")}
+                    {moment(item.sentDate).format("DD MMM YYYY (hh:mm A)")}
                   </Typography>
-                  {!item.isRead ? (
-                    <EmailIcon className={`message_icon unread`} />
-                  ) : (
-                    <DraftsIcon className="message_icon" />
-                  )}
                 </Typography>
                 <Typography variant="body1" className="message_body">
-                  {getSubstringWithLastWord(item.message, 500)}
+                  {Array(120).fill(item.message).join(" ")}
                 </Typography>
               </Box>
             ))}
@@ -118,7 +128,6 @@ export const MessagesComponent = (): JSX.Element => {
                 <Typography variant="body2" className="message_date">
                   <Skeleton role="progressbar" aria-label="Message Date" />
                 </Typography>
-                <DraftsIcon className="message_icon" />
               </Typography>
               <Typography variant="body1" className="message_body">
                 <Skeleton
@@ -140,15 +149,18 @@ export const MessagesComponent = (): JSX.Element => {
             </Box>
           )}
         </Box>
-        <TablePagination
-          rowsPerPageOptions={[10]}
-          component="div"
-          count={totalCount}
-          rowsPerPage={10}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        <Box sx={{ paddingTop: "1rem" }}>
+          <TablePagination
+            rowsPerPageOptions={[rowsPerPage]}
+            component="div"
+            count={totalCount}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            ActionsComponent={TablePaginationActions}
+          />
+        </Box>
       </Box>
       {selectedNotification && (
         <MessagePopupComponent

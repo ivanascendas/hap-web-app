@@ -31,14 +31,14 @@
     }
 
     p {
-      font-weight: 400;
+      //font-weight: 400;
       padding: 0;
       margin: 0;
     }
   }
 
   .h_title_right {
-    justify-content: center;
+    justify-content: end;
     align-items: end;
 
     .print-text {
@@ -46,13 +46,30 @@
     }
 
     .print_btn {
-      margin-left: auto;
-      color: $secondary700 !important;
+      background-color: $button-color-main;
+      color: $dark-text;
+      border: none;
       text-transform: none;
-      margin-right: 1.875rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 1.5rem;
+      margin-right: 2rem;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+
+      @include themed-box-shadow($mid-gray);
+
+      &:hover {
+        background-color: $button-color-hover;
+      }
+
+      &:disabled {
+        background-color: $button-color-disabled;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
 
       svg {
-        fill: $secondary700 !important;
+        fill: $dark-text !important;
       }
     }
   }
@@ -77,13 +94,107 @@
       }
 
       &_value {
-        font-size: 1.625rem;
+        font-size: 1.225rem;
         font-weight: bold;
       }
     }
 
     &_content {
       margin-top: 1.25rem;
+    }
+  }
+}
+
+.rates_statement_container {
+  .personal_box {
+    border-radius: 1.5rem;
+    padding: 0;
+
+    &_filter {
+      .MuiFormControl-root {
+        .MuiInputBase-root {
+          height: 2rem !important;
+        }
+
+        div[role="combobox"] {
+          padding: 0rem 0.75rem;
+
+          input {
+            height: 1.5rem !important;
+          }
+        }
+
+        .MuiInputBase-root {
+          border-radius: 1.5rem;
+          height: 2.863rem;
+
+          legend {
+            display: none;
+          }
+        }
+
+        .MuiInputLabel-root.MuiFormLabel-filled {
+          display: none;
+        }
+      }
+    }
+
+    .download-icon {
+      text-transform: none !important;
+      font-weight: bold;
+      border-radius: 1.5rem;
+      border: 1px solid $light-gray;
+      padding: 0.3rem 0.75rem;
+    }
+
+    .table-pagination-actions {
+      margin: 0 1rem 1rem;
+      flex-shrink: 0;
+      margin-left: 2.5em;
+      display: flex;
+      gap: 0.5em;
+
+      button {
+        border-radius: 1.5rem;
+        border: 1px solid $dark-gray;
+        color: $black;
+        text-transform: none !important;
+        padding: 0.3rem 0.75rem;
+        font-weight: bold;
+        background-color: transparent;
+
+        @include themed-box-shadow($mid-gray);
+
+        &:hover {
+          background-color: rgba($button-color-hover, 0.2);
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+          opacity: 0.6;
+        }
+
+        svg {
+          fill: $dark-text !important;
+        }
+      }
+    }
+
+    .strong {
+      font-weight: bold !important;
+      color: $black;
+
+      &__negative {
+        font-weight: bold !important;
+        color: $black;
+
+        &::before {
+          content: "\2212 ";
+          font-weight: bold;
+          margin-right: 0.2rem;
+          color: $primary600;
+        }
+      }
     }
   }
 }

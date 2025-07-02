@@ -68,6 +68,14 @@ export const OtpInputComponent = forwardRef<HTMLInputElement, OtpInputProps>(
     }, []);
 
     useEffect(() => {
+      if (input?.useDatePicker?.value?.isValid()) {
+        setInProgress(true);
+        //onSubmit(input?.useDatePicker?.value?.toString() || "");
+        console.log(`Submitting OTP: ${otp}`);
+      }
+    }, [input?.useDatePicker?.value]);
+
+    useEffect(() => {
       console.log(`isSubmitting: ${isSubmitting}`);
 
       setInProgress(!!isSubmitting);
@@ -99,11 +107,11 @@ export const OtpInputComponent = forwardRef<HTMLInputElement, OtpInputProps>(
           disabled={isSubmitting || input?.disabled}
         />
 
-        <Box className="otp-input__actions">
-          {inProgress ? (
-            <CircularProgress size={24} className="otp-input__spinner" />
-          ) : !isChecked && countdown == 0 ? (
-            !input?.useDatePicker ? (
+        {!input?.useDatePicker && !isChecked ? (
+          <Box className="otp-input__actions">
+            {inProgress ? (
+              <CircularProgress size={24} className="otp-input__spinner" />
+            ) : !isChecked && countdown == 0 ? (
               <IconButton
                 color="primary"
                 aria-label={btnLabel}
@@ -112,25 +120,23 @@ export const OtpInputComponent = forwardRef<HTMLInputElement, OtpInputProps>(
               >
                 <RefreshIcon />
               </IconButton>
+            ) : !isChecked && countdown > 0 ? (
+              <span className="otp-input__countdown">
+                {`${countdown}s`}
+                {/*t("MFA.VERIFICATION_INPUT.SECOND_LEFT", { seconds: countdown })*/}
+              </span>
+            ) : isChecked ? (
+              <img src={checkedImg} className="otp-input__checked" />
             ) : (
-              <></>
-            )
-          ) : !isChecked && countdown > 0 ? (
-            <span className="otp-input__countdown">
-              {`${countdown}s`}
-              {/*t("MFA.VERIFICATION_INPUT.SECOND_LEFT", { seconds: countdown })*/}
-            </span>
-          ) : isChecked ? (
-            <img src={checkedImg} className="otp-input__checked" />
-          ) : (
-            extraLinnk &&
-            onExtraLinkClick && (
-              <a onClick={onExtraLinkClick} style={{ textAlign: "start" }}>
-                {extraLinnk}
-              </a>
-            )
-          )}
-        </Box>
+              <> </>
+            )}
+          </Box>
+        ) : null}
+        {extraLinnk && onExtraLinkClick && (
+          <a onClick={onExtraLinkClick} style={{ textAlign: "start" }}>
+            {extraLinnk}
+          </a>
+        )}
       </Box>
     );
   },

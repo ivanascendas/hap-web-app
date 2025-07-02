@@ -25,6 +25,7 @@ import { usePasswordValidator } from "@shared/utils/password.validator";
 
 import checkedImg from "../../../../../assets/img/forms/otp-done.svg";
 import { TextInput } from "../../../common/components/TextInput.component";
+import { PasswordCheckList } from "@components/common/components/PasswordCheckList.component";
 
 export const RegConfirmFormComponent = (): JSX.Element => {
   const { t } = useTranslation();
@@ -38,7 +39,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
   const [checkDOB, checkDOBResult] = useDobConfirmationMutation();
 
   const { email, phone, accountNumber } = useSelector(selectUser) || {};
-  const [isPasswordValid, passwordError] = usePasswordValidator({
+  const passwordConfig = {
     minLength: parseInt(process.env.REACT_APP_PASSWORD_MIN_LENGTH || "8"),
     hasNumber: process.env.REACT_APP_PASSWORD_USE_NUMBERS === "true" || false,
     hasSpecialChar:
@@ -52,8 +53,10 @@ export const RegConfirmFormComponent = (): JSX.Element => {
         process.env.REACT_APP_PASSWORD_MAX_REPEATING !== "false" &&
         parseInt(process.env.REACT_APP_PASSWORD_MAX_REPEATING)) ||
       undefined,
-  });
+  };
+  const [isPasswordValid, passwordError] = usePasswordValidator(passwordConfig);
   const {
+    watch,
     register,
     setValue,
     formState: { errors },
@@ -118,6 +121,8 @@ export const RegConfirmFormComponent = (): JSX.Element => {
       <Navigate to="/registration/step3" state={{ from: location }} replace />
     );
   }
+  const passwordValue = watch("password");
+
   return (
     <div role="form" style={{ padding: "0 0.9375rem" }}>
       <div className="registration__subtitle">
@@ -125,7 +130,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
       </div>
       <div className="registration__input-container">
         <Grid container spacing={2}>
-          <Grid size={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <label
               className="registration__label  required"
               title={t("MFA.ENTER_EMAIL_OTP")}
@@ -162,7 +167,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
               }
             />
           </Grid>
-          <Grid size={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <label
               className="registration__label required"
               title={t("MFA.ENTER_PHONE_OTP")}
@@ -211,6 +216,8 @@ export const RegConfirmFormComponent = (): JSX.Element => {
           {t("LABELS.ENTER_BIRTH_DATE")}
         </label>
         <OtpInputComponent
+          isChecked={checkDOBResult.isSuccess}
+          isSubmitting={checkDOBResult.isLoading}
           onSubmit={() =>
             dob &&
             checkDOB({
@@ -231,7 +238,6 @@ export const RegConfirmFormComponent = (): JSX.Element => {
         />
       </div>
       <form className="registration__form" onSubmit={handleSubmit(onSubmit)}>
-        <div className="h5">{t("LABELS.PASSWORDS_INFO")}</div>
         <div className="registration__input-container">
           <Grid container spacing={2}>
             <Grid size={12}>
@@ -293,6 +299,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
               />
             </Grid>
           </Grid>
+          <PasswordCheckList {...passwordConfig} value={passwordValue} />
         </div>
         <div className="registration__input-container">
           <FormControlLabel

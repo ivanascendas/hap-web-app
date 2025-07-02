@@ -11,48 +11,54 @@ export type TextInputProps = TextFieldProps & {
   useDatePicker?: DatePickerProps<Dayjs>;
 };
 
-export const TextInput = forwardRef((props: TextInputProps): JSX.Element => {
-  const [showPassword, setShowPassword] = useState(false);
+export const TextInput = forwardRef(
+  (props: TextInputProps, ref): JSX.Element => {
+    const [showPassword, setShowPassword] = useState(false);
 
-  // Destructure relevant props - use props.type directly in render
-  const { type, error, helperText, useDatePicker, ...otherProps } = props;
-  const modifiedProps = {
-    ...otherProps,
-    // Only mark as required in the DOM if truly empty
-    //  required: hasValue ? false : props.required,
-  };
+    // Destructure relevant props - use props.type directly in render
+    const { type, error, helperText, useDatePicker, ...otherProps } = props;
+    const modifiedProps = {
+      ...otherProps,
+      // Only mark as required in the DOM if truly empty
+      //  required: hasValue ? false : props.required,
+    };
 
-  return useDatePicker ? (
-    <div className={`text-input-container text-input-${type || "text"}`}>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker
-          {...useDatePicker}
-          slotProps={{
-            textField: {
-              variant: "outlined",
-              className: "text-input-date",
-            },
-          }}
+    return useDatePicker ? (
+      <div className={`text-input-container text-input-${type || "text"}`}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            {...useDatePicker}
+            slotProps={{
+              textField: {
+                variant: "outlined",
+                className: "text-input-date",
+                inputRef: ref,
+              },
+            }}
+          />
+        </LocalizationProvider>
+      </div>
+    ) : (
+      <div className={`text-input-container text-input-${type || "text"}`}>
+        <TextField
+          {...modifiedProps}
+          type={
+            type === "password" ? (showPassword ? "text" : "password") : type
+          }
+          variant="outlined"
+          inputRef={ref}
         />
-      </LocalizationProvider>
-    </div>
-  ) : (
-    <div className={`text-input-container text-input-${type || "text"}`}>
-      <TextField
-        {...modifiedProps}
-        type={type === "password" ? (showPassword ? "text" : "password") : type}
-        variant="outlined"
-      />
-      {type === "password" && (
-        <div
-          className="password-icon"
-          onClick={() => setShowPassword(!showPassword)}
-        >
-          <i className={showPassword ? "fas fa-eye-slash" : "fas fa-eye"}></i>
-        </div>
-      )}
-    </div>
-  );
-});
+        {type === "password" && (
+          <div
+            className="password-icon"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            <i className={showPassword ? "fas fa-eye-slash" : "fas fa-eye"}></i>
+          </div>
+        )}
+      </div>
+    );
+  },
+);
 
 TextInput.displayName = "TextInput";

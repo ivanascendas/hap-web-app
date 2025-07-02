@@ -17,6 +17,8 @@ import { useDispatch } from "react-redux";
 import { setNotify } from "@shared/redux/slices/notifySlice";
 import { setError } from "@shared/redux/slices/errorSlice";
 import StorageService from "@shared/services/Storage.service";
+import { PasswordCheckList } from "@components/common/components/PasswordCheckList.component";
+import { usePasswordValidator } from "@shared/utils/password.validator";
 
 export const ResetPasswordComponent = (): JSX.Element => {
   const { t } = useTranslation();
@@ -27,12 +29,27 @@ export const ResetPasswordComponent = (): JSX.Element => {
   const accountNumber = queryParams.get("accountNumber") || "";
   const [resetPassword, result] = useResetPasswordMutation();
   const dispatch = useDispatch();
-
+  const passwordConfig = {
+    minLength: parseInt(process.env.REACT_APP_PASSWORD_MIN_LENGTH || "8"),
+    hasNumber: process.env.REACT_APP_PASSWORD_USE_NUMBERS === "true" || false,
+    hasSpecialChar:
+      process.env.REACT_APP_PASSWORD_USE_SPECIAL_CHARACTER === "true" || false,
+    hasUpperCase:
+      process.env.REACT_APP_PASSWORD_USE_UPPERCASE === "true" || false,
+    hasLowerCase:
+      process.env.REACT_APP_PASSWORD_USE_LOWERCASE === "true" || false,
+    charRepeating:
+      (process.env.REACT_APP_PASSWORD_MAX_REPEATING &&
+        process.env.REACT_APP_PASSWORD_MAX_REPEATING !== "false" &&
+        parseInt(process.env.REACT_APP_PASSWORD_MAX_REPEATING)) ||
+      undefined,
+  };
+  const [isPasswordValid, passwordError] = usePasswordValidator(passwordConfig);
   const {
     register,
     formState: { errors },
     handleSubmit,
-    getValues,
+    watch,
     formState,
     setError: setFromError,
   } = useForm<ResetPasswordDto>({
@@ -89,15 +106,20 @@ export const ResetPasswordComponent = (): JSX.Element => {
   return (
     <MainComponent>
       <div className="auth-container">
+        <div className="auth-container__cover"></div>
         <div className="auth-form reset-password">
           <div className="auth-form__logo">
             <img src={logo} alt="logo" />
           </div>
-          <NotificationComponent />
-          <h1 className="auth-form__title">{t("FORGOT_PASSWORD.TITLE")}</h1>
-          <div className="auth-form__subtitle">
-            {t("LABELS.PASSWORDS_INFO")}
+          <div
+            className="auth-form__help mt-20 far fa-question-circle"
+            role="dialog"
+            aria-label={t("SIGN_UP.BUTTONS.GET_IN_TOUCH")}
+          >
+            {t("SIGN_UP.NEED_HELP")}
           </div>
+          <h1 className="auth-form__title">{t("FORGOT_PASSWORD.TITLE")}</h1>
+
           <form
             className="auth-form__form"
             onSubmit={handleSubmit(submitHandler)}
@@ -140,9 +162,10 @@ export const ResetPasswordComponent = (): JSX.Element => {
                 ></i>
               </div>
             </div>
+            <PasswordCheckList {...passwordConfig} value={watch("password")} />
             <button
               type="submit"
-              className="button-primary"
+              className="button"
               disabled={
                 !formState.isDirty ||
                 !formState.isValid ||

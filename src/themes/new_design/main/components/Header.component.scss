@@ -2,7 +2,7 @@
 
 .MuiAppBar-root {
   height: 4.8125rem;
-  position: absolute;
+  // position: absolute;
   background: $secondary100 !important;
   color: $secondaryGray600 !important;
   top: 0;
@@ -21,6 +21,11 @@
   &.app-header {
     justify-content: center;
     align-items: center;
+    display: none !important;
+
+    @media screen and (max-width: $mobileSize) {
+      display: flex !important;
+    }
 
     .MuiContainer-root {
       max-width: 100%;

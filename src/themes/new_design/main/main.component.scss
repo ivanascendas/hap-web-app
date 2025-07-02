@@ -107,7 +107,7 @@
 
   &.authenticated {
     .main-container {
-      background-color: $secondary;
+      background-color: $soft-gray;
 
       @media screen and (max-width: $mobileSize) {
         z-index: 0;

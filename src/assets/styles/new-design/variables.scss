@@ -96,7 +96,8 @@ $theme-colors: (
 }
 
 // Button-specific styles
-.button {
+.button,
+.primary-button {
   background-color: $button-color-main;
   color: $dark-text;
   border: none;
@@ -104,6 +105,8 @@ $theme-colors: (
   border-radius: 8px;
   font-weight: bold;
   transition: background-color 0.3s ease;
+
+  @include themed-box-shadow($mid-gray);
 
   &:hover {
     background-color: $button-color-hover;

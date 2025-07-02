@@ -15,6 +15,7 @@ import { selectToken, selectUser } from "@shared/redux/slices/authSlice";
 import { useRegitrationMutation } from "@shared/services/Auth.service";
 import { UserModel } from "@shared/models/user.model";
 import { RegistrationRequestDto } from "@shared/dtos/registration.dto";
+import "../../MfaOptions.component.scss";
 
 /**
  * RegMfaFormComponent is a React functional component that renders a form for
@@ -104,7 +105,7 @@ export const RegMfaFormComponent = (): JSX.Element => {
               onChange={handleChange}
             >
               <Grid container spacing={1}>
-                <Grid size={6}>
+                <Grid size={12}>
                   <FormControlLabel
                     className="mfa-optgions__label"
                     value={MFA_SMS}
@@ -112,7 +113,7 @@ export const RegMfaFormComponent = (): JSX.Element => {
                     label={t("MFA.TYPES.SMS_OTP")}
                   />
                 </Grid>
-                <Grid size={6}>
+                <Grid size={12}>
                   <FormControlLabel
                     className="mfa-optgions__label"
                     value={MFA_EMAIL}
@@ -133,20 +134,19 @@ export const RegMfaFormComponent = (): JSX.Element => {
           </FormControl>
         </div>
       </form>
+      <div
+        className="registration__subtitle"
+        dangerouslySetInnerHTML={{ __html: t("SIGN_UP.MFA_INFO_2") }}
+      ></div>
+
       <button
         type="submit"
-        className="button-primary registration__button"
+        className="button registration__button"
         role="button"
         onClick={handleGetStarted}
       >
         {t("SIGN_UP.BUTTONS.GET_STARTED")}
       </button>
-      <Link
-        className="button-secondary back-btn registration__back"
-        to="/registration/step2"
-      >
-        {t("BUTTONS.BACK")}
-      </Link>
     </div>
   );
 };

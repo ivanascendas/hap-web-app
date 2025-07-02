@@ -1,0 +1,10 @@
+@import "../../../../assets/styles/variables.scss";
+
+.statement-header {
+  display: flex;
+  background-color: $white;
+  border-radius: 2.5rem;
+  padding: 0.875rem 1.8rem;
+  margin: 2rem;
+  align-items: center;
+}

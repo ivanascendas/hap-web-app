@@ -2,11 +2,13 @@ import {
   Box,
   CircularProgress,
   FormControl,
+  FormControlLabel,
   InputLabel,
   MenuItem,
   Modal,
   Select,
   Skeleton,
+  Switch,
   TablePagination,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -36,6 +38,7 @@ import {
 import { InvoicePopupСomponent } from "./InvoicePopup.component";
 import { InvoiceInputRequest } from "@shared/dtos/invoice.dtos";
 import { QueryActionCreatorResult } from "@reduxjs/toolkit/query";
+import { TablePaginationActions } from "@shared/components/TablePaginationActions";
 
 export type RatesStatementProps = {
   department: string;
@@ -58,6 +61,8 @@ export const RatesStatementComponent = ({
   const [page, setPage] = useState(0);
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
+  const [includePreviousYear, setIncludePreviousYear] = useState(false);
+
   const [getProperties, { data: properties, isFetching }] =
     useLazyGetPropertiesQuery();
   const dispatch = useDispatch();
@@ -71,7 +76,7 @@ export const RatesStatementComponent = ({
       key: "statementDate",
       label: "RATES.COLUMNS.DATE",
       rowRender: (row: StatementDto) =>
-        moment(row.statementDate).format("DD/MM/YYYY"),
+        moment(row.statementDate).format("DD MMM. YYYY"),
     },
     { key: "transType", label: "RATES.COLUMNS.TRANSACTION" },
     { key: "invoiceNo", label: "RATES.COLUMNS.REFERENCE" },
@@ -81,12 +86,14 @@ export const RatesStatementComponent = ({
       label: "RATES.COLUMNS.AMOUNT",
       rowRender: (row: StatementDto) => currency.format(row.amount),
       rowClassName: (row: StatementDto) =>
-        row.transType == "Invoice" ? "text_red" : "clr_green",
+        row.amount > 0 ? "strong" : "strong__negative",
     },
     {
       key: "balance",
       label: "RATES.COLUMNS.BALANCE",
       rowRender: (row: StatementDto) => currency.format(row.balance),
+      rowClassName: (row: StatementDto) =>
+        row.balance > 0 ? "strong" : "strong__negative",
     },
   ];
 
@@ -105,10 +112,9 @@ export const RatesStatementComponent = ({
       var balanceReq = getBalance({
         incDept: department.toUpperCase(),
         PropertyNumber: selectedProperty,
-        from:
-          selectedPeriod === "current_year"
-            ? moment().startOf("year").format("YYYY-MM-DD")
-            : moment().subtract(1, "year").startOf("year").format("YYYY-MM-DD"),
+        from: !includePreviousYear
+          ? moment().startOf("year").format("YYYY-MM-DD")
+          : moment().subtract(1, "year").startOf("year").format("YYYY-MM-DD"),
         to: moment().format("YYYY-MM-DD"),
       });
       var statementsReq = getStatements({
@@ -119,10 +125,9 @@ export const RatesStatementComponent = ({
 
         $skip: page * 50,
         $top: 50,
-        from:
-          selectedPeriod === "current_year"
-            ? moment().startOf("year").format("YYYY-MM-DD")
-            : moment().subtract(1, "year").startOf("year").format("YYYY-MM-DD"),
+        from: !includePreviousYear
+          ? moment().startOf("year").format("YYYY-MM-DD")
+          : moment().subtract(1, "year").startOf("year").format("YYYY-MM-DD"),
         to: moment().format("YYYY-MM-DD"),
       });
 
@@ -133,7 +138,7 @@ export const RatesStatementComponent = ({
         dispatch(clearStatements());
       };
     }
-  }, [isAuthenticated, selectedProperty, selectedPeriod]);
+  }, [isAuthenticated, selectedProperty, includePreviousYear]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -165,8 +170,8 @@ export const RatesStatementComponent = ({
 
   return (
     <>
-      <Box className="personal_box ">
-        <Box className="personal_box_filter">
+      <Box className="rates_statement_container">
+        <Box className="personal_box_filter" sx={{ margin: "0 2.25rem" }}>
           <Box>
             <FormControl fullWidth>
               <InputLabel id="property-select-label">
@@ -209,39 +214,20 @@ export const RatesStatementComponent = ({
             </FormControl>
           </Box>
           <Box>
-            <FormControl fullWidth>
-              <InputLabel id="date-range-label">
-                {t("RATES.FILTER.DATE_RANGE")}
-              </InputLabel>
-              <Select
-                labelId="date-range-label"
-                label={t("RATES.FILTER.DATE_RANGE")}
-                value={selectedPeriod}
-                onChange={(e) => setSelectedPeriod(e.target.value)}
-              >
-                <MenuItem value="current_year">
-                  {t("RATES.FILTER.DATE_RANGE_OPTIONS.CURRENT_YEAR")}
-                </MenuItem>
-                <MenuItem value="prev_year">
-                  {t("RATES.FILTER.DATE_RANGE_OPTIONS.INCLUDE_PREVIOUS_YEAR")}
-                </MenuItem>
-              </Select>
-            </FormControl>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={includePreviousYear}
+                  onChange={(e) => setIncludePreviousYear(e.target.checked)}
+                />
+              }
+              label={t("RATES.FILTER.DATE_RANGE_OPTIONS.INCLUDE_PREVIOUS_YEAR")}
+            />
           </Box>
-          <Box
-            className="personal_box_filter_balance"
-            sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}
-          >
-            <span className="personal_box_filter_title">
-              {t("INVOICES.RATES.CURRENT_BALANCE")}
-            </span>
-            <span className="personal_box_filter_value">
-              {currency.format(balance?.currentBalance || 0)}
-            </span>
-          </Box>
+          <Box sx={{ flex: "2" }}></Box>
         </Box>
         <Box
-          className="personal_box_content"
+          className=" personal_box personal_box_content"
           sx={{ display: { xs: "none", md: "block" } }}
         >
           <TableComponent
@@ -250,7 +236,7 @@ export const RatesStatementComponent = ({
             columns={columns}
             rows={statements.slice(page * 50, page * 50 + 50) || []}
             onItemClick={rateClickHandler}
-            className="rates_table"
+            className=" rates_table"
           />
 
           <Box
@@ -268,8 +254,9 @@ export const RatesStatementComponent = ({
               page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
+              ActionsComponent={TablePaginationActions}
             />
-            <Box
+            {/* <Box
               className="personal_box_filter_balance"
               sx={{ display: "flex" }}
             >
@@ -279,7 +266,7 @@ export const RatesStatementComponent = ({
               <span className="personal_box_filter_value">
                 {currency.format(balance?.closingBalance || 0)}
               </span>
-            </Box>
+            </Box> */}
           </Box>
         </Box>
       </Box>

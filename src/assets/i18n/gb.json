@@ -124,7 +124,8 @@
     "AGREE_WITH": "I agree with",
     "PASSWORDS_INFO": "Password must contain one uppercase letter and one number",
     "ACCOUNT_NUMBER_INFO": "This is your customer number. You should be able to find this on any letter that we sent\n                                to you.",
-    "MFA_INFO": "We strongly recommend that you choose multi-factor authentication (MFA). This will improve the security of your account. <br/> Please select SMS OTP or Email OTP. You will then receive a code to enter each time you access the WEB Portal in order to confirm your identity. If you do not wish to receive a code, select No MFA. This is not recommended. <br/> You can change your selection at any time in your WEB Portal Profile.",
+    "MFA_INFO": "We strongly recommend that you choose multi-factor authentication (MFA). This will improve the security of your account. <br/> ",
+    "MFA_INFO_2": "Please select SMS OTP or Email OTP. You will then receive a code to enter each time you access the WEB Portal in order to confirm your identity. If you do not wish to receive a code, select No MFA. This is not recommended. <br/> You can change your selection at any time in your WEB Portal Profile.",
     "BUTTONS": {
       "GET_IN_TOUCH": "Get in touch",
       "NEXT": "Next",

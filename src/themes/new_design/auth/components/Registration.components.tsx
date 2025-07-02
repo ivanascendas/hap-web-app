@@ -18,27 +18,27 @@ export const RegistrationComponent = (): JSX.Element => {
     <MainComponent>
       <div className="auth-container">
         <div className="auth-container__cover"></div>
-        <div className="auth-form__logo">
-          <img src={logo} alt="logo" />
-        </div>
-        <div
-          className="auth-form__help mt-20"
-          role="dialog"
-          aria-label={t("SIGN_UP.BUTTONS.GET_IN_TOUCH")}
-        >
-          {t("SIGN_UP.NEED_HELP")}
-        </div>
 
         <div className="auth-form registration">
+          <div className="auth-form__logo">
+            <img src={logo} alt="logo" />
+          </div>
+          <div
+            className="auth-form__help mt-20 far fa-question-circle"
+            role="dialog"
+            aria-label={t("SIGN_UP.BUTTONS.GET_IN_TOUCH")}
+          >
+            {t("SIGN_UP.NEED_HELP")}
+          </div>
           <div className="auth-form__container">
-            <NotificationComponent />
-
-            <Link
-              className="button-secondary back-btn registration__back"
-              to={`/registration/step${stepNumber > 1 ? stepNumber - 1 : 1}`}
-            >
-              {t("BUTTONS.BACK")}
-            </Link>
+            {step !== "step1" && (
+              <Link
+                className="button-secondary back-btn registration__back"
+                to={`/registration/step${stepNumber > 1 ? stepNumber - 1 : 1}`}
+              >
+                {t("BUTTONS.BACK")}
+              </Link>
+            )}
             <h1 className="auth-form__title">{t("SIGN_UP.TITLE")}</h1>
             <div>
               <RegistrationStepper step={step || "step1"} />

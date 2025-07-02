@@ -32,12 +32,14 @@ export type HeaderProps = {
   toogleDrawer?: (event?: React.MouseEvent<HTMLElement>) => void;
   onBack?: () => void;
   title?: string;
+  children?: React.ReactNode;
 };
 
 export const HeaderComponent = ({
   toogleDrawer,
   onBack,
   title,
+  children,
 }: HeaderProps): JSX.Element => {
   const { t } = useTranslation();
   const user = useSelector(selectUser);
@@ -90,18 +92,8 @@ export const HeaderComponent = ({
   ];
 
   return (
-    <AppBar
-      position="static"
-      className="app-header"
-      sx={{
-        display: {
-          xs: window.location.pathname.startsWith("/payment/pay")
-            ? "none"
-            : "flex",
-          md: "flex",
-        },
-      }}
-    >
+    <AppBar position="static" className="app-header">
+      {children}
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box sx={{ flex: "none", display: { md: "flex", lg: "none" } }}>

@@ -1,6 +1,6 @@
 //colors
 $primary900: #130603;
-$primary700: #9e310f;
+//$primary700: #9e310f;
 $primary600: rgb(234, 48, 31);
 $primary500: #ef642d;
 $primary400: rgb(246, 162, 96);
@@ -15,8 +15,8 @@ $secondary650: #7f7f7f;
 $secondary200: #f7f8f9;
 $secondary: #f5f7fa; //
 $secondary100: #ffffff;
-$success: #116419;
-$error: #ac1111;
+$success: #509f7b;
+$error: #d06961;
 $errorBorder: #d25422;
 $referenceColor: #ef642d;
 
@@ -52,11 +52,6 @@ $desktopMdSize: 56.25rem; // 900px ÷ 16
 $desktopLgSize: 75rem; // 1200px ÷ 16
 $placeholder_size: 1.125rem; // 18px ÷ 16
 
-@mixin theme {
-  --mui-primary-main: #{$primary500};
-  --mui-secondary-main: #{$secondary};
-}
-
 // Base variables
 $light-text: #000000;
 $dark-text: #ffffff;
@@ -64,10 +59,11 @@ $dark-text: #ffffff;
 $button-color-main: #7a003c; // main button color (from images)
 $button-color-hover: #8b0045; // hover or active state (approx)
 $button-color-disabled: #d8d8d8; // disabled button (light gray)
+$primary700: $button-color-main;
+$secondary: $soft-gray; // Base box shadow mixin
 
-// Base box shadow mixin
 @mixin themed-box-shadow($color) {
-  box-shadow: 0 4px 6px #{rgba($color, 0.53)};
+  box-shadow: 0 2px 4px #{rgba($color, 0.2)};
 }
 
 // Named color map
@@ -111,6 +107,7 @@ $theme-colors: (
 }
 
 // Button-specific styles
+
 .button {
   background-color: $button-color-main;
   color: $dark-text;
@@ -122,6 +119,8 @@ $theme-colors: (
   border-radius: 1.5rem;
   width: 100%;
 
+  @include themed-box-shadow($mid-gray);
+
   &:hover {
     background-color: $button-color-hover;
   }
@@ -131,4 +130,33 @@ $theme-colors: (
     cursor: not-allowed;
     opacity: 0.6;
   }
+}
+
+.btn-secondary {
+  background-color: $white !important;
+  color: $primary700 !important;
+
+  border: none;
+  text-transform: none !important;
+  padding: 0.5rem 1.2rem !important;
+  border-radius: 8px;
+  font-weight: 800 !important;
+  transition: background-color 0.3s ease;
+  border-radius: 1.5rem !important;
+  @include themed-box-shadow($mid-gray);
+
+  &:hover {
+    background-color: $soft-gray;
+  }
+
+  &:disabled {
+    background-color: $button-color-disabled;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+@mixin theme {
+  --mui-primary-main: #{$button-color-main};
+  --mui-secondary-main: #{$secondary};
 }

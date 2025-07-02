@@ -58,11 +58,21 @@ export const ForgotPasswordFormComponent = (): JSX.Element => {
   return (
     <MainComponent>
       <div className="auth-container">
+        <div className="auth-container__cover"></div>
         <div className="auth-form forgot-password">
+          <Link className="button-secondary back-btn" to="/login">
+            {t("BUTTONS.BACK")}
+          </Link>
           <div className="auth-form__logo">
             <img src={logo} alt="logo" />
           </div>
-          <NotificationComponent />
+          <div
+            className="auth-form__help mt-20 far fa-question-circle"
+            role="dialog"
+            aria-label={t("SIGN_UP.BUTTONS.GET_IN_TOUCH")}
+          >
+            {t("SIGN_UP.NEED_HELP")}
+          </div>
           <h1 className="auth-form__title">{t("FORGOT_PASSWORD.TITLE")}</h1>
           <form
             className="auth-form__form"
@@ -86,7 +96,7 @@ export const ForgotPasswordFormComponent = (): JSX.Element => {
             </div>
             <button
               type="submit"
-              className="button-primary"
+              className="button"
               disabled={
                 !formState.isDirty ||
                 !formState.isValid ||
@@ -96,9 +106,6 @@ export const ForgotPasswordFormComponent = (): JSX.Element => {
             >
               {t("CONTENTS.BUTTON.RESET")}
             </button>
-            <Link className="button-secondary back-btn" to="/login">
-              {t("BUTTONS.BACK_TO_SIGN_IN")}
-            </Link>
           </form>
         </div>
       </div>

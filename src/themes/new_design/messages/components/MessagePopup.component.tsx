@@ -37,10 +37,13 @@ export const MessagePopupComponent = ({
 
           <CloseIcon className="message_icon" onClick={onClose} />
         </Typography>
+        <Typography
+          variant="body2"
+          className={`message_date ${message.isRead ? "read" : "unread"}`}
+        >
+          {moment(message.sentDate).format("DD MMM YYYY [a]t hh:mm A")}
+        </Typography>
         <Typography variant="body1" className="message_body">
-          <Typography variant="body2" className="message_date">
-            {moment(message.sentDate).format("DD MMM YYYY ")}
-          </Typography>
           {message.message}
         </Typography>
       </Box>

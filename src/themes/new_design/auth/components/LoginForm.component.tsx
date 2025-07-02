@@ -20,9 +20,8 @@ import {
 import { MainComponent } from "../../main/main.component";
 import { getErrorMessage } from "@shared/utils/getErrorMessage";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser, setUser } from "@shared/redux/slices/authSlice";
+import { selectUser } from "@shared/redux/slices/authSlice";
 import { MfaLogin } from "./MfaLogin.component";
-import { MFAMethod } from "@shared/dtos/user.dto";
 import { NotificationComponent } from "@shared/components/Notification.component";
 import StorageService from "@shared/services/Storage.service";
 import { setError } from "@shared/redux/slices/errorSlice";
@@ -42,7 +41,7 @@ export const LoginFormComponent = ({
   successUrl,
 }: LoginFormProps): JSX.Element => {
   const [checkTempPassword, result] = useCheckTempPasswordMutation();
-  const [login, loginResult] = useLoginMutation();
+  const [login] = useLoginMutation();
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
@@ -122,11 +121,18 @@ export const LoginFormComponent = ({
     <MainComponent>
       <div className="auth-container">
         <div className="auth-container__cover"></div>
-        <div className="auth-form__logo">
-          <img src={logo} alt="logo" />
-        </div>
-        <div className="auth-form">
-          <NotificationComponent />
+
+        <div className="auth-form login-page">
+          <div className="auth-form__logo">
+            <img src={logo} alt="logo" />
+          </div>
+          <div
+            className="auth-form__help mt-20 far fa-question-circle"
+            role="dialog"
+            aria-label={t("SIGN_UP.BUTTONS.GET_IN_TOUCH")}
+          >
+            {t("SIGN_UP.NEED_HELP")}
+          </div>
 
           {defaultMFA && defaultMFA !== "None" ? (
             <MfaLogin

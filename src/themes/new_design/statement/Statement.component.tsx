@@ -14,9 +14,12 @@ import {
   useLazyGetBalanceQuery,
 } from "@shared/services/Statements.service";
 import currency from "@shared/utils/currency";
-import moment from "moment";
+
+import DownloadForOfflineIcon from "@mui/icons-material/Download";
+
 import { StatementQueryParams } from "@shared/dtos/statement.dtos";
 import React from "react";
+import { HeaderStatementComponent } from "./components/Header.component";
 
 export const StatementComponent = (): JSX.Element => {
   const { department } = useParams();
@@ -53,6 +56,7 @@ export const StatementComponent = (): JSX.Element => {
       <NotificationComponent />
       <Box sx={{ flexGrow: 1 }} className="statement-container">
         <Box sx={{ flexGrow: 1 }} className="page_wrap_height">
+          <HeaderStatementComponent getBalance={getBalance} balance={balance} />
           <Box
             sx={{ flexGrow: 1, display: "flex", paddingTop: 0 }}
             className="page_wrap_height_title"
@@ -68,10 +72,22 @@ export const StatementComponent = (): JSX.Element => {
               <span>&nbsp;{t("MAIN.STATEMENT")}</span>
             </h1>
             <Box
-              sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}
+              sx={{
+                flexGrow: 1,
+                display: { xs: "none", md: "flex", gap: "0.8rem" },
+              }}
               className="h_title_right"
             >
-              <Button className="print_btn" onClick={handlePrintPdf}>
+              <Button
+                startIcon={<DownloadForOfflineIcon />}
+                className="btn-secondary"
+              >
+                Download ALL
+              </Button>
+              <Button
+                className="print_btn primary-button"
+                onClick={handlePrintPdf}
+              >
                 <LocalPrintshopIcon />
                 <span className="print_text">
                   &nbsp;{t("MAIN.PRINT_STATEMENT")}

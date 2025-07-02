@@ -1,32 +1,17 @@
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TablePagination,
-  TableRow,
-} from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, Button, TablePagination } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "../Statement.component.scss";
 import {
   useLazyDownloadDocumentsPdfQuery,
-  useLazyGetBalanceQuery,
   useLazyGetDocumentsQuery,
-  useLazyGetPropertiesQuery,
-  useLazyGetStatementsQuery,
 } from "@shared/services/Statements.service";
 import moment from "moment";
-import DownloadForOfflineIcon from "@mui/icons-material/DownloadForOffline";
+import DownloadForOfflineIcon from "@mui/icons-material/Download";
 import { useAuth } from "@shared/providers/Auth.provider";
 import { ColumnItem, TableComponent } from "@shared/components/Table.component";
 import { DocumentDto } from "@shared/dtos/documents.dto";
+import { TablePaginationActions } from "@shared/components/TablePaginationActions";
 
 export type RentsStatementProps = {
   department: string;
@@ -54,14 +39,25 @@ export const DocumentsStatementComponent = ({
       key: "CreatedOn",
       label: "DOCUMENTS.DATE_CELL",
       rowRender: (row: DocumentDto) =>
-        moment(row.CreatedOn).format("DD/MM/YYYY"),
+        moment(row.CreatedOn).format("DD MMM. YYYY"),
     },
-    { key: "HAPDocumentName", label: "DOCUMENTS.DOC_NAME_CELL" },
+    {
+      key: "HAPDocumentName",
+      label: "DOCUMENTS.DOC_NAME_CELL",
+      rowClassName: () => "strong",
+    },
     {
       key: "Id",
       label: "RATES.COLUMNS.REFERENCE",
       colRnder: () => <>Download</>,
-      rowRender: (row: DocumentDto) => <DownloadForOfflineIcon />,
+      rowRender: (row: DocumentDto) => (
+        <Button
+          className="download-icon"
+          startIcon={<DownloadForOfflineIcon />}
+        >
+          Download
+        </Button>
+      ),
     },
   ];
 
@@ -78,9 +74,18 @@ export const DocumentsStatementComponent = ({
     }
   };
 
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setPage(0);
+  };
   return (
-    <Box className="personal_box ">
-      <Box className="personal_box_content">
+    <Box className="rates_statement_container ">
+      <Box className=" personal_box personal_box_content">
         <TableComponent
           isLoading={isFetching}
           aria-label="documents table"
@@ -89,23 +94,23 @@ export const DocumentsStatementComponent = ({
           rows={documents || []}
         />
 
-        {/* <Box className="personal_box_footer" sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <TablePagination
-                    rowsPerPageOptions={[50]}
-                    component="div"
-                    count={statements?.count || 0}
-                    rowsPerPage={50}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                />
-                <Box className="personal_box_filter_balance">
-                    <span className="personal_box_filter_title">{t('RATES.CLOSING_BALANCE')}</span>
-                    <span className="personal_box_filter_value">
-                        {currency.format(balance?.closingBalance || 0)}
-                    </span>
-                </Box>
-            </Box> */}
+        {
+          <Box
+            className="personal_box_footer"
+            sx={{ display: "flex", justifyContent: "space-between" }}
+          >
+            <TablePagination
+              rowsPerPageOptions={[50]}
+              component="div"
+              count={documents?.length || 0}
+              rowsPerPage={50}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              ActionsComponent={TablePaginationActions}
+            />
+          </Box>
+        }
       </Box>
     </Box>
   );
