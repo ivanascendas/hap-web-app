@@ -2,7 +2,6 @@
 @import "../../../assets/styles/functions.scss";
 
 .payment-container {
-  max-width: pxToRem(1040);
   padding: 0 pxToRem(15);
 
   @media screen and (max-width: $mobileSize) {
@@ -14,7 +13,37 @@
   .personal_box {
     margin: 0;
     max-width: 100%;
-    margin: pxToRem(60) 0;
+
+    &.info {
+      max-width: 30rem;
+      margin: 0;
+      font-size: pxToRem(16);
+      line-height: 1.5;
+      height: fit-content;
+
+      strong {
+        font-weight: bold;
+        color: $black;
+        margin-bottom: 2rem;
+      }
+
+      p {
+        margin: 1rem 0;
+        color: $mid-gray !important;
+      }
+
+      @media screen and (max-width: $mobileSize) {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: auto;
+        width: 100%;
+        height: auto;
+        padding: pxToRem(15);
+        background-color: $secondary100;
+      }
+    }
   }
 
   .payment {
@@ -117,6 +146,75 @@
         padding: 0;
         border-radius: 0;
         margin: 0;
+      }
+    }
+  }
+
+  .summary-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30rem;
+    background-color: $black;
+    padding: 0.625rem 1.25rem;
+    border-radius: 1.2rem;
+    color: $light-gray;
+    gap: 0.825rem;
+
+    .summary-box-content {
+      display: flex;
+      flex-direction: column;
+
+      .balance-holder {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+
+        .header-balance-label {
+          font-size: 0.8rem;
+
+          &.balance {
+            &::before {
+              content: " ";
+            }
+
+            &.negative::before {
+              content: "–";
+              color: $error;
+              font-weight: 700;
+              margin-right: 0.3125rem;
+            }
+
+            color: $white !important;
+            text-align: end;
+            display: block;
+            padding: 0.3rem 0;
+          }
+        }
+      }
+
+      .header-balance-text {
+        color: $white !important;
+        font-weight: bold;
+        font-size: 1.1875rem;
+        text-align: start;
+        display: block;
+        opacity: 1;
+        border-bottom: 2px solid rgba($light-gray, 0.5);
+      }
+    }
+
+    .btn-primary {
+      width: auto;
+      height: 2.5rem;
+
+      &:disabled {
+        background-color: $soft-gray;
       }
     }
   }

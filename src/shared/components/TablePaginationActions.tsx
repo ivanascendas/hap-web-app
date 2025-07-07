@@ -1,6 +1,5 @@
 import React from "react";
-import { IconButton, Button } from "@mui/material";
-import { TablePaginationActionsProps } from "@mui/material/TablePagination/TablePaginationActions";
+import { IconButton, Button, TablePaginationActionsProps } from "@mui/material";
 
 export const TablePaginationActions = (props: TablePaginationActionsProps) => {
   const { count, page, rowsPerPage, onPageChange } = props;

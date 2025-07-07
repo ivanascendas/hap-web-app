@@ -1,9 +1,16 @@
-import { Box, Button, FormHelperText, TextField } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import {
+  Box,
+  Button,
+  FormHelperText,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
+
 import { useTranslation } from "react-i18next";
 import "./payment.component.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser } from "@shared/redux/slices/authSlice";
+import { selectBalance, selectUser } from "@shared/redux/slices/authSlice";
 import { IntlTelInputComponent } from "@shared/components/IntlTelInput.component";
 import EastIcon from "@mui/icons-material/East";
 import WestIcon from "@mui/icons-material/West";
@@ -29,7 +36,7 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
   const user = useSelector(selectUser);
   const isLoading = useSelector(selectUserLoading);
   const payments = useSelector(selectInvoicesToPay);
-
+  const balance = useSelector(selectBalance);
   const iniTelReff = useRef<IntlTelInputRef>();
   const iniTelinst = useRef<Iti>();
   const form = useRef<HTMLFormElement>(null);
@@ -135,272 +142,284 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
 
   return (
     <Box className="payment-container">
-      <div className="page_wrap_title">
-        <h1 className="h_title aligncenter">
-          {t("PAYMENT_INFO.ENTER_ADDITIONAL_INFO")}
-        </h1>
-        <p>{t("PAYMENT_INFO.DESCRIPTION_1")}</p>
-        <p>{t("PAYMENT_INFO.DESCRIPTION_2")}</p>
-        <p>{t("PAYMENT_INFO.DESCRIPTION_3")}</p>
-      </div>
-      <div className="personal_box">
-        <form
-          ref={form}
-          onSubmit={handleSubmit(onSubmit)}
-          className="payment_form"
-        >
-          <div className="payment_form_title">{t("PAYMENT_INFO.TITLE")}</div>
-          <Grid container spacing={2}>
-            <Grid size={{ xs: 12, md: 6, lg: 4 }}>
-              <Box className="payment_form_row">
-                <label
-                  className=" required"
-                  title={t("PAYMENT_INFO.INFO.NAME")}
-                  htmlFor="account-name"
-                  aria-label={t("PAYMENT_INFO.INFO.NAME")}
-                >
-                  {t("PAYMENT_INFO.INFO.NAME")}
-                </label>
-
-                <TextField
-                  id="account-name"
-                  {...register("Name", {
-                    required: true,
-                  })}
-                />
-              </Box>
-            </Grid>
-            <Grid size={{ lg: 8, xs: 12, md: 6 }}>
-              <Box className="payment_form_row">
-                <label
-                  className="required"
-                  title={t("PAYMENT_INFO.INFO.ADDRESS_1")}
-                  htmlFor="address1"
-                  aria-label={t("PAYMENT_INFO.INFO.ADDRESS_1")}
-                >
-                  {t("PAYMENT_INFO.INFO.ADDRESS_1")}
-                </label>
-
-                <TextField
-                  id="address1"
-                  {...register("Address1", {
-                    required: true,
-                  })}
-                />
-              </Box>
-            </Grid>
-
-            <Grid size={{ lg: 4, xs: 12, md: 6 }}>
-              <Box className="payment_form_row">
-                <label
-                  className=" required"
-                  title={t("PAYMENT_INFO.INFO.ADDRESS_2")}
-                  htmlFor="address2"
-                  aria-label={t("PAYMENT_INFO.INFO.ADDRESS_2")}
-                >
-                  {t("PAYMENT_INFO.INFO.ADDRESS_2")}
-                </label>
-
-                <TextField
-                  id="address2"
-                  {...register("Address2", {
-                    required: true,
-                  })}
-                />
-              </Box>
-            </Grid>
-            <Grid size={{ lg: 4, xs: 12, md: 6 }}>
-              <Box className="payment_form_row">
-                <label
-                  className=" required"
-                  title={t("PAYMENT_INFO.INFO.ADDRESS_3")}
-                  htmlFor="address3"
-                  aria-label={t("PAYMENT_INFO.INFO.ADDRESS_3")}
-                >
-                  {t("PAYMENT_INFO.INFO.ADDRESS_3")}
-                </label>
-
-                <TextField
-                  id="address3"
-                  {...register("Address3", {
-                    required: true,
-                  })}
-                />
-              </Box>
-            </Grid>
-            <Grid size={{ lg: 4, xs: 12, md: 6 }}>
-              <Box className="payment_form_row">
-                <label
-                  className=" required"
-                  title={t("PAYMENT_INFO.INFO.ADDRESS_4")}
-                  htmlFor="address4"
-                  aria-label={t("PAYMENT_INFO.INFO.ADDRESS_4")}
-                >
-                  {t("PAYMENT_INFO.INFO.ADDRESS_4")}
-                </label>
-
-                <TextField
-                  id="address4"
-                  {...register("County", {
-                    required: true,
-                  })}
-                />
-              </Box>
-            </Grid>
-
-            <Grid container size={{ lg: 4, xs: 12, md: 6 }}>
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Box className="payment_form_row">
-                  <label
-                    className=" required"
-                    title={t("PAYMENT_INFO.INFO.COUNTRY")}
-                    htmlFor="country"
-                    aria-label={t("PAYMENT_INFO.INFO.COUNTRY")}
-                  >
-                    {t("PAYMENT_INFO.INFO.COUNTRY")}
-                  </label>
-
-                  <TextField
-                    id="country"
-                    className="country-data"
-                    {...register("Country")}
-                    disabled
-                    slotProps={{
-                      htmlInput: {
-                        readOnly: true,
-                      },
-                    }}
-                  />
-                </Box>
-              </Grid>
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Box className="payment_form_row">
-                  <label
-                    className=" required"
-                    title={t("PAYMENT_INFO.INFO.EIRCODE")}
-                    htmlFor="zipcode"
-                    aria-label={t("PAYMENT_INFO.INFO.EIRCODE")}
-                  >
-                    {t("PAYMENT_INFO.INFO.EIRCODE")}
-                  </label>
-
-                  <TextField
-                    id="zipcode"
-                    className="country-data"
-                    {...register("Zipcode", {
-                      required: true,
-                    })}
-                  />
-                </Box>
-              </Grid>
-            </Grid>
-            <Grid size={{ lg: 4, xs: 12, md: 6 }}>
-              <Box className="payment_form_row">
-                <label
-                  className=" required"
-                  title={t("PAYMENT_INFO.INFO.EMAIL")}
-                  htmlFor="account-email"
-                  aria-label={t("PAYMENT_INFO.INFO.EMAIL")}
-                >
-                  {t("PAYMENT_INFO.INFO.EMAIL")}
-                </label>
-
-                <TextField
-                  id="account-email"
-                  {...register("Email", {
-                    required: true,
-                  })}
-                />
-              </Box>
-            </Grid>
-            <Grid size={{ lg: 4, xs: 12, md: 6 }}>
-              <Box className="payment_form_row">
-                <label
-                  className=" required"
-                  title={t("PAYMENT_INFO.INFO.PHONE")}
-                  htmlFor="account-name"
-                  aria-label={t("PAYMENT_INFO.INFO.PHONE")}
-                >
-                  {t("PAYMENT_INFO.INFO.PHONE")}
-                </label>
-
-                <Box>
-                  <TextField
-                    id="phone-input"
-                    error={!!errors.Phone}
-                    helperText={getErrorMessage(errors.Phone?.message)}
-                    slotProps={{
-                      htmlInput: {
-                        "aria-invalid": !!errors.Phone,
-                      },
-                      input: {
-                        inputComponent: IntlTelInputComponent,
-                        inputProps: {
-                          options: {
-                            initialCountry: "ie",
-                            separateDialCode: true,
-                            formatOnDisplay: true,
-                            formatAsYouType: true,
-                          },
-                          getIti: (obj: IntlTelInputRef) => {
-                            console.log("set IntlTelInputRef", {
-                              input: obj.getInput(),
-                              instance: obj.getInstance(),
-                            });
-                            iniTelReff.current = obj;
-                            const instance = obj.getInstance();
-                            if (instance) {
-                              iniTelinst.current = instance;
-                            }
-                          },
-                          onChange: (
-                            e: React.ChangeEvent<HTMLInputElement>,
-                          ) => {
-                            const { value } = e.target;
-                            const countryData = iniTelReff.current
-                              ?.getInstance()
-                              ?.getSelectedCountryData();
-                            const phone = `+${countryData?.dialCode}${value}`;
-                            console.log(
-                              "onChange",
-                              phone,
-                              value,
-                              utils,
-                              countryData,
-                            );
-
-                            setValue("Phone", phone);
-                          },
-                        },
-                      },
-                    }}
-                    {...register("Phone", {
-                      required: true,
-                      validate: (value) => {
-                        const countryData = iniTelReff.current
-                          ?.getInstance()
-                          ?.getSelectedCountryData();
-                        let isValid = utils.isValidNumber(
-                          value,
-                          countryData?.iso2,
-                        );
-                        if (isValid) {
-                          return true;
-                        } else {
-                          return t("ERRORS.INVALID_PHONE");
-                        }
-                      },
-                    })}
-                  />
-                </Box>
-              </Box>
-            </Grid>
-          </Grid>
-        </form>
-      </div>
+      <h1 className="h_title aligncenter">
+        {t("PAYMENT_INFO.ENTER_ADDITIONAL_INFO")}
+      </h1>
       <Box
         sx={{
           display: "flex",
+          gap: "2rem",
+          alignItems: "start",
+          flexDirection: { xs: "column", md: "row" },
+        }}
+        className="payment_form_container"
+      >
+        <Box className="personal_box" sx={{ flex: 2 }}>
+          <form
+            ref={form}
+            onSubmit={handleSubmit(onSubmit)}
+            className="payment_form"
+          >
+            <div className="payment_form_title">{t("PAYMENT_INFO.TITLE")}</div>
+            <Grid container spacing={2}>
+              <Grid size={{ xs: 12, md: 6, lg: 4 }}>
+                <Box className="payment_form_row">
+                  <label
+                    className=" required"
+                    title={t("PAYMENT_INFO.INFO.NAME")}
+                    htmlFor="account-name"
+                    aria-label={t("PAYMENT_INFO.INFO.NAME")}
+                  >
+                    {t("PAYMENT_INFO.INFO.NAME")}
+                  </label>
+
+                  <TextField
+                    id="account-name"
+                    {...register("Name", {
+                      required: true,
+                    })}
+                  />
+                </Box>
+              </Grid>
+              <Grid size={{ lg: 8, xs: 12, md: 6 }}>
+                <Box className="payment_form_row">
+                  <label
+                    className="required"
+                    title={t("PAYMENT_INFO.INFO.ADDRESS_1")}
+                    htmlFor="address1"
+                    aria-label={t("PAYMENT_INFO.INFO.ADDRESS_1")}
+                  >
+                    {t("PAYMENT_INFO.INFO.ADDRESS_1")}
+                  </label>
+
+                  <TextField
+                    id="address1"
+                    {...register("Address1", {
+                      required: true,
+                    })}
+                  />
+                </Box>
+              </Grid>
+
+              <Grid size={{ lg: 4, xs: 12, md: 6 }}>
+                <Box className="payment_form_row">
+                  <label
+                    className=" required"
+                    title={t("PAYMENT_INFO.INFO.ADDRESS_2")}
+                    htmlFor="address2"
+                    aria-label={t("PAYMENT_INFO.INFO.ADDRESS_2")}
+                  >
+                    {t("PAYMENT_INFO.INFO.ADDRESS_2")}
+                  </label>
+
+                  <TextField
+                    id="address2"
+                    {...register("Address2", {
+                      required: true,
+                    })}
+                  />
+                </Box>
+              </Grid>
+              <Grid size={{ lg: 4, xs: 12, md: 6 }}>
+                <Box className="payment_form_row">
+                  <label
+                    className=" required"
+                    title={t("PAYMENT_INFO.INFO.ADDRESS_3")}
+                    htmlFor="address3"
+                    aria-label={t("PAYMENT_INFO.INFO.ADDRESS_3")}
+                  >
+                    {t("PAYMENT_INFO.INFO.ADDRESS_3")}
+                  </label>
+
+                  <TextField
+                    id="address3"
+                    {...register("Address3", {
+                      required: true,
+                    })}
+                  />
+                </Box>
+              </Grid>
+              <Grid size={{ lg: 4, xs: 12, md: 6 }}>
+                <Box className="payment_form_row">
+                  <label
+                    className=" required"
+                    title={t("PAYMENT_INFO.INFO.ADDRESS_4")}
+                    htmlFor="address4"
+                    aria-label={t("PAYMENT_INFO.INFO.ADDRESS_4")}
+                  >
+                    {t("PAYMENT_INFO.INFO.ADDRESS_4")}
+                  </label>
+
+                  <TextField
+                    id="address4"
+                    {...register("County", {
+                      required: true,
+                    })}
+                  />
+                </Box>
+              </Grid>
+
+              <Grid container size={{ lg: 4, xs: 12, md: 6 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <Box className="payment_form_row">
+                    <label
+                      className=" required"
+                      title={t("PAYMENT_INFO.INFO.COUNTRY")}
+                      htmlFor="country"
+                      aria-label={t("PAYMENT_INFO.INFO.COUNTRY")}
+                    >
+                      {t("PAYMENT_INFO.INFO.COUNTRY")}
+                    </label>
+
+                    <TextField
+                      id="country"
+                      className="country-data"
+                      {...register("Country")}
+                      disabled
+                      slotProps={{
+                        htmlInput: {
+                          readOnly: true,
+                        },
+                      }}
+                    />
+                  </Box>
+                </Grid>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  <Box className="payment_form_row">
+                    <label
+                      className=" required"
+                      title={t("PAYMENT_INFO.INFO.EIRCODE")}
+                      htmlFor="zipcode"
+                      aria-label={t("PAYMENT_INFO.INFO.EIRCODE")}
+                    >
+                      {t("PAYMENT_INFO.INFO.EIRCODE")}
+                    </label>
+
+                    <TextField
+                      id="zipcode"
+                      className="country-data"
+                      {...register("Zipcode", {
+                        required: true,
+                      })}
+                    />
+                  </Box>
+                </Grid>
+              </Grid>
+              <Grid size={{ lg: 4, xs: 12, md: 6 }}>
+                <Box className="payment_form_row">
+                  <label
+                    className=" required"
+                    title={t("PAYMENT_INFO.INFO.EMAIL")}
+                    htmlFor="account-email"
+                    aria-label={t("PAYMENT_INFO.INFO.EMAIL")}
+                  >
+                    {t("PAYMENT_INFO.INFO.EMAIL")}
+                  </label>
+
+                  <TextField
+                    id="account-email"
+                    {...register("Email", {
+                      required: true,
+                    })}
+                  />
+                </Box>
+              </Grid>
+              <Grid size={{ lg: 4, xs: 12, md: 6 }}>
+                <Box className="payment_form_row">
+                  <label
+                    className=" required"
+                    title={t("PAYMENT_INFO.INFO.PHONE")}
+                    htmlFor="account-name"
+                    aria-label={t("PAYMENT_INFO.INFO.PHONE")}
+                  >
+                    {t("PAYMENT_INFO.INFO.PHONE")}
+                  </label>
+
+                  <Box>
+                    <TextField
+                      id="phone-input"
+                      error={!!errors.Phone}
+                      helperText={getErrorMessage(errors.Phone?.message)}
+                      slotProps={{
+                        htmlInput: {
+                          "aria-invalid": !!errors.Phone,
+                        },
+                        input: {
+                          inputComponent: IntlTelInputComponent,
+                          inputProps: {
+                            options: {
+                              initialCountry: "ie",
+                              separateDialCode: true,
+                              formatOnDisplay: true,
+                              formatAsYouType: true,
+                            },
+                            getIti: (obj: IntlTelInputRef) => {
+                              console.log("set IntlTelInputRef", {
+                                input: obj.getInput(),
+                                instance: obj.getInstance(),
+                              });
+                              iniTelReff.current = obj;
+                              const instance = obj.getInstance();
+                              if (instance) {
+                                iniTelinst.current = instance;
+                              }
+                            },
+                            onChange: (
+                              e: React.ChangeEvent<HTMLInputElement>,
+                            ) => {
+                              const { value } = e.target;
+                              const countryData = iniTelReff.current
+                                ?.getInstance()
+                                ?.getSelectedCountryData();
+                              const phone = `+${countryData?.dialCode}${value}`;
+                              console.log(
+                                "onChange",
+                                phone,
+                                value,
+                                utils,
+                                countryData,
+                              );
+
+                              setValue("Phone", phone);
+                            },
+                          },
+                        },
+                      }}
+                      {...register("Phone", {
+                        required: true,
+                        validate: (value) => {
+                          const countryData = iniTelReff.current
+                            ?.getInstance()
+                            ?.getSelectedCountryData();
+                          let isValid = utils.isValidNumber(
+                            value,
+                            countryData?.iso2,
+                          );
+                          if (isValid) {
+                            return true;
+                          } else {
+                            return t("ERRORS.INVALID_PHONE");
+                          }
+                        },
+                      })}
+                    />
+                  </Box>
+                </Box>
+              </Grid>
+            </Grid>
+          </form>
+        </Box>
+        <Box className="personal_box info">
+          <Typography component="strong">
+            {t("PAYMENT_INFO.DESCRIPTION_1")}
+          </Typography>
+          <Typography>{t("PAYMENT_INFO.DESCRIPTION_2")}</Typography>
+          <Typography>{t("PAYMENT_INFO.DESCRIPTION_3")}</Typography>
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          display: "none",
           justifyContent: "space-between",
           alignItems: "center",
           margin: "0.625rem 0",
@@ -434,6 +453,44 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
             {t("PAYMENT.PAY_NOW")}
           </Button>
         </Box>
+      </Box>
+      <Box className="summary-box">
+        <Box className="summary-box-content">
+          <Typography component={"span"} className="header-balance-label">
+            Total amount:
+          </Typography>
+          <Typography
+            component={"span"}
+            color="white"
+            className="header-balance-text"
+          >
+            {" "}
+            {currency.format(
+              payments.reduce((acc, payment) => acc + payment.AmountToPay, 0),
+            )}
+          </Typography>
+          <Box className="balance-holder">
+            <Typography component={"span"} className="header-balance-label">
+              Your Current Balance:
+            </Typography>
+            <Typography
+              component={"span"}
+              className="header-balance-label balance negative"
+            >
+              {balance
+                ? currency.format(balance.currentBalance || 0)
+                : "Loading..."}
+            </Typography>
+          </Box>
+        </Box>
+        <Button
+          disabled={Object.values(payments).length === 0}
+          className="btn-primary"
+          variant="contained"
+          onClick={triggerSubmit}
+        >
+          {t("PAYMENT.PAY_NOW")}
+        </Button>
       </Box>
     </Box>
   );

@@ -4,7 +4,6 @@ import { Loading } from "@shared/components/Loading";
 import { CookieBannerComponent } from "./components/CookieBanner.component";
 import { useAuth } from "@shared/providers/Auth.provider";
 import { HeaderComponent } from "./components/Header.component";
-
 import { DrawerComponent } from "./components/Drawer.component";
 import { Box, Paper } from "@mui/material";
 import { BottomBarСomponent } from "./components/BottomBar.component";

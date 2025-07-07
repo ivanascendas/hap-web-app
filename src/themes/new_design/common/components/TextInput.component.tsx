@@ -8,7 +8,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker, DatePickerProps } from "@mui/x-date-pickers/DatePicker";
 
 export type TextInputProps = TextFieldProps & {
-  useDatePicker?: DatePickerProps<Dayjs>;
+  useDatePicker?: DatePickerProps<any>;
 };
 
 export const TextInput = forwardRef(

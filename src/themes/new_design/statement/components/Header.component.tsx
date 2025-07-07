@@ -7,6 +7,7 @@ import currency from "@shared/utils/currency";
 import { BalanceRequestDto } from "@shared/dtos/balance-request.dto";
 import { QueryActionCreatorResult } from "@reduxjs/toolkit/query";
 import { BalanceDto } from "@shared/dtos/balance.dto";
+import { useNavigate } from "react-router-dom";
 export type HeaderStatementProps = {
   getBalance: (dto: BalanceRequestDto) => QueryActionCreatorResult<any>;
   balance: BalanceDto | undefined;
@@ -17,6 +18,7 @@ export const HeaderStatementComponent = ({
 }: HeaderStatementProps): React.JSX.Element | JSX.Element | null => {
   const { t } = useTranslation();
   const user = useSelector(selectUser);
+  const navigate = useNavigate();
   return (
     <Box sx={{ flexGrow: 1 }} className="statement-header">
       <Box sx={{ flex: 1 }}>
@@ -41,7 +43,12 @@ export const HeaderStatementComponent = ({
           {currency.format(balance?.currentBalance || 0)}
         </span>
       </Box>
-      <Button className="btn-secondary">Pay Now</Button>
+      <Button
+        className="btn-secondary"
+        onClick={() => navigate("/invoices/rates")}
+      >
+        Pay Now
+      </Button>
     </Box>
   );
 };

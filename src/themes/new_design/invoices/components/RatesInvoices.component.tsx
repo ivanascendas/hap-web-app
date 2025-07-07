@@ -2,14 +2,9 @@ import {
   Box,
   Button,
   Checkbox,
-  CircularProgress,
-  FormControl,
   IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  Skeleton,
   TextField,
+  Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -22,13 +17,8 @@ import { BalanceRequestDto } from "@shared/dtos/balance-request.dto";
 import { BalanceDto } from "@shared/dtos/balance.dto";
 import { MobileInvoicesListComponent } from "./MobileInvoicesList.component";
 import { useDispatch, useSelector } from "react-redux";
-import DownloadForOfflineIcon from "@mui/icons-material/DownloadForOffline";
-import {
-  InvoiceDownloadRequest,
-  InvoiceDto,
-  InvoiceInputRequest,
-  InvoiceQueryParams,
-} from "@shared/dtos/invoice.dtos";
+import DownloadForOfflineIcon from "@mui/icons-material/Download";
+import { InvoiceDto, InvoiceQueryParams } from "@shared/dtos/invoice.dtos";
 import { QueryActionCreatorResult } from "@reduxjs/toolkit/query";
 import {
   useLazyDownloadInvoicePdfQuery,
@@ -36,12 +26,10 @@ import {
 } from "@shared/services/Payment.service";
 import {
   selectInvoices,
-  selectInvoicesCount,
   setInvoicesToPay,
 } from "@shared/redux/slices/paymentSlice";
 import { useLazyGetPropertiesQuery } from "@shared/services/Statements.service";
 import EastIcon from "@mui/icons-material/East";
-import WestIcon from "@mui/icons-material/West";
 import { setError } from "@shared/redux/slices/errorSlice";
 import { useNavigate } from "react-router-dom";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -217,6 +205,22 @@ export const RatesInvoicesComponent = ({
 
   const columns: ColumnItem<InvoiceDto>[] = [
     {
+      key: "totalPaid",
+      label: "",
+      colRnder: () => "Apply",
+      rowRender: (row: InvoiceDto) => (
+        <>
+          <Checkbox
+            onChange={(e) => checkBoxHandler(e, row)}
+            inputProps={{
+              "aria-labelledby": `${row.invoiceNo}_${row.sequenceNo}_checkbox`,
+              "aria-label": `enable pay ${currency.format(row.pending || 0)} input`,
+            }}
+          />
+        </>
+      ),
+    },
+    {
       key: "statementDate",
       label: "INVOICES.RENTS.COLUMNS.DATE",
       rowRender: (row: InvoiceDto) =>
@@ -228,20 +232,24 @@ export const RatesInvoicesComponent = ({
       rowRender: (row: InvoiceDto) => (
         <Box className="invoice-no">
           {row.invoiceNo}{" "}
-          <IconButton onClick={() => invoiceDownloadHandler(row)}>
+          <IconButton
+            aria-label={`download ${row.invoiceNo} pdf`}
+            onClick={() => invoiceDownloadHandler(row)}
+          >
             <DownloadForOfflineIcon />
           </IconButton>
         </Box>
       ),
     },
-    { key: "propertyDescription", label: "INVOICES.RATES.COLUMNS.PROPERTY" },
     {
       key: "total",
       label: "INVOICES.RATES.COLUMNS.BALANCE",
       rowRender: (row: InvoiceDto) => (
-        <Box className="balance">
+        <Box className={`balance `}>
           {currency.format(row.total || 0)}
-          <span>{currency.format(row.totalPaid || 0)} paid</span>
+          <span className={row.totalPaid && row.totalPaid > 0 ? "success" : ""}>
+            {currency.format(row.totalPaid || 0)} paid
+          </span>
         </Box>
       ),
     },
@@ -257,6 +265,7 @@ export const RatesInvoicesComponent = ({
                 "aria-label": `pay ${currency.format(row.pending || 0)} input`,
               },
             }}
+            variant="standard"
             onChange={(e) => handleAmountChange(e, row)}
             value={currency.format(
               selectedInvoices[`${row.invoiceNo}_${row.sequenceNo}_input`] ||
@@ -268,22 +277,6 @@ export const RatesInvoicesComponent = ({
                 (s) => s === `${row.invoiceNo}_${row.sequenceNo}_input`,
               )
             }
-          />
-        </>
-      ),
-    },
-    {
-      key: "totalPaid",
-      label: "",
-      colRnder: () => "Apply",
-      rowRender: (row: InvoiceDto) => (
-        <>
-          <Checkbox
-            onChange={(e) => checkBoxHandler(e, row)}
-            inputProps={{
-              "aria-labelledby": `${row.invoiceNo}_${row.sequenceNo}_checkbox`,
-              "aria-label": `enable pay ${currency.format(row.pending || 0)} input`,
-            }}
           />
         </>
       ),
@@ -323,112 +316,68 @@ export const RatesInvoicesComponent = ({
   }, [isAuthenticated, selectedProperty, selectedPeriod]);
 
   return (
-    <>
-      <Box className="personal_box ">
-        <Box className="personal_box_filter">
-          <Box>
-            <FormControl fullWidth>
-              <InputLabel id="property-select-label">
-                {t("INVOICES.RATES.FILTER.NAME")}
-              </InputLabel>
-              {isFetching ? (
-                <Skeleton variant="rounded" width={"100%"} role="progressbar">
-                  <Select
-                    labelId="property-select-label"
-                    label={t("RATES.FILTER.PROPERTY")}
-                    value=""
-                    disabled
-                  >
-                    <MenuItem value="">
-                      {" "}
-                      <CircularProgress size={20} /> Loading...
-                    </MenuItem>
-                  </Select>
-                </Skeleton>
-              ) : (
-                properties &&
-                properties.length > 0 && (
-                  <Select
-                    labelId="property-select-label"
-                    label={t("RATES.FILTER.PROPERTY")}
-                    value={selectedProperty}
-                    onChange={(e) => setSelectedProperty(e.target.value)}
-                  >
-                    {properties?.map((p) => (
-                      <MenuItem key={p.propertyNumber} value={p.propertyNumber}>
-                        {p.propertyDescription}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                )
-              )}
-            </FormControl>
-          </Box>
-          <Box
-            className="personal_box_filter_balance"
-            sx={{ display: "flex", flexDirection: "column" }}
-          >
-            <span className="personal_box_filter_title">
-              {t("INVOICES.RATES.CURRENT_BALANCE")}
-            </span>
-            <span className="personal_box_filter_value">
-              {currency.format(balance?.currentBalance || 0)}
-            </span>
-          </Box>
-        </Box>
+    <Box sx={{ position: "relative", height: "calc(100vh - 11rem)" }}>
+      <Box className=" ">
         <Box
-          className="personal_box_content"
-          sx={{ display: { xs: "none", md: "block" } }}
+          className=" personal_box personal_box_content"
+          sx={{
+            display: {
+              xs: "none",
+              md: "block",
+              borderRadius: "2rem",
+              padding: 0,
+            },
+          }}
         >
           <TableComponent
             aria-label="rates table"
             isLoading={isRatesLoading}
             columns={columns}
             rows={payments || []}
+            selected={(row) =>
+              Object.keys(selectedInvoices).some(
+                (s) => s === `${row.invoiceNo}_${row.sequenceNo}_input`,
+              )
+            }
             className="rates_invoice_table"
           />
-
-          <Box
-            className="personal_box_footer"
-            sx={{
-              display: { xs: "none", md: "flex" },
-              justifyContent: "space-between",
-            }}
-          >
-            <Box
-              className="personal_box_filter_balance"
-              sx={{ display: "flex" }}
-            >
-              <span className="personal_box_filter_value">
-                {t("LABELS.TOTAL")}:{" "}
-                {currency.format(
-                  Object.values(selectedInvoices).reduce((a, b) => a + b, 0),
-                )}
-              </span>
-            </Box>
-          </Box>
         </Box>
       </Box>
-      <Box
-        sx={{
-          display: { xs: "none", md: "flex" },
-          justifyContent: "space-between",
-          alignItems: "center",
-          margin: "0.625rem 2.1875rem",
-        }}
-      >
+      <Box className="summary-box">
+        <Box className="summary-box-content">
+          <Typography component={"span"} className="header-balance-label">
+            Total amount:
+          </Typography>
+          <Typography
+            component={"span"}
+            color="white"
+            className="header-balance-text"
+          >
+            {currency.format(
+              Object.values(selectedInvoices).reduce(
+                (acc, value) => acc + value,
+                0,
+              ),
+            )}
+          </Typography>
+          <Box className="balance-holder">
+            <Typography component={"span"} className="header-balance-label">
+              Your Current Balance:
+            </Typography>
+            <Typography
+              component={"span"}
+              className="header-balance-label balance negative"
+            >
+              {balance
+                ? currency.format(balance.currentBalance || 0)
+                : "Loading..."}
+            </Typography>
+          </Box>
+        </Box>
         <Button
-          onClick={() => navigate("/statements/rates")}
-          startIcon={<WestIcon />}
-        >
-          {t("BUTTONS.BACK_TO_STATEMENTS")}
-        </Button>
-        <Button
-          sx={{ width: "33%", padding: "0.9375rem" }}
           disabled={Object.values(selectedInvoices).length === 0}
-          className="btn btn-primary"
+          className="btn-primary"
           variant="contained"
-          endIcon={<EastIcon />}
           onClick={payHandler}
         >
           {t("PAYMENT.PAY_NOW")}
@@ -468,6 +417,6 @@ export const RatesInvoicesComponent = ({
           onClose={handleClose}
         />
       )}
-    </>
+    </Box>
   );
 };

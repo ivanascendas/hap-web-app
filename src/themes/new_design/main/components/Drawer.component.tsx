@@ -241,7 +241,11 @@ export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(
                       {currency.format(balance?.currentBalance || 0)}
                     </span>
                   </Box>
-                  <Button className="btn-secondary" fullWidth>
+                  <Button
+                    className="btn-secondary"
+                    fullWidth
+                    onClick={() => handleClick("/invoices/rates")}
+                  >
                     Pay Now
                   </Button>
                 </Box>

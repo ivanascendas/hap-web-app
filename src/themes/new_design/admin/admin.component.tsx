@@ -26,7 +26,6 @@ export const AdminComponent = () => {
     <Paper className="admin-container">
       <Loading />
       <HeaderComponent />
-      <NotificationComponent />
       <Box className="admin-content">
         <Outlet />
       </Box>

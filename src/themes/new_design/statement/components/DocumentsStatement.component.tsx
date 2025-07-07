@@ -49,14 +49,26 @@ export const DocumentsStatementComponent = ({
     {
       key: "Id",
       label: "RATES.COLUMNS.REFERENCE",
-      colRnder: () => <>Download</>,
-      rowRender: (row: DocumentDto) => (
-        <Button
-          className="download-icon"
-          startIcon={<DownloadForOfflineIcon />}
+      colRnder: () => (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "end",
+            paddingRight: "1.7rem",
+          }}
         >
           Download
-        </Button>
+        </Box>
+      ),
+      rowRender: (row: DocumentDto) => (
+        <Box sx={{ display: "flex", justifyContent: "end" }}>
+          <Button
+            className="download-icon"
+            startIcon={<DownloadForOfflineIcon />}
+          >
+            Download
+          </Button>
+        </Box>
       ),
     },
   ];

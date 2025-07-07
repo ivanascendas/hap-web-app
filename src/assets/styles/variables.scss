@@ -16,6 +16,8 @@ $secondary200: #f7f8f9;
 $secondary: #f5f7fa; //
 $secondary100: #ffffff;
 $success: #509f7b;
+$success-icon: #3f735c;
+$success-bg: green;
 $error: #d06961;
 $errorBorder: #d25422;
 $referenceColor: #ef642d;
@@ -108,7 +110,8 @@ $theme-colors: (
 
 // Button-specific styles
 
-.button {
+.button,
+.btn-primary {
   background-color: $button-color-main;
   color: $dark-text;
   border: none;
@@ -116,7 +119,7 @@ $theme-colors: (
   border-radius: 8px;
   font-weight: bold;
   transition: background-color 0.3s ease;
-  border-radius: 1.5rem;
+  border-radius: 1.5rem !important;
   width: 100%;
 
   @include themed-box-shadow($mid-gray);

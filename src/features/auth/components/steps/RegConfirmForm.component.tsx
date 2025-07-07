@@ -1,30 +1,26 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Checkbox, FormControlLabel, TextField } from "@mui/material";
-import {
-  UserConfirmDataModel,
-  UserDataDto,
-} from "../../../../shared/dtos/user.dto";
+import { Checkbox, FormControlLabel, Grid, TextField } from "@mui/material";
+import { UserConfirmDataModel, UserDataDto } from "@shared/dtos/user.dto";
 
-import { selectUser, setUser } from "../../../../shared/redux/slices/authSlice";
-import Grid from "@mui/material/Grid2";
+import { selectUser, setUser } from "@shared/redux/slices/authSlice";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Navigate, useLocation } from "react-router-dom";
-import { OtpInputComponent } from "../../../../shared/components/otpInput.component";
+import { OtpInputComponent } from "@shared/components/otpInput.component";
 import {
   useDobConfirmationMutation,
   useEmailOptRequestMutation,
   useEmailOtpConfirmationMutation,
   useSmsOptRequestMutation,
   useSmsOtpConfirmationMutation,
-} from "../../../../shared/services/Verification.service";
+} from "@shared/services/Verification.service";
 import { Dayjs } from "dayjs";
-import { getErrorMessage } from "../../../../shared/utils/getErrorMessage";
-import { usePasswordValidator } from "../../../../shared/utils/password.validator";
+import { getErrorMessage } from "@shared/utils/getErrorMessage";
+import { usePasswordValidator } from "@shared/utils/password.validator";
 
 import checkedImg from "../../../../assets/img/forms/otp-done.svg";
 

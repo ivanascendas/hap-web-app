@@ -1,12 +1,14 @@
 import { Box, Button } from "@mui/material";
 import { NotificationComponent } from "@shared/components/Notification.component";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
 import { useTranslation } from "react-i18next";
 import "./Invoices.component.scss";
 import { RatesInvoicesComponent } from "./components/RatesInvoices.component";
 import { RentsInvoiceComponent } from "./components/RentsInvoices.component";
 import { LoansInvoiceComponent } from "./components/LoansInvoices.component";
+
+import WestIcon from "@mui/icons-material/West";
 import {
   useLazyDownloadRatesPdfQuery,
   useLazyGetBalanceQuery,
@@ -18,15 +20,24 @@ import { InvoiceQueryParams } from "@shared/dtos/invoice.dtos";
 export const InvoicesComponent = (): JSX.Element => {
   const { department } = useParams();
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [dto, setDto] = React.useState<InvoiceQueryParams | null>(null);
   const [downloadPdf] = useLazyDownloadRatesPdfQuery();
   const [getBalance, { data: balance }] = useLazyGetBalanceQuery();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <NotificationComponent />
       <Box sx={{ flexGrow: 1 }} className="invoices-container">
         <Box sx={{ flexGrow: 1 }} className="page_wrap_height">
+          <Button
+            onClick={() => navigate("/statements/rates")}
+            startIcon={<WestIcon />}
+            sx={{
+              marginLeft: "2.56rem",
+            }}
+          >
+            {t("BUTTONS.BACK_TO_STATEMENTS")}
+          </Button>
           <Box
             sx={{
               flexGrow: 1,

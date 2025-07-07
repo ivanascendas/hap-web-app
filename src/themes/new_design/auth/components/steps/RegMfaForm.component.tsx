@@ -3,11 +3,11 @@ import { useTranslation } from "react-i18next";
 import {
   FormControl,
   FormControlLabel,
+  Grid,
   Radio,
   RadioGroup,
 } from "@mui/material";
 import { MFAMethod } from "@shared/dtos/user.dto";
-import Grid from "@mui/material/Grid2";
 
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";

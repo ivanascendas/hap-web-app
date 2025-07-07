@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Checkbox, FormControlLabel, TextField } from "@mui/material";
+import { Checkbox, FormControlLabel, Grid, TextField } from "@mui/material";
 import { UserConfirmDataModel, UserDataDto } from "@shared/dtos/user.dto";
 
 import { selectUser, setUser } from "@shared/redux/slices/authSlice";
-import Grid from "@mui/material/Grid2";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";

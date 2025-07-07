@@ -149,7 +149,6 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box className="user-details-modal">
-        <NotificationComponent />
         <Typography variant="h6" component="h2">
           {t("POPUPS.USER_DETAILS.TITLE")}
         </Typography>

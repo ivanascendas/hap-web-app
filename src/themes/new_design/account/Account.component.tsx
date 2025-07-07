@@ -186,7 +186,6 @@ export const AccountComponent = (): JSX.Element => {
   //  console.log({ values: getValues(), formState, submitDis: !((smsConfirmResult.isSuccess || emailConfirmResult.isSuccess) && formState.submitCount === 0), smsisSuccess: smsConfirmResult.isSuccess, emailisSuccess: emailConfirmResult.isSuccess });
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <NotificationComponent />
       <Box sx={{ flexGrow: 1 }} className="account">
         <Typography variant="h1" className="account_header">
           {t("ACCOUNT.TITLE")}

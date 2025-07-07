@@ -1,7 +1,6 @@
 import React, { useState, forwardRef, useEffect } from "react";
 
-import Grid from "@mui/material/Grid2";
-import { TextField, TextFieldProps } from "@mui/material";
+import { TextField, TextFieldProps, Grid } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import "./otpInput.component.scss";
 

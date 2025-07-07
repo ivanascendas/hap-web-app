@@ -53,7 +53,6 @@ export const StatementComponent = (): JSX.Element => {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <NotificationComponent />
       <Box sx={{ flexGrow: 1 }} className="statement-container">
         <Box sx={{ flexGrow: 1 }} className="page_wrap_height">
           <HeaderStatementComponent getBalance={getBalance} balance={balance} />

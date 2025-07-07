@@ -32,11 +32,19 @@ export type TableCmpProps<T = any> = {
   rows: T[];
   rowKey?: string;
   onItemClick?: (row: T) => void;
+  selected?: (row: T) => boolean;
   isLoading?: boolean;
 } & TableProps;
 export const TableComponent = (props: TableCmpProps): JSX.Element => {
-  const { columns, rows, rowKey, onItemClick, isLoading, ...tableProps } =
-    props;
+  const {
+    columns,
+    selected,
+    rows,
+    rowKey,
+    onItemClick,
+    isLoading,
+    ...tableProps
+  } = props;
 
   const { t } = useTranslation();
   return (
@@ -71,6 +79,9 @@ export const TableComponent = (props: TableCmpProps): JSX.Element => {
                   sx={{ mt: 1 }}
                   key={(rowKey && row[rowKey]) || index}
                   onClick={() => onItemClick && onItemClick(row)}
+                  className={`table-row ${
+                    selected && selected(row) ? "selected" : ""
+                  }`}
                 >
                   {columns.map(({ key, calSx, rowClassName, rowRender }, i) => {
                     return (

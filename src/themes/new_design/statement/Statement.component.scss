@@ -145,6 +145,7 @@
       border-radius: 1.5rem;
       border: 1px solid $light-gray;
       padding: 0.3rem 0.75rem;
+      align-self: end;
     }
 
     .table-pagination-actions {
@@ -189,7 +190,7 @@
         color: $black;
 
         &::before {
-          content: "\2212 ";
+          content: "– ";
           font-weight: bold;
           margin-right: 0.2rem;
           color: $primary600;

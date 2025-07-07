@@ -109,7 +109,6 @@ export const AdminNotificationsComponent = () => {
             </ToggleButton>
           </ToggleButtonGroup>
         </Box>
-        <NotificationComponent />
       </>
       <Box p={3} sx={{ overflow: "auto", maxHeight: "calc(100vh - 220px)" }}>
         {type === "forms" && (

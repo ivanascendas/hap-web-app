@@ -45,7 +45,6 @@ export const AdminMessagesComponent = () => {
   return (
     <Box p={3} className="messages-page">
       <Box className="personal_box " mb="2rem">
-        <NotificationComponent />
         <Typography variant="h4" mb="2rem" component="h2">
           Messages control
         </Typography>

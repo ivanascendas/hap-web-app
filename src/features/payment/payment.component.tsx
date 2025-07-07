@@ -1,5 +1,4 @@
-import { Box, Button, FormHelperText, TextField } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import { Box, Button, Grid, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import "./payment.component.scss";
 import { useDispatch, useSelector } from "react-redux";
