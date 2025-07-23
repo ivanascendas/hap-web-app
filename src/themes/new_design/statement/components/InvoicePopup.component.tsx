@@ -2,9 +2,12 @@ import React, { useContext } from "react";
 import "./InvoicePopup.component.scss";
 import { Modal, Box, Tooltip, Button, Skeleton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import moment from "moment";
 import { t } from "i18next";
 import { InvoiceInputRequest } from "@shared/dtos/invoice.dtos";
 import { useGetInvoiceDetailsQuery } from "@shared/services/Statements.service";
+import currency from "@shared/utils/currency";
+import DownloadForOfflineIcon from "@mui/icons-material/Download";
 
 export type InvoicePopupProps = {
   open: boolean;
@@ -29,9 +32,9 @@ export const InvoicePopupСomponent = ({
         {isFetching ? (
           <>
             <Box className="invoice_popup_header">
-              <span className="invoice_popup_header_title">
-                {t("INVOICE_DETAILS.TITLE")}
-              </span>
+              <strong className="invoice_popup_header_title">
+                Payment Invoice
+              </strong>
               <Skeleton
                 role="progressbar"
                 aria-label=""
@@ -123,9 +126,9 @@ export const InvoicePopupСomponent = ({
         ) : (
           <>
             <Box className="invoice_popup_header">
-              <span className="invoice_popup_header_title">
-                {t("INVOICE_DETAILS.TITLE")}
-              </span>
+              <strong className="invoice_popup_header_title">
+                Payment Invoice
+              </strong>
               <Tooltip title={t("BUTTONS.CLOSE")}>
                 <CloseIcon onClick={onClose} />
               </Tooltip>
@@ -134,64 +137,66 @@ export const InvoicePopupСomponent = ({
               <Box className="invoice_popup_content_block">
                 <Box className="invoice_popup_content_row">
                   <Box className="invoice_popup_content_row_label">
-                    {t("INVOICE_DETAILS.ISSUED_ON")}
-                  </Box>
-                  <Box>{}</Box>
-                </Box>
-                <Box className="invoice_popup_content_row">
-                  <Box className="invoice_popup_content_row_label">
-                    {t("INVOICE_DETAILS.PROPERTY")}
-                  </Box>
-                  <Box></Box>
-                </Box>
-              </Box>
-              <Box className="invoice_popup_content_block">
-                <Box className="invoice_popup_content_row">
-                  <Box className="invoice_popup_content_row_label">
-                    {t("INVOICE_DETAILS.DUE_DATE")}
-                  </Box>
-                  <Box></Box>
-                </Box>
-                <Box className="invoice_popup_content_row">
-                  <Box className="invoice_popup_content_row_label">
-                    {t("INVOICE_DETAILS.INVOICED")}
-                  </Box>
-                  <Box></Box>
-                </Box>
-                <Box className="invoice_popup_content_row">
-                  <Box className="invoice_popup_content_row_label">
                     {t("INVOICE_DETAILS.PAID")}
                   </Box>
-                  <Box></Box>
+                  <Box className="invoice_popup_content_row_value">
+                    {currency.format(557.0)}
+                  </Box>
                 </Box>
                 <Box className="invoice_popup_content_row">
-                  <Box>{t("INVOICE_DETAILS.BALANCE")}</Box>
-                  <Box></Box>
-                </Box>
-                <Box
-                  className="invoice_popup_content_row"
-                  sx={{ flexDirection: "column" }}
-                >
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    color="primary"
-                    className="download"
-                    onClick={onClose}
-                  >
-                    {t("INVOICE_DETAILS.DOWNLOAD")}
-                  </Button>
-
-                  <Button
-                    variant="contained"
-                    fullWidth
-                    color="primary"
-                    onClick={onClose}
-                  >
-                    {t("MAIN.PAY")}
-                  </Button>
+                  <Box className="invoice_popup_content_row_label">
+                    {t("INVOICE_DETAILS.BALANCE")}
+                  </Box>
+                  <Box className="invoice_popup_content_row_value negative">
+                    {currency.format(140)}
+                  </Box>
                 </Box>
               </Box>
+              <Box className="invoice_popup_content_row">
+                <Box className="invoice_popup_content_row_label">
+                  {t("PAYMENT_DETAILS.DATE")}
+                </Box>
+                <Box
+                  className="invoice_popup_content_row_value"
+                  sx={{ fontWeight: "500 !important" }}
+                >
+                  {moment(new Date()).format(" DD.MM.YYYY [a]t HH:mm")}
+                </Box>
+              </Box>
+              <Box className="invoice_popup_content_row">
+                <Box className="invoice_popup_content_row_label">
+                  Transaction Type:
+                </Box>
+                <Box
+                  className="invoice_popup_content_row_value"
+                  sx={{ fontWeight: "500 !important" }}
+                >
+                  Payment Invoice
+                </Box>
+              </Box>
+              <Box className="invoice_popup_content_row">
+                <Box className="invoice_popup_content_row_label">
+                  {t("PAYMENT_DETAILS.REFERENCE")}
+                </Box>
+                <Box
+                  className="invoice_popup_content_row_value"
+                  sx={{ fontWeight: "500 !important" }}
+                >
+                  -
+                </Box>
+              </Box>
+            </Box>
+            <Box className="invoice_popup_content_footer">
+              <Button
+                startIcon={<DownloadForOfflineIcon />}
+                variant="contained"
+                fullWidth
+                color="primary"
+                className="btn-secondary"
+                onClick={onClose}
+              >
+                {t("INVOICE_DETAILS.DOWNLOAD")}
+              </Button>
             </Box>
           </>
         )}

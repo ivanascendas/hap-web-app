@@ -1,15 +1,12 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Checkbox, FormControlLabel, Grid, TextField } from "@mui/material";
-import { UserConfirmDataModel, UserDataDto } from "@shared/dtos/user.dto";
+import { Box, Checkbox, FormControlLabel, Grid } from "@mui/material";
+import { UserConfirmDataModel } from "@shared/dtos/user.dto";
 
 import { selectUser, setUser } from "@shared/redux/slices/authSlice";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { OtpInputComponent } from "@components/common/components/otpInput.component";
 import {
   useDobConfirmationMutation,
@@ -22,7 +19,6 @@ import { Dayjs } from "dayjs";
 import { getErrorMessage } from "@shared/utils/getErrorMessage";
 import { usePasswordValidator } from "@shared/utils/password.validator";
 
-import checkedImg from "../../../../../assets/img/forms/otp-done.svg";
 import { TextInput } from "../../../common/components/TextInput.component";
 import { PasswordCheckList } from "@components/common/components/PasswordCheckList.component";
 
@@ -123,7 +119,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
   const passwordValue = watch("password");
 
   return (
-    <div role="form" style={{ padding: "0 0.9375rem" }}>
+    <Box role="form" sx={{ padding: { sx: "0", md: "0 0.9375rem" } }}>
       <div className="registration__subtitle">
         {t("SIGN_UP.DESCRIPTION_STEP_3")}
       </div>
@@ -151,12 +147,12 @@ export const RegConfirmFormComponent = (): JSX.Element => {
               resendLabel={t("MFA.VERIFICATION_INPUT.RESEND_OTP")}
               onResend={() => {
                 console.log("resend email");
-                accountNumber &&
-                  email &&
+                if (accountNumber && email) {
                   resendEmail({
                     UserId: accountNumber.toString() || "",
                     EmailId: email.toString() || "",
                   });
+                }
               }}
               onSubmit={(otp) =>
                 checkEmailCode({
@@ -187,12 +183,12 @@ export const RegConfirmFormComponent = (): JSX.Element => {
               resendLabel={t("MFA.VERIFICATION_INPUT.RESEND_OTP")}
               onResend={() => {
                 console.log("resend sms");
-                accountNumber &&
-                  phone &&
+                if (accountNumber && phone) {
                   resendSMS({
                     UserId: accountNumber.toString() || "",
                     PhoneNumber: phone.toString() || "",
                   });
+                }
               }}
               onSubmit={(otp) =>
                 checkSMSCode({
@@ -207,7 +203,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
 
       <div className="registration__input-container">
         <label
-          className="registration__label label-question required"
+          className="registration__label required"
           title={t("MESSAGES.REGISTRATION_BIRTH_DATES_TOOLTIP")}
           htmlFor="phone-input"
           aria-label={t("LABELS.ENTER_BIRTH_DATE")}
@@ -242,7 +238,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
             <Grid size={12}>
               <label
                 htmlFor="password-label"
-                className="registration__label label-question required"
+                className="registration__label required"
                 title={t("MESSAGES.CUSTOMER_PASSWORD_TOOLTIP")}
               >
                 {t("LABELS.PASSWORD")}
@@ -271,7 +267,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
             <Grid size={12}>
               <label
                 htmlFor="confirm-password-label"
-                className="registration__label label-question required"
+                className="registration__label  required"
                 title={t("MESSAGES.CUSTOMER_PASSWORD_TOOLTIP")}
               >
                 {t("LABELS.CONFIRM_PASSWORD")}
@@ -338,6 +334,6 @@ export const RegConfirmFormComponent = (): JSX.Element => {
           {t("SIGN_UP.BUTTONS.NEXT")}
         </button>
       </form>
-    </div>
+    </Box>
   );
 };

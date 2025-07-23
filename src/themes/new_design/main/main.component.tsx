@@ -5,7 +5,7 @@ import { CookieBannerComponent } from "./components/CookieBanner.component";
 import { useAuth } from "@shared/providers/Auth.provider";
 import { HeaderComponent } from "./components/Header.component";
 import { DrawerComponent } from "./components/Drawer.component";
-import { Box, Paper } from "@mui/material";
+import { Box, Modal, Paper } from "@mui/material";
 import { BottomBarСomponent } from "./components/BottomBar.component";
 import useWindowDimensions from "@shared/hooks/useWindowDimensions";
 import { t } from "i18next";
@@ -16,6 +16,8 @@ import { useSelector } from "react-redux";
 import { selectUserLoading } from "@shared/redux/slices/loaderSlice";
 import { selectUser } from "@shared/redux/slices/authSlice";
 import { NotificationComponent } from "@shared/components/Notification.component";
+import { ContactsComponent } from "@components/contacts/Contacts.component";
+import { set } from "react-hook-form";
 export type MainProps = {
   children: JSX.Element;
   showFooter?: boolean;
@@ -29,6 +31,7 @@ export const MainComponent = ({
   const [openMenu, setOpenMenu] = React.useState(false);
   const isLoading = useSelector(selectUserLoading);
   const user = useSelector(selectUser);
+  const [popup, setPopup] = React.useState(false);
   const [openExistingTenantPopup, setOpenExistingTenantPopup] =
     React.useState(false);
   const { width } = useWindowDimensions();
@@ -83,6 +86,10 @@ export const MainComponent = ({
           ref={drawerRef}
           open={openMenu}
           onClose={openMenuDrawer}
+          openContactPopup={() => {
+            setPopup(true);
+            setOpenMenu(false);
+          }}
         />
       )}
       <Box
@@ -107,11 +114,7 @@ export const MainComponent = ({
           }
         />
       )}
-      {isAuthenticated &&
-        !window.location.pathname.startsWith("/invoices") &&
-        !window.location.pathname.startsWith("/payment") && (
-          <BottomBarСomponent />
-        )}
+
       <CookieBannerComponent />
       {isAuthenticated && (
         <ExistingTenantPopupComponent
@@ -120,6 +123,11 @@ export const MainComponent = ({
         />
       )}
       <NotificationComponent />
+      {popup && (
+        <Modal open={popup} onClose={() => setPopup(false)}>
+          <ContactsComponent onClose={() => setPopup(false)} />
+        </Modal>
+      )}
     </Paper>
   );
 };

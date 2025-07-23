@@ -1,6 +1,6 @@
 import { TextField, TextFieldProps } from "@mui/material";
 import "./TextInput.component.scss";
-import { forwardRef, useState } from "react";
+import React, { forwardRef, useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
 
@@ -16,23 +16,33 @@ export const TextInput = forwardRef(
     const [showPassword, setShowPassword] = useState(false);
 
     // Destructure relevant props - use props.type directly in render
-    const { type, error, helperText, useDatePicker, ...otherProps } = props;
+    const { type, useDatePicker, ...otherProps } = props;
     const modifiedProps = {
       ...otherProps,
+      variant: "outlined",
       // Only mark as required in the DOM if truly empty
       //  required: hasValue ? false : props.required,
     };
 
     return useDatePicker ? (
-      <div className={`text-input-container text-input-${type || "text"}`}>
+      <div className={`text-input-container text-input-date`}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DatePicker
             {...useDatePicker}
             slotProps={{
               textField: {
+                ...modifiedProps,
                 variant: "outlined",
                 className: "text-input-date",
+                type: "date",
                 inputRef: ref,
+                sx: {
+                  "& .MuiOutlinedInput-root": {
+                    "& fieldset": {
+                      borderColor: "rgba(0, 0, 0, 0.23)",
+                    },
+                  },
+                },
               },
             }}
           />

@@ -1,3 +1,4 @@
+import React from "react";
 import {
   passwordValidator,
   PasswordValidatorConfig,
@@ -37,10 +38,7 @@ export const PasswordCheckList = ({
     value,
   );
   const { valid: isHasNumberValid } = passwordValidator({ hasNumber }, value);
-  console.log(
-    `isHasNumberValid:${isHasNumberValid}, value:${value}`,
-    isHasNumberValid,
-  );
+
   return (
     <div className="password-checklist">
       <ul>

@@ -50,3 +50,15 @@
     right: 0.625rem;
   }
 }
+.text-input-date {
+  position: relative;
+  .MuiPickersOutlinedInput-root {
+    border-radius: 2rem;
+    height: 2.8rem;
+    fieldset {
+      legend {
+        display: none;
+      }
+    }
+  }
+}

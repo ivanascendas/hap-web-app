@@ -43,7 +43,7 @@ export const RegistrationComponent = (): JSX.Element => {
             <div>
               <RegistrationStepper step={step || "step1"} />
             </div>
-            <div className="auth-form__subtitle" role="navigation">
+            <div className="auth-form__subtitle footer" role="navigation">
               {t("SIGN_UP.ALREADY_REGISTERED")}
               <Link to="/login" className="link-underline">
                 {t("APP.HEADER.BUTTONS.LOGIN")}

@@ -101,7 +101,6 @@ export const authApi = createApi({
         try {
           dispatch(clearUser());
           const { data } = await queryFulfilled;
-          console.log({ userdata: data });
           if (data && !data.isSuperAdmin && data.customerNo) {
             dispatch(
               authApi.endpoints.checkValidContact.initiate(

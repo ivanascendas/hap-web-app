@@ -1,21 +1,17 @@
 import { Box, Button } from "@mui/material";
-import { NotificationComponent } from "@shared/components/Notification.component";
 import { useNavigate, useParams } from "react-router-dom";
-import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
 import { useTranslation } from "react-i18next";
 import "./Invoices.component.scss";
-import { RatesInvoicesComponent } from "./components/RatesInvoices.component";
-import { RentsInvoiceComponent } from "./components/RentsInvoices.component";
-import { LoansInvoiceComponent } from "./components/LoansInvoices.component";
 
 import WestIcon from "@mui/icons-material/West";
 import {
   useLazyDownloadRatesPdfQuery,
   useLazyGetBalanceQuery,
 } from "@shared/services/Statements.service";
-import currency from "@shared/utils/currency";
 import React from "react";
 import { InvoiceQueryParams } from "@shared/dtos/invoice.dtos";
+import { MonthlyInvoiceComponent } from "./components/MonthlyInvoice.component";
+import { RatesStatementComponent } from "@components/statement/components/RatesStatement.component";
 
 export const InvoicesComponent = (): JSX.Element => {
   const { department } = useParams();
@@ -24,11 +20,14 @@ export const InvoicesComponent = (): JSX.Element => {
   const [dto, setDto] = React.useState<InvoiceQueryParams | null>(null);
   const [downloadPdf] = useLazyDownloadRatesPdfQuery();
   const [getBalance, { data: balance }] = useLazyGetBalanceQuery();
-
+  const [showMonthly] = React.useState<boolean>(true);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Box sx={{ flexGrow: 1 }} className="invoices-container">
-        <Box sx={{ flexGrow: 1 }} className="page_wrap_height">
+        <Box
+          sx={{ flexGrow: 1 }}
+          className={showMonthly ? "" : "page_wrap_height"}
+        >
           <Button
             onClick={() => navigate("/statements/rates")}
             startIcon={<WestIcon />}
@@ -52,12 +51,22 @@ export const InvoicesComponent = (): JSX.Element => {
           </Box>
 
           <Box sx={{ flexGrow: 1 }} className="page_wrap_height_content">
-            <RatesInvoicesComponent
-              setInvoiceQueryParams={setDto}
-              department={department || "rates"}
-              getBalance={getBalance}
-              balance={balance}
-            />
+            {showMonthly ? (
+              <MonthlyInvoiceComponent
+                setInvoiceQueryParams={setDto}
+                department={department || "rates"}
+                getBalance={getBalance}
+                balance={balance}
+              />
+            ) : (
+              <RatesStatementComponent
+                setStatementQueryParams={(dto) =>
+                  setDto({ ...dto, incDept: department || "rates" })
+                }
+                department={department || "rates"}
+                getBalance={getBalance}
+              />
+            )}
             {/*department === 'rents' && <RentsInvoiceComponent department={department} getBalance={getBalance} balance={balance} />*/}
             {/*department === 'loans' && <LoansInvoiceComponent department={department} getBalance={getBalance} balance={balance} />*/}
           </Box>

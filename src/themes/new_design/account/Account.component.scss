@@ -5,18 +5,107 @@
   padding: 0.9375rem 2.1875rem; // 15px 35px
   padding-bottom: pxToRem(55);
   max-height: calc(100vh - 11.8rem);
-  overflow: auto;
+  border-radius: 1.5rem;
+  overflow: hidden;
+
+  &_avatar {
+    border-radius: 2rem;
+    border: 1px solid $mid-gray;
+    margin-right: 2.25rem; // 20px
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 15rem;
+    width: 15rem;
+    flex: 1;
+    width: 100%;
+
+    &_container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      @media screen and (max-width: $mobileSize) {
+        margin: 1.5rem 0;
+      }
+    }
+
+    &_controls {
+      margin-top: 1.25rem; // 20px
+      display: flex;
+      margin-right: 3rem;
+      align-items: center;
+      justify-content: start;
+      width: 100%;
+      gap: 0.625rem; // 10px
+      button {
+        width: 10rem;
+        height: 2.625rem; // 42px
+        margin: 0;
+        text-transform: none;
+        padding: 0.5rem 1.25rem; // 8px 20px
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
 
   @media screen and (max-width: $mobileSize) {
-    max-height: calc(100vh - 13.7rem);
+    max-height: calc(100vh - 5.7rem);
     padding-bottom: pxToRem(50);
+    padding: 0.8rem;
+
+    &.password-tab {
+      min-height: 48.5rem !important; // 560px
+    }
   }
 
   &_header {
     color: $primary900;
     font-size: 2.5rem !important; // 40px
-    margin: 0.53em 0 !important;
+    margin: 0.53em 2.5rem !important;
     font-weight: bold !important;
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+
+    @media screen and (max-width: $mobileSize) {
+      flex-direction: column;
+      align-items: flex-start;
+      margin: 1.6rem 0.6rem !important;
+    }
+
+    h1 {
+      font-size: 1.7rem !important; // 26px
+      font-weight: bold !important;
+      margin: 0;
+    }
+    span:not(.MuiButton-icon) {
+      display: flex;
+      align-items: center;
+      color: $mid-gray;
+      strong {
+        margin-left: 0.5rem; // 8px
+      }
+      button {
+        svg.MuiSvgIcon-root {
+          fill: $primary900 !important;
+          color: $primary900 !important;
+        }
+        svg {
+          fill: $primary900 !important;
+          color: $primary900 !important;
+          width: 0.7em !important;
+          height: 0.7em !important;
+        }
+      }
+    }
+
+    .MuiIconButton-root {
+      padding: 0.5rem !important; // 8px
+      color: $primary900;
+      font-size: 1.25rem !important; // 20px
+    }
   }
 
   &_content {
@@ -42,11 +131,12 @@
 
       &.active {
         display: block;
+        min-height: 35rem; // 560px
       }
 
       &:last-child {
         .MFA {
-          display: none;
+          // display: none;
         }
       }
     }
@@ -71,9 +161,6 @@
     }
 
     &:first-child {
-      border-right: 1px solid;
-      border-image: $devider-bg 2;
-
       @media screen and (max-width: $mobileSize) {
         border: none;
       }
@@ -156,10 +243,22 @@
   }
 
   .MuiTabs-root {
+    @media screen and (max-width: $mobileSize) {
+      position: relative;
+      top: -1.5rem; // -24px
+      height: 4rem; // 56px
+    }
+    .MuiTabs-list {
+      width: 100%;
+      display: flex;
+    }
+
     button {
       flex: 1;
       width: 100% !important;
-
+      text-transform: none;
+      margin: 0;
+      padding: 0;
       &.Mui-selected {
         background: $secondary100;
         border-top-left-radius: 0.625rem; // 10px

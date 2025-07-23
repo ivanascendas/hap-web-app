@@ -1,5 +1,4 @@
 import { Box, Button } from "@mui/material";
-import { NotificationComponent } from "@shared/components/Notification.component";
 import { useParams } from "react-router-dom";
 import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
 import { useTranslation } from "react-i18next";
@@ -57,7 +56,14 @@ export const StatementComponent = (): JSX.Element => {
         <Box sx={{ flexGrow: 1 }} className="page_wrap_height">
           <HeaderStatementComponent getBalance={getBalance} balance={balance} />
           <Box
-            sx={{ flexGrow: 1, display: "flex", paddingTop: 0 }}
+            sx={{
+              flexGrow: 1,
+              display: "flex",
+              paddingTop: 0,
+              flexDirection: { xs: "column", md: "row" },
+              marginBottom: { xs: "1rem", md: "0" },
+              marginLeft: { xs: "0.625rem", md: "0" },
+            }}
             className="page_wrap_height_title"
           >
             <h1 className="h_title">
@@ -73,11 +79,12 @@ export const StatementComponent = (): JSX.Element => {
             <Box
               sx={{
                 flexGrow: 1,
-                display: { xs: "none", md: "flex", gap: "0.8rem" },
+                display: { md: "flex", gap: "0.8rem" },
               }}
               className="h_title_right"
             >
               <Button
+                sx={{ display: { xs: "none", md: "flex" } }}
                 startIcon={<DownloadForOfflineIcon />}
                 className="btn-secondary"
               >
@@ -93,25 +100,6 @@ export const StatementComponent = (): JSX.Element => {
                 </span>
               </Button>
             </Box>
-            <Box
-              sx={{
-                flexGrow: 1,
-                display: {
-                  xs: department === "documents" ? "none" : "flex",
-                  md: "none",
-                },
-                flexDirection: "column",
-                marginRight: "0.625rem",
-              }}
-              className="h_title_right"
-            >
-              <span className="header-balance-text">
-                {t("INVOICES.RATES.CURRENT_BALANCE")}
-              </span>
-              <span className="header-balance-value">
-                {currency.format(balance?.currentBalance || 0)}
-              </span>
-            </Box>
           </Box>
 
           <Box sx={{ flexGrow: 1 }} className="page_wrap_height_content">
@@ -120,7 +108,6 @@ export const StatementComponent = (): JSX.Element => {
                 setStatementQueryParams={setDto}
                 department={department}
                 getBalance={getBalance}
-                balance={balance}
               />
             )}
             {department === "rents" && (

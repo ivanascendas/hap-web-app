@@ -1,12 +1,7 @@
-import {
-  Box,
-  Button,
-  FormHelperText,
-  Grid,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Grid, Modal, Typography } from "@mui/material";
 
+import { useEffect, useRef } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import "./payment.component.scss";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,8 +10,6 @@ import { IntlTelInputComponent } from "@shared/components/IntlTelInput.component
 import EastIcon from "@mui/icons-material/East";
 import WestIcon from "@mui/icons-material/West";
 import { useForm } from "react-hook-form";
-import { Iti } from "intl-tel-input";
-import { useEffect, useRef, useState } from "react";
 import { selectUserLoading } from "@shared/redux/slices/loaderSlice";
 import currency from "@shared/utils/currency";
 import { useNavigate } from "react-router-dom";
@@ -25,20 +18,19 @@ import {
   selectInvoicesToPay,
   setInvoicesToPay,
 } from "@shared/redux/slices/paymentSlice";
-import { IntlTelInputRef } from "intl-tel-input/react";
 import { getErrorMessage } from "@shared/utils/getErrorMessage";
-const { default: utils } = require("intl-tel-input/build/js/utils.js");
+import { SummaryBoxComponent } from "@components/common/components/summary-box.component";
+import { TextInput } from "@components/common/components/TextInput.component";
+import { usePhoneInput } from "@shared/hooks/usePhoneInput";
+import { PayComponent } from "./pay.component";
 
-export type PaymentProps = {};
-
-export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
+export const PaymentComponent = (): JSX.Element => {
   const { t } = useTranslation();
   const user = useSelector(selectUser);
   const isLoading = useSelector(selectUserLoading);
   const payments = useSelector(selectInvoicesToPay);
   const balance = useSelector(selectBalance);
-  const iniTelReff = useRef<IntlTelInputRef>();
-  const iniTelinst = useRef<Iti>();
+  const [open, setOpen] = React.useState<boolean>(false);
   const form = useRef<HTMLFormElement>(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -70,6 +62,9 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
     },
   });
 
+  const { handlePhoneChange, handleItiInit, validatePhone, setPhoneNumber } =
+    usePhoneInput(setValue);
+
   useEffect(() => {
     if (!isLoading && user?.defaultMFA) {
       reset({
@@ -90,12 +85,33 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
         Phone: `+${user?.phone}`,
         Zipcode: "NA",
       });
-      if (iniTelReff.current && user.phone) {
-        iniTelReff.current?.getInstance()?.setNumber(`+${user.phone}`);
+      if (user.phone) {
+        setPhoneNumber(`+${user.phone.replace(/^\+/, "")}`);
       }
     }
-  }, [user, isLoading]);
+  }, [user, isLoading, reset, setPhoneNumber]);
 
+  /**
+   * Handles form submission for payment data.
+   *
+   * Extracts billing/contact information from the form data, updates all payment
+   * records with this information via Redux dispatch, and navigates to the payment
+   * processing page.
+   *
+   * @param data - The payment form data containing billing and contact information
+   * @param data.Name - Customer name
+   * @param data.Number - Contact number or reference number
+   * @param data.Address1 - Primary address line
+   * @param data.Address2 - Secondary address line (optional)
+   * @param data.Address3 - Tertiary address line (optional)
+   * @param data.County - County information
+   * @param data.phoneCode - Phone country code
+   * @param data.City - City name
+   * @param data.Country - Country name
+   * @param data.Email - Email address
+   * @param data.Phone - Phone number
+   * @param data.Zipcode - Postal/ZIP code
+   */
   const onSubmit = (data: PaymentDto) => {
     console.log({ data });
 
@@ -132,12 +148,26 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
         })),
       ),
     );
-
-    navigate("/payment/pay");
+    const usePopup = true;
+    if (usePopup) {
+      setOpen(true);
+    } else {
+      navigate("/payment/pay");
+    }
   };
 
+  /**
+   * Triggers the form submission by calling the handleSubmit function with the onSubmit callback.
+   * This function programmatically submits the form, bypassing the need for a submit button click.
+   */
   const triggerSubmit = () => {
-    handleSubmit(onSubmit)();
+    handleSubmit(onSubmit)()
+      .then(() => {
+        console.log("Form submitted successfully", errors);
+      })
+      .catch((error) => {
+        console.error("Form submission error:", error);
+      });
   };
 
   return (
@@ -145,15 +175,7 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
       <h1 className="h_title aligncenter">
         {t("PAYMENT_INFO.ENTER_ADDITIONAL_INFO")}
       </h1>
-      <Box
-        sx={{
-          display: "flex",
-          gap: "2rem",
-          alignItems: "start",
-          flexDirection: { xs: "column", md: "row" },
-        }}
-        className="payment_form_container"
-      >
+      <Box sx={{}} className="payment_form_container">
         <Box className="personal_box" sx={{ flex: 2 }}>
           <form
             ref={form}
@@ -162,7 +184,7 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
           >
             <div className="payment_form_title">{t("PAYMENT_INFO.TITLE")}</div>
             <Grid container spacing={2}>
-              <Grid size={{ xs: 12, md: 6, lg: 4 }}>
+              <Grid size={12}>
                 <Box className="payment_form_row">
                   <label
                     className=" required"
@@ -173,7 +195,7 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
                     {t("PAYMENT_INFO.INFO.NAME")}
                   </label>
 
-                  <TextField
+                  <TextInput
                     id="account-name"
                     {...register("Name", {
                       required: true,
@@ -181,7 +203,31 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
                   />
                 </Box>
               </Grid>
-              <Grid size={{ lg: 8, xs: 12, md: 6 }}>
+              <Grid size={12}>
+                <Box className="payment_form_row">
+                  <label
+                    className=" required"
+                    title={t("PAYMENT_INFO.INFO.COUNTRY")}
+                    htmlFor="country"
+                    aria-label={t("PAYMENT_INFO.INFO.COUNTRY")}
+                  >
+                    {t("PAYMENT_INFO.INFO.COUNTRY")}
+                  </label>
+
+                  <TextInput
+                    id="country"
+                    className="country-data"
+                    {...register("Country")}
+                    disabled
+                    slotProps={{
+                      htmlInput: {
+                        readOnly: true,
+                      },
+                    }}
+                  />
+                </Box>
+              </Grid>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Box className="payment_form_row">
                   <label
                     className="required"
@@ -192,7 +238,7 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
                     {t("PAYMENT_INFO.INFO.ADDRESS_1")}
                   </label>
 
-                  <TextField
+                  <TextInput
                     id="address1"
                     {...register("Address1", {
                       required: true,
@@ -201,7 +247,7 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
                 </Box>
               </Grid>
 
-              <Grid size={{ lg: 4, xs: 12, md: 6 }}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Box className="payment_form_row">
                   <label
                     className=" required"
@@ -212,7 +258,7 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
                     {t("PAYMENT_INFO.INFO.ADDRESS_2")}
                   </label>
 
-                  <TextField
+                  <TextInput
                     id="address2"
                     {...register("Address2", {
                       required: true,
@@ -220,7 +266,7 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
                   />
                 </Box>
               </Grid>
-              <Grid size={{ lg: 4, xs: 12, md: 6 }}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Box className="payment_form_row">
                   <label
                     className=" required"
@@ -231,7 +277,7 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
                     {t("PAYMENT_INFO.INFO.ADDRESS_3")}
                   </label>
 
-                  <TextField
+                  <TextInput
                     id="address3"
                     {...register("Address3", {
                       required: true,
@@ -239,7 +285,7 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
                   />
                 </Box>
               </Grid>
-              <Grid size={{ lg: 4, xs: 12, md: 6 }}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Box className="payment_form_row">
                   <label
                     className=" required"
@@ -250,7 +296,7 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
                     {t("PAYMENT_INFO.INFO.ADDRESS_4")}
                   </label>
 
-                  <TextField
+                  <TextInput
                     id="address4"
                     {...register("County", {
                       required: true,
@@ -259,153 +305,85 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
                 </Box>
               </Grid>
 
-              <Grid container size={{ lg: 4, xs: 12, md: 6 }}>
-                <Grid size={{ xs: 12, md: 6 }}>
-                  <Box className="payment_form_row">
-                    <label
-                      className=" required"
-                      title={t("PAYMENT_INFO.INFO.COUNTRY")}
-                      htmlFor="country"
-                      aria-label={t("PAYMENT_INFO.INFO.COUNTRY")}
-                    >
-                      {t("PAYMENT_INFO.INFO.COUNTRY")}
-                    </label>
-
-                    <TextField
-                      id="country"
-                      className="country-data"
-                      {...register("Country")}
-                      disabled
-                      slotProps={{
-                        htmlInput: {
-                          readOnly: true,
-                        },
-                      }}
-                    />
-                  </Box>
-                </Grid>
-                <Grid size={{ xs: 12, md: 6 }}>
-                  <Box className="payment_form_row">
-                    <label
-                      className=" required"
-                      title={t("PAYMENT_INFO.INFO.EIRCODE")}
-                      htmlFor="zipcode"
-                      aria-label={t("PAYMENT_INFO.INFO.EIRCODE")}
-                    >
-                      {t("PAYMENT_INFO.INFO.EIRCODE")}
-                    </label>
-
-                    <TextField
-                      id="zipcode"
-                      className="country-data"
-                      {...register("Zipcode", {
-                        required: true,
-                      })}
-                    />
-                  </Box>
-                </Grid>
-              </Grid>
-              <Grid size={{ lg: 4, xs: 12, md: 6 }}>
-                <Box className="payment_form_row">
-                  <label
-                    className=" required"
-                    title={t("PAYMENT_INFO.INFO.EMAIL")}
-                    htmlFor="account-email"
-                    aria-label={t("PAYMENT_INFO.INFO.EMAIL")}
-                  >
-                    {t("PAYMENT_INFO.INFO.EMAIL")}
-                  </label>
-
-                  <TextField
-                    id="account-email"
-                    {...register("Email", {
-                      required: true,
-                    })}
-                  />
-                </Box>
-              </Grid>
-              <Grid size={{ lg: 4, xs: 12, md: 6 }}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Box className="payment_form_row">
                   <label
                     className=" required"
                     title={t("PAYMENT_INFO.INFO.PHONE")}
-                    htmlFor="account-name"
+                    htmlFor="phone-input"
                     aria-label={t("PAYMENT_INFO.INFO.PHONE")}
                   >
                     {t("PAYMENT_INFO.INFO.PHONE")}
                   </label>
 
-                  <Box>
-                    <TextField
-                      id="phone-input"
-                      error={!!errors.Phone}
-                      helperText={getErrorMessage(errors.Phone?.message)}
-                      slotProps={{
-                        htmlInput: {
-                          "aria-invalid": !!errors.Phone,
-                        },
-                        input: {
-                          inputComponent: IntlTelInputComponent,
-                          inputProps: {
-                            options: {
-                              initialCountry: "ie",
-                              separateDialCode: true,
-                              formatOnDisplay: true,
-                              formatAsYouType: true,
-                            },
-                            getIti: (obj: IntlTelInputRef) => {
-                              console.log("set IntlTelInputRef", {
-                                input: obj.getInput(),
-                                instance: obj.getInstance(),
-                              });
-                              iniTelReff.current = obj;
-                              const instance = obj.getInstance();
-                              if (instance) {
-                                iniTelinst.current = instance;
-                              }
-                            },
-                            onChange: (
-                              e: React.ChangeEvent<HTMLInputElement>,
-                            ) => {
-                              const { value } = e.target;
-                              const countryData = iniTelReff.current
-                                ?.getInstance()
-                                ?.getSelectedCountryData();
-                              const phone = `+${countryData?.dialCode}${value}`;
-                              console.log(
-                                "onChange",
-                                phone,
-                                value,
-                                utils,
-                                countryData,
-                              );
-
-                              setValue("Phone", phone);
-                            },
+                  <TextInput
+                    id="phone-input"
+                    error={!!errors.Phone}
+                    helperText={getErrorMessage(errors.Phone?.message)}
+                    slotProps={{
+                      htmlInput: {
+                        "aria-invalid": !!errors.Phone,
+                      },
+                      input: {
+                        inputComponent: IntlTelInputComponent,
+                        inputProps: {
+                          options: {
+                            initialCountry: "ie",
+                            separateDialCode: true,
+                            formatOnDisplay: true,
+                            formatAsYouType: true,
                           },
+                          getIti: handleItiInit,
+                          onChange: handlePhoneChange,
                         },
-                      }}
-                      {...register("Phone", {
-                        required: true,
-                        validate: (value) => {
-                          const countryData = iniTelReff.current
-                            ?.getInstance()
-                            ?.getSelectedCountryData();
-                          let isValid = utils.isValidNumber(
-                            value,
-                            countryData?.iso2,
-                          );
-                          if (isValid) {
-                            return true;
-                          } else {
-                            return t("ERRORS.INVALID_PHONE");
-                          }
-                        },
-                      })}
-                    />
-                  </Box>
+                      },
+                    }}
+                    {...register("Phone", {
+                      required: true,
+                      validate: validatePhone,
+                    })}
+                  />
                 </Box>
               </Grid>
+              <Grid size={{ xs: 12, md: 6 }}>
+                <Box className="payment_form_row">
+                  <label
+                    className=" required"
+                    title={t("PAYMENT_INFO.INFO.EIRCODE")}
+                    htmlFor="zipcode"
+                    aria-label={t("PAYMENT_INFO.INFO.EIRCODE")}
+                  >
+                    {t("PAYMENT_INFO.INFO.EIRCODE")}
+                  </label>
+
+                  <TextInput
+                    id="zipcode"
+                    className="country-data"
+                    {...register("Zipcode", {
+                      required: true,
+                    })}
+                  />
+                </Box>
+              </Grid>
+            </Grid>
+            <Grid size={12}>
+              <Box className="payment_form_row">
+                <label
+                  className=" required"
+                  title={t("PAYMENT_INFO.INFO.EMAIL")}
+                  htmlFor="account-email"
+                  aria-label={t("PAYMENT_INFO.INFO.EMAIL")}
+                >
+                  {t("PAYMENT_INFO.INFO.EMAIL")}
+                </label>
+
+                <TextInput
+                  id="account-email"
+                  {...register("Email", {
+                    required: true,
+                  })}
+                />
+              </Box>
             </Grid>
           </form>
         </Box>
@@ -454,44 +432,19 @@ export const PaymentComponent = ({}: PaymentProps): JSX.Element => {
           </Button>
         </Box>
       </Box>
-      <Box className="summary-box">
-        <Box className="summary-box-content">
-          <Typography component={"span"} className="header-balance-label">
-            Total amount:
-          </Typography>
-          <Typography
-            component={"span"}
-            color="white"
-            className="header-balance-text"
-          >
-            {" "}
-            {currency.format(
-              payments.reduce((acc, payment) => acc + payment.AmountToPay, 0),
-            )}
-          </Typography>
-          <Box className="balance-holder">
-            <Typography component={"span"} className="header-balance-label">
-              Your Current Balance:
-            </Typography>
-            <Typography
-              component={"span"}
-              className="header-balance-label balance negative"
-            >
-              {balance
-                ? currency.format(balance.currentBalance || 0)
-                : "Loading..."}
-            </Typography>
-          </Box>
-        </Box>
-        <Button
-          disabled={Object.values(payments).length === 0}
-          className="btn-primary"
-          variant="contained"
-          onClick={triggerSubmit}
-        >
-          {t("PAYMENT.PAY_NOW")}
-        </Button>
-      </Box>
+      <SummaryBoxComponent
+        variant="short"
+        value={payments.reduce((acc, payment) => acc + payment.AmountToPay, 0)}
+        currentBalance={balance?.currentBalance}
+        onClick={triggerSubmit}
+      />
+      {open && (
+        <Modal open={open} onClose={() => setOpen(false)}>
+          <>
+            <PayComponent onClose={() => setOpen(false)} />
+          </>
+        </Modal>
+      )}
     </Box>
   );
 };

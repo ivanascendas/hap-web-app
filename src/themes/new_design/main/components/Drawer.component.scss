@@ -41,7 +41,6 @@
     border-radius: 1.8rem;
     margin: auto;
     padding: 1rem;
-
     .personal_box_filter_title {
       margin-top: 1rem;
       margin-bottom: 0.5rem;
@@ -63,6 +62,7 @@
       align-items: center;
       gap: 0.625rem;
       justify-content: space-between;
+      cursor: pointer;
 
       .user-name {
         font-weight: 700;

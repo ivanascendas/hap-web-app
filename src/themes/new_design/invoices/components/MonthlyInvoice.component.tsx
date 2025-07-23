@@ -56,7 +56,7 @@ export type RatesInvoiceProps = {
  * The component uses various hooks and services to fetch the necessary data, handle user interactions, and manage the state of the selected invoices. It also includes a mobile-friendly version of the invoice list and a payment popup component.
  */
 
-export const RatesInvoicesComponent = ({
+export const MonthlyInvoiceComponent = ({
   department,
   getBalance,
   balance,
@@ -73,12 +73,26 @@ export const RatesInvoicesComponent = ({
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-  const [getProperties, { data: properties, isFetching }] =
-    useLazyGetPropertiesQuery();
+  const [getProperties] = useLazyGetPropertiesQuery();
   const [downloadInvoice] = useLazyDownloadInvoicePdfQuery();
-  const [getInvoices, { data, isFetching: isRatesLoading }] =
+  const [getInvoices, { isFetching: isRatesLoading }] =
     useLazyGetInvoicesQuery();
   const payments = useSelector(selectInvoices);
+  const [sortedPayments, setSortedPayments] = useState<{
+    [monthYear: string]: InvoiceDto[];
+  }>(
+    payments.reduce(
+      (acc, payment) => {
+        const monthYear = moment(payment.statementDate).format("MMMM, YYYY");
+        if (!acc[monthYear]) {
+          acc[monthYear] = [];
+        }
+        acc[monthYear].push(payment);
+        return acc;
+      },
+      {} as { [monthYear: string]: InvoiceDto[] },
+    ),
+  );
 
   /**
    * Handles the checkbox change event for an invoice row.
@@ -204,86 +218,6 @@ export const RatesInvoicesComponent = ({
     navigate("/payment/info");
   };
 
-  const columns: ColumnItem<InvoiceDto>[] = [
-    {
-      key: "totalPaid",
-      label: "",
-      colRnder: () => "Apply",
-      rowRender: (row: InvoiceDto) => (
-        <>
-          <Checkbox
-            onChange={(e) => checkBoxHandler(e, row)}
-            inputProps={{
-              "aria-labelledby": `${row.invoiceNo}_${row.sequenceNo}_checkbox`,
-              "aria-label": `enable pay ${currency.format(row.pending || 0)} input`,
-            }}
-          />
-        </>
-      ),
-    },
-    {
-      key: "statementDate",
-      label: "INVOICES.RENTS.COLUMNS.DATE",
-      rowRender: (row: InvoiceDto) =>
-        moment(row.statementDate).format("DD MMM YYYY"),
-    },
-    {
-      key: "invoiceNo",
-      label: "INVOICES.RENTS.COLUMNS.REFERENCE",
-      rowRender: (row: InvoiceDto) => (
-        <Box className="invoice-no">
-          {row.invoiceNo}{" "}
-          <IconButton
-            aria-label={`download ${row.invoiceNo} pdf`}
-            onClick={() => invoiceDownloadHandler(row)}
-          >
-            <DownloadForOfflineIcon />
-          </IconButton>
-        </Box>
-      ),
-    },
-    {
-      key: "total",
-      label: "INVOICES.RATES.COLUMNS.BALANCE",
-      rowRender: (row: InvoiceDto) => (
-        <Box className={`balance `}>
-          {currency.format(row.total || 0)}
-          <span className={row.totalPaid && row.totalPaid > 0 ? "success" : ""}>
-            {currency.format(row.totalPaid || 0)} paid
-          </span>
-        </Box>
-      ),
-    },
-    {
-      key: "totalPaid",
-      label: "INVOICES.RENTS.COLUMNS.AMOUNT_TO_PAY",
-      rowRender: (row: InvoiceDto) => (
-        <>
-          <TextField
-            id={`${row.invoiceNo}_${row.sequenceNo}_input`}
-            slotProps={{
-              htmlInput: {
-                "aria-label": `pay ${currency.format(row.pending || 0)} input`,
-              },
-            }}
-            variant="standard"
-            onChange={(e) => handleAmountChange(e, row)}
-            value={currency.format(
-              selectedInvoices[`${row.invoiceNo}_${row.sequenceNo}_input`] ||
-                row.pending ||
-                0,
-            )}
-            disabled={
-              !Object.keys(selectedInvoices).some(
-                (s) => s === `${row.invoiceNo}_${row.sequenceNo}_input`,
-              )
-            }
-          />
-        </>
-      ),
-    },
-  ];
-
   useEffect(() => {
     if (isAuthenticated) {
       setInvoiceQueryParams({
@@ -316,54 +250,199 @@ export const RatesInvoicesComponent = ({
     }
   }, [isAuthenticated, selectedProperty, selectedPeriod]);
 
+  useEffect(() => {
+    const newSortedPayments: { [monthYear: string]: InvoiceDto[] } =
+      payments.reduce(
+        (acc, payment) => {
+          const monthYear = moment(payment.statementDate).format("MMMM, YYYY");
+          if (!acc[monthYear]) {
+            acc[monthYear] = [];
+          }
+          acc[monthYear].push(payment);
+          return acc;
+        },
+        {} as { [monthYear: string]: InvoiceDto[] },
+      );
+    setSortedPayments(newSortedPayments);
+  }, [payments]);
+
   return (
-    <Box sx={{ position: "relative", height: "calc(100vh - 11rem)" }}>
-      <Box className=" ">
+    <Box
+      sx={{
+        position: "relative",
+        display: "flex",
+        height: { md: "calc(100vh - 11rem)", xs: "calc(100vh - 21rem)" },
+      }}
+    >
+      <Box className="month_invoices_container">
         <Box
-          className=" personal_box personal_box_content"
+          className="month_invoices_content"
           sx={{
-            display: {
-              xs: "none",
-              md: "block",
-              borderRadius: "2rem",
-              padding: 0,
-            },
+            display: "flex",
+            flexDirection: "column",
+            flex: 2,
+            gap: "1rem",
           }}
         >
-          <TableComponent
-            aria-label="rates table"
-            isLoading={isRatesLoading}
-            columns={columns}
-            rows={payments || []}
-            selected={(row) =>
-              Object.keys(selectedInvoices).some(
-                (s) => s === `${row.invoiceNo}_${row.sequenceNo}_input`,
-              )
-            }
-            className="rates_invoice_table"
+          {Object.keys(sortedPayments).map((monthYear) => (
+            <Box key={monthYear} className={`personal_box month_invoices`}>
+              <Typography className="month_invoices_title" variant="h6">
+                {monthYear}
+              </Typography>
+              <Box className="month_invoices_item_content">
+                {sortedPayments[monthYear].map((row) => (
+                  <Box
+                    key={`${row.invoiceNo}_${row.sequenceNo}`}
+                    className={`month_invoices_item ${
+                      !selectedInvoices[
+                        `${row.invoiceNo}_${row.sequenceNo}_input`
+                      ]
+                        ? "disabled"
+                        : ""
+                    }`}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Checkbox
+                        onChange={(e) => checkBoxHandler(e, row)}
+                        inputProps={{
+                          "aria-labelledby": `${row.invoiceNo}_${row.sequenceNo}_checkbox`,
+                          "aria-label": `enable pay ${currency.format(row.pending || 0)} input`,
+                        }}
+                      />
+                      <Typography component={"span"} className="invoice-date">
+                        {moment(row.statementDate).format("DD MMMM")}
+                      </Typography>
+                    </Box>
+                    <Box className="month_invoices_item_input">
+                      <TextField
+                        fullWidth
+                        disabled={
+                          !selectedInvoices[
+                            `${row.invoiceNo}_${row.sequenceNo}_input`
+                          ]
+                        }
+                        id={`${row.invoiceNo}_${row.sequenceNo}_input`}
+                        type="text"
+                        value={currency.format(
+                          selectedInvoices[
+                            `${row.invoiceNo}_${row.sequenceNo}_input`
+                          ] ||
+                            row.pending ||
+                            0,
+                        )}
+                        variant={"standard"}
+                        onChange={(e) => handleAmountChange(e, row)}
+                        inputProps={{
+                          "aria-label": `amount to pay for ${row.invoiceNo}`,
+                        }}
+                      />
+                      <Box className="month_invoices_item_input_pending">
+                        {currency.format(row.pending || 0)}
+                      </Box>
+                      <Box className="balance" sx={{ padding: "0.5rem" }}>
+                        <span
+                          className={
+                            row.totalPaid && row.totalPaid > 0 ? "success" : ""
+                          }
+                        >
+                          {currency.format(row.totalPaid || 0)} paid
+                        </span>
+                      </Box>
+                    </Box>
+                    <Box className="month_invoices_item_paid"></Box>
+                  </Box>
+                ))}
+                {sortedPayments[monthYear].map((row) => (
+                  <Box
+                    key={`${row.invoiceNo}_${row.sequenceNo}1`}
+                    className={`month_invoices_item ${
+                      !selectedInvoices[
+                        `${row.invoiceNo}_${row.sequenceNo}_1_input`
+                      ]
+                        ? "disabled"
+                        : ""
+                    }`}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Checkbox
+                        onChange={(e) => checkBoxHandler(e, row)}
+                        inputProps={{
+                          "aria-labelledby": `${row.invoiceNo}_${row.sequenceNo}_checkbox`,
+                          "aria-label": `enable pay ${currency.format(row.pending || 0)} input`,
+                        }}
+                      />
+                      <Typography component={"span"} className="invoice-date">
+                        {moment(row.statementDate).format("DD MMMM")}
+                      </Typography>
+                    </Box>
+                    <Box className="month_invoices_item_input">
+                      <TextField
+                        fullWidth
+                        disabled={
+                          !selectedInvoices[
+                            `${row.invoiceNo}_${row.sequenceNo}_input`
+                          ]
+                        }
+                        id={`${row.invoiceNo}_${row.sequenceNo}_input`}
+                        type="text"
+                        value={currency.format(
+                          selectedInvoices[
+                            `${row.invoiceNo}_${row.sequenceNo}_input`
+                          ] ||
+                            row.pending ||
+                            0,
+                        )}
+                        variant={"standard"}
+                        onChange={(e) => handleAmountChange(e, row)}
+                        inputProps={{
+                          "aria-label": `amount to pay for ${row.invoiceNo}`,
+                        }}
+                      />
+                      <Box className="month_invoices_item_input_pending">
+                        {currency.format(row.pending || 0)}
+                      </Box>
+                      <Box className="balance" sx={{ padding: "0.5rem" }}>
+                        <span
+                          className={
+                            row.totalPaid && row.totalPaid > 0 ? "success" : ""
+                          }
+                        >
+                          {currency.format(row.totalPaid || 0)} paid
+                        </span>
+                      </Box>
+                    </Box>
+                    <Box className="month_invoices_item_paid"></Box>
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          ))}
+        </Box>
+        <Box sx={{ flex: 1, display: { xs: "none", md: "block" } }}>
+          <SummaryBoxComponent
+            variant="light"
+            value={Object.values(selectedInvoices).reduce(
+              (acc, value) => acc + value,
+              0,
+            )}
+            currentBalance={balance?.currentBalance}
+            onClick={payHandler}
           />
         </Box>
       </Box>
-      <SummaryBoxComponent
-        value={Object.values(selectedInvoices).reduce(
-          (acc, value) => acc + value,
-          0,
-        )}
-        currentBalance={balance?.currentBalance}
-        onClick={payHandler}
-      />
 
-      <Box
-        className="personal_box_content"
-        sx={{ display: { xs: "flex", md: "none" } }}
-      >
-        <MobileInvoicesListComponent
-          isLoading={isRatesLoading}
-          selectedInvoices={selectedInvoices}
-          list={payments || []}
-          onClick={checkBoxHandler}
-        />
-      </Box>
       <Box
         className="mobile-button"
         sx={{ display: { xs: "block", md: "none" } }}
@@ -377,6 +456,16 @@ export const RatesInvoicesComponent = ({
         >
           {t("CONTENTS.BUTTON.CONTINUE")}
         </Button>
+
+        <SummaryBoxComponent
+          variant="light"
+          value={Object.values(selectedInvoices).reduce(
+            (acc, value) => acc + value,
+            0,
+          )}
+          currentBalance={balance?.currentBalance}
+          onClick={payHandler}
+        />
       </Box>
       {Object.values(selectedInvoices).length > 0 && (
         <InvoicePaymentPopupСomponent

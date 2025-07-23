@@ -109,13 +109,9 @@ export const LoansStatementComponent = ({
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleChangeRowsPerPage = () => {
     setPage(0);
   };
-
-  const handleLoadMore = () => {};
 
   return (
     <>
@@ -203,7 +199,9 @@ export const LoansStatementComponent = ({
         <MobileStatementsListComponent
           isLoading={isFetching}
           list={statements || []}
-          loadMore={handleLoadMore}
+          handleChangeRowsPerPage={handleChangeRowsPerPage}
+          page={page}
+          handleChangePage={handleChangePage}
         />
       </Box>
     </>

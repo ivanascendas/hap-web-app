@@ -1,6 +1,6 @@
 @import "../../../../assets/styles/variables.scss";
 
-.invoice_popup {
+.invoice_payment_popup {
   border: none !important;
   display: flex;
   flex-direction: column;
@@ -97,6 +97,12 @@
             color: $error;
             text-align: end;
             font-size: 0.75rem;
+            &.negative::before {
+              content: "– ";
+              font-weight: bold;
+              margin-right: 0.2rem;
+              color: $primary600;
+            }
           }
 
           &_label {

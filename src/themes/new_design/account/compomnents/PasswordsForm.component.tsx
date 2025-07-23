@@ -1,9 +1,12 @@
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useChangePasswordMutation } from "@shared/services/Auth.service";
 import { useForm } from "react-hook-form";
 import { ChangePasswordDto } from "@shared/dtos/change-password.dto";
-import { Typography, Box, TextField, Skeleton } from "@mui/material";
+import { Typography, Box, Skeleton } from "@mui/material";
 import { getErrorMessage } from "@shared/utils/getErrorMessage";
+import { TextInput } from "@components/common/components/TextInput.component";
+import { PasswordCheckList } from "@components/common/components/PasswordCheckList.component";
 
 type PasswordsFormProps = {
   isLoading: boolean;
@@ -16,6 +19,7 @@ export const PasswordsFormComponent = ({
   const [changePassword, changePassResult] = useChangePasswordMutation();
 
   const {
+    watch,
     register: registerPasswords,
     formState: { errors: errorsPasswords },
     handleSubmit: handleSubmitPasswords,
@@ -30,6 +34,22 @@ export const PasswordsFormComponent = ({
       oldPassword: "",
     },
   });
+
+  const passwordConfig = {
+    minLength: parseInt(process.env.REACT_APP_PASSWORD_MIN_LENGTH || "8"),
+    hasNumber: process.env.REACT_APP_PASSWORD_USE_NUMBERS === "true" || false,
+    hasSpecialChar:
+      process.env.REACT_APP_PASSWORD_USE_SPECIAL_CHARACTER === "true" || false,
+    hasUpperCase:
+      process.env.REACT_APP_PASSWORD_USE_UPPERCASE === "true" || false,
+    hasLowerCase:
+      process.env.REACT_APP_PASSWORD_USE_LOWERCASE === "true" || false,
+    charRepeating:
+      (process.env.REACT_APP_PASSWORD_MAX_REPEATING &&
+        process.env.REACT_APP_PASSWORD_MAX_REPEATING !== "false" &&
+        parseInt(process.env.REACT_APP_PASSWORD_MAX_REPEATING)) ||
+      undefined,
+  };
 
   const onPasswordSubmit = ({
     oldPassword,
@@ -54,7 +74,7 @@ export const PasswordsFormComponent = ({
           {t("ACCOUNT.CURRENT_PASSWORD")}
         </label>
         {!isLoading ? (
-          <TextField
+          <TextInput
             id="account-current-password"
             placeholder={t("ACCOUNT.CURRENT_PASSWORD")}
             {...registerPasswords("oldPassword", {
@@ -82,7 +102,7 @@ export const PasswordsFormComponent = ({
           {t("ACCOUNT.NEW_PASSWORD")}
         </label>
         {!isLoading ? (
-          <TextField
+          <TextInput
             id="account-new-password"
             {...registerPasswords("newPassword", {
               required: true,
@@ -110,7 +130,7 @@ export const PasswordsFormComponent = ({
           {t("ACCOUNT.CONFIRM_PASSWORD")}
         </label>
         {!isLoading ? (
-          <TextField
+          <TextInput
             id="account-confirm-password"
             placeholder={t("ACCOUNT.CONFIRM_PASSWORD")}
             {...registerPasswords("confirmPassword", {
@@ -128,7 +148,7 @@ export const PasswordsFormComponent = ({
           <Skeleton width={"100%"} height={" 2.625rem"} variant="rounded" />
         )}
       </Box>
-
+      <PasswordCheckList {...passwordConfig} value={watch("newPassword")} />
       <Box className="account_form_row">
         <button
           className="button-primary mt-20"

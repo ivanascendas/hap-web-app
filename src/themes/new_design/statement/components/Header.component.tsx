@@ -2,6 +2,7 @@ import { Box, Button } from "@mui/material";
 import { selectUser } from "@shared/redux/slices/authSlice";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import React from "react";
 import "./Header.component.scss";
 import currency from "@shared/utils/currency";
 import { BalanceRequestDto } from "@shared/dtos/balance-request.dto";
@@ -21,7 +22,7 @@ export const HeaderStatementComponent = ({
   const navigate = useNavigate();
   return (
     <Box sx={{ flexGrow: 1 }} className="statement-header">
-      <Box sx={{ flex: 1 }}>
+      <Box sx={{ flex: 1 }} onClick={() => navigate("/account")}>
         {user && (
           <span>
             Hi, <strong>{user?.customerName}</strong> ✋

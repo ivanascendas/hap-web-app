@@ -1,5 +1,5 @@
+import React from "react";
 import { createBrowserRouter, Navigate, useLocation } from "react-router-dom";
-
 import { Protected } from "@shared/components/Protected";
 import { StatementComponent } from "@components/statement/Statement.component";
 import { useAuth } from "./shared/providers/Auth.provider";

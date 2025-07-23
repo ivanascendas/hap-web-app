@@ -111,9 +111,26 @@
     padding: 0;
 
     &_filter {
+      display: flex;
+      @media screen and (max-width: $mobileSize) {
+        flex-direction: column;
+        .MuiBox-root {
+          width: 100%;
+
+          fieldset {
+            top: 0 !important;
+          }
+        }
+      }
       .MuiFormControl-root {
         .MuiInputBase-root {
+          border: 1px solid $light-gray;
+          background-color: $white;
           height: 2rem !important;
+          fieldset {
+            background-color: $white;
+            z-index: -1;
+          }
         }
 
         div[role="combobox"] {

@@ -19,25 +19,36 @@
 
     &_list {
       .MuiButtonBase-root {
+        background: $white;
         color: #36383d;
         text-transform: none;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        border-radius: 1.25rem;
 
-        &:not(:hover) {
-          background: $secondary100;
+        .MuiBox-root {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          strong {
+            font-size: 0.875rem;
+            font-weight: 900;
+            color: $dark-gray;
+          }
         }
 
         .table-statements-mobile_group_list_item_date {
-          line-height: 0.875rem;
-          background-color: $secondary400 !important;
           border-radius: 50%;
-          width: 1.875rem;
-          height: 1.875rem;
-          display: block;
-          text-align: center;
-          padding: 0.4375rem;
-          font-size: 0.75rem !important;
-          font-weight: 700;
+          display: flex;
+          align-items: center;
+          justify-content: end;
+          text-align: end;
+          font-weight: 500;
           margin: auto;
+          padding: 0;
 
           span {
             font-size: 1.0625rem !important;
@@ -52,19 +63,17 @@
         box-shadow: 0 0 0.5625rem 0px rgba(220, 224, 231, 0.85);
         background: $secondary100;
         border-radius: 0.3125rem;
-        padding: 0.625rem 0px;
+        padding: 0.825rem 1rem !important;
         gap: 0.625rem;
         align-items: center;
 
         &_date {
-          background-color: $secondary400 !important;
           border-radius: 50%;
           width: 1.875rem;
           height: 1.875rem;
           display: block;
           text-align: center;
           padding: 0.4375rem;
-          font-size: 0.75rem !important;
           font-weight: 700;
 
           span {
@@ -93,7 +102,32 @@
           display: flex;
           margin-right: 0px;
         }
+
+        &_footer {
+          display: flex;
+          border-top: 1px solid $light-gray !important;
+          padding: 1rem 0 0.2rem;
+
+          strong {
+            &.negative::before {
+              content: "–";
+              color: $error;
+              font-weight: 700;
+              margin-right: 0.3125rem;
+            }
+            font-size: 0.875rem;
+            font-weight: 900;
+            color: $dark-gray;
+            background-color: rgba($light-gray, 0.6);
+            padding: 0.25rem 0.5rem;
+            border-radius: 1.25rem !important;
+          }
+        }
       }
     }
   }
+}
+
+.MuiTablePaginationActions-root {
+  display: flex;
 }

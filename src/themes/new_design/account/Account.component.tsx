@@ -1,68 +1,73 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Account.component.scss";
 import {
+  Avatar,
   Box,
-  FormHelperText,
+  Button,
+  IconButton,
   Skeleton,
-  TextField,
   Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { selectUser, setUser } from "../../../shared/redux/slices/authSlice";
-import { selectUserLoading } from "../../../shared/redux/slices/loaderSlice";
+import { selectUser, setUser } from "@shared/redux/slices/authSlice";
+import { selectUserLoading } from "@shared/redux/slices/loaderSlice";
 
 import {
   useEmailConfirmationMutation,
   useEmailConfirmationRequestMutation,
+  useLogoutMutation,
   usePhoneConfirmationMutation,
   usePhoneConfirmationRequestMutation,
   useSaveUserDataMutation,
-} from "../../../shared/services/Auth.service";
-import { ExsistingTenantDto } from "../../../shared/dtos/existing-tenant.dto";
+} from "@shared/services/Auth.service";
+import { ExsistingTenantDto } from "@shared/dtos/existing-tenant.dto";
 import { useForm } from "react-hook-form";
-import { getErrorMessage } from "../../../shared/utils/getErrorMessage";
+import { getErrorMessage } from "@shared/utils/getErrorMessage";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import UserIcon from "@mui/icons-material/Person";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { IntlTelInputComponent } from "../../../shared/components/IntlTelInput.component";
 import { Iti } from "intl-tel-input";
-import { NotificationComponent } from "../../../shared/components/Notification.component";
-import { MFAMethod } from "../../../shared/dtos/user.dto";
+import { MFAMethod } from "@shared/dtos/user.dto";
 import { OTPConfirmPopupComponent } from "./compomnents/OTPConfirmPopup.component";
 import { MFAControlComponent } from "./compomnents/MFAControl.component";
 import { PasswordsFormComponent } from "./compomnents/PasswordsForm.component";
 import { IntlTelInputRef } from "intl-tel-input/react";
+import { TextInput } from "@components/common/components/TextInput.component";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { PhoneInput } from "@shared/components/PhoneInput.component";
+import { stringToColor } from "@shared/utils/stringToColor";
+import { log } from "console";
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { default: utils } = require("intl-tel-input/build/js/utils.js");
 
 export const AccountComponent = (): JSX.Element => {
   const { t } = useTranslation();
   const user = useSelector(selectUser);
   const isLoading = useSelector(selectUserLoading);
-  const [updateUser, result] = useSaveUserDataMutation();
+  const [updateUser] = useSaveUserDataMutation();
   const [smsRequest] = usePhoneConfirmationRequestMutation();
   const [emailRequest] = useEmailConfirmationRequestMutation();
   const [smsConfirm, smsConfirmResult] = usePhoneConfirmationMutation();
   const [emailConfirm, emailConfirmResult] = useEmailConfirmationMutation();
   const iniTelReff = useRef<IntlTelInputRef>();
-  const iniTelinst = useRef<Iti>();
   const [tabValue, setTabValue] = useState(0);
   const [showOtpPopup, setShowOtpPopup] = useState(false);
   const isPhoneDirty = useRef<boolean>(false);
   const dispatch = useDispatch();
+  const [logout] = useLogoutMutation();
   const {
     register,
     formState: { errors },
     handleSubmit,
     formState,
     getValues,
-    setError: setFromError,
     setValue,
     watch,
     reset,
-    trigger,
   } = useForm<ExsistingTenantDto>({
     mode: "all",
     defaultValues: {
@@ -84,6 +89,14 @@ export const AccountComponent = (): JSX.Element => {
     PhoneNumberConfirmed,
     DefaultMFA,
   }: ExsistingTenantDto) => {
+    console.log("onSubmit called with:", {
+      EmailId,
+      PhoneNumber,
+      EmailConfirmed,
+      PhoneNumberConfirmed,
+      DefaultMFA,
+    });
+
     const countryData = iniTelReff.current
       ?.getInstance()
       ?.getSelectedCountryData();
@@ -161,14 +174,20 @@ export const AccountComponent = (): JSX.Element => {
     const isPhoneNumberConfirmed =
       values.PhoneNumber.replace("+", "") === user?.phone?.replace("+", "");
     const isEmailConfirmed = values.EmailId === user?.email;
-    // console.log({ isPhoneNumberConfirmed, isEmailConfirmed, compares: [values.PhoneNumber, user?.phone, values.EmailId, user?.email] });
+    console.log({
+      isPhoneNumberConfirmed,
+      isEmailConfirmed,
+      errors,
+      formState,
+      compares: [values.PhoneNumber, user?.phone, values.EmailId, user?.email],
+    });
     setValue("PhoneNumberConfirmed", isPhoneNumberConfirmed);
     setValue("EmailConfirmed", isEmailConfirmed);
   }, [formState]);
 
   useEffect(() => {
     if (smsConfirmResult.isSuccess) {
-      console.log({ smsConfirmResult });
+      //  console.log({ smsConfirmResult });
       dispatch(
         setUser({
           phone: getValues("PhoneNumber").replace("+", ""),
@@ -183,18 +202,45 @@ export const AccountComponent = (): JSX.Element => {
     }
   }, [smsConfirmResult.isSuccess, emailConfirmResult.isSuccess]);
 
-  //  console.log({ values: getValues(), formState, submitDis: !((smsConfirmResult.isSuccess || emailConfirmResult.isSuccess) && formState.submitCount === 0), smsisSuccess: smsConfirmResult.isSuccess, emailisSuccess: emailConfirmResult.isSuccess });
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <Box sx={{ flexGrow: 1 }} className="account">
-        <Typography variant="h1" className="account_header">
-          {t("ACCOUNT.TITLE")}
-        </Typography>
-        <Box sx={{ display: { sm: "block", md: "none" } }}>
+      <Box className="account_header">
+        <Box>
+          <Typography variant="h1" className="account_title">
+            {user?.customerName || t("ACCOUNT.ACCOUNT")}
+          </Typography>
+          <Typography component={"span"} className="account_subtitle">
+            {t("ACCOUNT.CUSTOMER_NUMBER")}: <strong> {user?.customerNo}</strong>
+            <IconButton
+              aria-label="Copy customer number"
+              onClick={() =>
+                navigator.clipboard.writeText(user?.customerNo || "")
+              }
+            >
+              <ContentCopyIcon color={"primary"} />
+            </IconButton>
+          </Typography>
+        </Box>
+        <Button
+          startIcon={<LogoutIcon />}
+          className="btn-secondary"
+          onClick={() => logout()}
+        >
+          {t("CONTENTS.NAV.LOGOUT")}
+        </Button>
+      </Box>
+      <Box
+        sx={{ flexGrow: 1 }}
+        className={
+          "account personal_box " + (tabValue === 1 ? "password-tab" : "")
+        }
+      >
+        <Box sx={{ display: { sm: "block" } }}>
           <Tabs
             value={tabValue}
             onChange={handleChange}
             aria-label="icon label tabs example"
+            variant="fullWidth"
           >
             <Tab
               icon={<UserIcon />}
@@ -208,75 +254,60 @@ export const AccountComponent = (): JSX.Element => {
             />
           </Tabs>
         </Box>
-        <Box className="personal_box account_content">
+        <Box className="account_content">
           <Box
             className={`account_form ${tabValue === 0 ? "active" : ""} ${isLoading && "loading"}`}
             sx={{
-              display: { sm: tabValue === 0 ? "block" : "none", md: "block" },
+              display: tabValue === 0 ? "flex" : "none",
+              gap: "2.5rem",
             }}
           >
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Box sx={{ display: { sm: "none", md: "block" } }}>
-                <Typography variant="h2" className="account_form_header">
-                  {t("ACCOUNT.PERSONAL_DETAILS")}
-                </Typography>
+            <Box className="account_avatar_container">
+              <Box className="account_avatar">
+                <Avatar
+                  alt={user?.customerName}
+                  src={undefined}
+                  sx={{
+                    width: 86,
+                    height: 86,
+                    bgcolor: stringToColor(user?.customerName || ""),
+                    fontSize: 86 * 0.4,
+                  }}
+                ></Avatar>
               </Box>
+              <Box className="account_avatar_controls">
+                <Button disabled={true} className="btn-secondary">
+                  Remove Avatar
+                </Button>
+                <Button disabled={true} className="btn-primary">
+                  {t("BUTTONS.CHANGE")}
+                </Button>
+              </Box>
+            </Box>
+            <form style={{ flex: 1 }} onSubmit={handleSubmit(onSubmit)}>
               <Box className="account_form_row">
                 <label
-                  className=" required"
-                  title={t("ACCOUNT.CUSTOMER_NAME")}
-                  htmlFor="account-name"
-                  aria-label={t("ACCOUNT.CUSTOMER_NAME")}
+                  className="registration__label label-question required"
+                  title={t("MESSAGES.REGISTRATION_PHONE_TOOLTIP")}
+                  htmlFor="phone-input"
+                  aria-label={t("LABELS.ENTER_PHONE")}
                 >
-                  {t("ACCOUNT.CUSTOMER_NAME")}
+                  {t("LABELS.ENTER_PHONE")}
                 </label>
-                {!isLoading ? (
-                  <TextField
-                    id="account-name"
-                    value={user?.customerName}
-                    aria-readonly
-                    disabled
-                    slotProps={{
-                      htmlInput: {
-                        readOnly: true,
-                      },
-                    }}
-                  />
-                ) : (
+
+                {isLoading ? (
                   <Skeleton
                     width={"100%"}
-                    height={" 2.625rem"}
+                    height={"2.625rem"}
                     variant="rounded"
-                  />
-                )}
-              </Box>
-              <Box className="account_form_row">
-                <label
-                  className=" required"
-                  title={t("ACCOUNT.CUSTOMER_NAME")}
-                  htmlFor="account-number"
-                  aria-label={t("ACCOUNT.CUSTOMER_NUMBER")}
-                >
-                  {t("ACCOUNT.CUSTOMER_NUMBER")}
-                </label>
-                {!isLoading ? (
-                  <TextField
-                    id="account-number"
-                    placeholder={t("ACCOUNT.CUSTOMER_NUMBER")}
-                    value={user?.customerNo}
-                    aria-readonly
-                    disabled
-                    slotProps={{
-                      htmlInput: {
-                        readOnly: true,
-                      },
-                    }}
                   />
                 ) : (
-                  <Skeleton
-                    width={"100%"}
-                    height={" 2.625rem"}
-                    variant="rounded"
+                  <PhoneInput
+                    id="phone-input"
+                    fieldName="PhoneNumber"
+                    error={errors.PhoneNumber}
+                    register={register}
+                    setValue={setValue}
                   />
                 )}
               </Box>
@@ -290,7 +321,7 @@ export const AccountComponent = (): JSX.Element => {
                   {t("ACCOUNT.EMAIL")}
                 </label>
                 {!isLoading ? (
-                  <TextField
+                  <TextInput
                     id="account-email"
                     placeholder={t("ACCOUNT.EMAIL")}
                     {...register("EmailId", {
@@ -314,118 +345,11 @@ export const AccountComponent = (): JSX.Element => {
                   />
                 )}
               </Box>
-              <Box className="account_form_row">
-                <label
-                  className="registration__label label-question required"
-                  title={t("MESSAGES.REGISTRATION_PHONE_TOOLTIP")}
-                  htmlFor="phone-input"
-                  aria-label={t("LABELS.ENTER_PHONE")}
-                >
-                  {t("LABELS.ENTER_PHONE")}
-                </label>
 
-                {isLoading ? (
-                  <Skeleton
-                    width={"100%"}
-                    height={"2.625rem"}
-                    variant="rounded"
-                  />
-                ) : (
-                  <TextField
-                    id="phone-input"
-                    error={!!errors.PhoneNumber}
-                    helperText={getErrorMessage(errors.PhoneNumber?.message)}
-                    slotProps={{
-                      htmlInput: {
-                        "aria-invalid": !!errors.PhoneNumber,
-                      },
-                      input: {
-                        inputComponent: IntlTelInputComponent,
-                        inputProps: {
-                          options: {
-                            initialCountry: "ie",
-                            separateDialCode: true,
-                            formatOnDisplay: true,
-                            formatAsYouType: true,
-                          },
-                          getIti: (obj: IntlTelInputRef) => {
-                            console.log("set IntlTelInputRef", {
-                              input: obj.getInput(),
-                              instance: obj.getInstance(),
-                            });
-                            iniTelReff.current = obj;
-                            const instance = obj.getInstance();
-                            if (instance) {
-                              iniTelinst.current = instance;
-                            }
-                          },
-                          onChange: (
-                            e: React.ChangeEvent<HTMLInputElement>,
-                          ) => {
-                            const { value } = e.target;
-                            const countryData = iniTelReff.current
-                              ?.getInstance()
-                              ?.getSelectedCountryData();
-                            const phone = `+${countryData?.dialCode}${value}`;
-                            console.log(
-                              "onChange",
-                              phone,
-                              value,
-                              utils,
-                              countryData,
-                            );
-
-                            setValue("PhoneNumber", phone);
-                          },
-                        },
-                      },
-                    }}
-                    {...register("PhoneNumber", {
-                      required: true,
-                      validate: (value) => {
-                        const countryData = iniTelReff.current
-                          ?.getInstance()
-                          ?.getSelectedCountryData();
-                        const isValid = utils.isValidNumber(
-                          value,
-                          countryData?.iso2,
-                        );
-                        if (isValid) {
-                          return true;
-                        } else {
-                          return t("ERRORS.INVALID_PHONE");
-                        }
-                      },
-                    })}
-                  />
-                )}
-              </Box>
-              <Box
-                sx={{ display: { sm: "block", md: "none" } }}
-                className="account_form_row MFA"
-              >
-                {!isLoading ? (
-                  <MFAControlComponent
-                    defaultValue={watch("DefaultMFA")} // Add this line
-                    onChange={(e) =>
-                      setValue("DefaultMFA", e.target.value, {
-                        shouldDirty: true,
-                        shouldTouch: true,
-                        shouldValidate: true,
-                      })
-                    }
-                  />
-                ) : (
-                  <Skeleton
-                    width={"20.25rem"}
-                    height={"12.5rem"}
-                    variant="rounded"
-                  />
-                )}
-              </Box>
               <Box className="account_form_row">
-                <button
-                  className="button-primary mt-20"
+                <Button
+                  className=" btn-secondary mt-20"
+                  type="submit"
                   disabled={
                     (isPhoneDirty.current === false && !formState.isDirty) ||
                     !formState.isValid ||
@@ -434,20 +358,24 @@ export const AccountComponent = (): JSX.Element => {
                   }
                 >
                   {t("BUTTONS.UPDATE")}
-                </button>
+                </Button>
               </Box>
             </form>
           </Box>
           <Box
             sx={{
-              display: { sm: tabValue === 1 ? "block" : "none", md: "block" },
+              display: tabValue === 1 ? "flex" : "none",
+              flexDirection: { xs: "column", md: "row" },
+              gap: "2.5rem",
             }}
             className={`account_form ${tabValue === 1 ? "active" : ""} `}
           >
-            <PasswordsFormComponent isLoading={isLoading} />
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <Box sx={{ flex: 1 }}>
+              <PasswordsFormComponent isLoading={isLoading} />
+            </Box>
+            <form onSubmit={handleSubmit(onSubmit)} style={{ flex: 1 }}>
               <Box
-                sx={{ display: { sm: "none", md: "block" } }}
+                sx={{ display: { sm: "block", md: "block" } }}
                 className="account_form_row MFA"
               >
                 {!isLoading ? (

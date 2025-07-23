@@ -4,28 +4,18 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
   TablePagination,
-  TableRow,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "../Statement.component.scss";
-import {
-  useLazyGetBalanceQuery,
-  useLazyGetPropertiesQuery,
-  useLazyGetStatementsQuery,
-} from "@shared/services/Statements.service";
+import { useLazyGetStatementsQuery } from "@shared/services/Statements.service";
 import moment from "moment";
 import currency from "@shared/utils/currency";
 import { useAuth } from "@shared/providers/Auth.provider";
 import { ColumnItem, TableComponent } from "@shared/components/Table.component";
 import { StatementDto } from "@shared/dtos/statement.dtos";
-import { BaseQueryFn, QueryActionCreatorResult } from "@reduxjs/toolkit/query";
+import { QueryActionCreatorResult } from "@reduxjs/toolkit/query";
 import { BalanceRequestDto } from "@shared/dtos/balance-request.dto";
 import { BalanceDto } from "@shared/dtos/balance.dto";
 import { MobileStatementsListComponent } from "./MobileStatementsList.component";
@@ -115,14 +105,8 @@ export const RentsStatementComponent = ({
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleChangeRowsPerPage = () => {
     setPage(0);
-  };
-
-  const handleLoadMore = () => {
-    setPage(page + 1);
   };
 
   return (
@@ -214,7 +198,9 @@ export const RentsStatementComponent = ({
         <MobileStatementsListComponent
           isLoading={isFetching}
           list={statements || []}
-          loadMore={handleLoadMore}
+          handleChangeRowsPerPage={handleChangeRowsPerPage}
+          page={page}
+          handleChangePage={handleChangePage}
         />
       </Box>
     </>

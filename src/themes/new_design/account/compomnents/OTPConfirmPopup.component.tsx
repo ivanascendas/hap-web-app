@@ -1,13 +1,9 @@
-import { Box, Button, Modal, Typography, IconButton } from "@mui/material";
+import React, { useEffect } from "react";
+import { Box, Modal, IconButton, Button, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import "./OTPConfirmPopup.component.scss";
 import { MFAMethod } from "@shared/dtos/user.dto";
-import { OtpInputComponent } from "@shared/components/otpInput.component";
-import { VerificationInputComponent } from "@shared/components/VerificationInput.component";
+import { OTPInputsComponent } from "@shared/components/otp-inputs.component";
 export type OTPConfirmPopupProps = {
   open: boolean;
   isChecked: boolean;
@@ -19,52 +15,46 @@ export type OTPConfirmPopupProps = {
 
 export const OTPConfirmPopupComponent = ({
   open,
-  type,
-  isChecked,
   onClose,
   onConfirm,
   onSendOtp,
 }: OTPConfirmPopupProps): JSX.Element => {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [otp, setOtp] = useState<string>("");
-  const [otpError, setOtpError] = useState<string>("");
-  const [isSent, setIsSent] = useState<boolean>(false);
-
-  const sendHandler = () => {
-    if (onSendOtp) {
-      onSendOtp();
-    }
-    setIsSent(true);
-  };
-
   const sendConfirmationHandler = (otp: string) => {
     if (onConfirm) {
       onConfirm(otp);
     }
   };
 
+  useEffect(() => {
+    if (open && onSendOtp) {
+      onSendOtp();
+    }
+  }, [open]);
+
+  // console.log({ open, type, isChecked });
   return (
     <Modal open={open} onClose={onClose}>
       <Box className="personal_box otp-popup">
-        <IconButton
-          onClick={onClose}
-          sx={{
-            position: "absolute",
-            right: 0,
-            top: 0,
-            color: "grey.500",
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
-        <VerificationInputComponent
-          isChecked={isChecked}
-          type={type}
-          onSendOtp={onSendOtp}
-          onConfirm={sendConfirmationHandler}
-        />
+        <Box className="otp-popup__title">
+          <Typography component="span">Enter OTP</Typography>
+          <IconButton
+            onClick={onClose}
+            sx={{
+              position: "absolute",
+              right: 0,
+              top: "0.3rem",
+              color: "grey.500",
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </Box>
+        <OTPInputsComponent length={4} onConfirm={sendConfirmationHandler} />
+        <Box className="otp-popup__actions">
+          <Button className="btn-primary" onClick={onSendOtp}>
+            Update Number
+          </Button>
+        </Box>
       </Box>
     </Modal>
   );

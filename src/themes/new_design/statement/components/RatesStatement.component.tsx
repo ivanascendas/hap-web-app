@@ -44,18 +44,16 @@ export type RatesStatementProps = {
   department: string;
   setStatementQueryParams: (dto: StatementQueryParams) => void;
   getBalance: (dto: BalanceRequestDto) => QueryActionCreatorResult<any>;
-  balance: BalanceDto | undefined;
 };
 
 export const RatesStatementComponent = ({
   department,
   getBalance,
-  balance,
   setStatementQueryParams,
 }: RatesStatementProps): JSX.Element => {
   const [selectedProperty, setSelectedProperty] = useState("0");
   const [open, setOpen] = useState(false);
-  const [selectedPeriod, setSelectedPeriod] = useState("current_year");
+  const [selectedPeriod] = useState("current_year");
   const [selectedInvoice, setSelectedInvoice] =
     useState<InvoiceInputRequest | null>(null);
   const [page, setPage] = useState(0);
@@ -108,8 +106,8 @@ export const RatesStatementComponent = ({
             : moment().subtract(1, "year").startOf("year").format("YYYY-MM-DD"),
         to: moment().format("YYYY-MM-DD"),
       });
-      var propReq = getProperties();
-      var balanceReq = getBalance({
+      const propReq = getProperties();
+      const balanceReq = getBalance({
         incDept: department.toUpperCase(),
         PropertyNumber: selectedProperty,
         from: !includePreviousYear
@@ -117,7 +115,7 @@ export const RatesStatementComponent = ({
           : moment().subtract(1, "year").startOf("year").format("YYYY-MM-DD"),
         to: moment().format("YYYY-MM-DD"),
       });
-      var statementsReq = getStatements({
+      const statementsReq = getStatements({
         $count: true,
         IncDept: department.toUpperCase(),
         $orderby: "SequenceNumber asc",
@@ -144,9 +142,7 @@ export const RatesStatementComponent = ({
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleChangeRowsPerPage = () => {
     setPage(0);
   };
 
@@ -171,7 +167,10 @@ export const RatesStatementComponent = ({
   return (
     <>
       <Box className="rates_statement_container">
-        <Box className="personal_box_filter" sx={{ margin: "0 2.25rem" }}>
+        <Box
+          className="personal_box_filter"
+          sx={{ margin: { xs: "0.5rem", md: "0 2.25rem" } }}
+        >
           <Box>
             <FormControl fullWidth>
               <InputLabel id="property-select-label">
@@ -278,7 +277,9 @@ export const RatesStatementComponent = ({
           isLoading={isFetching}
           onClick={rateClickHandler}
           list={statements || []}
-          loadMore={handleLoadMore}
+          handleChangeRowsPerPage={handleChangeRowsPerPage}
+          page={page}
+          handleChangePage={handleChangePage}
         />
       </Box>
       {selectedInvoice && (

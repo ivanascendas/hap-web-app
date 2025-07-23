@@ -1,7 +1,10 @@
-import { Box, Button, Skeleton, Typography } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
+import { Box, Button, IconButton, Skeleton, Typography } from "@mui/material";
+
+import CloseIcon from "@mui/icons-material/Close";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   DEFAUT_HPP_TEST_URL,
   RealexHpp,
@@ -15,16 +18,17 @@ import {
 import "./payment.component.scss";
 
 import WestIcon from "@mui/icons-material/West";
-import {
-  PaymentResponseDto,
-  PaymentResultResponseDto,
-} from "@shared/dtos/payments.dto";
+import { PaymentResultResponseDto } from "@shared/dtos/payments.dto";
 
 import paymentAccepted from "../../../assets/img/payment_accepted.svg";
 import paymentError from "../../../assets/img/payment_error.svg";
 import currency from "@shared/utils/currency";
 
-export const PayComponent = (): JSX.Element => {
+export type PayComponentProps = {
+  onClose?: () => void;
+};
+
+export const PayComponent = ({ onClose }: PayComponentProps): JSX.Element => {
   const { t } = useTranslation();
   const [showPaymentResponse, setShowPaymentResponse] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -152,6 +156,21 @@ export const PayComponent = (): JSX.Element => {
       className="payment-container"
     >
       <Box className="payment_card" id="wrap_iframe" ref={iframeRef}>
+        {onClose && (
+          <Box
+            sx={{
+              position: "relative",
+              display: "flex",
+              width: "100%",
+              justifyContent: "end",
+              padding: "0 -0.5rem 1rem 0",
+            }}
+          >
+            <IconButton onClick={onClose}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+        )}
         {isLoading && (
           <Skeleton
             variant="rectangular"
@@ -177,22 +196,7 @@ export const PayComponent = (): JSX.Element => {
               }
               alt="payment-response"
             />
-            <Typography variant="h4">
-              {t(
-                showPaymentResponse === "00"
-                  ? "MESSAGES.PAYMENT_ACCEPTED"
-                  : "MESSAGES.SOMETHING_ERROR",
-              )}
-            </Typography>
-            <br />
-            <Typography variant="body2">
-              {t(
-                showPaymentResponse === "00"
-                  ? "MESSAGES.PAYMENT_ACCEPTED_TITLE"
-                  : "MESSAGES.PAYMENT_DECLINED_TITLE",
-              )}
-            </Typography>
-            <br />
+
             <Typography variant="h3">
               {" "}
               {currency.format(
@@ -200,17 +204,41 @@ export const PayComponent = (): JSX.Element => {
               )}{" "}
               ({payments.length})
             </Typography>
+            <Box className="payment_response">
+              <Typography variant="h4">
+                {t(
+                  showPaymentResponse === "00"
+                    ? "MESSAGES.PAYMENT_ACCEPTED"
+                    : "MESSAGES.SOMETHING_ERROR",
+                )}
+              </Typography>
+              <br />
+              <Typography variant="body2">
+                {t(
+                  showPaymentResponse === "00"
+                    ? "MESSAGES.PAYMENT_ACCEPTED_TITLE"
+                    : "MESSAGES.PAYMENT_DECLINED_TITLE",
+                )}
+              </Typography>
+            </Box>
+            <Box
+              className="payment_button"
+              sx={{ maxHeight: "3rem", margin: "0 !important" }}
+            >
+              <Button
+                fullWidth
+                sx={{ margin: "0 3rem" }}
+                className="btn-secondary"
+                startIcon={<WestIcon />}
+                onClick={() => navigate("/statements/rates")}
+              >
+                {t("PAYMENT.BACK_TO_STAT")}
+              </Button>
+            </Box>
           </Box>
         )}
       </Box>
-      <Box className="payment_button">
-        <Button
-          startIcon={<WestIcon />}
-          onClick={() => navigate("/statements/rates")}
-        >
-          {t("PAYMENT.BACK_TO_STAT")}
-        </Button>
-      </Box>
+      <Box className="payment_button"></Box>
     </Box>
   );
 };

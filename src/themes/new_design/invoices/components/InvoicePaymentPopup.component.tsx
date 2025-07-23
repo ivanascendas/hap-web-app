@@ -43,18 +43,18 @@ export const InvoicePaymentPopupСomponent = ({
       aria-labelledby="invoiuce modal"
       aria-describedby="invoiuce modal description"
     >
-      <Box className="popup invoice_popup">
+      <Box className="popup invoice_payment_popup">
         {
           <>
-            <Box className="invoice_popup_header">
-              <span className="invoice_popup_header_title">
+            <Box className="invoice_payment_popup_header">
+              <span className="invoice_payment_popup_header_title">
                 {t("PAYMENT.ENTER_AMOUNT")}
               </span>
               <Tooltip title={t("BUTTONS.CLOSE")}>
                 <CloseIcon onClick={onClose} />
               </Tooltip>
             </Box>
-            <Box className="invoice_popup_content">
+            <Box className="invoice_payment_popup_content">
               {payments
                 .filter(
                   (row) =>
@@ -63,29 +63,29 @@ export const InvoicePaymentPopupСomponent = ({
                     ],
                 )
                 .map((p, i) => (
-                  <Box className="invoice_popup_content_block" key={i}>
-                    <Box className="invoice_popup_content_block_content">
-                      <Box className="invoice_popup_content_block_title">
+                  <Box className="invoice_payment_popup_content_block" key={i}>
+                    <Box className="invoice_payment_popup_content_block_content">
+                      <Box className="invoice_payment_popup_content_block_title">
                         {p.invoiceNo}
                       </Box>
-                      <Box className="invoice_popup_content_block_content_amount">
+                      <Box className="invoice_payment_popup_content_block_content_amount">
                         <Typography
                           variant="body2"
                           component="strong"
-                          className="invoice_popup_content_block_content_amount_title"
+                          className="invoice_payment_popup_content_block_content_amount_title"
                         >
                           {t("PAYMENT.LABEL_BALANCE")}
                         </Typography>
-                        <span className="invoice_popup_content_block_content_amount_value">
+                        <span className="invoice_payment_popup_content_block_content_amount_value">
                           {currency.format(p.pending || 0)}
                         </span>
                         <div style={{ position: "relative" }}>
-                          <label className="invoice_popup_content_block_content_amount_label">
+                          <label className="invoice_payment_popup_content_block_content_amount_label">
                             {t("PAYMENT.ENTER_AMOUNT_HERE")}
                           </label>
                           <TextField
                             variant="outlined"
-                            className="invoice_popup_content_block_content_amount_input"
+                            className="invoice_payment_popup_content_block_content_amount_input"
                             onChange={(e) => handleAmountChange(e, p)}
                             title={t("PAYMENT.ENTER_AMOUNT_HERE")}
                             value={currency.format(
@@ -103,10 +103,10 @@ export const InvoicePaymentPopupСomponent = ({
                 ))}
             </Box>
             <Box
-              className="invoice_popup_content_footer"
+              className="invoice_payment_popup_content_footer"
               sx={{ flexDirection: "column" }}
             >
-              <Box className="invoice_popup_content_footer_total">
+              <Box className="invoice_payment_popup_content_footer_total">
                 <span> {t("PAYMENT.PAYMENT_TOTAL")}</span>
                 <span>
                   {" "}

@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import "./OTPConfirmPopup.component.scss";
 import { MFAMethod } from "../../../shared/dtos/user.dto";
-import { OtpInputComponent } from "../../../shared/components/otpInput.component";
+import { OtpInputComponent } from "@shared/components/otpInput.component";
 import { VerificationInputComponent } from "../../../shared/components/VerificationInput.component";
 export type OTPConfirmPopupProps = {
   open: boolean;

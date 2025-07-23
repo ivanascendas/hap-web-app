@@ -150,101 +150,11 @@
           }
         }
       }
-
-      .balance {
-        display: flex;
-        flex-direction: column;
-        color: $black;
-        font-size: 1rem;
-        font-weight: 700;
-
-        span {
-          &.success::before {
-            content: "✔";
-            color: $success;
-            font-weight: 900;
-            margin-right: 0.2125rem;
-          }
-
-          font-weight: normal;
-          color: $mid-gray;
-          font-size: 0.625rem;
-        }
-      }
     }
   }
 
   button {
     text-transform: none;
-  }
-}
-
-.summary-box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  bottom: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 30rem;
-  background-color: $black;
-  padding: 0.625rem 1.25rem;
-  border-radius: 1.2rem;
-  color: $light-gray;
-  gap: 0.825rem;
-
-  .summary-box-content {
-    display: flex;
-    flex-direction: column;
-
-    .balance-holder {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-
-      .header-balance-label {
-        font-size: 0.8rem;
-
-        &.balance {
-          &::before {
-            content: " ";
-          }
-
-          &.negative::before {
-            content: "–";
-            color: $error;
-            font-weight: 700;
-            margin-right: 0.3125rem;
-          }
-
-          color: $white !important;
-          text-align: end;
-          display: block;
-          padding: 0.3rem 0;
-        }
-      }
-    }
-
-    .header-balance-text {
-      color: $white !important;
-      font-weight: bold;
-      font-size: 1.1875rem;
-      text-align: start;
-      display: block;
-      opacity: 1;
-      border-bottom: 2px solid rgba($light-gray, 0.5);
-    }
-  }
-
-  .btn-primary {
-    width: auto;
-    height: 2.5rem;
-
-    &:disabled {
-      background-color: $soft-gray;
-    }
   }
 }
 
@@ -262,5 +172,114 @@
     width: 100%;
     padding: 0.9375rem;
     box-shadow: 0 0 0.5625rem 0px rgba(220, 224, 231, 0.85);
+  }
+}
+
+.month_invoices {
+  &_container {
+    display: flex;
+    height: 100%;
+    padding: 0 1.875rem;
+    overflow-y: auto;
+
+    @media screen and (max-width: $mobileSize) {
+      padding: 0 0.925rem 0 0.625rem;
+    }
+    .personal_box {
+      border-radius: 1.5rem !important;
+      margin: 0 0 0.625rem 0.5rem;
+    }
+    .summary-box-wrapper {
+      width: 20rem;
+      position: relative;
+    }
+  }
+
+  &_content {
+    min-width: 20rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 1.25rem 0;
+    gap: 1.25rem;
+    flex: 1;
+    color: $dark-gray;
+  }
+
+  &_title {
+    font-weight: 900 !important;
+  }
+
+  &_item {
+    padding: 0.2rem 0.875rem;
+    background-color: $soft-gray;
+    min-width: 15rem;
+    &.disabled {
+      background-color: transparent;
+    }
+    border-radius: 1.5rem;
+    border: 1px solid rgba($light-gray, 0.5);
+    position: relative;
+    flex: 0.5;
+
+    &_content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      margin-top: 1.25rem;
+      @media screen and (max-width: $mobileSize) {
+        flex-direction: column;
+      }
+    }
+
+    &_input {
+      width: 100%;
+      margin-right: 0.625rem;
+      position: relative;
+      &_pending {
+        color: $dark-gray;
+        background-color: rgba($mid-gray, 0.2);
+        border-radius: 0.625rem;
+        padding: 0.25rem 0.5rem;
+        width: fit-content;
+        position: absolute;
+        right: 0;
+        top: 0.5rem;
+        font-size: 0.8rem;
+      }
+      .MuiInputBase-input {
+        &::before {
+          content: "€";
+          border-bottom-style: solid !important;
+        }
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+      }
+      .Mui-disabled {
+        &::before {
+          border-bottom-style: solid !important;
+        }
+      }
+    }
+  }
+}
+.balance {
+  display: flex;
+  flex-direction: column;
+  color: $black;
+  font-size: 1rem;
+  font-weight: 700;
+
+  span {
+    &.success::before {
+      content: "✔";
+      color: $success;
+      font-weight: 900;
+      margin-right: 0.2125rem;
+    }
+
+    font-weight: normal;
+    color: $mid-gray;
+    font-size: 0.625rem;
   }
 }

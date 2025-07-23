@@ -18,7 +18,7 @@
 
   .login-page {
     h1 {
-      padding: 0.3125rem 0rem 0rem 1.8rem !important;
+      //padding: 0.3125rem 0rem 0rem 1.8rem !important;
     }
   }
 
@@ -95,7 +95,7 @@
       overflow-y: auto;
 
       @media screen and (max-width: $mobileSize) {
-        padding: 0.625rem 1.875rem;
+        padding: 0.625rem 0rem;
       }
     }
 
@@ -157,6 +157,15 @@
       margin-bottom: 0.625rem;
       margin-left: 1.875rem;
       margin-right: 1.875rem;
+
+      @media screen and (max-width: $mobileSize) {
+        margin: 0.75rem 0;
+        &.footer {
+          display: flex;
+          justify-content: center;
+          gap: 0.3rem;
+        }
+      }
     }
 
     &__input-container {

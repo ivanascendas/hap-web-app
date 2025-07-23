@@ -108,16 +108,7 @@ export const HeaderComponent = ({
                 <BackIcon />
               </IconButton>
             ) : (
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleOpenNavMenu}
-                color="inherit"
-              >
-                <MenuIcon />
-              </IconButton>
+              <img src={logoTransparent} className="logo-mobile" alt="logo" />
             )}
             <Menu
               id="menu-appbar"
@@ -176,11 +167,21 @@ export const HeaderComponent = ({
           ) : (
             <Box
               sx={{
-                flexGrow: 1,
+                flex: "none",
                 display: { md: "flex", lg: "none", xl: "none" },
+                justifyContent: "end",
               }}
             >
-              <img src={logoTransparent} className="logo-mobile" alt="logo" />
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleOpenNavMenu}
+                color="inherit"
+              >
+                <MenuIcon />
+              </IconButton>
             </Box>
           )}
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>

@@ -1,11 +1,11 @@
 import { RouterProvider } from "react-router-dom";
 import { router } from "./AppRoutes";
+import React, { useState } from "react";
 import "@shared/utils/i18n";
 import { IdleTimerProvider } from "react-idle-timer";
 import { useAuth } from "@shared/providers/Auth.provider";
 import { ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-import { useState } from "react";
 import { IdlePopupModal } from "@shared/components/IdlePopup.modal";
 function App() {
   const [shoeIDLE, setShowIDLE] = useState(false);

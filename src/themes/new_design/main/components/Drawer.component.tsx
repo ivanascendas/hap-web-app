@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Avatar,
   Box,
@@ -8,6 +9,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Modal,
   Toolbar,
   Typography,
 } from "@mui/material";
@@ -21,7 +23,6 @@ import LocalAtmOutlinedIcon from "@mui/icons-material/LocalAtmOutlined";
 import CreditScoreIcon from "@mui/icons-material/CreditScore";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import "./Drawer.component.scss";
-import styles from "../../../../assets/styles/variables.scss";
 import logo from "../../../../assets/img/logo_new_2.png";
 import { useSelector } from "react-redux";
 import { selectBalance, selectUser } from "@shared/redux/slices/authSlice";
@@ -37,17 +38,21 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import currency from "@shared/utils/currency";
 import { useLazyGetBalanceQuery } from "@shared/services/Statements.service";
 import moment from "moment";
+import { stringToColor } from "@shared/utils/stringToColor";
+import { ContactsComponent } from "@components/contacts/Contacts.component";
+import { set } from "react-hook-form";
 
 export type DrawerProps = {
   anchor?: "left" | "top" | "right" | "bottom";
   open?: boolean;
   onClose?: () => void;
+  openContactPopup?: () => void;
 };
 
 export type NavItem = { icon: JSX.Element; url: string };
 
 export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(
-  ({ anchor, open, onClose }: DrawerProps, ref) => {
+  ({ anchor, open, onClose, openContactPopup }: DrawerProps, ref) => {
     const user = useSelector(selectUser);
 
     const balance = useSelector(selectBalance);
@@ -75,19 +80,7 @@ export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(
       },
     };
     // Generate a consistent color based on the name
-    const stringToColor = (str: string) => {
-      if (!str) return "#757575";
-      let hash = 0;
-      for (let i = 0; i < str.length; i++) {
-        hash = str.charCodeAt(i) + ((hash << 5) - hash);
-      }
-      let color = "#";
-      for (let i = 0; i < 3; i++) {
-        const value = (hash >> (i * 8)) & 0xff;
-        color += `00${value.toString(16)}`.slice(-2);
-      }
-      return color;
-    };
+
     const handleClick = (url: string) => {
       navigate(url);
       onClose && onClose();
@@ -102,7 +95,7 @@ export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(
         departments.length === 0 &&
         !location.pathname.startsWith("/admin")
       ) {
-        console.log("Fetching departments and balance");
+        //  console.log('Fetching departments and balance');
         getDepartments();
         getBalance({
           incDept: "RATES",
@@ -206,7 +199,10 @@ export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(
 
               <ListItem>
                 <Box className="profile-block">
-                  <Box className="user-info">
+                  <Box
+                    className="user-info"
+                    onClick={() => handleClick("/account")}
+                  >
                     <Avatar
                       alt={user?.customerName}
                       src={undefined}
@@ -254,7 +250,13 @@ export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(
             <List sx={{ marginTop: "auto" }}>
               <ListItem disablePadding>
                 <ListItemButton
-                  onClick={() => handleClick(`/contacts`)}
+                  onClick={() => {
+                    if (openContactPopup) {
+                      openContactPopup();
+                    } else {
+                      navigate("/contacts");
+                    }
+                  }}
                   selected={location.pathname.includes(`/contacts`)}
                 >
                   <ListItemIcon>

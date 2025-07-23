@@ -1,0 +1,20 @@
+@import "../../assets/styles/variables.scss";
+.otp-inputs {
+  &__container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    max-width: 14rem;
+    padding: 1rem;
+    margin: 0 auto;
+  }
+  &__input {
+    height: 3.5rem !important;
+    text-align: center;
+    font-size: 2rem;
+    border: 1px solid rgba($light-gray, 0.8);
+    border-radius: 0.4rem;
+    background-color: $soft-gray;
+  }
+}

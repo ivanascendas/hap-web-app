@@ -142,7 +142,6 @@ export const ExistingTenantPopupComponent = ({
 
   useEffect(() => {
     if (!isLoading && user?.defaultMFA) {
-      console.log({ user });
       const data: ExsistingTenantDto = {
         EmailConfirmed: user?.emailConfirmed || false,
         PhoneNumberConfirmed: user?.phoneNumberConfirmed || false,
@@ -156,7 +155,7 @@ export const ExistingTenantPopupComponent = ({
 
       reset(data);
       iniTelReff.current?.getInstance()?.setNumber(data.PhoneNumber);
-      console.log("reset", { data });
+
       if (isPhoneDirty.current) {
         isPhoneDirty.current = !(
           formState.submitCount === 0 &&
@@ -171,11 +170,7 @@ export const ExistingTenantPopupComponent = ({
     const isPhoneNumberConfirmed =
       values.PhoneNumber.replace("+", "") === user?.phone?.replace("+", "");
     const isEmailConfirmed = values.EmailId === user?.email;
-    console.log({
-      isPhoneNumberConfirmed,
-      isEmailConfirmed,
-      compares: [values.PhoneNumber, user?.phone, values.EmailId, user?.email],
-    });
+
     setValue("PhoneNumberConfirmed", isPhoneNumberConfirmed);
     setValue("EmailConfirmed", isEmailConfirmed);
   }, [formState, user]);
