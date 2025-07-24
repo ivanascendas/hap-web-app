@@ -312,25 +312,15 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
               />
 
               <Box className="user-details-modal__buttons">
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  onClick={handleUpdate}
-                  className="header_links_pay"
-                >
+                <button onClick={handleUpdate} className="btn-primary">
                   {t("BUTTONS.UPDATE")}
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  onClick={handleResetPassword}
-                  className="header_links_pay"
-                >
+                </button>
+                <button onClick={handleResetPassword} className="btn-primary">
                   {t("FORGOT_PASSWORD.TITLE")}
-                </Button>
-                <Button variant="outlined" onClick={onClose}>
+                </button>
+                <button className="btn-secondary" onClick={onClose}>
                   {t("BUTTONS.CLOSE")}
-                </Button>
+                </button>
               </Box>
             </div>
           </div>

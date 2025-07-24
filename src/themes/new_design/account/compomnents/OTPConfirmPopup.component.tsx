@@ -51,9 +51,9 @@ export const OTPConfirmPopupComponent = ({
         </Box>
         <OTPInputsComponent length={4} onConfirm={sendConfirmationHandler} />
         <Box className="otp-popup__actions">
-          <Button className="btn-primary" onClick={onSendOtp}>
+          <button className="btn-primary" onClick={onSendOtp}>
             Update Number
-          </Button>
+          </button>
         </Box>
       </Box>
     </Modal>

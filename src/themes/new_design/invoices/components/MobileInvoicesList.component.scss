@@ -43,17 +43,17 @@
 
       &_item {
         display: flex;
-        width: 100% !important;
+        width: 98% !important;
         box-shadow: 0 0 0.5625rem 0px rgba(220, 224, 231, 0.85);
         background: $secondary100;
-        border-radius: 0.3125rem;
+        border-radius: 0.9125rem;
         padding: 0.625rem 0px;
         align-items: center;
-        gap: 0.625rem;
+        margin-right: 0.9rem;
         border-left: 0.25rem solid $secondary100;
 
         &.selected {
-          border-left: 0.25rem solid $primary500;
+          border-left: 0.25rem solid rgba($primary700, $alpha: 0.7);
         }
 
         &_date {

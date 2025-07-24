@@ -15,6 +15,7 @@ import StorageService from "@shared/services/Storage.service";
 import { IntlTelInputRef } from "intl-tel-input/react";
 import { TextInput } from "@components/common/components/TextInput.component";
 import { PhoneInput } from "@shared/components/PhoneInput.component";
+import { PhoneData } from "@shared/hooks/usePhoneInput";
 export const RegUserDataFormComponent = (): JSX.Element => {
   const { t } = useTranslation();
   const location = useLocation();
@@ -29,7 +30,20 @@ export const RegUserDataFormComponent = (): JSX.Element => {
     setValue,
     formState,
   } = useForm<UserDataDto>({ mode: "all", defaultValues: { accountNumber } });
+  const phoneData = useRef<PhoneData | null>(null);
+  const getPhoneDataCallback = useRef<(callback: () => PhoneData) => void>(
+    (callback) => {
+      phoneData.current = callback();
 
+      if (phoneData.current?.phoneNumber) {
+        console.log(
+          "getPhoneDataCallback called, phoneData:",
+          phoneData.current,
+        );
+        setValue("phone", phoneData.current.phoneNumber);
+      }
+    },
+  );
   const onSubmit = ({ accountNumber, email, phone }: UserDataDto) => {
     if (StorageService.getBoolean("cookieBanner")) {
       const countryData = iniTelReff.current
@@ -131,6 +145,7 @@ export const RegUserDataFormComponent = (): JSX.Element => {
             error={errors.phone}
             register={register}
             setValue={setValue}
+            getPhoneDataCallback={getPhoneDataCallback.current}
           />
         </div>
         <div className="registration__input-container">

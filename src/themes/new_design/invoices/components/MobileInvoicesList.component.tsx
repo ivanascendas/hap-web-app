@@ -27,7 +27,34 @@ export const MobileInvoicesListComponent = ({
   const { t } = useTranslation();
   useEffect(() => {
     const statementsByYearMounth: { [yearMounth: string]: InvoiceDto[] } = {};
-    list.forEach((statement: InvoiceDto) => {
+    const invoices = [
+      list.reduce<InvoiceDto>(
+        (acc, payment) => {
+          acc.statementDate = payment.statementDate || acc.statementDate;
+          acc.invoiceNo = payment.invoiceNo || acc.invoiceNo;
+          acc.propertyDescription =
+            payment.propertyDescription || acc.propertyDescription;
+          acc.total = (acc.total || 0) + (payment.total || 0);
+          acc.totalPaid = (acc.totalPaid || 0) + (payment.totalPaid || 0);
+          acc.pending = (acc.pending || 0) + (payment.pending || 0);
+          acc.voucherNo = payment.voucherNo || acc.voucherNo;
+          acc.sequenceNo = payment.sequenceNo || acc.sequenceNo;
+          return acc;
+        },
+        {
+          invoiceNo: "",
+          propertyDescription: "",
+          total: 0,
+          totalPaid: 0,
+          pending: 0,
+          voucherNo: 0,
+          sequenceNo: 0,
+          issuedOn: null,
+          dueDate: null,
+        },
+      ),
+    ];
+    invoices.forEach((statement: InvoiceDto) => {
       const yearMounth = moment(statement.statementDate).format("MMM YYYY");
       if (!statementsByYearMounth[yearMounth]) {
         statementsByYearMounth[yearMounth] = [];

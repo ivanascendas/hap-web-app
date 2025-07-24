@@ -23,8 +23,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10%;
+    gap: 2rem;
     background-color: #3c515f;
+    border-radius: 0 0 1.5rem 1.5rem;
     padding: 1rem;
 
     .MuiFormControl-root {
@@ -42,6 +43,7 @@
       min-width: 200px;
       height: 40px;
       border-color: $primary500;
+      border-radius: 1.5rem;
     }
   }
 }

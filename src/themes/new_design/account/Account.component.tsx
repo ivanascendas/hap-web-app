@@ -40,6 +40,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { PhoneInput } from "@shared/components/PhoneInput.component";
 import { stringToColor } from "@shared/utils/stringToColor";
 import { log } from "console";
+import { PhoneData } from "@shared/hooks/usePhoneInput";
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { default: utils } = require("intl-tel-input/build/js/utils.js");
@@ -57,6 +58,7 @@ export const AccountComponent = (): JSX.Element => {
   const [tabValue, setTabValue] = useState(0);
   const [showOtpPopup, setShowOtpPopup] = useState(false);
   const isPhoneDirty = useRef<boolean>(false);
+  const phoneData = useRef<PhoneData | null>(null);
   const dispatch = useDispatch();
   const [logout] = useLogoutMutation();
   const {
@@ -95,6 +97,7 @@ export const AccountComponent = (): JSX.Element => {
       EmailConfirmed,
       PhoneNumberConfirmed,
       DefaultMFA,
+      phoneData,
     });
 
     const countryData = iniTelReff.current
@@ -202,6 +205,23 @@ export const AccountComponent = (): JSX.Element => {
     }
   }, [smsConfirmResult.isSuccess, emailConfirmResult.isSuccess]);
 
+  const getPhoneDataCallback = useRef<(callback: () => PhoneData) => void>(
+    (callback) => {
+      phoneData.current = callback();
+
+      if (phoneData.current?.phoneNumber) {
+        console.log(
+          "getPhoneDataCallback called, phoneData:",
+          phoneData.current,
+        );
+        setValue("PhoneNumber", phoneData.current.phoneNumber);
+        setValue("PhoneCountryCode", phoneData.current.countryCode);
+        setValue("PhoneExcludingCountryCode", phoneData.current.localNumber);
+        isPhoneDirty.current = true;
+      }
+    },
+  );
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Box className="account_header">
@@ -308,6 +328,7 @@ export const AccountComponent = (): JSX.Element => {
                     error={errors.PhoneNumber}
                     register={register}
                     setValue={setValue}
+                    getPhoneDataCallback={getPhoneDataCallback.current}
                   />
                 )}
               </Box>

@@ -11,7 +11,7 @@ import {
 import React from "react";
 import { InvoiceQueryParams } from "@shared/dtos/invoice.dtos";
 import { MonthlyInvoiceComponent } from "./components/MonthlyInvoice.component";
-import { RatesStatementComponent } from "@components/statement/components/RatesStatement.component";
+import { RatesInvoicesComponent } from "./components/RatesInvoices.component";
 
 export const InvoicesComponent = (): JSX.Element => {
   const { department } = useParams();
@@ -20,7 +20,7 @@ export const InvoicesComponent = (): JSX.Element => {
   const [dto, setDto] = React.useState<InvoiceQueryParams | null>(null);
   const [downloadPdf] = useLazyDownloadRatesPdfQuery();
   const [getBalance, { data: balance }] = useLazyGetBalanceQuery();
-  const [showMonthly] = React.useState<boolean>(true);
+  const [showMonthly] = React.useState<boolean>(false);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Box sx={{ flexGrow: 1 }} className="invoices-container">
@@ -33,6 +33,7 @@ export const InvoicesComponent = (): JSX.Element => {
             startIcon={<WestIcon />}
             sx={{
               marginLeft: "2.56rem",
+              display: { xs: "none", lg: "flex" },
             }}
           >
             {t("BUTTONS.BACK_TO_STATEMENTS")}
@@ -59,12 +60,11 @@ export const InvoicesComponent = (): JSX.Element => {
                 balance={balance}
               />
             ) : (
-              <RatesStatementComponent
-                setStatementQueryParams={(dto) =>
-                  setDto({ ...dto, incDept: department || "rates" })
-                }
+              <RatesInvoicesComponent
+                setInvoiceQueryParams={setDto}
                 department={department || "rates"}
                 getBalance={getBalance}
+                balance={balance}
               />
             )}
             {/*department === 'rents' && <RentsInvoiceComponent department={department} getBalance={getBalance} balance={balance} />*/}

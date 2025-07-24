@@ -1,9 +1,9 @@
-//colors
-$primary900: #130603;
+$primary900: #34001a;
 //$primary700: #9e310f;
-$primary600: rgb(234, 48, 31);
-$primary500: #ef642d;
-$primary400: rgb(246, 162, 96);
+$primary500: #7a003c;
+$primary600: rgba($primary500, 0.8);
+
+$primary400: rgba($primary500, 0.6);
 $primaryBlue: #005d8a;
 $secondaryGray: #595959;
 $secondaryGray600: #4c4c4c;
@@ -63,6 +63,8 @@ $button-color-hover: #8b0045; // hover or active state (approx)
 $button-color-disabled: #d8d8d8; // disabled button (light gray)
 $primary700: $button-color-main;
 $secondary: $soft-gray; // Base box shadow mixin
+
+$border-radius: 1.5rem;
 
 @mixin themed-box-shadow($color) {
   box-shadow: 0 2px 4px #{rgba($color, 0.2)};

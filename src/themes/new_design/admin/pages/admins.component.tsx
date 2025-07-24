@@ -79,14 +79,15 @@ export const AdminsComponent = () => {
             >
               {t("ADMIN.MANAGEMENT.TITLE")}
             </Typography>
-            <Button
-              variant="outlined"
-              color="secondary"
-              className="header_links_pay"
-              onClick={() => handleOpenModal()}
-            >
-              {t("POPUPS.CREATE_ADMIN.TITLE")}
-            </Button>
+            <Box sx={{ maxWidth: "30rem", flex: "none" }}>
+              <button
+                color="secondary"
+                className="button btn-primary"
+                onClick={() => handleOpenModal()}
+              >
+                {t("POPUPS.CREATE_ADMIN.TITLE")}
+              </button>
+            </Box>
           </Box>
           <TableComponent
             aria-label="rates table"

@@ -334,7 +334,35 @@ export const RatesInvoicesComponent = ({
             aria-label="rates table"
             isLoading={isRatesLoading}
             columns={columns}
-            rows={payments || []}
+            rows={[
+              payments.reduce<InvoiceDto>(
+                (acc, payment) => {
+                  acc.statementDate =
+                    payment.statementDate || acc.statementDate;
+                  acc.invoiceNo = payment.invoiceNo || acc.invoiceNo;
+                  acc.propertyDescription =
+                    payment.propertyDescription || acc.propertyDescription;
+                  acc.total = (acc.total || 0) + (payment.total || 0);
+                  acc.totalPaid =
+                    (acc.totalPaid || 0) + (payment.totalPaid || 0);
+                  acc.pending = (acc.pending || 0) + (payment.pending || 0);
+                  acc.voucherNo = payment.voucherNo || acc.voucherNo;
+                  acc.sequenceNo = payment.sequenceNo || acc.sequenceNo;
+                  return acc;
+                },
+                {
+                  invoiceNo: "",
+                  propertyDescription: "",
+                  total: 0,
+                  totalPaid: 0,
+                  pending: 0,
+                  voucherNo: 0,
+                  sequenceNo: 0,
+                  issuedOn: null,
+                  dueDate: null,
+                },
+              ),
+            ]}
             selected={(row) =>
               Object.keys(selectedInvoices).some(
                 (s) => s === `${row.invoiceNo}_${row.sequenceNo}_input`,
@@ -364,20 +392,7 @@ export const RatesInvoicesComponent = ({
           onClick={checkBoxHandler}
         />
       </Box>
-      <Box
-        className="mobile-button"
-        sx={{ display: { xs: "block", md: "none" } }}
-      >
-        <Button
-          endIcon={<KeyboardArrowRightIcon />}
-          onClick={() => setOpen(true)}
-          className="btn btn-primary table-statements-mobile_button"
-          disabled={Object.values(selectedInvoices).length === 0}
-          variant="contained"
-        >
-          {t("CONTENTS.BUTTON.CONTINUE")}
-        </Button>
-      </Box>
+
       {Object.values(selectedInvoices).length > 0 && (
         <InvoicePaymentPopupСomponent
           handleAmountChange={handleAmountChange}

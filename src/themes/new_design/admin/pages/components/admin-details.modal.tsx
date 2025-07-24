@@ -181,7 +181,15 @@ export const AdminDetailsModal: React.FC<AdminDetailsModalProps> = ({
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogContent>
-        <Box sx={{ display: "flex", flexDirection: "row", gap: 2, mt: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            gap: 2,
+            mt: 2,
+            borderRadius: "1.5rem",
+          }}
+        >
           <Box display="flex" flexDirection="column" gap={2}>
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
               {t(

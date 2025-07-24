@@ -2,17 +2,27 @@ import { useCallback, useRef, useMemo, useState } from "react";
 import { UseFormSetValue, Path } from "react-hook-form";
 import { IntlTelInputRef } from "intl-tel-input/react";
 import { useTranslation } from "react-i18next";
+import { get } from "http";
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { default: utils } = require("intl-tel-input/build/js/utils.js");
-
+export type PhoneData = {
+  phoneNumber: string;
+  countryCode: string;
+  localNumber: string;
+};
 export const usePhoneInput = <T extends Record<string, any>>(
   setValue: UseFormSetValue<T>,
   fieldName: Path<T> = "Phone" as Path<T>,
+  getPhoneDataCallback?: (callback: () => PhoneData) => void,
 ) => {
   const { t } = useTranslation();
   const intlTelRef = useRef<IntlTelInputRef>();
-  const [value, setInputValue] = useState<string>("");
+  const phoneData = useRef<PhoneData>({
+    phoneNumber: "",
+    countryCode: "",
+    localNumber: "",
+  });
 
   const phoneState = useMemo(
     () => ({
@@ -32,6 +42,12 @@ export const usePhoneInput = <T extends Record<string, any>>(
     if (dialCode && cleaned.startsWith(dialCode)) {
       cleaned = cleaned.substring(dialCode.length);
     }
+
+    phoneData.current = {
+      phoneNumber: `+${dialCode}${cleaned}`,
+      countryCode: dialCode || "",
+      localNumber: cleaned,
+    };
 
     return cleaned;
   }, []);
@@ -57,12 +73,28 @@ export const usePhoneInput = <T extends Record<string, any>>(
         if (fullNumber && utils.isValidNumber(fullNumber, countryData?.iso2)) {
           phoneState.lastValidNumber = fullNumber;
           phoneState.lastCountryCode = dialCode || "";
-          //  console.log('handlePhoneChange: Valid full number:', fullNumber);
+          console.log("handlePhoneChange: Valid full number:", fullNumber);
           setValue(fieldName, fullNumber as any);
         } else {
           const cleanedNumber = cleanPhoneNumber(value, dialCode);
-          //  console.log('handlePhoneChange: Cleaned number:', cleanedNumber);
-          setValue(fieldName, cleanedNumber as any);
+
+          const phone = `+${dialCode}${cleanedNumber}`;
+          console.log(
+            "handlePhoneChange: Cleaned number:",
+            utils.isValidNumber(phone, countryData?.iso2)
+              ? phone
+              : (cleanedNumber as any),
+          );
+          setValue(
+            fieldName,
+            utils.isValidNumber(phone, countryData?.iso2)
+              ? phone
+              : (cleanedNumber as any),
+          );
+          const input = intlTelRef.current?.getInput();
+          if (input) {
+            input.value = cleanPhoneNumber(phone, dialCode);
+          }
         }
       } finally {
         phoneState.isProcessing = false;
@@ -72,11 +104,11 @@ export const usePhoneInput = <T extends Record<string, any>>(
   );
 
   const handleItiInit = useCallback((obj: IntlTelInputRef) => {
-    /*console.log('handleItiInit called with:', {
+    console.log("handleItiInit called with:", {
       input: obj.getInput(),
       instance: obj.getInstance(),
       intlTelRef: intlTelRef.current,
-    });*/
+    });
     const { value } = obj?.getInput() || {};
     const { dialCode } = obj?.getInstance()?.getSelectedCountryData() || {};
     if (value && dialCode) {
@@ -171,6 +203,12 @@ export const usePhoneInput = <T extends Record<string, any>>(
 
     return "";
   }, [cleanPhoneNumber]);
+
+  const getPhoneData = useCallback(() => {
+    return phoneData.current;
+  }, []);
+
+  getPhoneDataCallback?.(getPhoneData);
 
   return {
     intlTelRef,

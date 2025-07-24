@@ -140,26 +140,22 @@ export const ResendLettersComponent = ({
             rows={letters?.items || []}
             className="rates_table"
           />
-          <Button
-            variant="outlined"
-            color="secondary"
-            sx={{ width: "250px" }}
-            className="header_links_pay"
-            onClick={handleChange}
-          >
-            {" "}
-            {t("ADMIN.LETTER.BUTTONS.GENERATE_AND_PRINT")}
-          </Button>
-          <Button
-            variant="outlined"
-            color="secondary"
-            sx={{ width: "250px" }}
-            className="header_links_pay"
-            onClick={handleRemove}
-          >
-            {" "}
-            {t("ADMIN.LETTER.BUTTONS.REMOVE")}
-          </Button>
+
+          <Box sx={{ maxWidth: "10rem", flex: "none" }}>
+            <button
+              color="secondary"
+              className="btn-primary"
+              onClick={handleChange}
+            >
+              {" "}
+              {t("ADMIN.LETTER.BUTTONS.GENERATE_AND_PRINT")}
+            </button>
+
+            <button className="header_links_pay" onClick={handleRemove}>
+              {" "}
+              {t("ADMIN.LETTER.BUTTONS.REMOVE")}
+            </button>
+          </Box>
         </>
       )}
     </Box>
