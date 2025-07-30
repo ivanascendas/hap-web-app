@@ -22,7 +22,7 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import "./Header.component.scss";
 import BackIcon from "@mui/icons-material/ArrowBack";
-import logo from "../../../../assets/img/logo_new_2.png";
+import logo from "../../../../assets/img/hap.png";
 import logoTransparent from "../../../../assets/img/logo-Transparent.png";
 import { useLogoutMutation } from "@shared/services/Auth.service";
 import { selectUnreadNotificationsCount } from "@shared/redux/slices/notificationsSlice";
@@ -108,7 +108,7 @@ export const HeaderComponent = ({
                 <BackIcon />
               </IconButton>
             ) : (
-              <img src={logoTransparent} className="logo-mobile" alt="logo" />
+              <img src={logo} className="logo-mobile" alt="logo" />
             )}
             <Menu
               id="menu-appbar"

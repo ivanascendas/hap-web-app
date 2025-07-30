@@ -148,7 +148,7 @@ export const PaymentComponent = (): JSX.Element => {
         })),
       ),
     );
-    const usePopup = true;
+    const usePopup = false; //true;
     if (usePopup) {
       setOpen(true);
     } else {

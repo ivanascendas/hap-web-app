@@ -198,11 +198,9 @@ export const PayComponent = ({ onClose }: PayComponentProps): JSX.Element => {
             />
 
             <Typography variant="h3">
-              {" "}
               {currency.format(
                 payments.reduce((acc, payment) => acc + payment.AmountToPay, 0),
-              )}{" "}
-              ({payments.length})
+              )}
             </Typography>
             <Box className="payment_response">
               <Typography variant="h4">
@@ -218,6 +216,14 @@ export const PayComponent = ({ onClose }: PayComponentProps): JSX.Element => {
                   showPaymentResponse === "00"
                     ? "MESSAGES.PAYMENT_ACCEPTED_TITLE"
                     : "MESSAGES.PAYMENT_DECLINED_TITLE",
+                )}
+              </Typography>
+              <br />
+              <Typography variant="body2">
+                {t(
+                  showPaymentResponse === "00"
+                    ? "MESSAGES.PAYMENT_ACCEPTED_TITLE2"
+                    : "",
                 )}
               </Typography>
             </Box>

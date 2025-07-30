@@ -1,3 +1,4 @@
+import React from "react";
 import { Box, Button, TablePagination } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";

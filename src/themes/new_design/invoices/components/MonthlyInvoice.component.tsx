@@ -66,9 +66,7 @@ export const MonthlyInvoiceComponent = ({
   const [selectedPeriod, setSelectedPeriod] = useState("current_year");
 
   const [open, setOpen] = useState(false);
-  const [selectedInvoices, setSelectedInvoices] = useState<{
-    [key: string]: number;
-  }>({});
+  const [selectedInvoices, setSelectedInvoices] = useState<number>(0);
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -114,13 +112,14 @@ export const MonthlyInvoiceComponent = ({
     ) as HTMLInputElement | null;
     if (input) {
       if (!checked) {
-        delete selectedInvoices[id];
-        input.disabled = true;
-        setSelectedInvoices({ ...selectedInvoices });
+        setSelectedInvoices(
+          selectedInvoices -
+            (Number(input.value.replace(/[^0-9.-]+/g, "")) || 0),
+        );
       } else {
         const numericValue = Number(input.value.replace(/[^0-9.-]+/g, ""));
-        selectedInvoices[id] = numericValue;
-        setSelectedInvoices({ ...selectedInvoices, [id]: numericValue });
+
+        setSelectedInvoices(numericValue);
       }
     }
   };
@@ -161,9 +160,8 @@ export const MonthlyInvoiceComponent = ({
   ) => {
     const { value } = e.target;
     const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
-    const id = `${row.invoiceNo}_${row.sequenceNo}_input`;
-    selectedInvoices[id] = numericValue;
-    setSelectedInvoices({ ...selectedInvoices, [id]: numericValue });
+
+    setSelectedInvoices(numericValue);
   };
 
   /**
@@ -173,7 +171,7 @@ export const MonthlyInvoiceComponent = ({
    */
   const handleClose = () => {
     setOpen(false);
-    setSelectedInvoices({ ...{} });
+    setSelectedInvoices(0);
   };
 
   /**
@@ -194,7 +192,7 @@ export const MonthlyInvoiceComponent = ({
           ? {
               VoucherNo: row.voucherNo?.toString() ?? "",
               SequenceNo: row.sequenceNo?.toString() ?? "",
-              AmountToPay: selectedInvoices[key],
+              AmountToPay: selectedInvoices,
               incDept: department,
               Name: "",
               Number: "",
@@ -294,11 +292,7 @@ export const MonthlyInvoiceComponent = ({
                   <Box
                     key={`${row.invoiceNo}_${row.sequenceNo}`}
                     className={`month_invoices_item ${
-                      !selectedInvoices[
-                        `${row.invoiceNo}_${row.sequenceNo}_input`
-                      ]
-                        ? "disabled"
-                        : ""
+                      !selectedInvoices ? "disabled" : ""
                     }`}
                   >
                     <Box
@@ -322,19 +316,10 @@ export const MonthlyInvoiceComponent = ({
                     <Box className="month_invoices_item_input">
                       <TextField
                         fullWidth
-                        disabled={
-                          !selectedInvoices[
-                            `${row.invoiceNo}_${row.sequenceNo}_input`
-                          ]
-                        }
                         id={`${row.invoiceNo}_${row.sequenceNo}_input`}
                         type="text"
                         value={currency.format(
-                          selectedInvoices[
-                            `${row.invoiceNo}_${row.sequenceNo}_input`
-                          ] ||
-                            row.pending ||
-                            0,
+                          selectedInvoices || row.pending || 0,
                         )}
                         variant={"standard"}
                         onChange={(e) => handleAmountChange(e, row)}
@@ -362,11 +347,7 @@ export const MonthlyInvoiceComponent = ({
                   <Box
                     key={`${row.invoiceNo}_${row.sequenceNo}1`}
                     className={`month_invoices_item ${
-                      !selectedInvoices[
-                        `${row.invoiceNo}_${row.sequenceNo}_1_input`
-                      ]
-                        ? "disabled"
-                        : ""
+                      !selectedInvoices ? "disabled" : ""
                     }`}
                   >
                     <Box
@@ -390,19 +371,10 @@ export const MonthlyInvoiceComponent = ({
                     <Box className="month_invoices_item_input">
                       <TextField
                         fullWidth
-                        disabled={
-                          !selectedInvoices[
-                            `${row.invoiceNo}_${row.sequenceNo}_input`
-                          ]
-                        }
                         id={`${row.invoiceNo}_${row.sequenceNo}_input`}
                         type="text"
                         value={currency.format(
-                          selectedInvoices[
-                            `${row.invoiceNo}_${row.sequenceNo}_input`
-                          ] ||
-                            row.pending ||
-                            0,
+                          selectedInvoices || row.pending || 0,
                         )}
                         variant={"standard"}
                         onChange={(e) => handleAmountChange(e, row)}

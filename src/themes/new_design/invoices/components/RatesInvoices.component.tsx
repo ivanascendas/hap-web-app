@@ -66,9 +66,7 @@ export const RatesInvoicesComponent = ({
   const [selectedPeriod, setSelectedPeriod] = useState("current_year");
 
   const [open, setOpen] = useState(false);
-  const [selectedInvoices, setSelectedInvoices] = useState<{
-    [key: string]: number;
-  }>({});
+
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -79,6 +77,9 @@ export const RatesInvoicesComponent = ({
   const [getInvoices, { data, isFetching: isRatesLoading }] =
     useLazyGetInvoicesQuery();
   const payments = useSelector(selectInvoices);
+  const [selectedInvoices, setSelectedInvoices] = useState<number>(
+    payments.reduce((sum, obj) => sum + (Number(obj.pending) || 0), 0),
+  );
 
   /**
    * Handles the checkbox change event for an invoice row.
@@ -100,13 +101,14 @@ export const RatesInvoicesComponent = ({
     ) as HTMLInputElement | null;
     if (input) {
       if (!checked) {
-        delete selectedInvoices[id];
-        input.disabled = true;
-        setSelectedInvoices({ ...selectedInvoices });
+        setSelectedInvoices(
+          selectedInvoices -
+            (Number(input.value.replace(/[^0-9.-]+/g, "")) || 0),
+        );
       } else {
         const numericValue = Number(input.value.replace(/[^0-9.-]+/g, ""));
-        selectedInvoices[id] = numericValue;
-        setSelectedInvoices({ ...selectedInvoices, [id]: numericValue });
+
+        setSelectedInvoices(numericValue);
       }
     }
   };
@@ -147,9 +149,7 @@ export const RatesInvoicesComponent = ({
   ) => {
     const { value } = e.target;
     const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
-    const id = `${row.invoiceNo}_${row.sequenceNo}_input`;
-    selectedInvoices[id] = numericValue;
-    setSelectedInvoices({ ...selectedInvoices, [id]: numericValue });
+    setSelectedInvoices(numericValue);
   };
 
   /**
@@ -159,7 +159,7 @@ export const RatesInvoicesComponent = ({
    */
   const handleClose = () => {
     setOpen(false);
-    setSelectedInvoices({ ...{} });
+    setSelectedInvoices(0);
   };
 
   /**
@@ -169,35 +169,26 @@ export const RatesInvoicesComponent = ({
    */
 
   const payHandler = () => {
-    const invoicesToPay: PaymentDto[] = Object.keys(selectedInvoices)
-      .map((key) => {
-        const [invoiceNo, sequenceNo] = key.split("_");
-        const row = payments.find(
-          (p) =>
-            p.invoiceNo === invoiceNo && p.sequenceNo === parseInt(sequenceNo),
-        );
-        return row
-          ? {
-              VoucherNo: row.voucherNo?.toString() ?? "",
-              SequenceNo: row.sequenceNo?.toString() ?? "",
-              AmountToPay: selectedInvoices[key],
-              incDept: department,
-              Name: "",
-              Number: "",
-              Address1: "",
-              Address2: "",
-              Address3: "",
-              County: "",
-              phoneCode: "",
-              City: "",
-              Country: "",
-              Email: "",
-              Phone: "",
-              Zipcode: "",
-            }
-          : null;
-      })
-      .filter((row): row is PaymentDto => row !== null);
+    const invoicesToPay: PaymentDto[] = [
+      {
+        VoucherNo: "0",
+        SequenceNo: "0",
+        AmountToPay: selectedInvoices,
+        incDept: department,
+        Name: "",
+        Number: "",
+        Address1: "",
+        Address2: "",
+        Address3: "",
+        County: "",
+        phoneCode: "",
+        City: "",
+        Country: "",
+        Email: "",
+        Phone: "",
+        Zipcode: "",
+      },
+    ];
 
     dispatch(setInvoicesToPay(invoicesToPay));
     handleClose();
@@ -205,7 +196,7 @@ export const RatesInvoicesComponent = ({
   };
 
   const columns: ColumnItem<InvoiceDto>[] = [
-    {
+    /* {
       key: "totalPaid",
       label: "",
       colRnder: () => "Apply",
@@ -220,7 +211,7 @@ export const RatesInvoicesComponent = ({
           />
         </>
       ),
-    },
+    },*/
     {
       key: "statementDate",
       label: "INVOICES.RENTS.COLUMNS.DATE",
@@ -268,16 +259,7 @@ export const RatesInvoicesComponent = ({
             }}
             variant="standard"
             onChange={(e) => handleAmountChange(e, row)}
-            value={currency.format(
-              selectedInvoices[`${row.invoiceNo}_${row.sequenceNo}_input`] ||
-                row.pending ||
-                0,
-            )}
-            disabled={
-              !Object.keys(selectedInvoices).some(
-                (s) => s === `${row.invoiceNo}_${row.sequenceNo}_input`,
-              )
-            }
+            value={currency.format(selectedInvoices || row.pending || 0)}
           />
         </>
       ),
@@ -316,6 +298,7 @@ export const RatesInvoicesComponent = ({
     }
   }, [isAuthenticated, selectedProperty, selectedPeriod]);
 
+  console.log("selectedInvoices", selectedInvoices);
   return (
     <Box sx={{ position: "relative", height: "calc(100vh - 11rem)" }}>
       <Box className=" ">
@@ -346,8 +329,8 @@ export const RatesInvoicesComponent = ({
                   acc.totalPaid =
                     (acc.totalPaid || 0) + (payment.totalPaid || 0);
                   acc.pending = (acc.pending || 0) + (payment.pending || 0);
-                  acc.voucherNo = payment.voucherNo || acc.voucherNo;
-                  acc.sequenceNo = payment.sequenceNo || acc.sequenceNo;
+                  acc.voucherNo = 0;
+                  acc.sequenceNo = 0;
                   return acc;
                 },
                 {
@@ -373,10 +356,7 @@ export const RatesInvoicesComponent = ({
         </Box>
       </Box>
       <SummaryBoxComponent
-        value={Object.values(selectedInvoices).reduce(
-          (acc, value) => acc + value,
-          0,
-        )}
+        value={selectedInvoices}
         currentBalance={balance?.currentBalance}
         onClick={payHandler}
       />

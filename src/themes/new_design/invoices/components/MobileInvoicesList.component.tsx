@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 export type MobileInvoicesListProps = {
   list: InvoiceDto[];
   isLoading: boolean;
-  selectedInvoices: { [key: string]: number };
+  selectedInvoices: number;
   onClick?: (e: React.ChangeEvent<HTMLInputElement>, row: InvoiceDto) => void;
   loadMore?: () => void;
 };
@@ -124,11 +124,7 @@ export const MobileInvoicesListComponent = ({
                     <Checkbox
                       id={`${statemet.invoiceNo}_${statemet.sequenceNo}_input`}
                       onChange={(e) => onClick && onClick(e, statemet)}
-                      checked={
-                        !!selectedInvoices[
-                          `${statemet.invoiceNo}_${statemet.sequenceNo}_input`
-                        ]
-                      }
+                      checked={!!selectedInvoices}
                     />
                   </Box>
                 </Box>

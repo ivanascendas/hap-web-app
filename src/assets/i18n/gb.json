@@ -409,6 +409,7 @@
     "SOMETHING_ERROR": "Something went wrong",
     "PAYMENT_ACCEPTED": "Payment accepted!",
     "PAYMENT_ACCEPTED_TITLE": "Your payment will be reflected your account in 24 hours.",
+    "PAYMENT_ACCEPTED_TITLE2": "Your  will also be emailed copy of receipt.",
     "PAYMENT_DECLINED_TITLE": "Your payment couldn’t be processed. Double check the card information or try with another credit card.",
     "PAYMENT_PENDING": "Your payment is being processed, please do not leave this page.",
     "PAYMENT_PROCESSING": "Your recent payment will be reflected on your account tomorrow.",
@@ -544,7 +545,7 @@
   },
   "INVOICES": {
     "RATES": {
-      "TITLE": "Select invoices to pay",
+      "TITLE": "Enter in amount that you wish to pay",
       "FILTER": {
         "NAME": "Property ",
         "OPTIONS": {

@@ -19,7 +19,7 @@ import { InvoiceDto } from "@shared/dtos/invoice.dtos";
 
 export type InvoicePaymentPopupProps = {
   open: boolean;
-  selectedInvoices: { [key: string]: number };
+  selectedInvoices: number;
   payHandler: () => void;
   handleAmountChange: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -56,12 +56,12 @@ export const InvoicePaymentPopupСomponent = ({
             </Box>
             <Box className="invoice_payment_popup_content">
               {payments
-                .filter(
+                /* .filter(
                   (row) =>
                     selectedInvoices[
                       `${row.invoiceNo}_${row.sequenceNo}_input`
                     ],
-                )
+                )*/
                 .map((p, i) => (
                   <Box className="invoice_payment_popup_content_block" key={i}>
                     <Box className="invoice_payment_popup_content_block_content">
@@ -89,11 +89,7 @@ export const InvoicePaymentPopupСomponent = ({
                             onChange={(e) => handleAmountChange(e, p)}
                             title={t("PAYMENT.ENTER_AMOUNT_HERE")}
                             value={currency.format(
-                              selectedInvoices[
-                                `${p.invoiceNo}_${p.sequenceNo}_input`
-                              ] ||
-                                p.pending ||
-                                0,
+                              selectedInvoices || p.pending || 0,
                             )}
                           />
                         </div>

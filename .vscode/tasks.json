@@ -51,7 +51,7 @@
       "args": [
         "run",
         "--project",
-        "C:\\projects\\HapBackend\\HapBackend\\HapBackend.csproj"
+        "${workspaceFolder}/../HapBackend/HapBackend/HapBackend.csproj"
       ],
       "isBackground": true,
       "problemMatcher": {

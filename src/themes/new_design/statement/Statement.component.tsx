@@ -74,7 +74,9 @@ export const StatementComponent = (): JSX.Element => {
                     )
                   : ""}
               </p>
-              <span>&nbsp;{t("MAIN.STATEMENT")}</span>
+              {department?.toLocaleLowerCase() !== "documents" && (
+                <span>&nbsp;{t("MAIN.STATEMENT")}</span>
+              )}
             </h1>
             <Box
               sx={{
@@ -83,22 +85,26 @@ export const StatementComponent = (): JSX.Element => {
               }}
               className="h_title_right"
             >
-              <Button
-                sx={{ display: { xs: "none", md: "flex" } }}
-                startIcon={<DownloadForOfflineIcon />}
-                className="btn-secondary"
-              >
-                Download ALL
-              </Button>
-              <Button
-                className="print_btn primary-button"
-                onClick={handlePrintPdf}
-              >
-                <LocalPrintshopIcon />
-                <span className="print_text">
-                  &nbsp;{t("MAIN.PRINT_STATEMENT")}
-                </span>
-              </Button>
+              {department?.toLocaleLowerCase() !== "documents" && (
+                <Button
+                  sx={{ display: { xs: "none", md: "flex" } }}
+                  startIcon={<DownloadForOfflineIcon />}
+                  className="btn-secondary"
+                >
+                  Download ALL
+                </Button>
+              )}
+              {department?.toLocaleLowerCase() !== "documents" && (
+                <Button
+                  className="print_btn primary-button"
+                  onClick={handlePrintPdf}
+                >
+                  <LocalPrintshopIcon />
+                  <span className="print_text">
+                    &nbsp;{t("MAIN.PRINT_STATEMENT")}
+                  </span>
+                </Button>
+              )}
             </Box>
           </Box>
 

@@ -160,7 +160,7 @@ export const RentsInvoiceComponent = ({
       >
         <MobileInvoicesListComponent
           isLoading={isFetching}
-          selectedInvoices={{}}
+          selectedInvoices={0}
           list={statements || []}
           loadMore={handleLoadMore}
         />
