@@ -22,7 +22,7 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import "./Header.component.scss";
 import BackIcon from "@mui/icons-material/ArrowBack";
-import logo from "../../../../assets/img/hap.png";
+import logo from "../../../../assets/img/HAP2.png";
 import logoTransparent from "../../../../assets/img/logo-Transparent.png";
 import { useLogoutMutation } from "@shared/services/Auth.service";
 import { selectUnreadNotificationsCount } from "@shared/redux/slices/notificationsSlice";

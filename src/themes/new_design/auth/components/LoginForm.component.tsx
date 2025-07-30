@@ -11,7 +11,7 @@ import "../Auth.component.scss";
 
 import androidImg from "../../../../assets/img/google-img.png";
 import appleImg from "../../../../assets/img/apple-img.svg";
-import logo from "../../../../assets/img/hap.png";
+import logo from "../../../../assets/img/HAP2.png";
 
 import {
   useCheckTempPasswordMutation,

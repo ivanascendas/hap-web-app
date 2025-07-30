@@ -23,7 +23,7 @@ import LocalAtmOutlinedIcon from "@mui/icons-material/LocalAtmOutlined";
 import CreditScoreIcon from "@mui/icons-material/CreditScore";
 import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import "./Drawer.component.scss";
-import logo from "../../../../assets/img/hap.png";
+import logo from "../../../../assets/img/HAP2.png";
 import { useSelector } from "react-redux";
 import { selectBalance, selectUser } from "@shared/redux/slices/authSlice";
 import useWindowDimensions from "@shared/hooks/useWindowDimensions";
