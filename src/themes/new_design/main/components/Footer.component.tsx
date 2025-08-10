@@ -8,7 +8,7 @@ export type FooterProps = {
   showFooter: boolean;
 };
 
-export const FooterCompoment = ({
+export const FooterComponent = ({
   drawerWidth,
   isAuthenticated,
   showFooter,
@@ -27,6 +27,10 @@ export const FooterCompoment = ({
         left: {
           md: "0px",
           lg: isAuthenticated ? `${drawerWidth}px` : "0px",
+        },
+        justifyContent: {
+          xs: "center",
+          md: "flex-end ",
         },
       }}
       className={isAuthenticated ? "authenticated" : undefined}

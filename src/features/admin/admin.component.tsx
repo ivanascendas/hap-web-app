@@ -7,7 +7,7 @@ import "./admin.component.scss";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../../shared/providers/Auth.provider";
 import HeaderComponent from "./components/Headers.component";
-import { FooterCompoment } from "../main/components/Footer.component";
+import { FooterComponent } from "../main/components/Footer.component";
 import { Loading } from "../../shared/components/Loading";
 import { NotificationComponent } from "../../shared/components/Notification.component";
 
@@ -30,7 +30,7 @@ export const AdminComponent = () => {
       <Box className="admin-content">
         <Outlet />
       </Box>
-      <FooterCompoment showFooter={true} />
+      <FooterComponent showFooter={true} />
     </Paper>
   );
 };

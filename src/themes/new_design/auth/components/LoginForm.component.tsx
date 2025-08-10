@@ -118,7 +118,7 @@ export const LoginFormComponent = ({
   }
 
   return (
-    <MainComponent>
+    <MainComponent showFooter={true}>
       <div className="auth-container">
         <div className="auth-container__cover"></div>
 

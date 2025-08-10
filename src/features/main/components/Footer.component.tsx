@@ -1,14 +1,14 @@
 import { Box } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
-
+import React from "react";
 export type FooterProps = {
   drawerWidth?: number;
   isAuthenticated?: boolean;
   showFooter: boolean;
 };
 
-export const FooterCompoment = ({
+export const FooterComponent = ({
   drawerWidth,
   isAuthenticated,
   showFooter,
