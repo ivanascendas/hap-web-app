@@ -11,22 +11,45 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import "./Headers.component.scss";
-import logo from "../../../../assets/img/logo_new_2.png";
+import logo from "../../../../assets/img/HAP2.png";
 import { selectUser } from "@shared/redux/slices/authSlice";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
+import { Badge, Button, Drawer } from "@mui/material";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import { useParams, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import LogoutIcon from "@mui/icons-material/Logout";
+import PeopleIcon from "@mui/icons-material/People";
+import MailIcon from "@mui/icons-material/Mail";
+import AssessmentIcon from "@mui/icons-material/Assessment";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import SecurityIcon from "@mui/icons-material/Security";
+import MessageIcon from "@mui/icons-material/Message";
+import DescriptionIcon from "@mui/icons-material/Description";
 
 const pages = [
-  { link: "users", title: "Users" },
-  { link: "letters/InvitationLetter", title: "Letters" },
-  { link: "reports", title: "Reports" },
-  { link: "notifications/forms", title: "Notifications" },
-  { link: "admins", title: "Admins" },
+  { link: "users", title: "Users", icon: <PeopleIcon /> },
+  { link: "letters/InvitationLetter", title: "Letters", icon: <MailIcon /> },
+  { link: "reports", title: "Reports", icon: <AssessmentIcon /> },
+  {
+    link: "notifications/forms",
+    title: "Notifications",
+    icon: <NotificationsIcon />,
+  },
+  { link: "admins", title: "Admins", icon: <AdminPanelSettingsIcon /> },
 ];
+
 const settings = ["Security", "Messages", "Terms", "Logout"];
 
 const HeaderComponent = (): JSX.Element => {
+  const [title, setTitle] = React.useState<string>("ADMIN.USERS.TITLE");
+
+  const location = useLocation();
+  console.log({ ...useParams(), ...location });
+  const { t } = useTranslation();
   const [adminName, setAdminName] = React.useState<string>("Admin");
+  const [unreadCount, setUnreadCount] = React.useState<number>(10);
   const user = useSelector(selectUser);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
@@ -46,14 +69,19 @@ const HeaderComponent = (): JSX.Element => {
     if (page) {
       switch (page) {
         case "Users":
+          setTitle("ADMIN.USERS.TITLE");
           break;
         case "Letters":
+          setTitle("ADMIN.LETTERS.TITLE");
           break;
         case "Reports":
+          setTitle("ADMIN.REPORTS.TITLE");
           break;
         case "Notifications":
+          setTitle("ADMIN.NOTIFICATIONS.TITLE");
           break;
         case "Admins":
+          setTitle("ADMIN.MANAGEMENT.TITLE");
           break;
       }
     }
@@ -85,12 +113,12 @@ const HeaderComponent = (): JSX.Element => {
   }, [user]);
 
   return (
-    <AppBar position="static">
-      <Container maxWidth="xl">
+    <>
+      <AppBar position="static">
         <Toolbar disableGutters>
           <Box
             sx={{
-              display: { xs: "none", md: "flex" },
+              display: "none",
               mr: 1,
               flex: "none",
               justifyItems: "center",
@@ -143,7 +171,7 @@ const HeaderComponent = (): JSX.Element => {
               }}
               open={Boolean(anchorElNav)}
               onClose={() => handleCloseNavMenu()}
-              sx={{ display: { xs: "block", md: "none" } }}
+              sx={{ display: "none" }}
             >
               {pages.map((page) => (
                 <MenuItem
@@ -170,7 +198,6 @@ const HeaderComponent = (): JSX.Element => {
             noWrap
             component="h5"
             sx={{
-              display: { xs: "flex", md: "none" },
               flexGrow: 1,
               fontFamily: "monospace",
               fontWeight: 700,
@@ -181,27 +208,45 @@ const HeaderComponent = (): JSX.Element => {
               marginLeft: "2rem",
             }}
           >
-            ADMIN
+            {t(title)}
           </Typography>
-          <Box
-            sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}
-            component={"nav"}
-          >
-            {pages.map((page) => (
-              <NavLink
-                to={`/admin/${page.link}`}
-                key={page.link}
-                onClick={() => handleCloseNavMenu(page.title)}
-              >
-                {page.title}
-              </NavLink>
-            ))}
-          </Box>
-          <Box sx={{ flexGrow: 0 }}>
+
+          <Box sx={{ flexGrow: 0, display: "flex", alignItems: "center" }}>
+            <IconButton
+              size="large"
+              aria-label={`show ${unreadCount} new notifications`}
+              color="inherit"
+              onClick={() => handleCloseUserMenu()}
+            >
+              <Badge badgeContent={unreadCount} color="error">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
             <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={adminName} src="/static/images/avatar/2.jpg" />
-              </IconButton>
+              <Button
+                startIcon={
+                  <Avatar alt={adminName} src="/static/images/avatar/2.jpg" />
+                }
+                endIcon={
+                  <i
+                    className="fas fa-chevron-down"
+                    style={{ color: "#000000", fontSize: "0.8rem" }}
+                  />
+                }
+                onClick={handleOpenUserMenu}
+                sx={{ p: 0, marginLeft: "1.5rem" }}
+              >
+                <Typography
+                  sx={{
+                    display: { xs: "none", md: "flex" },
+                    ml: 1,
+                    color: "#000000",
+                    textTransform: "none",
+                  }}
+                >
+                  {adminName}
+                </Typography>
+              </Button>
             </Tooltip>
             <Menu
               sx={{ mt: "45px" }}
@@ -241,8 +286,52 @@ const HeaderComponent = (): JSX.Element => {
             </Menu>
           </Box>
         </Toolbar>
-      </Container>
-    </AppBar>
+      </AppBar>
+      <Drawer variant={"permanent"} anchor="left">
+        <Box
+          className="drawer-admin"
+          sx={{ width: 250 }}
+          onClick={() => setAnchorElNav(null)}
+          onKeyDown={() => setAnchorElNav(null)}
+        >
+          <img src={logo} className="logo" alt="logo" />
+          {pages.map((page) => (
+            <MenuItem
+              key={page.link}
+              onClick={() => handleCloseNavMenu(page.title)}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <NavLink to={`/admin/${page.link}`}>
+                  {React.cloneElement(page.icon, {
+                    sx: { color: "inherit" },
+                    marginRight: "0.5rem",
+                  })}
+                  &nbsp;
+                  {page.title}
+                </NavLink>
+              </Box>
+            </MenuItem>
+          ))}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-end",
+              alignItems: "start",
+              marginBottom: "1rem",
+              marginLeft: "1rem",
+            }}
+          >
+            <Button
+              startIcon={<LogoutIcon />}
+              onClick={() => handleCloseUserMenu("Logout")}
+            >
+              <Typography sx={{ textTransform: "none" }}>Logout</Typography>
+            </Button>
+          </Box>
+        </Box>
+      </Drawer>
+    </>
   );
 };
 

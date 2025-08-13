@@ -3,6 +3,7 @@ import {
   Box,
   Container,
   CssBaseline,
+  IconButton,
   MenuItem,
   Select,
   TablePagination,
@@ -17,9 +18,11 @@ import { useTranslation } from "react-i18next";
 import { UserDetailsModal } from "./components/user-details.modal";
 import { useLazyGetAdminDepartmentsQuery } from "@shared/services/Department.service";
 import { useAuth } from "@shared/providers/Auth.provider";
+import { Edit, Delete, Visibility } from "@mui/icons-material";
+import { TablePaginationActions } from "../components/TablePaginationActions";
 
 export const UsersComponent = () => {
-  const top = 5;
+  const top = 7;
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
   const [page, setPage] = useState(0);
@@ -32,21 +35,51 @@ export const UsersComponent = () => {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
 
   const columns: ColumnItem<CustomerDto>[] = [
+    { key: "cust_name", label: "LABELS.NAME" },
     {
       key: "userName",
       label: "LABELS.CUSTOMER_NUMBER",
       onClick: (col) =>
         setOrderUserName(orderUserName === "asc" ? "desc" : "asc"),
     },
-    { key: "cust_name", label: "LABELS.NAME" },
     { key: "address", label: "LABELS.ADDRESS" },
 
     {
       key: "isActive",
       label: "LABELS.STATUS",
-      rowRender: (row: CustomerDto) => (row.isActive ? "Active" : "Inactive"),
+      rowRender: (row: CustomerDto) => (
+        <Typography
+          component={"span"}
+          className={row.isActive ? "active" : "inactive"}
+        >
+          ● {row.isActive ? "Active" : "Inactive"}
+        </Typography>
+      ),
+    },
+    {
+      key: "id",
+      label: "Actions",
+      rowRender: (row: CustomerDto) => (
+        <Box className="actions" sx={{ display: "flex", gap: "0.5rem" }}>
+          <IconButton onClick={() => editClickHandler(row)}>
+            <Edit color="info" />
+          </IconButton>
+          <IconButton onClick={() => rateClickHandler(row)}>
+            <Visibility color="info" />
+          </IconButton>
+          <IconButton onClick={() => deleteClickHandler(row)}>
+            <Delete color="error" />
+          </IconButton>
+        </Box>
+      ),
     },
   ];
+
+  const editClickHandler = (row: CustomerDto): void => {
+    setSelectedUserId(row.userName);
+  };
+
+  const deleteClickHandler = (row: CustomerDto): void => {};
 
   const rateClickHandler = (row: CustomerDto): void => {
     setSelectedUserId(row.userName);
@@ -99,82 +132,102 @@ export const UsersComponent = () => {
         justifyContent: "center",
         alignItems: "center",
         overflow: "auto",
-        maxHeight: "calc(100vh - 130px)",
+        maxHeight: "calc(100vh - 30px)",
       }}
     >
       <CssBaseline />
-      <Container maxWidth="xl" sx={{ mt: "4rem ", mb: "2rem" }}>
-        <Box className="personal_box ">
+
+      <Box className="personal_box ">
+        <Box
+          className="personal_box_filter"
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "1.5rem",
+            padding: "1rem 0",
+          }}
+        >
           <Box
-            className="personal_box_filter"
+            className="personal_box_filter_select"
             sx={{
               display: "flex",
-              justifyContent: "space-between",
               alignItems: "center",
-              gap: "1.5rem",
-              padding: "1rem 0",
+              gap: "1rem",
+              justifyContent: "space-between",
+              flex: "none",
+            }}
+          >
+            {t("ADMIN.USERS.FILTERS.DEPTS")}{" "}
+            <Select
+              labelId="property-select-label"
+              label={t("ADMIN.USERS.FILTERS.DEPTS")}
+              value={selectedIncDepts}
+              onChange={(e) => setIncDepts(e.target.value)}
+              sx={{ width: "15rem" }}
+            >
+              <MenuItem key={"All"} value={"All"}>
+                All
+              </MenuItem>
+              {properties?.map((property) => (
+                <MenuItem key={property.incDept} value={property.incDept}>
+                  {property.incDept}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+          <Box></Box>
+          <Box
+            className="personal_box_filter_search"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
             }}
           >
             <Typography
-              variant="h5"
-              className="personal_box_filter_title"
-              sx={{ whiteSpace: "nowrap" }}
+              variant="body2"
+              color="text.secondary"
+              sx={{ position: "relative", top: "-4px" }}
             >
-              {t("ADMIN.USERS.TITLE")}
+              Search
             </Typography>
-            <Box
-              className="personal_box_filter_select"
-              sx={{ display: "flex", alignItems: "center", gap: "1rem" }}
-            >
-              {t("ADMIN.USERS.FILTERS.DEPTS")}{" "}
-              <Select
-                labelId="property-select-label"
-                label={t("ADMIN.USERS.FILTERS.DEPTS")}
-                value={selectedIncDepts}
-                onChange={(e) => setIncDepts(e.target.value)}
-              >
-                <MenuItem key={"All"} value={"All"}>
-                  All
-                </MenuItem>
-                {properties?.map((property) => (
-                  <MenuItem key={property.incDept} value={property.incDept}>
-                    {property.incDept}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Box>
             <TextField
               value={filterValue}
               onChange={(e) => setFilterValue(e.target.value)}
             />
           </Box>
-          <TableComponent
-            aria-label="customers table"
-            isLoading={isFetching}
-            columns={columns}
-            rows={customers?.items || []}
-            onItemClick={rateClickHandler}
-            className="rates_table"
-          />
-          <Box
-            className="personal_box_footer"
-            sx={{
-              display: { xs: "none", md: "flex" },
-              justifyContent: "space-between",
-            }}
-          >
-            <TablePagination
-              rowsPerPageOptions={[top]}
-              component="div"
-              count={customers?.count || 0}
-              rowsPerPage={top}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Box>
         </Box>
-      </Container>
+        <TableComponent
+          aria-label="customers table"
+          isLoading={isFetching}
+          columns={columns}
+          rows={customers?.items || []}
+          className="admin-table"
+        />
+        <Box
+          className="personal_box_footer"
+          sx={{
+            display: { xs: "none", md: "flex" },
+            justifyContent: "space-between",
+          }}
+        >
+          <TablePagination
+            rowsPerPageOptions={[top]}
+            component="div"
+            count={customers?.count || 0}
+            rowsPerPage={top}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            ActionsComponent={TablePaginationActions}
+            labelDisplayedRows={({ from, to, count }) =>
+              `Showing ${from} to ${to} of ${count} entries`
+            }
+          />
+        </Box>
+      </Box>
+
       <UserDetailsModal
         isOpen={!!selectedUserId}
         onClose={() => setSelectedUserId(null)}

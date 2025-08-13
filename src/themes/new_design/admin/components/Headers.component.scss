@@ -2,9 +2,13 @@
 @import "../../../../assets/styles/functions.scss";
 
 header.MuiAppBar-root {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding-left: 16rem;
+  padding-right: 2rem;
   .MuiToolbar-root {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     color: $primary900 !important;
   }
 
@@ -31,11 +35,48 @@ header.MuiAppBar-root {
 
 .MuiList-root {
   li.MuiMenuItem-root {
+    margin: 0.5rem 0;
     a {
       display: block;
       color: $primary900 !important;
 
       p {
+        color: $primary900 !important;
+      }
+
+      &.active {
+        color: $primary700 !important;
+
+        p {
+          color: $primary700 !important;
+        }
+      }
+    }
+  }
+}
+
+.drawer-admin {
+  background-color: $white;
+  border-radius: 0 1.5rem 1.5rem 0;
+  width: 15rem;
+  display: flex;
+  flex-direction: column;
+
+  .logo {
+    max-width: 80%;
+    margin: 1rem;
+  }
+  .MuiMenuItem-root {
+    margin: 0.5rem 0.5rem;
+    border-radius: 0.4rem;
+    a {
+      display: flex;
+      align-items: center;
+      color: $primary900 !important;
+      text-transform: uppercase !important;
+
+      p {
+        margin-left: 0.5rem;
         color: $primary900 !important;
       }
 

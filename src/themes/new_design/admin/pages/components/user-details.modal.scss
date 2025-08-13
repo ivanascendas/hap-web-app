@@ -33,13 +33,23 @@
 
   &__buttons {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     gap: 1rem;
     margin-top: 1.5rem;
 
     .MuiButton-root,
     button {
-      flex: 1;
+      flex: none;
+      background-color: #224d96;
+      color: #fff;
+      border-radius: 10px !important;
+      text-transform: none;
+
+      &.reset-password {
+        background-color: #dc0963;
+        flex: none;
+        width: auto !important;
+      }
     }
   }
 
@@ -51,7 +61,7 @@
   }
 
   .MuiFormGroup-root {
-    margin: 1rem 0;
+    margin: 0;
     justify-content: center;
   }
 
