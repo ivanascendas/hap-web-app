@@ -27,6 +27,7 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import SecurityIcon from "@mui/icons-material/Security";
 import MessageIcon from "@mui/icons-material/Message";
 import DescriptionIcon from "@mui/icons-material/Description";
+import { de } from "intl-tel-input/i18n";
 
 const pages = [
   { link: "users", title: "Users", icon: <PeopleIcon /> },
@@ -46,7 +47,6 @@ const HeaderComponent = (): JSX.Element => {
   const [title, setTitle] = React.useState<string>("ADMIN.USERS.TITLE");
 
   const location = useLocation();
-  console.log({ ...useParams(), ...location });
   const { t } = useTranslation();
   const [adminName, setAdminName] = React.useState<string>("Admin");
   const [unreadCount, setUnreadCount] = React.useState<number>(10);
@@ -68,20 +68,23 @@ const HeaderComponent = (): JSX.Element => {
   const handleCloseNavMenu = (page?: string) => {
     if (page) {
       switch (page) {
-        case "Users":
+        case "users":
           setTitle("ADMIN.USERS.TITLE");
           break;
-        case "Letters":
+        case "letters":
           setTitle("ADMIN.LETTERS.TITLE");
           break;
-        case "Reports":
-          setTitle("ADMIN.REPORTS.TITLE");
+        case "reports":
+          setTitle("Reports");
           break;
-        case "Notifications":
+        case "notifications":
           setTitle("ADMIN.NOTIFICATIONS.TITLE");
           break;
-        case "Admins":
+        case "admins":
           setTitle("ADMIN.MANAGEMENT.TITLE");
+          break;
+        default:
+          console.warn(`Unknown page: ${page}`);
           break;
       }
     }
@@ -112,6 +115,11 @@ const HeaderComponent = (): JSX.Element => {
     }
   }, [user]);
 
+  React.useEffect(() => {
+    console.log("Location changed:", location.pathname.split("/")[2]);
+    handleCloseNavMenu(location.pathname.split("/")[2]);
+  }, [location.pathname]);
+  console.log("HeaderComponent rendered with title:", title);
   return (
     <>
       <AppBar position="static">
@@ -176,7 +184,7 @@ const HeaderComponent = (): JSX.Element => {
               {pages.map((page) => (
                 <MenuItem
                   key={page.link}
-                  onClick={() => handleCloseNavMenu(page.title)}
+                  onClick={() => handleCloseNavMenu(page.title.toLowerCase())}
                 >
                   <NavLink to={`/admin/${page.link}`}>{page.title}</NavLink>
                 </MenuItem>
