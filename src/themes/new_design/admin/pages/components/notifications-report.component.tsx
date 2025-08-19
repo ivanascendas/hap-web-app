@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@shared/providers/Auth.provider";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   CssBaseline,
@@ -15,9 +15,10 @@ import { ColumnItem, TableComponent } from "@shared/components/Table.component";
 import { useLazyReportQuery } from "@shared/services/Notifications.service";
 import { NotificationReportDto } from "@shared/dtos/messages.dtos";
 import "./notifications-report.component.scss";
+import { TablePaginationActions } from "@components/admin/components/TablePaginationActions";
 
 export const NotificationsReportComponent = (): JSX.Element => {
-  const top = 5;
+  const top = 9;
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
   const [page, setPage] = useState(0);
@@ -61,7 +62,8 @@ export const NotificationsReportComponent = (): JSX.Element => {
       label: "ADMIN.NOTIFICATIONS.SUMMARY_TABLE.COLUMNS.NOTIFICATION_DEVICES",
       rowRender: (item: NotificationReportDto) => (
         <>
-          <i className="fab fa-android" aria-hidden="true"></i> (android):
+          <i className="fab fa-android" aria-hidden="true"></i>
+          &nbsp;
           <span
             className={item.androidSuccessCount ? "success-notification" : ""}
           >
@@ -73,7 +75,13 @@ export const NotificationsReportComponent = (): JSX.Element => {
           >
             {item.androidFailedCount}
           </span>
-          ,<i className="fab fa-apple" aria-hidden="true"></i> (ios):
+          &nbsp; &nbsp;
+          <i
+            className="fab fa-apple"
+            style={{ color: "#224d96" }}
+            aria-hidden="true"
+          ></i>
+          &nbsp;
           <span className={item.iosSuccessCount ? "success-notification" : ""}>
             {item.iosSuccessCount}
           </span>
@@ -105,35 +113,37 @@ export const NotificationsReportComponent = (): JSX.Element => {
         maxHeight: "calc(100vh - 130px)",
       }}
     >
-      <Container maxWidth="xl">
-        <Box className="personal_box ">
-          <TableComponent
-            aria-label="customers table"
-            isLoading={isFetching}
-            columns={columns}
-            rows={notifications?.items || []}
-            onItemClick={() => {}}
-            className="rates_table"
+      <Box sx={{ marginTop: "2rem" }}>
+        <TableComponent
+          aria-label="customers table"
+          isLoading={isFetching}
+          columns={columns}
+          rows={notifications?.items || []}
+          onItemClick={() => {}}
+          className="admin-table"
+        />
+        <Box
+          className="personal_box_footer"
+          sx={{
+            display: { xs: "none", md: "flex" },
+            justifyContent: "space-between",
+          }}
+        >
+          <TablePagination
+            rowsPerPageOptions={[top]}
+            component="div"
+            count={notifications?.count || 0}
+            rowsPerPage={top}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            ActionsComponent={TablePaginationActions}
+            labelDisplayedRows={({ from, to, count }) =>
+              `Showing ${from} to ${to} of ${count} entries`
+            }
           />
-          <Box
-            className="personal_box_footer"
-            sx={{
-              display: { xs: "none", md: "flex" },
-              justifyContent: "space-between",
-            }}
-          >
-            <TablePagination
-              rowsPerPageOptions={[top]}
-              component="div"
-              count={notifications?.count || 0}
-              rowsPerPage={top}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Box>
         </Box>
-      </Container>
+      </Box>
     </Box>
   );
 };

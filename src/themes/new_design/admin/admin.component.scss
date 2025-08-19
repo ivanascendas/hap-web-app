@@ -8,14 +8,16 @@
   background-color: $secondary !important;
 
   &__header {
-    background-color: #677e90;
-
     .MuiToggleButton-root {
-      color: $secondary100;
+      color: #131314;
+      font-weight: 600;
+      background-color: transparent !important;
+      border: none;
+      border-radius: 0;
 
       &.Mui-selected {
-        background-color: $primary500;
-        color: $secondary100;
+        color: #dc0963;
+        border-bottom: 1px solid #dc0963;
       }
     }
   }
@@ -77,7 +79,18 @@
 }
 .MuiButton-root,
 .MuiDialog-paper {
-  border-radius: 1.5rem !important;
+  border-radius: 1rem !important;
+  .income-departments {
+    display: flex !important;
+    flex-direction: row !important;
+    -webkit-flex-direction: row !important;
+    .MuiSvgIcon-root {
+      fill: #224d96 !important;
+    }
+    label * {
+      text-transform: none !important;
+    }
+  }
 }
 
 .admin-table {
@@ -160,4 +173,37 @@
     border-bottom: 15px solid $white;
     z-index: 10;
   }
+}
+.admin_blue-button {
+  background-color: #224d96 !important;
+  color: white;
+  padding: 0.7rem 1rem;
+  border-radius: 10px !important ;
+  border: none;
+  &:hover {
+    background-color: darken(#224d96, 10%) !important;
+    cursor: pointer;
+  }
+}
+
+.admin_main-button {
+  background-color: #dc0963 !important;
+  color: white;
+  border-radius: 10px !important ;
+  &:hover {
+    background-color: darken(#dc0963, 10%) !important;
+  }
+
+  &:disabled {
+    background-color: rgba(#dc0963, 0.5) !important;
+    color: rgba($white, 0.5) !important;
+  }
+}
+
+.admin_outlined-button {
+  border-color: #d1d5dc !important;
+  border-radius: 10px !important;
+  color: #131314 !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
 }

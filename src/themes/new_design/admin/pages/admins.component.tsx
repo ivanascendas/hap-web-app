@@ -81,7 +81,7 @@ export const AdminsComponent = () => {
           <Box sx={{ maxWidth: "30rem", flex: "none" }}>
             <button
               color="secondary"
-              className="button btn-primary"
+              className=" admin_blue-button"
               onClick={() => handleOpenModal()}
             >
               {t("POPUPS.CREATE_ADMIN.TITLE")}
