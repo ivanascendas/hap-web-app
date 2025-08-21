@@ -141,7 +141,8 @@
       align-items: start;
 
       @media screen and (max-width: $mobileSize) {
-        left: -2.25rem;
+        left: 1rem;
+        top: 0.5rem;
       }
 
       img {
@@ -149,6 +150,9 @@
         //  margin: auto;
         align-self: center;
         width: 11.875rem;
+        @media screen and (max-width: $mobileSize) {
+          width: 8rem;
+        }
       }
     }
 

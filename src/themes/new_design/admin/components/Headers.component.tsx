@@ -28,6 +28,7 @@ import SecurityIcon from "@mui/icons-material/Security";
 import MessageIcon from "@mui/icons-material/Message";
 import DescriptionIcon from "@mui/icons-material/Description";
 import { de } from "intl-tel-input/i18n";
+import { useLogoutMutation } from "@shared/services/Auth.service";
 
 const pages = [
   { link: "users", title: "Users", icon: <PeopleIcon /> },
@@ -57,6 +58,8 @@ const HeaderComponent = (): JSX.Element => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
   );
+
+  const [logout] = useLogoutMutation();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -101,6 +104,7 @@ const HeaderComponent = (): JSX.Element => {
         case "Terms":
           break;
         case "Logout":
+          logout();
           break;
         default:
           break;

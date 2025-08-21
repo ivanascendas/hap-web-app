@@ -28,7 +28,10 @@ import { useSelector } from "react-redux";
 import { selectBalance, selectUser } from "@shared/redux/slices/authSlice";
 import useWindowDimensions from "@shared/hooks/useWindowDimensions";
 import { forwardRef, useEffect } from "react";
-import { useLazyUserdataQuery } from "@shared/services/Auth.service";
+import {
+  useLazyUserdataQuery,
+  useLogoutMutation,
+} from "@shared/services/Auth.service";
 import { selectDepartments } from "@shared/redux/slices/departmentsSlice";
 import { useGetDepartmentsMutation } from "@shared/services/Department.service";
 import { useAuth } from "@shared/providers/Auth.provider";
@@ -39,8 +42,7 @@ import currency from "@shared/utils/currency";
 import { useLazyGetBalanceQuery } from "@shared/services/Statements.service";
 import moment from "moment";
 import { stringToColor } from "@shared/utils/stringToColor";
-import { ContactsComponent } from "@components/contacts/Contacts.component";
-import { set } from "react-hook-form";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 export type DrawerProps = {
   anchor?: "left" | "top" | "right" | "bottom";
@@ -68,6 +70,7 @@ export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(
     const [getBalance] = useLazyGetBalanceQuery();
     const [fetchUser, { isFetching }] = useLazyUserdataQuery();
 
+    const [logout] = useLogoutMutation();
     const departmentsInfo: {
       [key: string]: { icon: JSX.Element; url: string };
     } = {
@@ -263,6 +266,14 @@ export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(
                     <LocalPhoneOutlinedIcon />
                   </ListItemIcon>
                   <ListItemText primary={t("MAIN.MENU.CONTACT_US")} />
+                </ListItemButton>
+              </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton onClick={() => logout()}>
+                  <ListItemIcon>
+                    <LogoutIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={t("CONTENTS.NAV.LOGOUT")} />
                 </ListItemButton>
               </ListItem>
             </List>

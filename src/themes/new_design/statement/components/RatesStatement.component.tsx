@@ -41,6 +41,7 @@ import { QueryActionCreatorResult } from "@reduxjs/toolkit/query";
 import { TablePaginationActions } from "@shared/components/TablePaginationActions";
 
 export type RatesStatementProps = {
+  includePreviousYear: boolean;
   department: string;
   setStatementQueryParams: (dto: StatementQueryParams) => void;
   getBalance: (dto: BalanceRequestDto) => QueryActionCreatorResult<any>;
@@ -50,8 +51,9 @@ export const RatesStatementComponent = ({
   department,
   getBalance,
   setStatementQueryParams,
+  includePreviousYear,
 }: RatesStatementProps): JSX.Element => {
-  const [selectedProperty, setSelectedProperty] = useState("0");
+  const [selectedProperty] = useState("0");
   const [open, setOpen] = useState(false);
   const [selectedPeriod] = useState("current_year");
   const [selectedInvoice, setSelectedInvoice] =
@@ -59,10 +61,7 @@ export const RatesStatementComponent = ({
   const [page, setPage] = useState(0);
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
-  const [includePreviousYear, setIncludePreviousYear] = useState(false);
 
-  const [getProperties, { data: properties, isFetching }] =
-    useLazyGetPropertiesQuery();
   const dispatch = useDispatch();
   const statements = useSelector(selectStatements);
   const statementCount = useSelector(selectStatementsCount);
@@ -78,7 +77,6 @@ export const RatesStatementComponent = ({
     },
     { key: "transType", label: "RATES.COLUMNS.TRANSACTION" },
     { key: "invoiceNo", label: "RATES.COLUMNS.REFERENCE" },
-    { key: "propertyDescription", label: "RATES.COLUMNS.PROPERTY" },
     {
       key: "amount",
       label: "RATES.COLUMNS.AMOUNT",
@@ -106,7 +104,6 @@ export const RatesStatementComponent = ({
             : moment().subtract(1, "year").startOf("year").format("YYYY-MM-DD"),
         to: moment().format("YYYY-MM-DD"),
       });
-      const propReq = getProperties();
       const balanceReq = getBalance({
         incDept: department.toUpperCase(),
         PropertyNumber: selectedProperty,
@@ -131,7 +128,6 @@ export const RatesStatementComponent = ({
 
       return () => {
         balanceReq.abort();
-        propReq.abort();
         statementsReq.abort();
         dispatch(clearStatements());
       };
@@ -171,58 +167,6 @@ export const RatesStatementComponent = ({
           className="personal_box_filter"
           sx={{ margin: { xs: "0.5rem", md: "0 2.25rem" } }}
         >
-          <Box>
-            <FormControl fullWidth>
-              <InputLabel id="property-select-label">
-                {t("RATES.FILTER.PROPERTY")}
-              </InputLabel>
-              {isFetching ? (
-                <Skeleton variant="rounded" width={"100%"} role="progressbar">
-                  <Select
-                    labelId="property-select-label"
-                    label={t("RATES.FILTER.PROPERTY")}
-                    value=""
-                    disabled
-                  >
-                    <MenuItem value="">
-                      {" "}
-                      <CircularProgress size={20} /> Loading...
-                    </MenuItem>
-                  </Select>
-                </Skeleton>
-              ) : (
-                properties &&
-                properties.length > 0 && (
-                  <Select
-                    labelId="property-select-label"
-                    label={t("RATES.FILTER.PROPERTY")}
-                    value={selectedProperty}
-                    onChange={(e) => setSelectedProperty(e.target.value)}
-                  >
-                    {properties?.map((property) => (
-                      <MenuItem
-                        key={property.propertyNumber}
-                        value={property.propertyNumber}
-                      >
-                        {property.propertyDescription}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                )
-              )}
-            </FormControl>
-          </Box>
-          <Box>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={includePreviousYear}
-                  onChange={(e) => setIncludePreviousYear(e.target.checked)}
-                />
-              }
-              label={t("RATES.FILTER.DATE_RANGE_OPTIONS.INCLUDE_PREVIOUS_YEAR")}
-            />
-          </Box>
           <Box sx={{ flex: "2" }}></Box>
         </Box>
         <Box
@@ -274,7 +218,7 @@ export const RatesStatementComponent = ({
         sx={{ display: { xs: "flex", md: "none" } }}
       >
         <MobileStatementsListComponent
-          isLoading={isFetching}
+          isLoading={false}
           onClick={rateClickHandler}
           list={statements || []}
           handleChangeRowsPerPage={handleChangeRowsPerPage}

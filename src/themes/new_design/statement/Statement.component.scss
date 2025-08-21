@@ -41,6 +41,10 @@
     justify-content: end;
     align-items: end;
 
+    @media screen and (max-width: $mobileSize) {
+      display: flex;
+    }
+
     .print-text {
       margin-left: auto;
     }
