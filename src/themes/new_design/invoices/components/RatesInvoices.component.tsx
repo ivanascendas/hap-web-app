@@ -301,7 +301,7 @@ export const RatesInvoicesComponent = ({
           className=" personal_box personal_box_content"
           sx={{
             display: {
-              xs: "none",
+              xs: "block",
               md: "block",
               borderRadius: "2rem",
               padding: 0,
@@ -358,7 +358,7 @@ export const RatesInvoicesComponent = ({
 
       <Box
         className="personal_box_content"
-        sx={{ display: { xs: "flex", md: "none" } }}
+        sx={{ display: { xs: "none", md: "none" } }}
       >
         <MobileInvoicesListComponent
           isLoading={isRatesLoading}

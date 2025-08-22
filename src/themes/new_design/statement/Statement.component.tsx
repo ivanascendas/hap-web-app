@@ -27,25 +27,50 @@ export const StatementComponent = (): JSX.Element => {
   const [downloadPdf] = useLazyDownloadRatesPdfQuery();
   const [getBalance, { data: balance }] = useLazyGetBalanceQuery();
   const [includePreviousYear, setIncludePreviousYear] = useState(false);
+
   const handlePrintPdf = async () => {
     if (dto) {
       const result = await downloadPdf(dto);
       if (result.data) {
         const blobUrl = URL.createObjectURL(result.data);
-        const iframe = document.createElement("iframe");
-        //iframe.style.display = 'none';
-        iframe.src = blobUrl;
 
-        iframe.onload = () => {
-          iframe.contentWindow?.print();
-          // Cleanup after print dialog closes
+        // Check if we're on mobile
+        const isMobile =
+          /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            navigator.userAgent,
+          );
+
+        if (isMobile) {
+          // On mobile, open PDF in new window/tab for user to handle printing
+          const link = document.createElement("a");
+          link.href = blobUrl;
+          link.target = "_blank";
+          link.download = "statement.pdf";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          // Cleanup
           setTimeout(() => {
-            //  URL.revokeObjectURL(blobUrl);
-            //  document.body.removeChild(iframe);
+            URL.revokeObjectURL(blobUrl);
           }, 1000);
-        };
+        } else {
+          // Desktop behavior - use iframe for direct printing
+          const iframe = document.createElement("iframe");
+          iframe.style.display = "none";
+          iframe.src = blobUrl;
 
-        document.body.appendChild(iframe);
+          iframe.onload = () => {
+            iframe.contentWindow?.print();
+            // Cleanup after print dialog closes
+            //setTimeout(() => {
+            // URL.revokeObjectURL(blobUrl);
+            // document.body.removeChild(iframe);
+            // }, 1000);
+          };
+
+          document.body.appendChild(iframe);
+        }
       }
     }
   };
