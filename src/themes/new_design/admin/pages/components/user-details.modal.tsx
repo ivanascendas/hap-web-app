@@ -30,7 +30,7 @@ import { IntlTelInputRef } from "intl-tel-input/react";
 import { getErrorMessage } from "@shared/utils/getErrorMessage";
 import { setNotify } from "@shared/redux/slices/notifySlice";
 import { useDispatch } from "react-redux";
-import { Close as CloseIcon } from "@mui/icons-material";
+import { Close as CloseIcon, Label } from "@mui/icons-material";
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { default: utils } = require("intl-tel-input/build/js/utils.js");
@@ -194,7 +194,7 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                   label={t("LABELS.EMAIL")}
                   slotProps={{
                     input: {
-                      readOnly: true,
+                      //readOnly: true,
                     },
                   }}
                   error={!!errors.email}
@@ -222,8 +222,8 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                       }
                     },
                   })}
-                  fullWidth
                   label={t("LABELS.PHONE")}
+                  fullWidth
                   slotProps={{
                     input: {
                       inputComponent: IntlTelInputComponent,
@@ -245,11 +245,15 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                         },
                       },
                     },
+                    inputLabel: {
+                      shrink: true,
+                    },
                   }}
                   error={!!errors.phoneNumber}
                   helperText={getErrorMessage(errors.phoneNumber?.type)}
                   variant="outlined"
                   margin="normal"
+                  className="phone-input-field"
                 />
               </Grid>
               <Grid size={{ xs: 3 }}>

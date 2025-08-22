@@ -16,10 +16,10 @@ export const TextInput = forwardRef(
     const [showPassword, setShowPassword] = useState(false);
 
     // Destructure relevant props - use props.type directly in render
-    const { type, useDatePicker, ...otherProps } = props;
+    const { type, useDatePicker, variant, ...otherProps } = props;
     const modifiedProps = {
       ...otherProps,
-      variant: "outlined",
+      variant: variant || "outlined",
       // Only mark as required in the DOM if truly empty
       //  required: hasValue ? false : props.required,
     };

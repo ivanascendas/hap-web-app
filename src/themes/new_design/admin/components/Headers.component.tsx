@@ -24,10 +24,6 @@ import PeopleIcon from "@mui/icons-material/People";
 import MailIcon from "@mui/icons-material/Mail";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
-import SecurityIcon from "@mui/icons-material/Security";
-import MessageIcon from "@mui/icons-material/Message";
-import DescriptionIcon from "@mui/icons-material/Description";
-import { de } from "intl-tel-input/i18n";
 import { useLogoutMutation } from "@shared/services/Auth.service";
 
 const pages = [
@@ -42,7 +38,7 @@ const pages = [
   { link: "admins", title: "Admins", icon: <AdminPanelSettingsIcon /> },
 ];
 
-const settings = ["Security", "Messages", "Terms", "Logout"];
+const settings = ["Security", "Messages", "Logout"];
 
 const HeaderComponent = (): JSX.Element => {
   const [title, setTitle] = React.useState<string>("ADMIN.USERS.TITLE");

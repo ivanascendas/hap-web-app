@@ -51,6 +51,7 @@ export const UsersComponent = () => {
         <Typography
           component={"span"}
           className={row.isActive ? "active" : "inactive"}
+          sx={{ whiteSpace: "nowrap" }}
         >
           ● {row.isActive ? "Active" : "Inactive"}
         </Typography>
@@ -64,10 +65,16 @@ export const UsersComponent = () => {
           <IconButton onClick={() => editClickHandler(row)}>
             <Edit color="info" />
           </IconButton>
-          <IconButton onClick={() => rateClickHandler(row)}>
+          <IconButton
+            sx={{ display: "none" }}
+            onClick={() => rateClickHandler(row)}
+          >
             <Visibility color="info" />
           </IconButton>
-          <IconButton onClick={() => deleteClickHandler(row)}>
+          <IconButton
+            sx={{ display: "none" }}
+            onClick={() => deleteClickHandler(row)}
+          >
             <Delete color="error" />
           </IconButton>
         </Box>

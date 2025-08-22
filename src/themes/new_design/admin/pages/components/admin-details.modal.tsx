@@ -288,11 +288,16 @@ export const AdminDetailsModal: React.FC<AdminDetailsModalProps> = ({
                         },
                       },
                     },
+
+                    inputLabel: {
+                      shrink: true,
+                    },
                   }}
                   error={!!errors.Phone}
                   helperText={getErrorMessage(errors.Phone?.type)}
                   variant="outlined"
                   margin="normal"
+                  className="phone-input-field"
                 />
               </Grid>
               <Grid size={{ xs: 6 }}>
