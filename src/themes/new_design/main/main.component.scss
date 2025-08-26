@@ -65,11 +65,16 @@
     left: 0;
     right: 0;
     display: flex;
-    justify-content: center;
+    justify-content: end;
     align-items: center;
     height: 3.125rem;
     background: $secondary;
     box-shadow: 0 0.0625rem 1.125rem 0 rgb(220, 224, 231);
+    padding: 0 3rem;
+
+    @media screen and (max-width: $mobileSize) {
+      justify-content: center;
+    }
 
     a {
       margin: 0 0.3125rem;
@@ -79,11 +84,12 @@
   &:not(.authenticated) {
     footer {
       background: none !important;
-      color: #a6abb0;
+      //background-color: rgba($primary700, 0.8) !important;
+      color: $mid-gray;
       box-shadow: none;
 
       a {
-        color: #a6abb0;
+        color: $primary700;
         text-decoration: underline;
       }
 

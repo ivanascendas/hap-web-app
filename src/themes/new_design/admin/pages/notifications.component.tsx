@@ -21,7 +21,6 @@ import {
 } from "@shared/services/Notifications.service";
 import { useDispatch } from "react-redux";
 import { setError } from "@shared/redux/slices/errorSlice";
-import { NotificationComponent } from "@shared/components/Notification.component";
 import { setNotify } from "@shared/redux/slices/notifySlice";
 import { NotificationsReportComponent } from "./components/notifications-report.component";
 
@@ -92,7 +91,7 @@ export const AdminNotificationsComponent = () => {
   };
 
   return (
-    <>
+    <Box className="personal_box">
       <>
         <Box className="admin-container__header">
           <ToggleButtonGroup
@@ -110,19 +109,19 @@ export const AdminNotificationsComponent = () => {
           </ToggleButtonGroup>
         </Box>
       </>
-      <Box p={3} sx={{ overflow: "auto", maxHeight: "calc(100vh - 220px)" }}>
+      <Box sx={{ overflow: "auto", maxHeight: "calc(100vh - 220px)" }}>
         {type === "forms" && (
-          <Container maxWidth="xl">
+          <>
             <Typography
               variant="h5"
               sx={{
-                margin: "1rem 2.1875rem",
+                margin: "1rem 0",
                 fontWeight: "bold",
               }}
             >
               {t("CONTENTS.TITLE.PUSHNOTIFICATION")}
             </Typography>
-            <Box className="personal_box">
+            <Box>
               <form>
                 <TextField
                   label={t("CONTENTS.TABLE.TITLE")}
@@ -151,6 +150,7 @@ export const AdminNotificationsComponent = () => {
                   onClick={handleSubmit(snedNotification)}
                   variant="contained"
                   color="primary"
+                  className="admin_main-button"
                 >
                   {t("CONTENTS.BUTTON.SEND")}
                 </Button>
@@ -159,19 +159,19 @@ export const AdminNotificationsComponent = () => {
             <Typography
               variant="h5"
               sx={{
-                margin: "1rem 2.1875rem",
+                margin: "1rem 0",
                 fontWeight: "bold",
               }}
             >
               {t("CONTENTS.TABLE.EXCEL_FILE")}
             </Typography>
-            <Box className="personal_box">
+            <Box>
               <form>
                 <Box display="flex" gap="1rem">
                   <TextField
                     label={t("CONTENTS.TABLE.TITLE")}
                     sx={{
-                      flex: 1,
+                      flex: 0.5,
                       marginBottom: "1.5rem",
                     }}
                     {...registerExcel("title", { required: true })}
@@ -184,9 +184,10 @@ export const AdminNotificationsComponent = () => {
                     variant="contained"
                     tabIndex={-1}
                     sx={{
-                      flex: 1,
+                      flex: "none",
                       marginBottom: "1.5rem",
                     }}
+                    className="admin_blue-button"
                     startIcon={<CloudUploadIcon />}
                   >
                     {file?.name || "Upload CSV"}
@@ -217,19 +218,16 @@ export const AdminNotificationsComponent = () => {
                   variant="contained"
                   onClick={handleSubmitExcel(snedExcelNotification)}
                   color="primary"
+                  className="admin_main-button"
                 >
                   {t("CONTENTS.BUTTON.SEND")}
                 </Button>
               </form>
             </Box>
-          </Container>
+          </>
         )}
-        {type === "reports" && (
-          <Container maxWidth="xl">
-            <NotificationsReportComponent />
-          </Container>
-        )}
+        {type === "reports" && <NotificationsReportComponent />}
       </Box>
-    </>
+    </Box>
   );
 };

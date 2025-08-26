@@ -118,7 +118,7 @@ export const LoginFormComponent = ({
   }
 
   return (
-    <MainComponent>
+    <MainComponent showFooter={true}>
       <div className="auth-container">
         <div className="auth-container__cover"></div>
 
@@ -162,10 +162,18 @@ export const LoginFormComponent = ({
                     error={!!errors.username}
                     aria-invalid={errors.username ? "true" : "false"}
                     placeholder={
-                      isMobile || true ? undefined : t("LABELS.CUSTOMER_NUMBER")
+                      successUrl === "/admin/users"
+                        ? "Login"
+                        : isMobile || true
+                          ? undefined
+                          : t("LABELS.CUSTOMER_NUMBER")
                     }
                     label={
-                      isMobile || true ? t("LABELS.CUSTOMER_NUMBER") : undefined
+                      successUrl === "/admin/users"
+                        ? "Login"
+                        : isMobile || true
+                          ? t("LABELS.CUSTOMER_NUMBER")
+                          : undefined
                     }
                     variant={"outlined"}
                     helperText={getErrorMessage(errors.username?.type)}

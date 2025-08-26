@@ -2,40 +2,42 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f1f3f5 !important;
+  background: #fff !important;
   color: #3c515f;
   border-radius: 5px;
   border: 1px solid rgb(200, 200, 200);
   margin-bottom: 10px;
   gap: 30px;
   padding: 10px;
-
+  display: flex;
   &:hover {
     box-shadow: 0 0 0.1625rem 0 rgba(205, 59, 26, 0.85);
   }
 
   &_name {
     display: flex;
-    flex-direction: column;
-    justify-content: start;
+    justify-content: space-between;
     text-align: start;
     text-transform: none;
+    color: #131314;
+    font-weight: 600;
+    font-size: 16px;
+    flex: 1;
   }
 
   &_sort {
-    color: #766c6c;
+    color: #fff;
     text-transform: none;
     font-size: 11px;
-  }
-
-  svg.MuiSvgIcon-root {
-    &:first-child {
-      fill: #076aef;
-      width: 48px !important;
-      height: 48px !important;
-      border: 1px solid #ccc;
-      border-radius: 3px;
-    }
+    background-color: #7a003c;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    flex: none;
   }
 
   &_arrow {

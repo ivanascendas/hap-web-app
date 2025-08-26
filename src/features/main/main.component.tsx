@@ -11,7 +11,7 @@ import { BottomBarСomponent } from "./components/BottomBar.component";
 import useWindowDimensions from "../../shared/hooks/useWindowDimensions";
 import { t } from "i18next";
 import { useNavigate } from "react-router-dom";
-import { FooterCompoment } from "./components/Footer.component";
+import { FooterComponent } from "./components/Footer.component";
 import { ExistingTenantPopupComponent } from "../../shared/components/ExistingTenantPopup.component";
 import { useSelector } from "react-redux";
 import { selectUserLoading } from "../../shared/redux/slices/loaderSlice";
@@ -82,7 +82,7 @@ export const MainComponent = ({ children }: MainProps): JSX.Element => {
       >
         {children}
       </Box>
-      <FooterCompoment
+      <FooterComponent
         drawerWidth={drawerWidth}
         isAuthenticated={isAuthenticated}
         showFooter={

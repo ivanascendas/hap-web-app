@@ -7,6 +7,8 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
+  IconButton,
+  Grid,
 } from "@mui/material";
 import { CircularProgress } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -28,6 +30,7 @@ import { IntlTelInputRef } from "intl-tel-input/react";
 import { getErrorMessage } from "@shared/utils/getErrorMessage";
 import { setNotify } from "@shared/redux/slices/notifySlice";
 import { useDispatch } from "react-redux";
+import { Close as CloseIcon, Label } from "@mui/icons-material";
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { default: utils } = require("intl-tel-input/build/js/utils.js");
@@ -152,139 +155,157 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
         <Typography variant="h6" component="h2">
           {t("POPUPS.USER_DETAILS.TITLE")}
         </Typography>
+        <IconButton
+          onClick={onClose}
+          sx={{ position: "absolute", top: 16, right: 16 }}
+        >
+          <CloseIcon />
+        </IconButton>
         {isLoading ? (
           <div className="user-details-modal__loading">
             <CircularProgress />
           </div>
         ) : (
           <div className="user-details-modal__content">
-            <div className="space-y-4">
-              <TextField
-                {...register("customerName")}
-                fullWidth
-                label={t("LABELS.CUSTOMER_NAME")}
-                slotProps={{
-                  input: {
-                    readOnly: true,
-                  },
-                }}
-                error={!!errors.customerName}
-                helperText={getErrorMessage(errors.customerName?.type)}
-                variant="outlined"
-                margin="normal"
-              />
-
-              <TextField
-                {...register("address")}
-                fullWidth
-                label={t("LABELS.ADDRESS")}
-                slotProps={{
-                  input: {
-                    readOnly: true,
-                  },
-                }}
-                error={!!errors.address}
-                helperText={getErrorMessage(errors.address?.type)}
-                variant="outlined"
-                margin="normal"
-              />
-
-              <TextField
-                {...register("customerNumber")}
-                fullWidth
-                label={t("ACCOUNT.CUSTOMER_NUMBER")}
-                slotProps={{
-                  input: {
-                    readOnly: true,
-                  },
-                }}
-                error={!!errors.customerNumber}
-                helperText={getErrorMessage(errors.customerNumber?.type)}
-                variant="outlined"
-                margin="normal"
-              />
-
-              <TextField
-                {...register("drNumber")}
-                fullWidth
-                label={t("LABELS.DR_NUMBER")}
-                slotProps={{
-                  input: {
-                    readOnly: true,
-                  },
-                }}
-                error={!!errors.drNumber}
-                helperText={getErrorMessage(errors.drNumber?.type)}
-                variant="outlined"
-                margin="normal"
-              />
-
-              <TextField
-                {...register("email", {
-                  required: true,
-                  pattern: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
-                })}
-                fullWidth
-                label={t("LABELS.EMAIL")}
-                slotProps={{
-                  input: {
-                    readOnly: true,
-                  },
-                }}
-                error={!!errors.email}
-                helperText={getErrorMessage(errors.email?.type)}
-                variant="outlined"
-                margin="normal"
-              />
-
-              <TextField
-                {...register("phoneNumber", {
-                  required: true,
-                  validate: (value) => {
-                    const countryData = iniTelReff.current
-                      ?.getInstance()
-                      ?.getSelectedCountryData();
-                    const isValid = utils.isValidNumber(
-                      value,
-                      countryData?.iso2,
-                    );
-                    if (isValid) {
-                      return true;
-                    } else {
-                      return t("ERRORS.INVALID_PHONE");
-                    }
-                  },
-                })}
-                fullWidth
-                label={t("LABELS.PHONE")}
-                slotProps={{
-                  input: {
-                    inputComponent: IntlTelInputComponent,
-                    inputProps: {
-                      options: {
-                        initialCountry: "ie",
-                        separateDialCode: true,
-                        formatOnDisplay: true,
-                      },
-                      getIti: (obj: IntlTelInputRef) => {
-                        iniTelReff.current = obj;
-                        iniTelinst.current = obj.getInstance() || undefined;
-                      },
-                      onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-                        const countryData =
-                          iniTelinst.current?.getSelectedCountryData();
-                        const phone = `+${countryData?.dialCode}${e.target.value}`;
-                        setValue("phoneNumber", phone);
+            <Grid container spacing={2} className="space-y-4">
+              <Grid size={{ xs: 6 }}>
+                <TextField
+                  {...register("customerName")}
+                  fullWidth
+                  label={t("LABELS.CUSTOMER_NAME")}
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                    },
+                  }}
+                  error={!!errors.customerName}
+                  helperText={getErrorMessage(errors.customerName?.type)}
+                  variant="outlined"
+                  margin="normal"
+                />
+              </Grid>
+              <Grid size={{ xs: 6 }}>
+                <TextField
+                  {...register("email", {
+                    required: true,
+                    pattern: /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/,
+                  })}
+                  fullWidth
+                  label={t("LABELS.EMAIL")}
+                  slotProps={{
+                    input: {
+                      //readOnly: true,
+                    },
+                  }}
+                  error={!!errors.email}
+                  helperText={getErrorMessage(errors.email?.type)}
+                  variant="outlined"
+                  margin="normal"
+                />
+              </Grid>
+              <Grid size={{ xs: 6 }}>
+                <TextField
+                  {...register("phoneNumber", {
+                    required: true,
+                    validate: (value) => {
+                      const countryData = iniTelReff.current
+                        ?.getInstance()
+                        ?.getSelectedCountryData();
+                      const isValid = utils.isValidNumber(
+                        value,
+                        countryData?.iso2,
+                      );
+                      if (isValid) {
+                        return true;
+                      } else {
+                        return t("ERRORS.INVALID_PHONE");
+                      }
+                    },
+                  })}
+                  label={t("LABELS.PHONE")}
+                  fullWidth
+                  slotProps={{
+                    input: {
+                      inputComponent: IntlTelInputComponent,
+                      inputProps: {
+                        options: {
+                          initialCountry: "ie",
+                          separateDialCode: true,
+                          formatOnDisplay: true,
+                        },
+                        getIti: (obj: IntlTelInputRef) => {
+                          iniTelReff.current = obj;
+                          iniTelinst.current = obj.getInstance() || undefined;
+                        },
+                        onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                          const countryData =
+                            iniTelinst.current?.getSelectedCountryData();
+                          const phone = `+${countryData?.dialCode}${e.target.value}`;
+                          setValue("phoneNumber", phone);
+                        },
                       },
                     },
-                  },
-                }}
-                error={!!errors.phoneNumber}
-                helperText={getErrorMessage(errors.phoneNumber?.type)}
-                variant="outlined"
-                margin="normal"
-              />
-
+                    inputLabel: {
+                      shrink: true,
+                    },
+                  }}
+                  error={!!errors.phoneNumber}
+                  helperText={getErrorMessage(errors.phoneNumber?.type)}
+                  variant="outlined"
+                  margin="normal"
+                  className="phone-input-field"
+                />
+              </Grid>
+              <Grid size={{ xs: 3 }}>
+                <TextField
+                  {...register("customerNumber")}
+                  fullWidth
+                  label={t("ACCOUNT.CUSTOMER_NUMBER")}
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                    },
+                  }}
+                  error={!!errors.customerNumber}
+                  helperText={getErrorMessage(errors.customerNumber?.type)}
+                  variant="outlined"
+                  margin="normal"
+                />
+              </Grid>
+              <Grid size={{ xs: 3 }}>
+                <TextField
+                  {...register("drNumber")}
+                  fullWidth
+                  label={t("LABELS.DR_NUMBER")}
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                    },
+                  }}
+                  error={!!errors.drNumber}
+                  helperText={getErrorMessage(errors.drNumber?.type)}
+                  variant="outlined"
+                  margin="normal"
+                />
+              </Grid>
+              <Grid size={{ xs: 12 }}>
+                <TextField
+                  {...register("address")}
+                  fullWidth
+                  label={t("LABELS.ADDRESS")}
+                  slotProps={{
+                    input: {
+                      readOnly: true,
+                    },
+                  }}
+                  error={!!errors.address}
+                  helperText={getErrorMessage(errors.address?.type)}
+                  variant="outlined"
+                  margin="normal"
+                  multiline
+                  rows={3}
+                />
+              </Grid>
               <Controller
                 name="isActive"
                 control={control}
@@ -292,6 +313,7 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                   <RadioGroup
                     {...field}
                     row
+                    sx={{ margin: 0 }}
                     value={field.value ? "active" : "inactive"}
                     onChange={(e) =>
                       field.onChange(e.target.value === "active")
@@ -310,19 +332,13 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                   </RadioGroup>
                 )}
               />
-
-              <Box className="user-details-modal__buttons">
-                <button onClick={handleUpdate} className="btn-primary">
-                  {t("BUTTONS.UPDATE")}
-                </button>
-                <button onClick={handleResetPassword} className="btn-primary">
-                  {t("FORGOT_PASSWORD.TITLE")}
-                </button>
-                <button className="btn-secondary" onClick={onClose}>
-                  {t("BUTTONS.CLOSE")}
-                </button>
-              </Box>
-            </div>
+            </Grid>
+            <Box className="user-details-modal__buttons">
+              <Button onClick={handleUpdate}>{t("BUTTONS.UPDATE")}</Button>
+              <Button onClick={handleResetPassword} className="reset-password">
+                {t("FORGOT_PASSWORD.TITLE")}
+              </Button>
+            </Box>
           </div>
         )}
       </Box>

@@ -97,7 +97,14 @@
 
       .rates_invoice_table {
         margin-bottom: 3.5rem;
+
         tr {
+          th {
+            @media screen and (max-width: $mobileSize) {
+              font-size: 12px !important;
+              padding: 0.5rem !important;
+            }
+          }
           &.selected {
             background-color: rgba($primary700, 0.1) !important;
           }
@@ -136,13 +143,23 @@
 
           .MuiFormControl-root {
             width: 7.9375rem;
+            @media screen and (max-width: $mobileSize) {
+              font-size: 12px !important;
+              width: 7rem;
+            }
           }
 
           td {
             flex: 1;
-
+            @media screen and (max-width: $mobileSize) {
+              font-size: 12px !important;
+              padding: 0.5rem !important;
+            }
             &:nth-child(3) {
               width: 15.625rem;
+              @media screen and (max-width: $mobileSize) {
+                width: 6.625rem;
+              }
             }
 
             &:nth-child(6) {
@@ -270,6 +287,9 @@
   color: $black;
   font-size: 1rem;
   font-weight: 700;
+  @media screen and (max-width: $mobileSize) {
+    font-size: 12px !important;
+  }
 
   span {
     &.success::before {

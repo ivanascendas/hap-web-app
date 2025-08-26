@@ -238,12 +238,7 @@ export const RatesInvoicesComponent = ({
       key: "total",
       label: "INVOICES.RATES.COLUMNS.BALANCE",
       rowRender: (row: InvoiceDto) => (
-        <Box className={`balance `}>
-          {currency.format(row.total || 0)}
-          <span className={row.totalPaid && row.totalPaid > 0 ? "success" : ""}>
-            {currency.format(row.totalPaid || 0)} paid
-          </span>
-        </Box>
+        <Box className={`balance `}>{currency.format(row.total || 0)}</Box>
       ),
     },*/
     {
@@ -260,7 +255,7 @@ export const RatesInvoicesComponent = ({
             }}
             variant="standard"
             onChange={(e) => handleAmountChange(e, row)}
-            value={currency.format(selectedInvoices || row.pending || 0)}
+            value={currency.format(selectedInvoices || 0)}
           />
         </>
       ),
@@ -307,7 +302,7 @@ export const RatesInvoicesComponent = ({
           className=" personal_box personal_box_content"
           sx={{
             display: {
-              xs: "none",
+              xs: "block",
               md: "block",
               borderRadius: "2rem",
               padding: 0,
@@ -364,7 +359,7 @@ export const RatesInvoicesComponent = ({
 
       <Box
         className="personal_box_content"
-        sx={{ display: { xs: "flex", md: "none" } }}
+        sx={{ display: { xs: "none", md: "none" } }}
       >
         <MobileInvoicesListComponent
           isLoading={isRatesLoading}

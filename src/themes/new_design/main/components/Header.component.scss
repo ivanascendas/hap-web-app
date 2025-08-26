@@ -9,12 +9,16 @@
   left: 0;
   right: 0;
   z-index: 100;
-
+  @media screen and (max-width: $mobileSize) {
+    padding: 0 !important;
+    //justify-content: space-between !important;
+  }
   .MuiToolbar-root {
     z-index: 100;
 
     @media screen and (max-width: $mobileSize) {
       padding: 0;
+      justify-content: space-between !important;
     }
   }
 

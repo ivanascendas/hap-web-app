@@ -64,6 +64,20 @@
     background-clip: border-box;
     padding: 0rem 1.25rem 0rem 2.5rem;
 
+    &.forgot-password {
+      input:not([type="radio"]) {
+        padding-top: 0;
+      }
+    }
+
+    &.login-page {
+      .auth-form__title {
+        margin-bottom: 0.625rem;
+        margin-left: 1.875rem;
+        margin-right: 1.875rem;
+      }
+    }
+
     @media screen and (max-width: $mobileSize) {
       padding: 0rem 1rem;
       width: 100%;
@@ -127,7 +141,8 @@
       align-items: start;
 
       @media screen and (max-width: $mobileSize) {
-        left: -2.25rem;
+        left: 1rem;
+        top: 0.5rem;
       }
 
       img {
@@ -135,6 +150,9 @@
         //  margin: auto;
         align-self: center;
         width: 11.875rem;
+        @media screen and (max-width: $mobileSize) {
+          width: 8rem;
+        }
       }
     }
 

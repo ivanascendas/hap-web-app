@@ -1,113 +1,85 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { StatementDto } from "@shared/dtos/statement.dtos";
 import moment from "moment";
-import {
-  Box,
-  Button,
-  Skeleton,
-  TablePagination,
-  TablePaginationActions,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Skeleton, Typography } from "@mui/material";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import currency from "@shared/utils/currency";
 import "./MobileStatementsList.component.scss";
-import { t } from "i18next";
-import { selectStatementsCount } from "@shared/redux/slices/statementSlice";
-import { useSelector } from "react-redux";
 
 export type MobileStatementsListProps = {
   list: StatementDto[];
   isLoading: boolean;
-  page: number;
+  page?: number;
+  handleChangePage?: (event: unknown, newPage: number) => void;
+  handleChangeRowsPerPage?: (newRowsPerPage: number) => void;
   onClick?: (statement: StatementDto) => void;
-  handleChangeRowsPerPage: () => void;
-  handleChangePage: (event: unknown, newPage: number) => void;
+  loadMore?: () => void;
 };
 export const MobileStatementsListComponent = ({
   list,
-  page,
+  loadMore,
   isLoading,
   onClick,
-  handleChangeRowsPerPage,
-  handleChangePage,
 }: MobileStatementsListProps): JSX.Element => {
-  const statementCount = useSelector(selectStatementsCount);
+  const [statements, setStatements] = React.useState<{
+    [yearMounth: string]: StatementDto[];
+  }>({});
+
+  useEffect(() => {
+    const statementsByYearMounth: { [yearMounth: string]: StatementDto[] } = {};
+    list.forEach((statement: StatementDto) => {
+      const yearMounth = moment(statement.statementDate).format("MMM YYYY");
+      if (!statementsByYearMounth[yearMounth]) {
+        statementsByYearMounth[yearMounth] = [];
+      }
+      statementsByYearMounth[yearMounth].push(statement);
+    });
+    setStatements(statementsByYearMounth);
+  }, [list]);
 
   return (
     <Box className="table-statements-mobile">
-      {!isLoading && (
-        <Box className="table-statements-mobile_group">
-          <Box className="table-statements-mobile_group_list">
-            {list.map((statement, i) => (
-              <Button
-                fullWidth
-                onClick={() => onClick && onClick(statement)}
-                key={i}
-                className="table-statements-mobile_group_list_item ripple"
-                aria-label={`${statement.invoiceNo} - ${statement.sequenceNo}`}
-              >
-                <Box sx={{ display: "flex", flex: 1 }}>
-                  <Typography component={"strong"}>
-                    {statement.transType}
-                  </Typography>
-                  <Box className="table-statements-mobile_group_list_item_date">
-                    {moment(statement.statementDate).format("DD MMM YYYY")}
+      {!isLoading &&
+        Object.keys(statements).map((yearMounth: string) => (
+          <Box className="table-statements-mobile_group" key={yearMounth}>
+            <Box className="table-statements-mobile_group_header">
+              {yearMounth}
+            </Box>
+
+            <Box className="table-statements-mobile_group_list">
+              {statements[yearMounth].map((statement, i) => (
+                <Button
+                  fullWidth
+                  onClick={() => onClick && onClick(statement)}
+                  key={yearMounth + i}
+                  className="table-statements-mobile_group_list_item ripple"
+                  aria-label={`${statement.invoiceNo} - ${statement.sequenceNo}`}
+                >
+                  <Box style={{ width: "3.75rem !important", flex: "none" }}>
+                    <Box className="table-statements-mobile_group_list_item_date">
+                      <span>
+                        {moment(statement.statementDate).format("DD")}
+                      </span>
+                      {moment(statement.statementDate).format("MMM")}
+                    </Box>
                   </Box>
-                </Box>
-
-                <Box
-                  className={`table-statements-mobile_group_list_item_amount `}
-                >
-                  <Typography component={"span"}>
-                    {t("RATES.COLUMNS.AMOUNT")}:&nbsp;
-                  </Typography>
-                  <Typography component={"strong"}>
-                    {currency.format(statement.amount)}
-                  </Typography>
-                </Box>
-                <Box
-                  className={`table-statements-mobile_group_list_item_amount `}
-                >
-                  <Typography component={"span"}>
-                    {t("RATES.COLUMNS.REFERENCE")}:&nbsp;
-                  </Typography>
-                  <Typography component={"strong"}>
+                  <Box className="table-statements-mobile_group_list_item_referance">
                     {statement.invoiceNo}
-                  </Typography>
-                </Box>
-                <Box className="table-statements-mobile_group_list_item_footer">
-                  <Typography component={"span"}>
-                    {t("RATES.COLUMNS.BALANCE")}:&nbsp;
-                  </Typography>
-                  <Typography component={"strong"} className="negative">
-                    {currency.format(statement.balance)}
-                  </Typography>
-                </Box>
-              </Button>
-            ))}
+                  </Box>
 
-            <Box
-              className="personal_box_footer"
-              sx={{
-                display: { md: "flex" },
-                marginTop: "3rem",
-                justifyContent: "space-between",
-              }}
-            >
-              <TablePagination
-                rowsPerPageOptions={[50]}
-                component="div"
-                count={statementCount || 0}
-                rowsPerPage={50}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                ActionsComponent={TablePaginationActions}
-              />
+                  <Box
+                    className={`table-statements-mobile_group_list_item_amount ${statement.transType == "Invoice" ? "text_red" : "clr_green"}`}
+                  >
+                    {currency.format(statement.amount)}
+                  </Box>
+                  <Box className="table-statements-mobile_group_list_item_chevron">
+                    <ChevronRightIcon fontSize="large" />
+                  </Box>
+                </Button>
+              ))}
             </Box>
           </Box>
-        </Box>
-      )}
+        ))}
       {isLoading && (
         <Box className="table-statements-mobile_group">
           <Box className="table-statements-mobile_group_header">
@@ -134,7 +106,7 @@ export const MobileStatementsListComponent = ({
                 <Skeleton variant="text" />
               </Box>
               <Box className="table-statements-mobile_group_list_item_chevron">
-                <Skeleton variant="text" />
+                <ChevronRightIcon fontSize="large" />
               </Box>
             </Box>
           </Box>

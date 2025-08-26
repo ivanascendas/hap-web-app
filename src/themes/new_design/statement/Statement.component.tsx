@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, FormControlLabel, Switch } from "@mui/material";
 import { useParams } from "react-router-dom";
 import LocalPrintshopIcon from "@mui/icons-material/LocalPrintshop";
 import { useTranslation } from "react-i18next";
@@ -17,7 +17,7 @@ import currency from "@shared/utils/currency";
 import DownloadForOfflineIcon from "@mui/icons-material/Download";
 
 import { StatementQueryParams } from "@shared/dtos/statement.dtos";
-import React from "react";
+import React, { useState } from "react";
 import { HeaderStatementComponent } from "./components/Header.component";
 
 export const StatementComponent = (): JSX.Element => {
@@ -26,26 +26,51 @@ export const StatementComponent = (): JSX.Element => {
   const [dto, setDto] = React.useState<StatementQueryParams | null>(null);
   const [downloadPdf] = useLazyDownloadRatesPdfQuery();
   const [getBalance, { data: balance }] = useLazyGetBalanceQuery();
+  const [includePreviousYear, setIncludePreviousYear] = useState(false);
 
   const handlePrintPdf = async () => {
     if (dto) {
       const result = await downloadPdf(dto);
       if (result.data) {
         const blobUrl = URL.createObjectURL(result.data);
-        const iframe = document.createElement("iframe");
-        //iframe.style.display = 'none';
-        iframe.src = blobUrl;
 
-        iframe.onload = () => {
-          iframe.contentWindow?.print();
-          // Cleanup after print dialog closes
+        // Check if we're on mobile
+        const isMobile =
+          /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+            navigator.userAgent,
+          );
+
+        if (isMobile) {
+          // On mobile, open PDF in new window/tab for user to handle printing
+          const link = document.createElement("a");
+          link.href = blobUrl;
+          link.target = "_blank";
+          link.download = "statement.pdf";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+          // Cleanup
           setTimeout(() => {
-            //  URL.revokeObjectURL(blobUrl);
-            //  document.body.removeChild(iframe);
+            URL.revokeObjectURL(blobUrl);
           }, 1000);
-        };
+        } else {
+          // Desktop behavior - use iframe for direct printing
+          const iframe = document.createElement("iframe");
+          iframe.style.display = "none";
+          iframe.src = blobUrl;
 
-        document.body.appendChild(iframe);
+          iframe.onload = () => {
+            iframe.contentWindow?.print();
+            // Cleanup after print dialog closes
+            //setTimeout(() => {
+            // URL.revokeObjectURL(blobUrl);
+            // document.body.removeChild(iframe);
+            // }, 1000);
+          };
+
+          document.body.appendChild(iframe);
+        }
       }
     }
   };
@@ -85,15 +110,19 @@ export const StatementComponent = (): JSX.Element => {
               }}
               className="h_title_right"
             >
-              {department?.toLocaleLowerCase() !== "documents" && (
-                <Button
-                  sx={{ display: { xs: "none", md: "flex" } }}
-                  startIcon={<DownloadForOfflineIcon />}
-                  className="btn-secondary"
-                >
-                  Download ALL
-                </Button>
-              )}
+              <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={includePreviousYear}
+                      onChange={(e) => setIncludePreviousYear(e.target.checked)}
+                    />
+                  }
+                  label={t(
+                    "RATES.FILTER.DATE_RANGE_OPTIONS.INCLUDE_PREVIOUS_YEAR",
+                  )}
+                />
+              </Box>
               {department?.toLocaleLowerCase() !== "documents" && (
                 <Button
                   className="print_btn primary-button"
@@ -111,6 +140,7 @@ export const StatementComponent = (): JSX.Element => {
           <Box sx={{ flexGrow: 1 }} className="page_wrap_height_content">
             {department === "rates" && (
               <RatesStatementComponent
+                includePreviousYear={includePreviousYear}
                 setStatementQueryParams={setDto}
                 department={department}
                 getBalance={getBalance}

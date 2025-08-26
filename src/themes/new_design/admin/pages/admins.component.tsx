@@ -60,45 +60,43 @@ export const AdminsComponent = () => {
   return (
     <Box p={3} sx={{ overflow: "auto", maxHeight: "calc(100vh - 80px)" }}>
       <CssBaseline />
-      <Container maxWidth="xl">
-        <Box className="personal_box ">
-          <Box
-            className="personal_box_filter"
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: "1.5rem",
-              padding: "1rem 0",
-            }}
+      <Box className="personal_box ">
+        <Box
+          className="personal_box_filter"
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "1.5rem",
+            padding: "1rem 0",
+          }}
+        >
+          <Typography
+            variant="h5"
+            className="personal_box_filter_title"
+            sx={{ whiteSpace: "nowrap" }}
           >
-            <Typography
-              variant="h5"
-              className="personal_box_filter_title"
-              sx={{ whiteSpace: "nowrap" }}
+            {t("ADMIN.MANAGEMENT.TITLE")}
+          </Typography>
+          <Box sx={{ maxWidth: "30rem", flex: "none" }}>
+            <button
+              color="secondary"
+              className=" admin_blue-button"
+              onClick={() => handleOpenModal()}
             >
-              {t("ADMIN.MANAGEMENT.TITLE")}
-            </Typography>
-            <Box sx={{ maxWidth: "30rem", flex: "none" }}>
-              <button
-                color="secondary"
-                className="button btn-primary"
-                onClick={() => handleOpenModal()}
-              >
-                {t("POPUPS.CREATE_ADMIN.TITLE")}
-              </button>
-            </Box>
+              {t("POPUPS.CREATE_ADMIN.TITLE")}
+            </button>
           </Box>
-          <TableComponent
-            aria-label="rates table"
-            isLoading={isFetching}
-            columns={columns}
-            rows={admins || []}
-            onItemClick={handleOpenModal}
-            className="rates_table"
-          />
         </Box>
-      </Container>
+        <TableComponent
+          aria-label="rates table"
+          isLoading={isFetching}
+          columns={columns}
+          rows={admins || []}
+          onItemClick={handleOpenModal}
+          className="admin-table"
+        />
+      </Box>
 
       {isModalOpen && (
         <AdminDetailsModal

@@ -282,7 +282,7 @@ export const AccountComponent = (): JSX.Element => {
               gap: "2.5rem",
             }}
           >
-            <Box className="account_avatar_container">
+            <Box className="account_avatar_container" sx={{ display: "none" }}>
               <Box className="account_avatar">
                 <Avatar
                   alt={user?.customerName}
@@ -304,7 +304,7 @@ export const AccountComponent = (): JSX.Element => {
                 </Button>
               </Box>
             </Box>
-            <form style={{ flex: 1 }} onSubmit={handleSubmit(onSubmit)}>
+            <form style={{ flex: 0.5 }} onSubmit={handleSubmit(onSubmit)}>
               <Box className="account_form_row">
                 <label
                   className="registration__label label-question required"

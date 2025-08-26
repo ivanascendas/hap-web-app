@@ -237,3 +237,8 @@ label {
   margin: 0 1.875rem; // 0 30px
   text-transform: none;
 }
+.phone-input-field {
+  .MuiInputLabel-root {
+    top: 0 !important;
+  }
+}
