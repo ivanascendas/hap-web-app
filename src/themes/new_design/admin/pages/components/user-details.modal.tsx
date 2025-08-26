@@ -79,7 +79,11 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
 
   useEffect(() => {
     if (customer) {
-      reset({ ...customer, isActive: customer.lockoutEndDateUtc == null });
+      reset({
+        ...customer,
+        address: customer.address.replace(/\s\s+/g, "\n") || "",
+        isActive: customer.lockoutEndDateUtc == null,
+      });
       iniTelReff.current?.getInstance()?.setNumber(`+${customer.phoneNumber}`);
       console.log("customer", customer);
     }
@@ -87,6 +91,7 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
 
   useEffect(() => {
     if (isOpen && userId) {
+      console.log("Fetching customer data for userId:", userId);
       fetchCustomer(userId);
     }
   }, [isOpen, userId, fetchCustomer]);
@@ -123,14 +128,18 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
     }
     try {
       if (
-        values.isActive !== customer?.isActive &&
+        values.isActive !== !customer?.lockoutEnabled &&
         customerUpdate.customerNumber
       ) {
+        console.log(
+          `Customer status changed: ${values.isActive} from ${customer?.lockoutEnabled}`,
+        );
+
         customerUpdate.isActive = values.isActive;
         if (values.isActive) {
-          activateCustomer(customerUpdate.customerNumber.toString());
+          await activateCustomer(customerUpdate.customerNumber.toString());
         } else {
-          deactivateCustomer(customerUpdate.customerNumber.toString());
+          await deactivateCustomer(customerUpdate.customerNumber.toString());
         }
       }
 
@@ -148,6 +157,8 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
       console.log("error", error);
     }
   };
+
+  console.log(getValues());
 
   return (
     <Modal open={isOpen} onClose={onClose}>
@@ -295,7 +306,7 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                   label={t("LABELS.ADDRESS")}
                   slotProps={{
                     input: {
-                      readOnly: true,
+                      // readOnly: true,
                     },
                   }}
                   error={!!errors.address}
