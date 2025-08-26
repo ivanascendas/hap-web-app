@@ -604,7 +604,8 @@
       "EIRCODE": "Eircode",
       "EMAIL": "Email",
       "PHONE": "Phone"
-    }
+    },
+    "SAVE_INFO": "Save Information"
   },
   "PAYMENT_DETAILS": {
     "TITLE": "Payment Details",

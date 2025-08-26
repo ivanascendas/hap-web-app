@@ -1,6 +1,6 @@
 import React, { useEffect, useTransition } from "react";
 import moment from "moment";
-import { Box, Button, Checkbox, Skeleton } from "@mui/material";
+import { Box, Button, Checkbox, Skeleton, TextField } from "@mui/material";
 import currency from "@shared/utils/currency";
 import "./MobileInvoicesList.component.scss";
 import { InvoiceDto } from "@shared/dtos/invoice.dtos";
@@ -12,6 +12,10 @@ export type MobileInvoicesListProps = {
   isLoading: boolean;
   selectedInvoices: number;
   onClick?: (e: React.ChangeEvent<HTMLInputElement>, row: InvoiceDto) => void;
+  handleAmountChange?: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    row: InvoiceDto,
+  ) => void;
   loadMore?: () => void;
 };
 export const MobileInvoicesListComponent = ({
@@ -19,6 +23,7 @@ export const MobileInvoicesListComponent = ({
   loadMore,
   isLoading,
   onClick,
+  handleAmountChange,
   selectedInvoices,
 }: MobileInvoicesListProps): JSX.Element => {
   const [statements, setInvoices] = React.useState<{
@@ -114,18 +119,25 @@ export const MobileInvoicesListComponent = ({
                     className={`table-invoices-mobile_group_list_item_amount `}
                   >
                     <Box className="balance">
-                      {currency.format(statemet.total || 0)}
-                      <span>
-                        {currency.format(statemet.totalPaid || 0)} paid
-                      </span>
+                      <TextField
+                        sx={{
+                          width: "8rem",
+                        }}
+                        id={`${statemet.invoiceNo}_${statemet.sequenceNo}_input`}
+                        slotProps={{
+                          htmlInput: {
+                            "aria-label": `pay ${currency.format(statemet.pending || 0)} input`,
+                          },
+                        }}
+                        variant="standard"
+                        onChange={(e) =>
+                          handleAmountChange && handleAmountChange(e, statemet)
+                        }
+                        value={currency.format(
+                          selectedInvoices || statemet.pending || 0,
+                        )}
+                      />
                     </Box>
-                  </Box>
-                  <Box className="table-invoices-mobile_group_list_item_chevron">
-                    <Checkbox
-                      id={`${statemet.invoiceNo}_${statemet.sequenceNo}_input`}
-                      onChange={(e) => onClick && onClick(e, statemet)}
-                      checked={!!selectedInvoices}
-                    />
                   </Box>
                 </Box>
               ))}

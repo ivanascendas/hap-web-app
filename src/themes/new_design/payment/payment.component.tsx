@@ -1,4 +1,12 @@
-import { Box, Button, Grid, Modal, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Grid,
+  Modal,
+  Typography,
+} from "@mui/material";
 
 import { useEffect, useRef } from "react";
 import React from "react";
@@ -23,7 +31,14 @@ import { SummaryBoxComponent } from "@components/common/components/summary-box.c
 import { TextInput } from "@components/common/components/TextInput.component";
 import { usePhoneInput } from "@shared/hooks/usePhoneInput";
 import { PayComponent } from "./pay.component";
-
+import {
+  useLazyGetPaymentInfoQuery,
+  useSetPaymentInfoMutation,
+} from "@shared/services/Payment.service";
+import { getValue } from "@testing-library/user-event/dist/utils";
+type PaymentModel = PaymentDto & {
+  shouldSaveInfo?: boolean;
+};
 export const PaymentComponent = (): JSX.Element => {
   const { t } = useTranslation();
   const user = useSelector(selectUser);
@@ -34,13 +49,18 @@ export const PaymentComponent = (): JSX.Element => {
   const form = useRef<HTMLFormElement>(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [getPaymentInfo, { isLoading: isPaymentInfoLoading, isUninitialized }] =
+    useLazyGetPaymentInfoQuery();
+  const [setPaymentInfo] = useSetPaymentInfoMutation();
+
   const {
     handleSubmit,
     register,
     reset,
     setValue,
     formState: { errors, isValid },
-  } = useForm<PaymentDto>({
+  } = useForm<PaymentModel>({
     mode: "all",
     defaultValues: {
       VoucherNo: "",
@@ -59,6 +79,7 @@ export const PaymentComponent = (): JSX.Element => {
       Email: user?.email,
       Phone: user ? `+${user?.phone}` : "",
       Zipcode: "NA",
+      shouldSaveInfo: false, // Default value for the checkbox
     },
   });
 
@@ -112,9 +133,14 @@ export const PaymentComponent = (): JSX.Element => {
    * @param data.Phone - Phone number
    * @param data.Zipcode - Postal/ZIP code
    */
-  const onSubmit = (data: PaymentDto) => {
-    console.log({ data });
-
+  const onSubmit = (payment: PaymentModel) => {
+    const { shouldSaveInfo, ...data } = payment;
+    console.log("Payment data submitted:", data);
+    if (shouldSaveInfo) {
+      setPaymentInfo({
+        ...data,
+      });
+    }
     const {
       Name,
       Number,
@@ -155,6 +181,36 @@ export const PaymentComponent = (): JSX.Element => {
       navigate("/payment/pay");
     }
   };
+
+  useEffect(() => {
+    if (isPaymentInfoLoading || !isUninitialized) {
+      return;
+    }
+    getPaymentInfo()
+      .then((res) => res.data)
+      .then((info) => {
+        if (info) {
+          reset({
+            VoucherNo: info.VoucherNo || "0",
+            SequenceNo: info.SequenceNo || "0",
+            AmountToPay: info.AmountToPay || 0,
+            incDept: info.incDept || "",
+            Name: info.Name || user?.customerName,
+            Number: info.Number || user?.customerNo,
+            Address1: info.Address1 || user?.address?.slice(0, 40).trim(),
+            Address2: info.Address2 || user?.address?.slice(40, 80),
+            Address3: info.Address3 || user?.town || "",
+            County: info.County || user?.county || "",
+            phoneCode: info.phoneCode || user?.countryCode?.toString() || "",
+            City: info.City || "City",
+            Country: info.Country || "Ireland",
+            Email: info.Email || user?.email,
+            Phone: info.Phone || `+${user?.phone}`,
+            Zipcode: info.Zipcode || "NA",
+          });
+        }
+      });
+  }, [isPaymentInfoLoading, getPaymentInfo, reset]);
 
   /**
    * Triggers the form submission by calling the handleSubmit function with the onSubmit callback.
@@ -203,7 +259,7 @@ export const PaymentComponent = (): JSX.Element => {
                   />
                 </Box>
               </Grid>
-              <Grid size={12}>
+              <Grid sx={{ display: "none" }} size={12}>
                 <Box className="payment_form_row">
                   <label
                     className=" required"
@@ -384,6 +440,20 @@ export const PaymentComponent = (): JSX.Element => {
                   })}
                 />
               </Box>
+              <Grid size={12}>
+                <Box className="payment_form_row" sx={{ marginTop: "1rem" }}>
+                  <FormControlLabel
+                    control={<Checkbox {...register("shouldSaveInfo")} />}
+                    label={
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: t("PAYMENT_INFO.SAVE_INFO"),
+                        }}
+                      />
+                    }
+                  />
+                </Box>
+              </Grid>
             </Grid>
           </form>
         </Box>

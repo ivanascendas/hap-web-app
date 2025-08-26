@@ -38,6 +38,24 @@ export const paymentsApi = createApi({
       }),
     }),
 
+    getPaymentInfo: builder.query<PaymentDto, void>({
+      query: () => ({
+        url: "/api/payment/info",
+        method: "GET",
+      }),
+    }),
+
+    setPaymentInfo: builder.mutation<PaymentDto, PaymentDto>({
+      query: (data) => ({
+        url: "/api/payment/info",
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
     getInvoices: builder.query<InvoicesResponse, InvoiceQueryParams>({
       query: (params) => ({
         url: "/api/payment/invoices",
@@ -78,4 +96,6 @@ export const {
   useLazyDownloadInvoicePdfQuery,
   usePayInvoicesMutation,
   useConfirmPaymentMutation,
+  useLazyGetPaymentInfoQuery,
+  useSetPaymentInfoMutation,
 } = paymentsApi;

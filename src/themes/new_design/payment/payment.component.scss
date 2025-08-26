@@ -10,7 +10,7 @@
     padding-bottom: pxToRem(80);
   }
 
-  label {
+  label:not(.MuiFormControlLabel-root) {
     margin: 1rem 0;
     display: block;
   }
@@ -19,6 +19,7 @@
     margin: 0;
     max-width: 100%;
     margin-bottom: 0 !important;
+
     &.info {
       max-width: 30rem;
       margin: 0;
@@ -45,6 +46,7 @@
       flex-direction: row;
       margin-bottom: pxToRem(15);
     }
+
     &_response {
       display: flex;
       flex-direction: column;
@@ -56,6 +58,7 @@
       padding: 3rem;
       border-radius: 2rem;
       margin-bottom: 2rem;
+
       h4 {
         color: $black;
         font-size: pxToRem(22);
@@ -69,6 +72,7 @@
         text-align: center;
       }
     }
+
     &_form {
       &_title {
         line-height: 1.2;

@@ -221,19 +221,20 @@ export const RatesInvoicesComponent = ({
     {
       key: "invoiceNo",
       label: "INVOICES.RENTS.COLUMNS.REFERENCE",
-      rowRender: (row: InvoiceDto) => (
-        <Box className="invoice-no">
-          {row.invoiceNo}{" "}
-          <IconButton
-            aria-label={`download ${row.invoiceNo} pdf`}
-            onClick={() => invoiceDownloadHandler(row)}
-          >
-            <DownloadForOfflineIcon />
-          </IconButton>
-        </Box>
-      ),
+
+      /*  rowRender: (row: InvoiceDto) => (
+          <Box className="invoice-no">
+            {row.invoiceNo}{" "}
+            <IconButton
+              aria-label={`download ${row.invoiceNo} pdf`}
+              onClick={() => invoiceDownloadHandler(row)}
+            >
+              <DownloadForOfflineIcon />
+            </IconButton>
+          </Box>
+        ),*/
     },
-    {
+    /*{
       key: "total",
       label: "INVOICES.RATES.COLUMNS.BALANCE",
       rowRender: (row: InvoiceDto) => (
@@ -244,7 +245,7 @@ export const RatesInvoicesComponent = ({
           </span>
         </Box>
       ),
-    },
+    },*/
     {
       key: "totalPaid",
       label: "INVOICES.RENTS.COLUMNS.AMOUNT_TO_PAY",
@@ -370,6 +371,7 @@ export const RatesInvoicesComponent = ({
           selectedInvoices={selectedInvoices}
           list={payments || []}
           onClick={checkBoxHandler}
+          handleAmountChange={handleAmountChange}
         />
       </Box>
 
