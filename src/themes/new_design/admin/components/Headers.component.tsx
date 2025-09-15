@@ -71,7 +71,7 @@ const HeaderComponent = (): JSX.Element => {
           setTitle("ADMIN.USERS.TITLE");
           break;
         case "letters":
-          setTitle("ADMIN.LETTERS.TITLE");
+          setTitle("Letters");
           break;
         case "reports":
           setTitle("Reports");

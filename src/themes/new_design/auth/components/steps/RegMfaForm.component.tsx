@@ -59,7 +59,9 @@ export const RegMfaFormComponent = (): JSX.Element => {
   const [mfa, setMFA] = useState<MFAMethod>("SMS");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setMFA((event.target as HTMLInputElement).value as MFAMethod);
+    if (event.target) {
+      setMFA((event.target as HTMLInputElement).value as MFAMethod);
+    }
   };
 
   useEffect(() => {

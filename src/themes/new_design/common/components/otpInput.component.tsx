@@ -14,6 +14,8 @@ import "./otpInput.component.scss";
 import checkedImg from "../../../../assets/img/forms/otp-done.svg";
 import { TextInput, TextInputProps } from "./TextInput.component";
 import { QueryResultSelectorResult } from "@reduxjs/toolkit/query";
+import { Dayjs } from "dayjs";
+
 type OtpInputProps = {
   input?: TextInputProps;
   btnLabel: string;
@@ -50,7 +52,7 @@ export const OtpInputComponent = forwardRef<HTMLInputElement, OtpInputProps>(
     const [countnumbers] = useState(countNumbers || 5); // Default to 6 if not provided
     const { t } = useTranslation();
     const [countdown, setCountdown] = useState(0);
-    const [otp, setOtp] = useState("");
+    const [otp, setOtp] = useState<Dayjs | string>("");
 
     useEffect(() => {
       if (countdown > 0) {
@@ -87,13 +89,21 @@ export const OtpInputComponent = forwardRef<HTMLInputElement, OtpInputProps>(
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      console.log(`OTP input changed: ${e.target.value}`);
-      input?.onChange?.(e);
-      setOtp(e.target.value);
+      if (e.target) {
+        input?.onChange?.(e);
+        setOtp(e.target?.value);
 
-      if (e.target.value.length === countnumbers) {
-        setInProgress(true);
-        onSubmit(e.target.value);
+        if (e.target?.value.length === countnumbers) {
+          setInProgress(true);
+          onSubmit(e.target.value);
+        }
+      }
+      if ((e as any).$isDayjsObject) {
+        console.log(
+          `OTP input changed: ${(e as any).$D}/${(e as any).$M + 1}/${(e as any).$y}`,
+          e,
+        );
+        setOtp(`${(e as any).$D}/${(e as any).$M + 1}/${(e as any).$y}`);
       }
     };
 
@@ -107,7 +117,7 @@ export const OtpInputComponent = forwardRef<HTMLInputElement, OtpInputProps>(
           disabled={isSubmitting || input?.disabled}
         />
 
-        {!input?.useDatePicker && !isChecked ? (
+        {!input?.useDatePicker ? (
           <Box className="otp-input__actions">
             {inProgress ? (
               <CircularProgress size={24} className="otp-input__spinner" />

@@ -31,22 +31,27 @@ export const getErrorMessage = (
  * @param error - The error object to handle.
  * @returns The result of calling `setError` with the appropriate error message.
  */
-export const errorHandler = (
-  error: unknown
-) => {
+export const errorHandler = (error: unknown) => {
   console.log(error);
   if ((error as any).data) {
-    if ((error as any).data.status == 400) {
+    if (typeof (error as any).data === "string") {
+      return setError({ message: t((error as any).data) });
+    } else if ((error as any).data.status == 400) {
       return setError({ message: t("ERRORS.ACCESS_DENIED") });
     }
     return setError({ message: t((error as any).data.message) });
   } else {
     if (error instanceof Error) {
       return setError({ message: t(error.message) });
-    } else
-      if (typeof error === "string") {
-        return setError({ message: t(error) });
-      }
+    } else if (typeof error === "string") {
+      return setError({ message: t(error) });
+    } else if (
+      typeof error === "object" &&
+      (error as any).data &&
+      typeof (error as any).data === "string"
+    ) {
+      return setError({ message: t((error as any).data) });
+    }
   }
   return setError({ message: t("ERRORS.UNKNOWN_ERROR") });
 };

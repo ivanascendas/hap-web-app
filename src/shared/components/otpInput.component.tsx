@@ -58,7 +58,9 @@ export const OtpInputComponent = forwardRef<HTMLInputElement, OtpInputProps>(
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       input?.onChange?.(e);
-      setOtp(e.target.value);
+      if (e.target) {
+        setOtp(e.target.value);
+      }
     };
 
     return (

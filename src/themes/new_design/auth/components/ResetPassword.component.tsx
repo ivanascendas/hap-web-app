@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom";
 
 import "../Auth.component.scss";
 
-import logo from "../../../../assets/img/custom/logo.png";
+import logo from "../../../../assets/img/HAP2.png";
 import { ResetPasswordDto } from "@shared/dtos/resetPassword.dto";
 import { useResetPasswordMutation } from "@shared/services/Auth.service";
 import { NotificationComponent } from "@shared/components/Notification.component";

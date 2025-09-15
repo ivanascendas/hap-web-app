@@ -23,6 +23,7 @@ import { getErrorMessage } from "@shared/utils/getErrorMessage";
 import { usePasswordValidator } from "@shared/utils/password.validator";
 
 import checkedImg from "../../../../assets/img/forms/otp-done.svg";
+import { NotificationComponent } from "@shared/components/Notification.component";
 
 export const RegConfirmFormComponent = (): JSX.Element => {
   const { t } = useTranslation();
@@ -110,6 +111,17 @@ export const RegConfirmFormComponent = (): JSX.Element => {
     checkDOBResult.isSuccess,
   ]);
 
+  useEffect(() => {
+    console.log({
+      fromErrors: [
+        checkSMSResult.error,
+        checkEmailResult.error,
+        checkDOBResult.error,
+        errors,
+      ],
+    });
+  }, [checkSMSResult, checkEmailResult, checkDOBResult]);
+
   if (formState.isSubmitted && email && phone) {
     console.log({ isSubmitted: formState.isSubmitted, email, phone });
     return (
@@ -119,6 +131,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
 
   return (
     <div role="form" style={{ padding: "0 0.9375rem" }}>
+      <NotificationComponent />
       <div className="registration__subtitle">
         {t("SIGN_UP.DESCRIPTION_STEP_3")}
       </div>

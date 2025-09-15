@@ -6,14 +6,13 @@ import { useTranslation } from "react-i18next";
 
 import ReCAPTCHA from "react-google-recaptcha";
 
-import logo from "../../../../assets/img/custom/logo.png";
+import logo from "../../../../assets/img/HAP2.png";
 import { useForgotPasswordMutation } from "@shared/services/Auth.service";
 
 import { TextField } from "@mui/material";
 import "../Auth.component.scss";
 import { getErrorMessage } from "@shared/utils/getErrorMessage";
 import { MainComponent } from "../../main/main.component";
-import { NotificationComponent } from "@shared/components/Notification.component";
 import { setError } from "@shared/redux/slices/errorSlice";
 import { setNotify } from "@shared/redux/slices/notifySlice";
 import { useDispatch } from "react-redux";

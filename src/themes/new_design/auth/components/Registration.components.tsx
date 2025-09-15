@@ -1,13 +1,11 @@
 import React from "react";
 import { MainComponent } from "../../main/main.component";
 import { Link, useParams } from "react-router-dom";
-import { SelectLanguage } from "@shared/components/SelectLanguage";
-import logo from "../../../../assets/img/custom/logo.png";
+import logo from "../../../../assets/img/HAP2.png";
 import { RegistrationStepper } from "./steps/RegistrationStepper.component";
 
 import "../Auth.component.scss";
 import { useTranslation } from "react-i18next";
-import { NotificationComponent } from "@shared/components/Notification.component";
 
 export const RegistrationComponent = (): JSX.Element => {
   const { t } = useTranslation();
