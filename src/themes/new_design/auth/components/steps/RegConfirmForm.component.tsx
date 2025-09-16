@@ -15,12 +15,12 @@ import {
   useSmsOptRequestMutation,
   useSmsOtpConfirmationMutation,
 } from "@shared/services/Verification.service";
-import { Dayjs } from "dayjs";
 import { getErrorMessage } from "@shared/utils/getErrorMessage";
 import { usePasswordValidator } from "@shared/utils/password.validator";
 
 import { TextInput } from "../../../common/components/TextInput.component";
 import { PasswordCheckList } from "@components/common/components/PasswordCheckList.component";
+import { Dayjs } from "dayjs";
 
 export const RegConfirmFormComponent = (): JSX.Element => {
   const { t } = useTranslation();
@@ -117,7 +117,7 @@ export const RegConfirmFormComponent = (): JSX.Element => {
     );
   }
   const passwordValue = watch("password");
-
+  console.log("reload");
   return (
     <Box role="form" sx={{ padding: { sx: "0", md: "0 0.9375rem" } }}>
       <div className="registration__subtitle">

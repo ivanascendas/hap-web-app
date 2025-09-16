@@ -5,7 +5,6 @@ import {
   Box,
   CircularProgress,
   IconButton,
-  TextField,
   TextFieldProps,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
@@ -68,14 +67,29 @@ export const OtpInputComponent = forwardRef<HTMLInputElement, OtpInputProps>(
         setCountdown(90);
       }
     }, []);
-
+    // ...existing code...
     useEffect(() => {
-      if (input?.useDatePicker?.value?.isValid()) {
+      if (input?.useDatePicker) {
+        const onChange = input.useDatePicker.onChange;
+        input.useDatePicker.onChange = (newValue: Dayjs | null) => {
+          if (newValue && newValue.isValid() && newValue.year() > 1900) {
+            console.log(`valid OTP: ${newValue}`);
+            setOtp(newValue);
+          } else {
+            console.log(`invalid OTP: ${newValue}`);
+          }
+          onChange?.(newValue, { validationError: null });
+        };
+      }
+    }, [input?.useDatePicker]);
+    // ...existing code...
+    useEffect(() => {
+      if (typeof otp === "object" && otp.isValid()) {
         setInProgress(true);
-        //onSubmit(input?.useDatePicker?.value?.toString() || "");
+        onSubmit(otp.toString());
         console.log(`Submitting OTP: ${otp}`);
       }
-    }, [input?.useDatePicker?.value]);
+    }, [otp]);
 
     useEffect(() => {
       console.log(`isSubmitting: ${isSubmitting}`);
@@ -88,22 +102,59 @@ export const OtpInputComponent = forwardRef<HTMLInputElement, OtpInputProps>(
       onResend && onResend();
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (e.target) {
-        input?.onChange?.(e);
-        setOtp(e.target?.value);
+    const handleDayjsChange = (dayjsValue: Dayjs) => {
+      if (!dayjsValue) {
+        console.log("Dayjs value is null, resetting");
 
-        if (e.target?.value.length === countnumbers) {
-          setInProgress(true);
-          onSubmit(e.target.value);
-        }
+        return;
       }
-      if ((e as any).$isDayjsObject) {
+
+      if (!dayjsValue.isValid()) {
         console.log(
-          `OTP input changed: ${(e as any).$D}/${(e as any).$M + 1}/${(e as any).$y}`,
-          e,
+          "Dayjs value is invalid:",
+          dayjsValue,
+          input?.value,
+          input?.useDatePicker?.value,
         );
-        setOtp(`${(e as any).$D}/${(e as any).$M + 1}/${(e as any).$y}`);
+        return;
+      }
+
+      const formattedDate = `${dayjsValue.date()}/${dayjsValue.month() + 1}/${dayjsValue.year()}`;
+
+      setOtp(dayjsValue);
+
+      // Всегда передаем Dayjs объект обратно в компонент
+      if (input?.onChange) {
+        console.log(
+          `OTP input changed: ${formattedDate}`,
+          dayjsValue,
+          input.value,
+          input.useDatePicker?.value,
+        );
+        input.onChange(dayjsValue as any);
+      }
+
+      // Проверяем полноту даты перед отправкой
+      const dateParts = formattedDate.split("/");
+      if (
+        dateParts.length === 3 &&
+        dateParts[0].length >= 1 &&
+        dateParts[1].length >= 1 &&
+        dateParts[2].length === 4
+      ) {
+        setInProgress(true);
+        onSubmit(formattedDate);
+      }
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      input?.onChange?.(e);
+      setOtp(e.target?.value);
+      console.log(`OTP input changed: ${e.target?.value}`);
+
+      if (e.target?.value.length === countnumbers) {
+        setInProgress(true);
+        onSubmit(e.target.value);
       }
     };
 
@@ -111,7 +162,11 @@ export const OtpInputComponent = forwardRef<HTMLInputElement, OtpInputProps>(
       <Box className="otp-input">
         <TextInput
           {...input}
-          onChange={handleChange}
+          onChange={
+            (input?.useDatePicker ? handleDayjsChange : handleChange) as
+              | ((event: React.ChangeEvent<HTMLInputElement>) => void)
+              | undefined
+          }
           ref={ref}
           variant="outlined"
           disabled={isSubmitting || input?.disabled}

@@ -1,6 +1,6 @@
 import { TextField, TextFieldProps } from "@mui/material";
 import "./TextInput.component.scss";
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
 
@@ -14,16 +14,21 @@ export type TextInputProps = TextFieldProps & {
 export const TextInput = forwardRef(
   (props: TextInputProps, ref): JSX.Element => {
     const [showPassword, setShowPassword] = useState(false);
-
+    const [dateValue, setDateValue] = useState<Dayjs | null>(null);
     // Destructure relevant props - use props.type directly in render
-    const { type, useDatePicker, variant, ...otherProps } = props;
+    const { type, useDatePicker, onChange, variant, ...otherProps } = props;
     const modifiedProps = {
       ...otherProps,
       variant: variant || "outlined",
       // Only mark as required in the DOM if truly empty
       //  required: hasValue ? false : props.required,
     };
-
+    useEffect(() => {
+      console.log("Date value changed:", dateValue);
+      if (dateValue?.isValid()) {
+        useDatePicker?.onChange?.(dateValue, { validationError: null });
+      }
+    }, [dateValue?.isValid()]);
     return useDatePicker ? (
       <div className={`text-input-container text-input-date`}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -45,6 +50,14 @@ export const TextInput = forwardRef(
                 },
               },
             }}
+            onChange={(date) => {
+              console.log("Date value changed:", date);
+              setDateValue(date);
+              if (date?.isValid()) {
+                useDatePicker?.onChange?.(date, { validationError: null });
+              }
+            }}
+            value={dateValue}
           />
         </LocalizationProvider>
       </div>
@@ -55,6 +68,7 @@ export const TextInput = forwardRef(
           type={
             type === "password" ? (showPassword ? "text" : "password") : type
           }
+          onChange={onChange}
           variant="outlined"
           inputRef={ref}
         />
