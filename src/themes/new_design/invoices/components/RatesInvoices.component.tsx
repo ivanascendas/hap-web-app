@@ -78,7 +78,7 @@ export const RatesInvoicesComponent = ({
     useLazyGetInvoicesQuery();
   const payments = useSelector(selectInvoices);
   const [selectedInvoices, setSelectedInvoices] = useState<number>(
-    payments.reduce((sum, obj) => sum + (Number(obj.pending) || 0), 0),
+    payments?.reduce((sum, obj) => sum + (Number(obj.pending) || 0), 0) || 0,
   );
 
   /**
@@ -294,7 +294,17 @@ export const RatesInvoicesComponent = ({
     }
   }, [isAuthenticated, selectedProperty, selectedPeriod]);
 
-  console.log("selectedInvoices", selectedInvoices);
+  useEffect(() => {
+    setSelectedInvoices(
+      payments?.reduce((sum, obj) => sum + (Number(obj.pending) || 0), 0) || 0,
+    );
+  }, [payments]);
+
+  console.log(
+    "selectedInvoices",
+    selectedInvoices,
+    payments?.reduce((sum, obj) => sum + (Number(obj.pending) || 0), 0) || 0,
+  );
   return (
     <Box sx={{ position: "relative", height: "calc(100vh - 11rem)" }}>
       <Box className=" ">
@@ -314,33 +324,39 @@ export const RatesInvoicesComponent = ({
             isLoading={isRatesLoading}
             columns={columns}
             rows={[
-              payments.reduce<InvoiceDto>(
-                (acc, payment) => {
-                  acc.statementDate =
-                    payment.statementDate || acc.statementDate;
-                  acc.invoiceNo = payment.invoiceNo || acc.invoiceNo;
-                  acc.propertyDescription =
-                    payment.propertyDescription || acc.propertyDescription;
-                  acc.total = (acc.total || 0) + (payment.total || 0);
-                  acc.totalPaid =
-                    (acc.totalPaid || 0) + (payment.totalPaid || 0);
-                  acc.pending = (acc.pending || 0) + (payment.pending || 0);
-                  acc.voucherNo = 0;
-                  acc.sequenceNo = 0;
-                  return acc;
-                },
-                {
-                  invoiceNo: "",
-                  propertyDescription: "",
-                  total: 0,
-                  totalPaid: 0,
-                  pending: 0,
-                  voucherNo: 0,
-                  sequenceNo: 0,
-                  issuedOn: null,
-                  dueDate: null,
-                },
-              ),
+              ...(payments
+                ? [
+                    payments?.reduce<InvoiceDto>(
+                      (acc, payment) => {
+                        acc.statementDate =
+                          payment.statementDate || acc.statementDate;
+                        acc.invoiceNo = payment.invoiceNo || acc.invoiceNo;
+                        acc.propertyDescription =
+                          payment.propertyDescription ||
+                          acc.propertyDescription;
+                        acc.total = (acc.total || 0) + (payment.total || 0);
+                        acc.totalPaid =
+                          (acc.totalPaid || 0) + (payment.totalPaid || 0);
+                        acc.pending =
+                          (acc.pending || 0) + (payment.pending || 0);
+                        acc.voucherNo = 0;
+                        acc.sequenceNo = 0;
+                        return acc;
+                      },
+                      {
+                        invoiceNo: "",
+                        propertyDescription: "",
+                        total: 0,
+                        totalPaid: 0,
+                        pending: 0,
+                        voucherNo: 0,
+                        sequenceNo: 0,
+                        issuedOn: null,
+                        dueDate: null,
+                      },
+                    ),
+                  ]
+                : []),
             ]}
             selected={(row) =>
               Object.keys(selectedInvoices).some(

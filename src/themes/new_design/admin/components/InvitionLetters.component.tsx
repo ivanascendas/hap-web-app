@@ -59,7 +59,7 @@ export const InvitionLettersComponent = ({
       ids: selectedIds,
       incDept: selectedIncDepts,
     });
-
+    console.log("response", response);
     if (response && response.data) {
       window.open(
         `${process.env.REACT_APP_BASE_URL}/api/letters/pdf/${encodeURIComponent(response.data)}`,
@@ -105,7 +105,7 @@ export const InvitionLettersComponent = ({
       label: "ADMIN.LETTER.COLUMNS.ENTERED_NAME",
     },
   ];
-
+  console.log("letters", letters);
   return (
     <Box>
       {letters?.count && (

@@ -64,6 +64,7 @@ export const lettersApi = createApi({
         headers: {
           "Content-Type": "application/json",
         },
+        responseHandler: "text",
       }),
     }),
     /**
@@ -79,6 +80,7 @@ export const lettersApi = createApi({
         headers: {
           "Content-Type": "application/json",
         },
+        responseHandler: "text",
       }),
     }),
     /**
@@ -94,6 +96,7 @@ export const lettersApi = createApi({
         headers: {
           "Content-Type": "application/json",
         },
+        responseHandler: "text",
       }),
     }),
     removeLetters: builder.mutation<void, number[]>({

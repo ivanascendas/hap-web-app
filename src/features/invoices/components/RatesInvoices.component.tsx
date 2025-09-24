@@ -77,7 +77,7 @@ export const RatesInvoicesComponent = ({
   setInvoiceQueryParams,
 }: RatesInvoiceProps): JSX.Element => {
   const [selectedProperty, setSelectedProperty] = useState("0");
-  const [selectedPeriod, setSelectedPeriod] = useState("current_year");
+  const [selectedPeriod] = useState("current_year");
 
   const [open, setOpen] = useState(false);
   const [selectedInvoices, setSelectedInvoices] = useState<{
@@ -299,8 +299,8 @@ export const RatesInvoicesComponent = ({
         incDept: department.toUpperCase(),
         $orderby: "ROW_NUMBER asc",
       });
-      var propReq = getProperties();
-      var balanceReq = getBalance({
+      const propReq = getProperties();
+      const balanceReq = getBalance({
         incDept: department.toUpperCase(),
         PropertyNumber: selectedProperty,
         from:

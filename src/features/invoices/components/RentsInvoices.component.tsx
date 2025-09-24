@@ -47,7 +47,6 @@ export const RentsInvoiceComponent = ({
 }: RentsInvoiceProps): JSX.Element => {
   const [page, setPage] = useState(0);
   const { t } = useTranslation();
-  const dispatch = useDispatch();
   const { isAuthenticated } = useAuth();
   const statements = useSelector(selectInvoices);
   const statementCount = useSelector(selectInvoicesCount);
