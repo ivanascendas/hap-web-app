@@ -18,7 +18,8 @@
     "baseUrl": "src",
     "paths": {
       "@shared/*": ["shared/*"],
-      "@components/*": ["themes/new_design/*"]
+      "@components/*": ["themes/new_design/*"],
+      "@themes/*": ["themes/*"]
     }
   }
 }

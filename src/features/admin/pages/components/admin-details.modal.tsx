@@ -151,6 +151,7 @@ export const AdminDetailsModal: React.FC<AdminDetailsModalProps> = ({
         TwoFactorEnabled: data.TwoFactorEnabled,
         LockoutEnabled: data.LockoutEnabled,
         IncDepts: data.IncDepts,
+        Roles: data.Roles,
       });
     } else {
       await createAdmin({
@@ -162,6 +163,7 @@ export const AdminDetailsModal: React.FC<AdminDetailsModalProps> = ({
         IncDepts: data.IncDepts,
         Password: data.Password,
         ConfirmPassword: data.ConfirmPassword,
+        Roles: data.Roles,
       });
     }
 

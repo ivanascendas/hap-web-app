@@ -73,6 +73,9 @@ const customBaseQuery: BaseQueryFn<
           args.url.includes("/api/user"))
       ) {
         dispatch(clearToken());
+        dispatch(
+          errorHandler(new Error("You don't have access to this resource")),
+        );
       }
       if (result.error.status === 401) {
         dispatch(authApi.endpoints.logout.initiate());

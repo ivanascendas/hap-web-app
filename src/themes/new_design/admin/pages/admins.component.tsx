@@ -7,6 +7,7 @@ import { ColumnItem, TableComponent } from "@shared/components/Table.component";
 
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@shared/providers/Auth.provider";
+import { useUserRole } from "@shared/hooks/useUserRole";
 
 export const AdminsComponent = () => {
   const [selectedAdmin, setSelectedAdmin] = useState<AdminDto | null>(null);
@@ -15,6 +16,8 @@ export const AdminsComponent = () => {
   // const [orderAdminName, setrOrderAdminName] = useState<'asc' | 'desc'>('asc');
   const [fetchAdmins, { data: admins, isFetching }] = useLazyGetAdminsQuery();
   const { t } = useTranslation();
+  const { hasRole } = useUserRole();
+
   const columns: ColumnItem<AdminDto>[] = [
     {
       key: "userName",
@@ -56,6 +59,15 @@ export const AdminsComponent = () => {
     await fetchAdmins();
     // handleCloseModal();
   };
+  if (!hasRole("SuperAdmin")) {
+    return (
+      <Box className="refund-details" sx={{ p: 3, textAlign: "center" }}>
+        <Typography variant="h6" color="error">
+          Access Denied
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box p={3} sx={{ overflow: "auto", maxHeight: "calc(100vh - 80px)" }}>

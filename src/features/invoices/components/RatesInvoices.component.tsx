@@ -48,7 +48,7 @@ import WestIcon from "@mui/icons-material/West";
 import { setError } from "../../../shared/redux/slices/errorSlice";
 import { useNavigate } from "react-router-dom";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import { InvoicePaymentPopupСomponent } from "./InvoicePaymentPopup.component";
+import { InvoicePaymentPopupComponent } from "./InvoicePaymentPopup.component";
 import { PaymentDto } from "../../../shared/dtos/payments.dto";
 
 export type RatesInvoiceProps = {
@@ -463,7 +463,7 @@ export const RatesInvoicesComponent = ({
         </Button>
       </Box>
       {Object.values(selectedInvoices).length > 0 && (
-        <InvoicePaymentPopupСomponent
+        <InvoicePaymentPopupComponent
           handleAmountChange={handleAmountChange}
           selectedInvoices={selectedInvoices}
           payHandler={payHandler}

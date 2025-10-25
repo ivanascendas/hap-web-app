@@ -1,0 +1,22 @@
+.create-gl07-batch-page {
+  padding: 1.5rem;
+
+  .create-batch-table {
+    .MuiTableCell-root {
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    .MuiTableRow-root {
+      transition: background-color 0.2s;
+
+      &.selected {
+        background-color: rgba(25, 118, 210, 0.08);
+      }
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.04);
+      }
+    }
+  }
+}

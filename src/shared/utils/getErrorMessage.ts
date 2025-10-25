@@ -39,7 +39,9 @@ export const errorHandler = (error: unknown) => {
     } else if ((error as any).data.status == 400) {
       return setError({ message: t("ERRORS.ACCESS_DENIED") });
     }
-    return setError({ message: t((error as any).data.message) });
+    return setError({
+      message: t((error as any).data.detail ?? (error as any).data.message),
+    });
   } else {
     if (error instanceof Error) {
       return setError({ message: t(error.message) });

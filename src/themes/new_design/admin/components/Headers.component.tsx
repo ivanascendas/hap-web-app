@@ -24,10 +24,15 @@ import PeopleIcon from "@mui/icons-material/People";
 import MailIcon from "@mui/icons-material/Mail";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import DescriptionIcon from "@mui/icons-material/Description";
 import { useLogoutMutation } from "@shared/services/Auth.service";
+import { useUserRole } from "@shared/hooks/useUserRole";
+import { useEffect } from "react";
 
 const pages = [
   { link: "users", title: "Users", icon: <PeopleIcon /> },
+
   { link: "letters/InvitationLetter", title: "Letters", icon: <MailIcon /> },
   { link: "reports", title: "Reports", icon: <AssessmentIcon /> },
   {
@@ -35,18 +40,17 @@ const pages = [
     title: "Notifications",
     icon: <NotificationsIcon />,
   },
-  { link: "admins", title: "Admins", icon: <AdminPanelSettingsIcon /> },
 ];
 
 const settings = ["Security", "Messages", "Logout"];
 
 const HeaderComponent = (): JSX.Element => {
   const [title, setTitle] = React.useState<string>("ADMIN.USERS.TITLE");
-
+  const { hasRole } = useUserRole();
   const location = useLocation();
   const { t } = useTranslation();
   const [adminName, setAdminName] = React.useState<string>("Admin");
-  const [unreadCount, setUnreadCount] = React.useState<number>(10);
+  const [unreadCount] = React.useState<number>(10);
   const user = useSelector(selectUser);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null,
@@ -54,6 +58,38 @@ const HeaderComponent = (): JSX.Element => {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null,
   );
+  useEffect(() => {
+    if (
+      (hasRole("DMU_L1") || hasRole("DMU_L2") || hasRole("AP")) &&
+      pages.findIndex((p) => p.link === "refunds") === -1
+    ) {
+      pages.push({
+        link: "refunds",
+        title: "Refunds",
+        icon: <AccountBalanceWalletIcon />,
+      });
+    }
+    if (
+      hasRole("AP") &&
+      pages.findIndex((p) => p.link === "gl07-batches") === -1
+    ) {
+      pages.push({
+        link: "gl07-batches",
+        title: "GL07 Batches",
+        icon: <DescriptionIcon />,
+      });
+    }
+    if (
+      hasRole("SuperAdmin") &&
+      pages.findIndex((p) => p.link === "admins") === -1
+    ) {
+      pages.push({
+        link: "admins",
+        title: "Admins",
+        icon: <AdminPanelSettingsIcon />,
+      });
+    }
+  }, [hasRole]);
 
   const [logout] = useLogoutMutation();
 
@@ -69,6 +105,12 @@ const HeaderComponent = (): JSX.Element => {
       switch (page) {
         case "users":
           setTitle("ADMIN.USERS.TITLE");
+          break;
+        case "refunds":
+          setTitle("Refunds");
+          break;
+        case "gl07-batches":
+          setTitle("GL07 Batches");
           break;
         case "letters":
           setTitle("Letters");
@@ -306,13 +348,12 @@ const HeaderComponent = (): JSX.Element => {
           {pages.map((page) => (
             <MenuItem
               key={page.link}
-              onClick={() => handleCloseNavMenu(page.title)}
+              onClick={() => handleCloseNavMenu(page.title.toLowerCase())}
             >
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <NavLink to={`/admin/${page.link}`}>
                   {React.cloneElement(page.icon, {
-                    sx: { color: "inherit" },
-                    marginRight: "0.5rem",
+                    sx: { color: "inherit", marginRight: "0.5rem" },
                   })}
                   &nbsp;
                   {page.title}

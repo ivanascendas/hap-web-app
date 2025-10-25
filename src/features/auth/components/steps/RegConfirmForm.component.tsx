@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Checkbox, FormControlLabel, Grid, TextField } from "@mui/material";
-import { UserConfirmDataModel, UserDataDto } from "@shared/dtos/user.dto";
+import { UserConfirmDataModel } from "@shared/dtos/user.dto";
 
 import { selectUser, setUser } from "@shared/redux/slices/authSlice";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -30,9 +30,9 @@ export const RegConfirmFormComponent = (): JSX.Element => {
   const location = useLocation();
   const dispatch = useDispatch();
   const [dob, setDOB] = React.useState<Dayjs | null>(null);
-  const [resendSMS, resendSMSResult] = useSmsOptRequestMutation();
+  const [resendSMS] = useSmsOptRequestMutation();
   const [checkSMSCode, checkSMSResult] = useSmsOtpConfirmationMutation();
-  const [resendEmail, resendEmailResult] = useEmailOptRequestMutation();
+  const [resendEmail] = useEmailOptRequestMutation();
   const [checkEmailCode, checkEmailResult] = useEmailOtpConfirmationMutation();
   const [checkDOB, checkDOBResult] = useDobConfirmationMutation();
 
@@ -213,7 +213,14 @@ export const RegConfirmFormComponent = (): JSX.Element => {
         <Grid container spacing={0} className="otp-input">
           <Grid size={8}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker format="DD/MM/YYYY" value={dob} onChange={setDOB} />
+              <DatePicker
+                format="DD/MM/YYYY"
+                value={dob}
+                onChange={(newValue) => {
+                  // newValue is Dayjs | null when using AdapterDayjs
+                  setDOB(newValue as Dayjs | null);
+                }}
+              />
             </LocalizationProvider>
           </Grid>
           <Grid size={4}>

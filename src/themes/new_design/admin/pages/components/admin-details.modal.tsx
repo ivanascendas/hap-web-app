@@ -28,6 +28,7 @@ import {
   CreateAdminDto,
   UpdateAdminDto,
   UpdatePasswordByAdminDto,
+  UserRoleName,
 } from "@shared/dtos/admins.dtos";
 import { useTranslation } from "react-i18next";
 import { Iti } from "intl-tel-input";
@@ -66,7 +67,14 @@ export const AdminDetailsModal: React.FC<AdminDetailsModalProps> = ({
     formState: { errors },
     control,
   } = useForm<CreateAdminDto & UpdateAdminDto>();
-
+  const roles: UserRoleName[] = [
+    "Client",
+    "Admin",
+    "SuperAdmin",
+    "DMU_L1",
+    "DMU_L2",
+    "AP",
+  ];
   const dispatch = useDispatch();
   const { t } = useTranslation();
   const iniTelReff = useRef<IntlTelInputRef>();
@@ -154,6 +162,7 @@ export const AdminDetailsModal: React.FC<AdminDetailsModalProps> = ({
         TwoFactorEnabled: data.TwoFactorEnabled,
         LockoutEnabled: data.LockoutEnabled,
         IncDepts: data.IncDepts,
+        Roles: data.Roles,
       });
     } else {
       await createAdmin({
@@ -165,6 +174,7 @@ export const AdminDetailsModal: React.FC<AdminDetailsModalProps> = ({
         IncDepts: data.IncDepts,
         Password: data.Password,
         ConfirmPassword: data.ConfirmPassword,
+        Roles: data.Roles,
       });
     }
 
@@ -344,40 +354,80 @@ export const AdminDetailsModal: React.FC<AdminDetailsModalProps> = ({
             </Grid>
           </Box>
           <Box>
-            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-              {t("POPUPS.ADMIN_DETAILS.INCOME_DEPARTMENTS")}
-            </Typography>
+            <Box sx={{ display: "flex" }}>
+              <Box>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                  {t("POPUPS.ADMIN_DETAILS.INCOME_DEPARTMENTS")}
+                </Typography>
 
-            <FormGroup className="income-departments">
-              <Controller
-                name="IncDepts"
-                control={control}
-                defaultValue={admin?.incDepts || []}
-                render={({ field }) => (
-                  <>
-                    {properties?.map(({ incDept }, index) => (
-                      <FormControlLabel
-                        key={index}
-                        control={
-                          <Checkbox
-                            checked={field.value.includes(incDept)}
-                            onChange={(e) => {
-                              const newValue = e.target.checked
-                                ? [...field.value, incDept]
-                                : field.value.filter(
-                                    (dept: string) => dept !== incDept,
-                                  );
-                              field.onChange(newValue);
-                            }}
+                <FormGroup className="income-departments">
+                  <Controller
+                    name="IncDepts"
+                    control={control}
+                    defaultValue={admin?.incDepts || []}
+                    render={({ field }) => (
+                      <>
+                        {properties?.map(({ incDept }, index) => (
+                          <FormControlLabel
+                            key={index}
+                            control={
+                              <Checkbox
+                                checked={field.value.includes(incDept)}
+                                onChange={(e) => {
+                                  const newValue = e.target.checked
+                                    ? [...field.value, incDept]
+                                    : field.value.filter(
+                                        (dept: string) => dept !== incDept,
+                                      );
+                                  field.onChange(newValue);
+                                }}
+                              />
+                            }
+                            label={incDept}
                           />
-                        }
-                        label={incDept}
-                      />
-                    ))}
-                  </>
-                )}
-              />
-            </FormGroup>
+                        ))}
+                      </>
+                    )}
+                  />
+                </FormGroup>
+              </Box>
+              <Box>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                  {t("POPUPS.ADMIN_DETAILS.ROLES")}
+                </Typography>
+
+                <FormGroup className="income-departments">
+                  <Controller
+                    name="Roles"
+                    control={control}
+                    defaultValue={admin?.roles || []}
+                    render={({ field }) => (
+                      <>
+                        {roles?.map((role, index) => (
+                          <FormControlLabel
+                            key={index}
+                            control={
+                              <Checkbox
+                                checked={field.value.includes(role)}
+                                onChange={(e) => {
+                                  const newValue = e.target.checked
+                                    ? [...field.value, role]
+                                    : field.value.filter(
+                                        (dept: string) => dept !== role,
+                                      );
+                                  field.onChange(newValue);
+                                }}
+                              />
+                            }
+                            label={role}
+                          />
+                        ))}
+                      </>
+                    )}
+                  />
+                </FormGroup>
+              </Box>
+            </Box>
 
             <Typography variant="h6" sx={{ fontWeight: "bold" }}>
               {t("LABELS.PASSWORD")}

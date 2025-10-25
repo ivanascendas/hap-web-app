@@ -158,8 +158,6 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
     }
   };
 
-  console.log(getValues());
-
   return (
     <Modal open={isOpen} onClose={onClose}>
       <Box className="user-details-modal">

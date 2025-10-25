@@ -35,7 +35,7 @@ import {
   selectStatements,
   selectStatementsCount,
 } from "@shared/redux/slices/statementSlice";
-import { InvoicePopupСomponent } from "./InvoicePopup.component";
+import { InvoicePopupComponent } from "./InvoicePopup.component";
 import { InvoiceInputRequest } from "@shared/dtos/invoice.dtos";
 import { QueryActionCreatorResult } from "@reduxjs/toolkit/query";
 import { TablePaginationActions } from "@shared/components/TablePaginationActions";
@@ -227,7 +227,7 @@ export const RatesStatementComponent = ({
         />
       </Box>
       {selectedInvoice && (
-        <InvoicePopupСomponent
+        <InvoicePopupComponent
           dto={selectedInvoice}
           open={open}
           onClose={handleClose}

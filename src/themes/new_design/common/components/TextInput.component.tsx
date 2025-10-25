@@ -5,10 +5,14 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker, DatePickerProps } from "@mui/x-date-pickers/DatePicker";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 export type TextInputProps = TextFieldProps & {
-  useDatePicker?: DatePickerProps<any>;
+  useDatePicker?: Partial<{
+    onChange?: (date: Dayjs | null) => void;
+    value?: Dayjs | null;
+    [key: string]: unknown;
+  }>;
 };
 
 export const TextInput = forwardRef(
@@ -26,9 +30,9 @@ export const TextInput = forwardRef(
     useEffect(() => {
       console.log("Date value changed:", dateValue);
       if (dateValue?.isValid()) {
-        useDatePicker?.onChange?.(dateValue, { validationError: null });
+        useDatePicker?.onChange?.(dateValue);
       }
-    }, [dateValue?.isValid()]);
+    }, [dateValue, useDatePicker]);
     return useDatePicker ? (
       <div className={`text-input-container text-input-date`}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -52,9 +56,15 @@ export const TextInput = forwardRef(
             }}
             onChange={(date) => {
               console.log("Date value changed:", date);
-              setDateValue(date);
-              if (date?.isValid()) {
-                useDatePicker?.onChange?.(date, { validationError: null });
+              // date will be Dayjs | null from AdapterDayjs
+              if (date && "isValid" in date) {
+                // Check that it's Dayjs
+                setDateValue(date as Dayjs);
+                if ((date as Dayjs).isValid()) {
+                  useDatePicker?.onChange?.(date as Dayjs);
+                }
+              } else {
+                setDateValue(null);
               }
             }}
             value={dateValue}

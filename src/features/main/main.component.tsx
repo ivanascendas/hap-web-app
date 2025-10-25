@@ -7,7 +7,7 @@ import { HeaderComponent } from "./components/Header.component";
 
 import { DrawerComponent } from "./components/Drawer.component";
 import { Box, Paper } from "@mui/material";
-import { BottomBarСomponent } from "./components/BottomBar.component";
+import { BottomBarComponent } from "./components/BottomBar.component";
 import useWindowDimensions from "../../shared/hooks/useWindowDimensions";
 import { t } from "i18next";
 import { useNavigate } from "react-router-dom";
@@ -93,7 +93,7 @@ export const MainComponent = ({ children }: MainProps): JSX.Element => {
       {isAuthenticated &&
         !window.location.pathname.startsWith("/invoices") &&
         !window.location.pathname.startsWith("/payment") && (
-          <BottomBarСomponent />
+          <BottomBarComponent />
         )}
       <CookieBannerComponent />
       {isAuthenticated && (

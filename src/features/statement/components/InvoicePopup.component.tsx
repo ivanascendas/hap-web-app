@@ -12,7 +12,7 @@ export type InvoicePopupProps = {
   onClose: () => void;
 };
 
-export const InvoicePopupСomponent = ({
+export const InvoicePopupComponent = ({
   open,
   onClose,
   dto,

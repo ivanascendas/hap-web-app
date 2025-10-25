@@ -78,7 +78,8 @@ export const OtpInputComponent = forwardRef<HTMLInputElement, OtpInputProps>(
           } else {
             console.log(`invalid OTP: ${newValue}`);
           }
-          onChange?.(newValue, { validationError: null });
+          // Call onChange with single argument (Dayjs | null)
+          onChange?.(newValue);
         };
       }
     }, [input?.useDatePicker]);
@@ -123,7 +124,7 @@ export const OtpInputComponent = forwardRef<HTMLInputElement, OtpInputProps>(
 
       setOtp(dayjsValue);
 
-      // Всегда передаем Dayjs объект обратно в компонент
+      // Always pass Dayjs object back to component
       if (input?.onChange) {
         console.log(
           `OTP input changed: ${formattedDate}`,
@@ -134,7 +135,7 @@ export const OtpInputComponent = forwardRef<HTMLInputElement, OtpInputProps>(
         input.onChange(dayjsValue as any);
       }
 
-      // Проверяем полноту даты перед отправкой
+      // Check date completeness before sending
       const dateParts = formattedDate.split("/");
       if (
         dateParts.length === 3 &&

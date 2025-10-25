@@ -12,14 +12,10 @@ import { useLazyGetNotificationsQuery } from "@shared/services/Notifications.ser
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { selectUser } from "@shared/redux/slices/authSlice";
-import EmailIcon from "@mui/icons-material/Email";
-import DraftsIcon from "@mui/icons-material/Drafts";
 import { useAuth } from "@shared/providers/Auth.provider";
 import moment from "moment";
-import { Message } from "@mui/icons-material";
 import { MessagePopupComponent } from "./components/MessagePopup.component";
 import { NotificationDto } from "@shared/dtos/messages.dtos";
-import { getSubstringWithLastWord } from "@shared/utils/string.utils";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
 import {
@@ -93,7 +89,7 @@ export const MessagesComponent = (): JSX.Element => {
       <Box className="personal_box messages_content">
         <Box className="messages_list" sx={{ paddingTop: "1rem" }}>
           {!isFetching &&
-            notifications.map((item, index) => (
+            notifications?.map((item, index) => (
               <Box
                 key={item.notificationId}
                 className="message"

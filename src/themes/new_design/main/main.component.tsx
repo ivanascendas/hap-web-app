@@ -6,7 +6,7 @@ import { useAuth } from "@shared/providers/Auth.provider";
 import { HeaderComponent } from "./components/Header.component";
 import { DrawerComponent } from "./components/Drawer.component";
 import { Box, Modal, Paper } from "@mui/material";
-import { BottomBarСomponent } from "./components/BottomBar.component";
+import { BottomBarComponent } from "./components/BottomBar.component";
 import useWindowDimensions from "@shared/hooks/useWindowDimensions";
 import { t } from "i18next";
 import { useNavigate } from "react-router-dom";

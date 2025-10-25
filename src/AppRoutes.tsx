@@ -1,6 +1,8 @@
 import React from "react";
 import { createBrowserRouter, Navigate, useLocation } from "react-router-dom";
 import { Protected } from "@shared/components/Protected";
+import { RoleProtected } from "@shared/components/RoleProtected";
+import { UnauthorizedPage } from "@shared/components/UnauthorizedPage";
 import { StatementComponent } from "@components/statement/Statement.component";
 import { useAuth } from "./shared/providers/Auth.provider";
 import { LoginFormComponent } from "@components/auth/components/LoginForm.component";
@@ -24,6 +26,16 @@ import { AdminsComponent } from "@components/admin/pages/admins.component";
 import { PasswordComponent } from "@components/admin/pages/password.component";
 import { AdminMessagesComponent } from "@components/admin/pages/messages.component";
 import { TermsComponent } from "@components/admin/pages/terms.copmonent";
+import { RefundListPage } from "@components/refund/RefundListPage";
+import { RefundFormPage } from "@components/refund/RefundFormPage";
+import { RefundDetailsPage } from "@components/refund/RefundDetailsPage";
+import { RefundsComponent } from "@components/admin/pages/refunds.component";
+import { RefundDetailsComponent } from "@components/admin/pages/refund-details.component";
+import { DocumentViewerPage } from "@components/admin/components/refunds/DocumentViewerPage";
+import { RefundUpdatePage } from "@components/refund/RefundUpdatePage";
+import { Gl07BatchesComponent } from "@components/admin/pages/gl07-batches.component";
+import { CreateGl07BatchComponent } from "@components/admin/pages/create-gl07-batch.component";
+import { Gl07BatchDetailsComponent } from "@components/admin/pages/gl07-batch-details.component";
 
 /**
  * Redirect component that handles user authentication and navigation.
@@ -84,7 +96,13 @@ export const router = createBrowserRouter([
       {
         index: true,
         path: "users",
-        element: <UsersComponent />,
+        element: (
+          <RoleProtected
+            allowedRoles={["Admin"]}
+            redirectTo="/loginAdmin"
+            component={<UsersComponent />}
+          />
+        ),
       },
       {
         path: "letters/:type",
@@ -100,7 +118,13 @@ export const router = createBrowserRouter([
       },
       {
         path: "admins",
-        element: <AdminsComponent />,
+        element: (
+          <RoleProtected
+            allowedRoles={["SuperAdmin"]}
+            redirectTo="/admin/users"
+            component={<AdminsComponent />}
+          />
+        ),
       },
       {
         path: "security",
@@ -113,6 +137,66 @@ export const router = createBrowserRouter([
       {
         path: "terms",
         element: <TermsComponent />,
+      },
+      {
+        path: "refunds",
+        element: (
+          <RoleProtected
+            allowedRoles={["DMU_L1", "DMU_L2", "AP"]}
+            redirectTo="/admin/users"
+            component={<RefundsComponent />}
+          />
+        ),
+      },
+      {
+        path: "refunds/:id",
+        element: (
+          <RoleProtected
+            allowedRoles={["DMU_L1", "DMU_L2", "AP"]}
+            redirectTo="/admin/users"
+            component={<RefundDetailsComponent />}
+          />
+        ),
+      },
+      {
+        path: "refunds/:applicationId/documents/:documentId",
+        element: (
+          <RoleProtected
+            allowedRoles={["DMU_L1", "DMU_L2", "AP"]}
+            redirectTo="/admin/users"
+            component={<DocumentViewerPage />}
+          />
+        ),
+      },
+      {
+        path: "gl07-batches",
+        element: (
+          <RoleProtected
+            allowedRoles={["AP"]}
+            redirectTo="/admin/users"
+            component={<Gl07BatchesComponent />}
+          />
+        ),
+      },
+      {
+        path: "gl07-batches/create",
+        element: (
+          <RoleProtected
+            allowedRoles={["AP"]}
+            redirectTo="/admin/users"
+            component={<CreateGl07BatchComponent />}
+          />
+        ),
+      },
+      {
+        path: "gl07-batches/:id",
+        element: (
+          <RoleProtected
+            allowedRoles={["AP"]}
+            redirectTo="/admin/users"
+            component={<Gl07BatchDetailsComponent />}
+          />
+        ),
       },
     ],
   },
@@ -135,6 +219,10 @@ export const router = createBrowserRouter([
   {
     path: "/data",
     element: <DataComponent />,
+  },
+  {
+    path: "/unauthorized",
+    element: <UnauthorizedPage />,
   },
   {
     index: true,
@@ -165,5 +253,22 @@ export const router = createBrowserRouter([
   {
     path: "/payment/pay",
     element: <Protected component={<PayComponent />} />,
+  },
+  {
+    path: "/refunds",
+    element: <Protected component={<RefundListPage />} />,
+  },
+  {
+    path: "/refunds/new",
+    element: <Protected component={<RefundFormPage />} />,
+  },
+  {
+    path: "/refunds/:id",
+    element: <Protected component={<RefundDetailsPage />} />,
+  },
+
+  {
+    path: "/refunds/:id/update",
+    element: <Protected component={<RefundUpdatePage />} />,
   },
 ]);

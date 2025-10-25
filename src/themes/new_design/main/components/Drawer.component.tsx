@@ -43,6 +43,7 @@ import { useLazyGetBalanceQuery } from "@shared/services/Statements.service";
 import moment from "moment";
 import { stringToColor } from "@shared/utils/stringToColor";
 import LogoutIcon from "@mui/icons-material/Logout";
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 
 export type DrawerProps = {
   anchor?: "left" | "top" | "right" | "bottom";
@@ -171,7 +172,17 @@ export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(
                 <ListItemText primary={t(`MAIN.MENU.LOAN_INFO`)} />
               </ListItemButton>
             </ListItem>*/}
-
+              <ListItem disablePadding>
+                <ListItemButton
+                  onClick={() => handleClick("/refunds")}
+                  selected={location.pathname.includes(`/refunds`)}
+                >
+                  <ListItemIcon>
+                    <AccountBalanceWalletIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={t(`REFUNDS.LIST.TITLE`)} />
+                </ListItemButton>
+              </ListItem>
               <ListItem disablePadding>
                 <ListItemButton
                   onClick={() => handleClick("/statements/documents")}

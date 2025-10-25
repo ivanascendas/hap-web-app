@@ -16,19 +16,33 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast, ToastContentProps } from "react-toastify";
 import { Box, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+
 export type NotificationProps = {
   title: string;
 };
-export const Notification = (props: any): JSX.Element => {
-  const { closeToast, data, ...rest } = props;
-  console.log(rest);
+
+export type NotificationData = {
+  title: string;
+  body: string;
+};
+
+export const Notification = (
+  props: ToastContentProps<NotificationData>,
+): JSX.Element => {
+  const { closeToast, data } = props;
   return (
     <Box className="notification">
       <Typography component="h3">{data?.title || "Title"}</Typography>
       <Typography component="span">{data?.body || "Body"}</Typography>
+      {closeToast && (
+        <CloseIcon
+          onClick={closeToast}
+          style={{ cursor: "pointer", marginLeft: "auto" }}
+        />
+      )}
     </Box>
   );
 };
@@ -94,8 +108,8 @@ export const NotificationComponent = (): JSX.Element => {
       draggable
       pauseOnHover
       theme="colored"
-      icon={({ type, theme }) => {
-        // theme is not used in this example but you could
+      icon={({ type }) => {
+        // Custom icon based on notification type
         switch (type) {
           case "info":
             return <InfoOutlineIcon className="stroke-indigo-400" />;

@@ -22,7 +22,7 @@ import { useLogoutMutation } from "../../../shared/services/Auth.service";
 import { useSelector } from "react-redux";
 import { selectUnreadNotificationsCount } from "../../../shared/redux/slices/notificationsSlice";
 
-export const BottomBarСomponent = () => {
+export const BottomBarComponent = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();

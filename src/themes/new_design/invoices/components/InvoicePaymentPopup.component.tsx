@@ -28,7 +28,7 @@ export type InvoicePaymentPopupProps = {
   onClose: () => void;
 };
 
-export const InvoicePaymentPopupСomponent = ({
+export const InvoicePaymentPopupComponent = ({
   open,
   onClose,
   payHandler,

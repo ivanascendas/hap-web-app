@@ -33,7 +33,7 @@ import EastIcon from "@mui/icons-material/East";
 import { setError } from "@shared/redux/slices/errorSlice";
 import { useNavigate } from "react-router-dom";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import { InvoicePaymentPopupСomponent } from "./InvoicePaymentPopup.component";
+import { InvoicePaymentPopupComponent } from "./InvoicePaymentPopup.component";
 import { PaymentDto } from "@shared/dtos/payments.dto";
 import { SummaryBoxComponent } from "@components/common/components/summary-box.component";
 
@@ -440,7 +440,7 @@ export const MonthlyInvoiceComponent = ({
         />
       </Box>
       {Object.values(selectedInvoices).length > 0 && (
-        <InvoicePaymentPopupСomponent
+        <InvoicePaymentPopupComponent
           handleAmountChange={handleAmountChange}
           selectedInvoices={selectedInvoices}
           payHandler={payHandler}
