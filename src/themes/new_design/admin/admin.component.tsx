@@ -9,13 +9,13 @@ import { useAuth } from "@shared/providers/Auth.provider";
 import HeaderComponent from "./components/Headers.component";
 import { FooterComponent } from "../main/components/Footer.component";
 import { Loading } from "@shared/components/Loading";
-import { NotificationComponent } from "@shared/components/Notification.component";
 
 export const AdminComponent = () => {
   const auth = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-
+  const [isSidebarCollapsed, setIsSidebarCollapsed] =
+    React.useState<boolean>(false);
   useEffect(() => {
     if (auth.isTokenRecived && !auth.isAuthenticated) {
       navigate("/loginAdmin", { state: { from: location } });
@@ -25,8 +25,14 @@ export const AdminComponent = () => {
   return (
     <Paper className="admin-container">
       <Loading />
-      <HeaderComponent />
-      <Box className="admin-content">
+      <HeaderComponent
+        isSidebarCollapsed={isSidebarCollapsed}
+        setIsSidebarCollapsed={setIsSidebarCollapsed}
+      />
+      <Box
+        className="admin-content"
+        sx={{ marginLeft: isSidebarCollapsed ? "5.5rem" : "16rem" }}
+      >
         <Outlet />
       </Box>
       <FooterComponent showFooter={true} />

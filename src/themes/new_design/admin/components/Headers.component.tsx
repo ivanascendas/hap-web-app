@@ -6,18 +6,18 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import "./Headers.component.scss";
 import logo from "../../../../assets/img/HAP2.png";
+import iconLogo from "../../../../assets/img/Icon2.png";
 import { selectUser } from "@shared/redux/slices/authSlice";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { Badge, Button, Drawer } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { useParams, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import LogoutIcon from "@mui/icons-material/Logout";
 import PeopleIcon from "@mui/icons-material/People";
@@ -26,6 +26,8 @@ import AssessmentIcon from "@mui/icons-material/Assessment";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import DescriptionIcon from "@mui/icons-material/Description";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useLogoutMutation } from "@shared/services/Auth.service";
 import { useUserRole } from "@shared/hooks/useUserRole";
 import { useEffect } from "react";
@@ -44,7 +46,15 @@ const pages = [
 
 const settings = ["Security", "Messages", "Logout"];
 
-const HeaderComponent = (): JSX.Element => {
+export type HeaderComponentProps = {
+  isSidebarCollapsed: boolean;
+  setIsSidebarCollapsed: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+const HeaderComponent = ({
+  isSidebarCollapsed,
+  setIsSidebarCollapsed,
+}: HeaderComponentProps): JSX.Element => {
   const [title, setTitle] = React.useState<string>("ADMIN.USERS.TITLE");
   const { hasRole } = useUserRole();
   const location = useLocation();
@@ -163,7 +173,9 @@ const HeaderComponent = (): JSX.Element => {
   }, [location.pathname]);
   console.log("HeaderComponent rendered with title:", title);
   return (
-    <>
+    <div
+      className={isSidebarCollapsed ? "sidebar-collapsed" : "sidebar-expanded"}
+    >
       <AppBar position="static">
         <Toolbar disableGutters>
           <Box
@@ -337,50 +349,146 @@ const HeaderComponent = (): JSX.Element => {
           </Box>
         </Toolbar>
       </AppBar>
-      <Drawer variant={"permanent"} anchor="left">
+      <Drawer
+        variant={"permanent"}
+        anchor="left"
+        className={isSidebarCollapsed ? "collapsed" : ""}
+      >
         <Box
-          className="drawer-admin"
-          sx={{ width: 250 }}
+          className={`drawer-admin ${isSidebarCollapsed ? "collapsed" : ""}`}
+          sx={{ width: isSidebarCollapsed ? 80 : 250 }}
           onClick={() => setAnchorElNav(null)}
           onKeyDown={() => setAnchorElNav(null)}
         >
-          <img src={logo} className="logo" alt="logo" />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "1rem",
+              flex: "none",
+            }}
+          >
+            <img
+              src={isSidebarCollapsed ? iconLogo : logo}
+              className="logo"
+              alt="logo"
+              style={{
+                maxWidth: isSidebarCollapsed ? "40px" : "80%",
+                margin: 0,
+              }}
+            />
+            {!isSidebarCollapsed && (
+              <Tooltip title="Collapse sidebar">
+                <IconButton
+                  onClick={() => setIsSidebarCollapsed(true)}
+                  size="small"
+                >
+                  <ChevronLeftIcon />
+                </IconButton>
+              </Tooltip>
+            )}
+          </Box>
+          {isSidebarCollapsed && (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: "1rem",
+                flex: "none",
+              }}
+            >
+              <Tooltip title="Expand sidebar">
+                <IconButton
+                  onClick={() => setIsSidebarCollapsed(false)}
+                  size="small"
+                >
+                  <ChevronRightIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          )}
           {pages.map((page) => (
             <MenuItem
               key={page.link}
               onClick={() => handleCloseNavMenu(page.title.toLowerCase())}
             >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <NavLink to={`/admin/${page.link}`}>
-                  {React.cloneElement(page.icon, {
-                    sx: { color: "inherit", marginRight: "0.5rem" },
-                  })}
-                  &nbsp;
-                  {page.title}
-                </NavLink>
-              </Box>
+              <Tooltip
+                title={isSidebarCollapsed ? page.title : ""}
+                placement="right"
+              >
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1,
+                    justifyContent: isSidebarCollapsed
+                      ? "center"
+                      : "flex-start",
+                    width: "100%",
+                  }}
+                >
+                  <NavLink to={`/admin/${page.link}`}>
+                    {React.cloneElement(page.icon, {
+                      sx: {
+                        color: "inherit",
+                        marginRight: isSidebarCollapsed ? 0 : "0.5rem",
+                      },
+                    })}
+                    {!isSidebarCollapsed && (
+                      <>
+                        &nbsp;
+                        {page.title}
+                      </>
+                    )}
+                  </NavLink>
+                </Box>
+              </Tooltip>
             </MenuItem>
           ))}
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-end",
-              alignItems: "start",
-              marginBottom: "1rem",
-              marginLeft: "1rem",
-            }}
-          >
-            <Button
-              startIcon={<LogoutIcon />}
-              onClick={() => handleCloseUserMenu("Logout")}
+          {!isSidebarCollapsed && (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-end",
+                alignItems: "start",
+                marginBottom: "1rem",
+                marginLeft: "1rem",
+              }}
             >
-              <Typography sx={{ textTransform: "none" }}>Logout</Typography>
-            </Button>
-          </Box>
+              <Button
+                startIcon={<LogoutIcon />}
+                onClick={() => handleCloseUserMenu("Logout")}
+              >
+                <Typography sx={{ textTransform: "none" }}>Logout</Typography>
+              </Button>
+            </Box>
+          )}
+          {isSidebarCollapsed && (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-end",
+                alignItems: "start",
+                marginBottom: "1rem",
+                marginLeft: "1rem",
+              }}
+            >
+              <Tooltip title="Logout" placement="right">
+                <IconButton
+                  onClick={() => handleCloseUserMenu("Logout")}
+                  size="small"
+                >
+                  <LogoutIcon />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          )}
         </Box>
       </Drawer>
-    </>
+    </div>
   );
 };
 

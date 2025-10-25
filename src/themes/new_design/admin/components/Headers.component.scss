@@ -1,11 +1,89 @@
 @import "../../../../assets/styles/variables.scss";
 @import "../../../../assets/styles/functions.scss";
+
+.sidebar-expanded {
+  .admin-container {
+    header.MuiAppBar-root {
+      background: transparent !important;
+      box-shadow: none !important;
+      padding-left: 16rem;
+      padding-right: 2.8rem;
+      transition: padding-left 0.3s ease;
+
+      .MuiToolbar-root {
+        display: flex;
+        justify-content: flex-end;
+        color: $primary900 !important;
+      }
+
+      .logo {
+        margin: 1rem;
+      }
+
+      nav {
+        justify-content: space-between;
+        margin: 0 2.25rem;
+        max-width: 33.75rem;
+
+        a {
+          display: block;
+          color: $primary900 !important;
+          text-transform: uppercase;
+
+          &.active {
+            color: $primary700 !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+.sidebar-collapsed {
+  .admin-container {
+    header.MuiAppBar-root {
+      background: transparent !important;
+      box-shadow: none !important;
+      padding-left: 6rem;
+      padding-right: 2.8rem;
+      transition: padding-left 0.3s ease;
+
+      .MuiToolbar-root {
+        display: flex;
+        justify-content: flex-end;
+        color: $primary900 !important;
+      }
+
+      .logo {
+        margin: 1rem;
+      }
+
+      nav {
+        justify-content: space-between;
+        margin: 0 2.25rem;
+        max-width: 33.75rem;
+
+        a {
+          display: block;
+          color: $primary900 !important;
+          text-transform: uppercase;
+
+          &.active {
+            color: $primary700 !important;
+          }
+        }
+      }
+    }
+  }
+}
+
 .admin-container {
   header.MuiAppBar-root {
     background: transparent !important;
     box-shadow: none !important;
     padding-left: 16rem;
     padding-right: 2.8rem;
+    transition: padding-left 0.3s ease;
     .MuiToolbar-root {
       display: flex;
       justify-content: flex-end;
@@ -61,11 +139,32 @@
     width: 15rem;
     display: flex;
     flex-direction: column;
+    transition: width 0.3s ease;
+
+    &.collapsed {
+      width: 5rem;
+
+      .logo {
+        max-width: 40px;
+        margin: 0;
+      }
+
+      .MuiMenuItem-root {
+        justify-content: center;
+
+        a {
+          justify-content: center;
+          text-align: center;
+        }
+      }
+    }
 
     .logo {
       max-width: 80%;
       margin: 1rem;
+      transition: all 0.3s ease;
     }
+
     .MuiMenuItem-root {
       margin: 0.5rem 0.5rem;
       border-radius: 0.4rem;
@@ -88,6 +187,20 @@
           }
         }
       }
+    }
+  }
+
+  .MuiDrawer-root {
+    transition: width 0.3s ease;
+
+    &.collapsed {
+      .MuiDrawer-paper {
+        width: 5rem;
+      }
+    }
+
+    .MuiDrawer-paper {
+      transition: width 0.3s ease;
     }
   }
 }

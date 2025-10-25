@@ -235,7 +235,7 @@ export const RefundFormComponent = ({
           </Grid>
 
           {/* Joint Tenancy */}
-          <Grid size={12}>
+          <Grid size={12} sx={{ display: "none" }}>
             <FormControl fullWidth>
               <Controller
                 name="jointTenancy"
