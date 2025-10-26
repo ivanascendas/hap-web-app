@@ -91,7 +91,13 @@ export const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <AdminComponent />,
+    element: (
+      <RoleProtected
+        allowedRoles={["Admin", "SuperAdmin"]}
+        redirectTo="/login"
+        component={<AdminComponent />}
+      />
+    ),
     children: [
       {
         index: true,

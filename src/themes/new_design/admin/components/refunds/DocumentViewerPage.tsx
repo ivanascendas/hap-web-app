@@ -32,6 +32,7 @@ import {
   useLazyDownloadDocumentQuery,
   useLazyGetApplicationByIdQuery,
   useLazyGetDocumentBlobQuery,
+  useSubmitApplicationMutation,
   useVerifyBshMutation,
 } from "@shared/services/Refunds.service";
 import { selectUser } from "@shared/redux/slices/authSlice";
@@ -40,8 +41,12 @@ import { DocumentStatusConfirmationDialog } from "./DocumentStatusConfirmationDi
 import { BshComparisonDialog } from "./BshComparisonDialog";
 import { setError } from "@shared/redux/slices/errorSlice";
 import { NotificationComponent } from "@shared/components/Notification.component";
-import type { VerifyBshResponse } from "@shared/dtos/refund.dtos";
+import {
+  RefundDocumentType,
+  type VerifyBshResponse,
+} from "@shared/dtos/refund.dtos";
 import { BshComparisonComponent } from "./BshComparisonComponent";
+import { is } from "date-fns/locale";
 
 // Configure PDF.js worker
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -56,7 +61,7 @@ export const DocumentViewerPage: React.FC = () => {
   const dispatch = useDispatch();
 
   const [actionError, setActionError] = useState("");
-  const [bshCertificateNumber, setBshCertificateNumber] = useState("");
+  const [bshCertificateNumber] = useState("");
   const [bshVerificationResult, setBshVerificationResult] =
     useState<string>("Not Verified");
   const [bshComparisonDialogOpen, setBshComparisonDialogOpen] = useState(false);
@@ -79,6 +84,8 @@ export const DocumentViewerPage: React.FC = () => {
   const [downloadDocument] = useLazyDownloadDocumentQuery();
   const [getDocumentBlob] = useLazyGetDocumentBlobQuery();
   const [verifyBsh, { isLoading: isVerifying }] = useVerifyBshMutation();
+  const [submitApplication, { isLoading: isSubmitting }] =
+    useSubmitApplicationMutation();
   const [confirmStatus] = useConfirmDocumentStatusMutation();
   // Find the current document
   const document = application?.documents?.find(
@@ -88,6 +95,29 @@ export const DocumentViewerPage: React.FC = () => {
   const handleBack = () => {
     navigate(`/admin/refunds/${applicationId}`);
     setBshVerificationData(null);
+  };
+
+  const handleLopRequirementChange = (isRequired: boolean) => {
+    if (
+      !isSubmitting &&
+      application &&
+      application.jointTenancy !== isRequired
+    ) {
+      const updatedApplication = {
+        ...application,
+        jointTenancy: isRequired,
+      };
+      submitApplication(updatedApplication)
+        .unwrap()
+        .then(() => {
+          console.log("LOP Requirement updated successfully");
+        })
+        .catch((error) => {
+          console.error("Error updating LOP Requirement:", error);
+          const msg = t("ERRORS.SERVER_ERROR");
+          dispatch(setError(new Error(msg)));
+        });
+    }
   };
 
   const loadPdfDocument = async () => {
@@ -288,13 +318,15 @@ export const DocumentViewerPage: React.FC = () => {
           </Typography>
         </Paper>
         <Grid container spacing={2}>
-          <Grid size={6}>
+          <Grid
+            size={document.docType === RefundDocumentType.BankHeader ? 6 : 12}
+          >
             {/* Document Viewer */}
             <Paper
               sx={{
                 p: 2,
                 mb: 3,
-                height: "calc(100vh - 30rem)",
+                height: "calc(100vh - 22rem)",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -466,16 +498,18 @@ export const DocumentViewerPage: React.FC = () => {
               )}
             </Paper>
           </Grid>
-          <Grid size={6}>
-            {/* BSH Verification Result */}
-            <BshComparisonComponent
-              title={bshVerificationResult}
-              application={application || null}
-              bshResult={bshVerificationData}
-              onClose={handleBshComparisonCancel}
-              onConfirm={handleBshComparisonConfirm}
-            />
-          </Grid>
+          {document.docType === RefundDocumentType.BankHeader && (
+            <Grid size={6}>
+              <BshComparisonComponent
+                title={bshVerificationResult}
+                application={application || null}
+                bshResult={bshVerificationData}
+                onClose={handleBshComparisonCancel}
+                onConfirm={handleBshComparisonConfirm}
+                handleLopRequirementChange={handleLopRequirementChange}
+              />
+            </Grid>
+          )}
         </Grid>
       </Box>
       {/* Action Buttons */}
@@ -491,14 +525,16 @@ export const DocumentViewerPage: React.FC = () => {
             {t("REFUNDS.CONFIRM_DOCUMENT_STATUS")}
           </Button>
         )}
-        <Button
-          variant="outlined"
-          startIcon={<CloudIcon />}
-          onClick={handleVerifyBsh}
-          disabled={isVerifying}
-        >
-          {isVerifying ? "Verifying..." : "Verify BSH"}
-        </Button>
+        {document.docType === RefundDocumentType.BankHeader && (
+          <Button
+            variant="outlined"
+            startIcon={<CloudIcon />}
+            onClick={handleVerifyBsh}
+            disabled={isVerifying}
+          >
+            {isVerifying ? "Verifying..." : "Verify BSH"}
+          </Button>
+        )}
       </Box>
 
       {actionError && (

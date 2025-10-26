@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Table,
@@ -21,49 +21,78 @@ import type { VerifyBshResponse } from "@shared/dtos/refund.dtos";
 interface BshComparisonTableProps {
   selectedStatus: string;
   handleStatusChange: (event: SelectChangeEvent<string>) => void;
+  lopRequirementChange?: (isRequired: boolean) => void;
   application: RefundApplicationDto | null;
   bshResult: VerifyBshResponse | null;
   isLoading?: boolean;
 }
+
+interface MatchCheckboxProps {
+  appValue: string | null | boolean | undefined;
+  bshValue: string | null | boolean | undefined;
+  index: number;
+  matchStates: { [key: number]: boolean };
+  onMatchChange: (index: number, checked: boolean) => void;
+}
+
+const MatchCheckbox: React.FC<MatchCheckboxProps> = ({
+  appValue,
+  bshValue,
+  index,
+  onMatchChange,
+}) => {
+  const [isMatch, setIsMatch] = useState<boolean>(false);
+
+  const handleCheckboxChange = (checked: boolean) => {
+    setIsMatch(checked);
+    onMatchChange(index, checked);
+  };
+
+  useEffect(() => {
+    const normalizedAppValue =
+      typeof appValue === "boolean"
+        ? appValue.toString()
+        : appValue?.trim().toLowerCase() || "";
+    const normalizedBshValue =
+      typeof bshValue === "boolean"
+        ? bshValue.toString()
+        : bshValue?.trim().toLowerCase() || "";
+    const match =
+      typeof appValue === "boolean"
+        ? Boolean(appValue)
+        : normalizedAppValue === normalizedBshValue;
+    setIsMatch(match);
+    onMatchChange(index, match);
+  }, [appValue, bshValue, index]);
+
+  return (
+    <Checkbox
+      checked={isMatch}
+      onChange={(e) => handleCheckboxChange(e.target.checked)}
+      sx={{
+        color: isMatch ? "success.main" : "error.main",
+        "&.Mui-checked": {
+          color: isMatch ? "success.main" : "error.main",
+        },
+      }}
+    />
+  );
+};
 
 export const BshComparisonTableComponent: React.FC<BshComparisonTableProps> = ({
   application,
   bshResult,
   selectedStatus,
   handleStatusChange,
+  lopRequirementChange,
   isLoading = false,
 }) => {
   const [matchStates, setMatchStates] = useState<{ [key: number]: boolean }>(
     {},
   );
 
-  const getMatchIcon = (
-    appValue: string | null | undefined,
-    bshValue: string | null | undefined,
-    index: number,
-  ): React.ReactNode => {
-    const normalizedAppValue = appValue?.trim().toLowerCase() || "";
-    const normalizedBshValue = bshValue?.trim().toLowerCase() || "";
-    const isMatch =
-      matchStates[index] ?? normalizedAppValue === normalizedBshValue;
-
-    const handleCheckboxChange = (checked: boolean) => {
-      setMatchStates((prev) => ({ ...prev, [index]: checked }));
-    };
-
-    return (
-      <Checkbox
-        checked={isMatch}
-        onChange={(e) => handleCheckboxChange(e.target.checked)}
-        disabled={true}
-        sx={{
-          color: isMatch ? "success.main" : "error.main",
-          "&.Mui-checked": {
-            color: isMatch ? "success.main" : "error.main",
-          },
-        }}
-      />
-    );
+  const handleMatchChange = (index: number, checked: boolean) => {
+    setMatchStates((prev) => ({ ...prev, [index]: checked }));
   };
 
   const comparisonData = [
@@ -77,22 +106,42 @@ export const BshComparisonTableComponent: React.FC<BshComparisonTableProps> = ({
       formValue: application?.address || "-",
       extractedValue: bshResult?.extracted?.customerAddress || "-",
     },
-    /*{
-      field: 'Date',
+    {
+      field: "Date",
       formValue: application?.createdAt
         ? new Date(application.createdAt).toLocaleDateString()
-        : '-',
+        : "-",
       extractedValue: bshResult?.extracted?.statementDate
         ? new Date(bshResult.extracted.statementDate).toLocaleDateString()
-        : '-',
-    },*/
+        : "-",
+    },
+    {
+      field: "LOP is Required",
+      formValue: application?.jointTenancy,
+      extractedValue: false,
+    },
   ];
+
+  useEffect(() => {
+    if (matchStates[0] && matchStates[1] && matchStates[2]) {
+      handleStatusChange({
+        target: { value: "VALID" },
+      } as SelectChangeEvent<string>);
+    } else {
+      handleStatusChange({
+        target: { value: "INVALID" },
+      } as SelectChangeEvent<string>);
+    }
+    if (lopRequirementChange && matchStates[3] !== undefined) {
+      lopRequirementChange(matchStates[3]);
+    }
+  }, [matchStates, lopRequirementChange]);
 
   return (
     <Box sx={{ mt: 2 }}>
       {/* Comparison Table */}
-      <TableContainer component={Paper} sx={{ mb: 3 }}>
-        <Table>
+      <TableContainer component={Paper}>
+        <Table sx={{ mb: 0 }}>
           <TableHead>
             <TableRow sx={{ backgroundColor: "#f5f5f5" }}>
               <TableCell sx={{ fontWeight: "bold", width: "20%" }}></TableCell>
@@ -120,7 +169,13 @@ export const BshComparisonTableComponent: React.FC<BshComparisonTableProps> = ({
                 <TableCell>{row.formValue}</TableCell>
                 <TableCell>{row.extractedValue}</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>
-                  {getMatchIcon(row.formValue, row.extractedValue, index)}
+                  <MatchCheckbox
+                    appValue={row.formValue}
+                    bshValue={row.extractedValue}
+                    index={index}
+                    matchStates={matchStates}
+                    onMatchChange={handleMatchChange}
+                  />
                 </TableCell>
               </TableRow>
             ))}
@@ -129,7 +184,7 @@ export const BshComparisonTableComponent: React.FC<BshComparisonTableProps> = ({
       </TableContainer>
 
       {/* Status Dropdown */}
-      <FormControl fullWidth sx={{ mb: 2 }}>
+      <FormControl fullWidth sx={{ mb: 2, display: "none" }}>
         <InputLabel id="status-select-label">Status</InputLabel>
         <Select
           labelId="status-select-label"

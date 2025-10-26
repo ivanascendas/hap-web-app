@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, SxProps, Theme } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { Link, useParams } from "react-router-dom";
 import React from "react";
@@ -6,12 +6,14 @@ export type FooterProps = {
   drawerWidth?: number;
   isAuthenticated?: boolean;
   showFooter: boolean;
+  sx?: SxProps<Theme>;
 };
 
 export const FooterComponent = ({
   drawerWidth,
   isAuthenticated,
   showFooter,
+  sx,
 }: FooterProps): JSX.Element => {
   const { t } = useTranslation();
 
@@ -32,6 +34,7 @@ export const FooterComponent = ({
           xs: "center",
           md: "flex-end ",
         },
+        ...(sx ? sx : {}),
       }}
       className={isAuthenticated ? "authenticated" : undefined}
     >

@@ -35,7 +35,10 @@ export const AdminComponent = () => {
       >
         <Outlet />
       </Box>
-      <FooterComponent showFooter={true} />
+      <FooterComponent
+        sx={{ marginLeft: isSidebarCollapsed ? "7.0rem" : "17rem" }}
+        showFooter={true}
+      />
     </Paper>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -53,7 +53,7 @@ export const DocumentStatusConfirmationDialog: React.FC<
   DocumentStatusConfirmationDialogProps
 > = ({ open, onClose, applicationId, documentId, currentStatus }) => {
   const { t } = useTranslation();
-  const [status, setStatus] = useState<"VALID" | "INVALID">("VALID");
+  const [status, setStatus] = useState<"VALID" | "INVALID" | "">("");
   const [comment, setComment] = useState("");
 
   const [confirmStatus, { isLoading, error }] =
@@ -61,6 +61,8 @@ export const DocumentStatusConfirmationDialog: React.FC<
 
   const handleConfirm = async () => {
     try {
+      if (status === "") return;
+
       const result = await confirmStatus({
         applicationId,
         documentId,
@@ -78,16 +80,21 @@ export const DocumentStatusConfirmationDialog: React.FC<
     }
   };
 
-  const handleClose = () => {
-    if (!isLoading) {
-      setStatus("VALID");
-      setComment("");
-      onClose();
-    }
+  const handleStatusChange = (status: "VALID" | "INVALID") => {
+    setStatus(status);
   };
 
+  useEffect(() => {
+    if (open) {
+      handleConfirm();
+    } else {
+      setStatus("");
+      setComment("");
+    }
+  }, [open, status]);
+
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+    <Dialog open={open} onClose={() => onClose()} maxWidth="sm" fullWidth>
       <DialogTitle>{t("REFUNDS.CONFIRM_DOCUMENT_STATUS")}</DialogTitle>
 
       <DialogContent>
@@ -98,7 +105,7 @@ export const DocumentStatusConfirmationDialog: React.FC<
             </Alert>
           )}
 
-          <FormControl fullWidth sx={{ mb: 2 }}>
+          <FormControl fullWidth sx={{ mb: 2, display: "none" }}>
             <InputLabel>{t("REFUNDS.STATUS")}</InputLabel>
             <Select
               value={status}
@@ -131,18 +138,29 @@ export const DocumentStatusConfirmationDialog: React.FC<
       ) : null}
 
       <DialogActions>
-        <Button onClick={handleClose} disabled={isLoading}>
-          {t("COMMON.CANCEL")}
+        <Button
+          variant="outlined"
+          onClick={() => handleStatusChange("INVALID")}
+          disabled={isLoading}
+        >
+          {isLoading && status === "INVALID"
+            ? t("BUTTONS.SENDING")
+            : t("REFUNDS.STATUS_INVALID")}
         </Button>
         <Button
-          onClick={handleConfirm}
+          onClick={() => handleStatusChange("VALID")}
           variant="contained"
           disabled={isLoading}
           startIcon={isLoading && <CircularProgress size={20} />}
         >
-          {isLoading ? t("COMMON.CONFIRMING") : t("COMMON.CONFIRM")}
+          {isLoading && status === "VALID"
+            ? t("BUTTONS.SENDING")
+            : t("REFUNDS.STATUS_VALID")}
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
+function useffect(arg0: () => void, arg1: (boolean | "VALID" | "INVALID")[]) {
+  throw new Error("Function not implemented.");
+}

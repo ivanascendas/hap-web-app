@@ -110,7 +110,11 @@
       }
     }
   }
-
+  .sidebar-collapsed {
+    header.MuiAppBar-root {
+      padding-left: 6rem !important;
+    }
+  }
   .MuiList-root {
     li.MuiMenuItem-root {
       margin: 0.5rem 0;

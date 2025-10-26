@@ -46,7 +46,7 @@ export const RefundFormPage = (): JSX.Element => {
       defaultValues: {
         tenantId: user?.customerNo || "",
         applicantName: user?.customerName || "",
-        address: user?.address || "",
+        address: user?.address?.replace(/\s\s+/g, "\n") || "",
         trnPpsn: "",
         email: user?.email || "",
         phone: user?.phone ? `+${user.phone}` : "",
@@ -68,7 +68,7 @@ export const RefundFormPage = (): JSX.Element => {
       reset({
         tenantId: user?.customerNo || "",
         applicantName: user?.customerName || "",
-        address: user?.address || "",
+        address: user?.address?.replace(/\s\s+/g, "\n") || "",
         trnPpsn: "",
         email: user?.email || "",
         phone: user?.phone ? `+${user.phone}` : "",

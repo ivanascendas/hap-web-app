@@ -51,7 +51,10 @@ export const RefundUpdatePage = (): JSX.Element => {
       defaultValues: {
         tenantId: data?.tenantId || user?.customerNo || "",
         applicantName: data?.applicantName || user?.customerName || "",
-        address: data?.address || user?.address || "",
+        address:
+          data?.address?.replace(/\s\s+/g, "\n") ||
+          user?.address?.replace(/\s\s+/g, "\n") ||
+          "",
         trnPpsn: data?.trnPpsn || "",
         email: data?.email || user?.email || "",
         phone: data?.phone

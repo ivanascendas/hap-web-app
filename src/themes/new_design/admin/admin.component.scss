@@ -63,6 +63,7 @@
   }
 
   footer {
+    transition: all 0.3s ease;
     flex: none;
     display: flex;
     justify-content: space-between;
@@ -72,7 +73,6 @@
     gap: 5px;
     background-color: $secondary100;
     font-size: 0.93rem;
-    margin-left: 17rem;
     margin-right: 2rem;
     border-radius: 1rem 1rem 0 0;
   }
