@@ -36,7 +36,7 @@ import { useConfig } from "@shared/providers/Configuration.provider";
 const pages = [
   { link: "users", title: "Users", icon: <PeopleIcon /> },
 
-  { link: "letters/InvitationLetter", title: "Letters", icon: <MailIcon /> },
+  //  { link: "letters/InvitationLetter", title: "Letters", icon: <MailIcon /> },
   { link: "reports", title: "Reports", icon: <AssessmentIcon /> },
   {
     link: "notifications/forms",

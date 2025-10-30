@@ -8,6 +8,7 @@ import { ColumnItem, TableComponent } from "@shared/components/Table.component";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@shared/providers/Auth.provider";
 import { useUserRole } from "@shared/hooks/useUserRole";
+import { NotificationComponent } from "@shared/components/Notification.component";
 
 export const AdminsComponent = () => {
   const [selectedAdmin, setSelectedAdmin] = useState<AdminDto | null>(null);
@@ -72,6 +73,8 @@ export const AdminsComponent = () => {
   return (
     <Box p={3} sx={{ overflow: "auto", maxHeight: "calc(100vh - 80px)" }}>
       <CssBaseline />
+
+      <NotificationComponent />
       <Box className="personal_box ">
         <Box
           className="personal_box_filter"

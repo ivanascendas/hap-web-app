@@ -17,6 +17,7 @@ import {
   Checkbox,
   Grid,
   IconButton,
+  Alert,
 } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 
@@ -43,6 +44,7 @@ import {
   useUpdateAdminPasswordMutation,
 } from "@shared/services/Admins.service";
 import { NotificationComponent } from "@shared/components/Notification.component";
+import { set } from "date-fns";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { default: utils } = require("intl-tel-input/build/js/utils.js");
 
@@ -146,6 +148,13 @@ export const AdminDetailsModal: React.FC<AdminDetailsModalProps> = ({
         }),
       );
     }
+    if (
+      isAdminSuccessfullyCreated ||
+      isAdminSuccessfullyUpdated ||
+      isPasswordSuccessfullyUpdated
+    ) {
+      setTimeout(() => onClose(), 1500);
+    }
   }, [
     isAdminSuccessfullyCreated,
     isAdminSuccessfullyUpdated,
@@ -153,7 +162,6 @@ export const AdminDetailsModal: React.FC<AdminDetailsModalProps> = ({
   ]);
 
   const onSubmit = async (data: UpdateAdminDto & CreateAdminDto) => {
-    console.log(data);
     if (admin) {
       await updateAdmin({
         Id: data.Id,
@@ -511,6 +519,15 @@ export const AdminDetailsModal: React.FC<AdminDetailsModalProps> = ({
             )}
           />
         </Box>
+        {isAdminSuccessfullyCreated && (
+          <Alert severity="success">{t("MESSAGES.ADMIN_CREATED")}</Alert>
+        )}
+        {isAdminSuccessfullyUpdated && (
+          <Alert severity="success">{t("MESSAGES.INFO_UPDATED")}</Alert>
+        )}
+        {isPasswordSuccessfullyUpdated && (
+          <Alert severity="success">{t("MESSAGES.PASSWORD_UPDATED")}</Alert>
+        )}
         <Button
           variant="outlined"
           className="admin_outlined-button"
