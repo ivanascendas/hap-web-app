@@ -36,6 +36,7 @@ import { RefundUpdatePage } from "@components/refund/RefundUpdatePage";
 import { Gl07BatchesComponent } from "@components/admin/pages/gl07-batches.component";
 import { CreateGl07BatchComponent } from "@components/admin/pages/create-gl07-batch.component";
 import { Gl07BatchDetailsComponent } from "@components/admin/pages/gl07-batch-details.component";
+import { AddRefundComponent } from "@components/admin/components/refunds/AddRefundComponent";
 
 /**
  * Redirect component that handles user authentication and navigation.
@@ -161,6 +162,16 @@ export const router = createBrowserRouter([
             allowedRoles={["DMU_L1", "DMU_L2", "AP"]}
             redirectTo="/admin/users"
             component={<RefundDetailsComponent />}
+          />
+        ),
+      },
+      {
+        path: "refunds/new",
+        element: (
+          <RoleProtected
+            allowedRoles={["DMU_L1", "DMU_L2", "AP"]}
+            redirectTo="/admin/users"
+            component={<AddRefundComponent />}
           />
         ),
       },

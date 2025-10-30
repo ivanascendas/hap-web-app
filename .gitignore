@@ -29,3 +29,5 @@ build.zip
 doc/
 
 build 2.zip
+
+*.md

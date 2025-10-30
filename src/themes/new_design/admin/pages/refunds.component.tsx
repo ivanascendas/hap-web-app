@@ -5,6 +5,7 @@ import {
   Paper,
   TablePagination,
   CircularProgress,
+  Button,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -25,6 +26,8 @@ import { formatCurrency, formatDate } from "../utils/statusLabels";
 import "./refunds.component.scss";
 import { RefundApplicationDto } from "@shared/dtos/refund.dtos";
 import { useUserRole } from "@shared/hooks/useUserRole";
+import AddIcon from "@mui/icons-material/Add";
+import { useTranslation } from "react-i18next";
 
 /**
  * RefundsComponent - Admin page for managing refund applications
@@ -43,6 +46,7 @@ export const RefundsComponent: React.FC = () => {
   const filters = useSelector(selectAdminFilters);
   const pagination = useSelector(selectAdminPagination);
   const { hasRole } = useUserRole();
+  const { t } = useTranslation();
   // Fetch data - hooks must be called before any early returns
 
   const [getAdminApplications, { data, isFetching, isError }] =
@@ -110,7 +114,7 @@ export const RefundsComponent: React.FC = () => {
       label: "Application ID",
       rowRender: (row: RefundApplicationDto) => (
         <Typography variant="body2" fontFamily="monospace">
-          {row.applicationId.substring(0, 8)}...
+          {row.referenceCode}
         </Typography>
       ),
     },
@@ -154,10 +158,19 @@ export const RefundsComponent: React.FC = () => {
 
   return (
     <Box className="personal_box" sx={{}}>
-      <Typography variant="h5" className="personal_box_title" sx={{ mb: 2 }}>
-        Refund Applications Management
-      </Typography>
-
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography variant="h5" className="personal_box_title" sx={{ mb: 2 }}>
+          Refund Applications Management
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={() => navigate("/admin/refunds/new")}
+        >
+          {t("REFUNDS.LIST.NEW_APPLICATION")}
+        </Button>
+      </Box>
       {/* Filters */}
       <RefundFilters
         filters={filters}

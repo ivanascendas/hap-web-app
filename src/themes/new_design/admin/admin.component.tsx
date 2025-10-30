@@ -31,7 +31,10 @@ export const AdminComponent = () => {
       />
       <Box
         className="admin-content"
-        sx={{ marginLeft: isSidebarCollapsed ? "5.5rem" : "16rem" }}
+        sx={{
+          marginLeft: isSidebarCollapsed ? "5.5rem" : "16rem",
+          overflowY: "auto",
+        }}
       >
         <Outlet />
       </Box>
