@@ -9,6 +9,7 @@ import { BalanceRequestDto } from "@shared/dtos/balance-request.dto";
 import { QueryActionCreatorResult } from "@reduxjs/toolkit/query";
 import { BalanceDto } from "@shared/dtos/balance.dto";
 import { useNavigate } from "react-router-dom";
+import { useConfig } from "@shared/providers/Configuration.provider";
 export type HeaderStatementProps = {
   getBalance: (dto: BalanceRequestDto) => QueryActionCreatorResult<any>;
   balance: BalanceDto | undefined;
@@ -20,6 +21,7 @@ export const HeaderStatementComponent = ({
   const { t } = useTranslation();
   const user = useSelector(selectUser);
   const navigate = useNavigate();
+  const { config } = useConfig();
   return (
     <Box sx={{ flexGrow: 1 }} className="statement-header">
       <Box sx={{ flex: 1 }} onClick={() => navigate("/account")}>
@@ -46,7 +48,9 @@ export const HeaderStatementComponent = ({
       </Box>
       <Button
         className="btn-secondary"
-        onClick={() => navigate("/invoices/rates")}
+        onClick={() =>
+          navigate(`/invoices/${config?.depDefaultValue || "rates"}`)
+        }
       >
         Pay Now
       </Button>

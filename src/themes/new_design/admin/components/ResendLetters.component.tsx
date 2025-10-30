@@ -11,6 +11,7 @@ import {
   useLazyGetLettersQuery,
   useRemoveLettersMutation,
 } from "@shared/services/Letters.service";
+import { useConfig } from "@shared/providers/Configuration.provider";
 
 export type InvitionLettersProps = {
   selectedIncDepts: string;
@@ -27,6 +28,7 @@ export const ResendLettersComponent = ({
 }: InvitionLettersProps): JSX.Element => {
   const [generatePdf] = useGenerateResendPdfMutation();
   const [removeLetters] = useRemoveLettersMutation();
+  const { config } = useConfig();
   const {
     data: letters,
     isFetching,
@@ -70,7 +72,7 @@ export const ResendLettersComponent = ({
 
     if (response && response.data) {
       window.open(
-        `${process.env.REACT_APP_BASE_URL}/api/letters/pdf/${encodeURIComponent(response.data)}`,
+        `${config?.baseUrl}/api/letters/pdf/${encodeURIComponent(response.data)}`,
         "_blank",
       );
     }

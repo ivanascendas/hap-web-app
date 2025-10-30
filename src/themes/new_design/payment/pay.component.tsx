@@ -23,6 +23,7 @@ import { PaymentResultResponseDto } from "@shared/dtos/payments.dto";
 import paymentAccepted from "../../../assets/img/payment_accepted.svg";
 import paymentError from "../../../assets/img/payment_error.svg";
 import currency from "@shared/utils/currency";
+import { useConfiguration } from "@shared/hooks/useConfiguration";
 
 export type PayComponentProps = {
   onClose?: () => void;
@@ -37,6 +38,8 @@ export const PayComponent = ({ onClose }: PayComponentProps): JSX.Element => {
   const [confirmPayment] = useConfirmPaymentMutation();
   const navigate = useNavigate();
   const iframeRef = useRef<HTMLDivElement>(null);
+
+  const { config } = useConfiguration();
 
   const closeIframe = (): void => {
     RealexHpp.embedded.close();
@@ -72,12 +75,12 @@ export const PayComponent = ({ onClose }: PayComponentProps): JSX.Element => {
         const parsedData = JSON.parse(data);
 
         if (!parsedData.iframe) {
-          let paymentResponse: any = {};
+          const paymentResponse: any = {};
           Object.keys(parsedData).forEach((key) => {
             paymentResponse[key] = decode(parsedData[key]);
           });
 
-          let paymentResponseDto: PaymentResultResponseDto = {
+          const paymentResponseDto: PaymentResultResponseDto = {
             Timestamp: paymentResponse["TIMESTAMP"],
             OrderId: paymentResponse["ORDER_ID"],
             ResultCode: paymentResponse["RESULT"],
@@ -130,7 +133,7 @@ export const PayComponent = ({ onClose }: PayComponentProps): JSX.Element => {
 
           if (token) {
             createIframe();
-            RealexHpp.setHppUrl(DEFAUT_HPP_TEST_URL);
+            RealexHpp.setHppUrl(config?.paymentUrl || DEFAUT_HPP_TEST_URL);
             RealexHpp.embedded.init(
               null,
               "payment_iframe",

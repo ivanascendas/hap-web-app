@@ -31,6 +31,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useLogoutMutation } from "@shared/services/Auth.service";
 import { useUserRole } from "@shared/hooks/useUserRole";
 import { useEffect } from "react";
+import { useConfig } from "@shared/providers/Configuration.provider";
 
 const pages = [
   { link: "users", title: "Users", icon: <PeopleIcon /> },
@@ -59,6 +60,7 @@ const HeaderComponent = ({
   const { hasRole } = useUserRole();
   const location = useLocation();
   const { t } = useTranslation();
+  const { config } = useConfig();
   const [adminName, setAdminName] = React.useState<string>("Admin");
   const [unreadCount] = React.useState<number>(10);
   const user = useSelector(selectUser);
@@ -70,6 +72,7 @@ const HeaderComponent = ({
   );
   useEffect(() => {
     if (
+      config?.useRefundFeature &&
       (hasRole("DMU_L1") || hasRole("DMU_L2") || hasRole("AP")) &&
       pages.findIndex((p) => p.link === "refunds") === -1
     ) {
@@ -80,6 +83,7 @@ const HeaderComponent = ({
       });
     }
     if (
+      config?.useRefundFeature &&
       hasRole("AP") &&
       pages.findIndex((p) => p.link === "gl07-batches") === -1
     ) {

@@ -7,9 +7,13 @@ import { useAuth } from "@shared/providers/Auth.provider";
 import { ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { IdlePopupModal } from "@shared/components/IdlePopup.modal";
-function App() {
+import { ConfigurationProvider } from "@shared/providers/Configuration.provider";
+import { useConfiguration } from "@shared/hooks/useConfiguration";
+
+function AppContent() {
   const [shoeIDLE, setShowIDLE] = useState(false);
   const { isAuthenticated } = useAuth();
+  const { config } = useConfiguration();
   const theme = createTheme({
     palette: {
       primary: {
@@ -37,11 +41,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <IdleTimerProvider
-        timeout={
-          process.env.REACT_APP_IDLE
-            ? parseInt(process.env.REACT_APP_IDLE)
-            : undefined
-        } // 10 minutes
+        timeout={config?.idle || 600000} // 10 minutes
         onIdle={handleOnIdle}
       >
         <RouterProvider router={router} />
@@ -50,6 +50,14 @@ function App() {
         <IdlePopupModal open={shoeIDLE} onClose={() => setShowIDLE(false)} />
       )}
     </ThemeProvider>
+  );
+}
+
+function App() {
+  return (
+    <ConfigurationProvider>
+      <AppContent />
+    </ConfigurationProvider>
   );
 }
 export default App;

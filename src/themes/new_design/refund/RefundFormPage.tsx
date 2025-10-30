@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -12,11 +13,13 @@ import {
 import {
   CreateRefundApplicationRequest,
   PaymentMethod,
+  RefundApplicationDto,
   RefundDocumentType,
 } from "@shared/dtos/refund.dtos";
 import { toast } from "react-toastify";
 import "./RefundForm.component.scss";
 import { RefundFormComponent } from "./RefundForm.component";
+import { useConfig } from "@shared/providers/Configuration.provider";
 export type RefundFormProps = {} & CreateRefundApplicationRequest;
 
 interface RefundFormData extends CreateRefundApplicationRequest {
@@ -31,10 +34,20 @@ export const RefundFormPage = (): JSX.Element => {
   const user = useSelector(selectUser);
   const isLoading = useSelector(selectUserLoading);
   const navigate = useNavigate();
+  const { config } = useConfig();
 
   const iniTelRef = useRef<HTMLInputElement>(null);
+  const [isHeaderFilesUploaded, setIsHeaderFilesUploaded] = useState(false);
+  const [isLopFilesUploaded, setIsLopFilesUploaded] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-
+  const [selectedLopFiles, setSelectedLopFiles] = useState<File[]>([]);
+  const [sendResult, setSendResult] = useState<RefundApplicationDto | null>(
+    null,
+  );
+  const [lopSendingError, setLopSendingError] = useState<string | null>(null);
+  const [headerSendingError, setHeaderSendingError] = useState<string | null>(
+    null,
+  );
   const [createApplication, { isLoading: isCreating }] =
     useCreateApplicationMutation();
   const [uploadDocument, { isLoading: isUploading }] =
@@ -74,9 +87,7 @@ export const RefundFormPage = (): JSX.Element => {
         phone: user?.phone ? `+${user.phone}` : "",
         refundReason: "",
         currency: "EUR",
-        amount: process.env.REACT_APP_REFUND_MIN_AMOUNT
-          ? Number(process.env.REACT_APP_REFUND_MIN_AMOUNT)
-          : 50,
+        amount: config?.refundMinAmount || 50,
         referenceCode: "",
         submissionChannel: "portal",
         jointTenancy: false,
@@ -99,21 +110,63 @@ export const RefundFormPage = (): JSX.Element => {
       const requestData: CreateRefundApplicationRequest = {
         ...data,
         phone: fullPhone,
+        jointTenancy: selectedLopFiles.length > 0 ? true : data.jointTenancy,
       };
 
-      // Create the refund application
-      const result = await createApplication(requestData).unwrap();
+      if (selectedFiles.length === 0) {
+        toast.error(t("REFUNDS.FORM.ERROR_NO_DOCUMENTS"));
+        return;
+      }
+      let result: RefundApplicationDto | null = null;
+      if (sendResult === null) {
+        // Create the refund application
+        result = await createApplication(requestData).unwrap();
+        setSendResult(result);
+      } else {
+        result = sendResult;
+      }
 
       toast.success(t("REFUNDS.FORM.SUCCESS_MESSAGE"));
 
       // Upload documents if any
-      if (selectedFiles.length > 0) {
-        for (const file of selectedFiles) {
-          await uploadDocument({
-            applicationId: result.applicationId,
-            documentType: RefundDocumentType.BankHeader,
-            file,
-          }).unwrap();
+      if (!isHeaderFilesUploaded && result && selectedFiles.length > 0) {
+        try {
+          for (const file of selectedFiles) {
+            await uploadDocument({
+              applicationId: result.applicationId,
+              documentType: RefundDocumentType.BankHeader,
+              file,
+            }).unwrap();
+          }
+          setIsHeaderFilesUploaded(true);
+        } catch (error) {
+          setHeaderSendingError(
+            (error as { data?: { message?: string } })?.data?.message ||
+              (error as { data?: { detail?: string } })?.data?.detail ||
+              t("ERRORS.SERVER_ERROR"),
+          );
+          throw error;
+        }
+      }
+
+      // Upload LOP documents if any
+      if (!isLopFilesUploaded && result && selectedLopFiles.length > 0) {
+        try {
+          for (const file of selectedLopFiles) {
+            await uploadDocument({
+              applicationId: result.applicationId,
+              documentType: RefundDocumentType.PermissionLetter,
+              file,
+            }).unwrap();
+          }
+          setIsLopFilesUploaded(true);
+        } catch (error) {
+          setLopSendingError(
+            (error as { data?: { message?: string } })?.data?.message ||
+              (error as { data?: { detail?: string } })?.data?.detail ||
+              t("ERRORS.SERVER_ERROR"),
+          );
+          throw error;
         }
       }
 
@@ -141,6 +194,12 @@ export const RefundFormPage = (): JSX.Element => {
       selectedFiles={selectedFiles}
       setSelectedFiles={setSelectedFiles}
       iniTelRef={iniTelRef}
+      selectedLopFiles={selectedLopFiles}
+      setSelectedLopFiles={setSelectedLopFiles}
+      isHeaderFilesUploaded={isHeaderFilesUploaded}
+      isLopFilesUploaded={isLopFilesUploaded}
+      headerSendingError={headerSendingError}
+      lopSendingError={lopSendingError}
     />
   );
 };

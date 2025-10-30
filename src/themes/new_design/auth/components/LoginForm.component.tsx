@@ -26,6 +26,7 @@ import { NotificationComponent } from "@shared/components/Notification.component
 import StorageService from "@shared/services/Storage.service";
 import { setError } from "@shared/redux/slices/errorSlice";
 import { useAuth } from "@shared/providers/Auth.provider";
+import { useConfig } from "@shared/providers/Configuration.provider";
 
 export type LoginFormProps = {
   successUrl?: string;
@@ -49,6 +50,7 @@ export const LoginFormComponent = ({
   const auth = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const { config } = useConfig();
 
   const {
     register,
@@ -222,7 +224,7 @@ export const LoginFormComponent = ({
                 <div>
                   <div className="app-icons">
                     {isAndroid && (
-                      <a href={process.env.REACT_APP_ANDROID_LINK}>
+                      <a href={config?.androidLink}>
                         <img
                           className="android"
                           alt="Get it on Google Play"
@@ -231,7 +233,7 @@ export const LoginFormComponent = ({
                       </a>
                     )}
                     {isIOS && (
-                      <a href={process.env.REACT_APP_IOS_LINK}>
+                      <a href={config?.iosLink}>
                         <img
                           className="apple"
                           src={appleImg}

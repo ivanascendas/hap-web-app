@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Box,
   Button,
@@ -10,6 +10,7 @@ import {
   FormControl,
   FormControlLabel,
   useMediaQuery,
+  Autocomplete,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
@@ -22,14 +23,24 @@ import {
   FormState,
   Control,
   UseFormSetValue,
+  useForm,
 } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { IntlTelInputComponent } from "@shared/components/IntlTelInput.component";
-import { CreateRefundApplicationRequest } from "@shared/dtos/refund.dtos";
+import {
+  CreateRefundApplicationRequest,
+  PaymentMethod,
+} from "@shared/dtos/refund.dtos";
 import "./RefundForm.component.scss";
+import { isValid } from "date-fns";
+import { title } from "process";
+
+import { toast } from "react-toastify";
+import { useCreateApplicationMutation } from "@shared/services/Refunds.service";
+import { selectUserLoading } from "@shared/redux/slices/loaderSlice";
+import { useLazyGetCustomersQuery } from "@shared/services/Customers.service";
+import { CustomerDto } from "@shared/dtos/customer.dtos";
 import { useConfig } from "@shared/providers/Configuration.provider";
-import { validatePPSN } from "@shared/utils/validation.utils";
-import { is } from "date-fns/locale";
 export type RefundFormProps = {
   title: string;
   handleSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
@@ -45,10 +56,6 @@ export type RefundFormProps = {
   selectedLopFiles: File[];
   setSelectedLopFiles: React.Dispatch<React.SetStateAction<File[]>>;
   iniTelRef: React.RefObject<HTMLInputElement>;
-  isHeaderFilesUploaded?: boolean;
-  isLopFilesUploaded?: boolean;
-  headerSendingError?: string | null;
-  lopSendingError?: string | null;
 };
 
 interface RefundFormData extends CreateRefundApplicationRequest {
@@ -58,49 +65,174 @@ interface RefundFormData extends CreateRefundApplicationRequest {
 /**
  * RefundFormComponent for creating new refund applications
  */
-export const RefundFormComponent = ({
-  register,
-  handleSubmit,
-  formState: { errors, isValid },
-  control,
-  setValue,
-  isCreating,
-  isUploading,
-  selectedFiles,
-  setSelectedFiles,
-  selectedLopFiles,
-  setSelectedLopFiles,
-  isHeaderFilesUploaded,
-  isLopFilesUploaded,
-  headerSendingError,
-  lopSendingError,
-  iniTelRef,
-  title,
-}: RefundFormProps): JSX.Element => {
+export const AddRefundComponent = (): JSX.Element => {
   const { t } = useTranslation();
   const user = useSelector(selectUser);
   const navigate = useNavigate();
   const { config } = useConfig();
 
+  const isLoading = useSelector(selectUserLoading);
+  const [createApplication, { isLoading: isCreating }] =
+    useCreateApplicationMutation();
+  const iniTelRef = useRef<HTMLInputElement>(null);
+
+  // Customer autocomplete state
+  const [
+    getCustomers,
+    { data: customersData, isFetching: isFetchingCustomers },
+  ] = useLazyGetCustomersQuery();
+  const [customerOptions, setCustomerOptions] = React.useState<CustomerDto[]>(
+    [],
+  );
+  const [customerInputValue, setCustomerInputValue] = React.useState("");
+  const [selectedCustomer, setSelectedCustomer] =
+    React.useState<CustomerDto | null>(null);
+
   // Screen size detection
   const isMobile = useMediaQuery("(max-width:768px)");
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      setSelectedFiles(Array.from(event.target.files));
-    }
-  };
+  const {
+    handleSubmit,
+    register,
+    reset,
+    control,
+    setValue,
+    formState: { errors },
+  } = useForm<RefundFormData>({
+    mode: "all",
+    defaultValues: {
+      tenantId: user?.customerNo || "",
+      applicantName: user?.customerName || "",
+      address: user?.address?.replace(/\s\s+/g, "\n") || "",
+      trnPpsn: "",
+      email: user?.email || "",
+      phone: user?.phone ? `+${user.phone}` : "",
+      refundReason: ``,
+      currency: "EUR",
+      amount: config?.refundMinAmount || 50,
+      referenceCode: "",
+      submissionChannel: "portal",
+      jointTenancy: false,
+      paymentMethod: PaymentMethod.EFT,
+      iban: "",
+      bic: "",
+      dueBy: "",
+    },
+  });
 
-  const handleLopFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      setSelectedLopFiles(Array.from(event.target.files));
+  const validatePPSN = (ppsn: string): boolean => {
+    // Normalize input: remove spaces and make uppercase
+    ppsn = ppsn.trim().toUpperCase();
+
+    // Match PPSN format:
+    // - Old format: 7 digits + 1 letter (e.g. 1234567T)
+    // - New format: 7 digits + 2 letters (e.g. 1234567TW)
+    const ppsnPattern = /^(\d{7})([A-Z]{1,2})$/;
+    const match = ppsn.match(ppsnPattern);
+    if (!match) return false;
+
+    const digits = match[1];
+    const letters = match[2];
+
+    // Weighted checksum calculation (for first letter only)
+    const multipliers = [8, 7, 6, 5, 4, 3, 2];
+    let total = 0;
+
+    for (let i = 0; i < 7; i++) {
+      total += parseInt(digits[i], 10) * multipliers[i];
     }
+
+    // If there is a 2nd letter (new format), include it in the checksum
+    if (letters.length === 2) {
+      const secondLetterValue = letters.charCodeAt(1) - 64; // A=1, B=2, etc.
+      total += secondLetterValue * 9;
+    }
+
+    const remainder = total % 23;
+    const checkChar =
+      remainder === 0 ? "W" : String.fromCharCode(64 + remainder);
+
+    // Compare calculated check character with the first letter
+    return letters[0] === checkChar;
   };
 
   const handleCancel = () => {
     navigate("/refunds");
   };
-  console.log({ isLopFilesUploaded, isHeaderFilesUploaded });
+
+  useEffect(() => {
+    if (!isLoading && user) {
+      reset({
+        tenantId: user?.customerNo || "",
+        applicantName: user?.customerName || "",
+        address: user?.address?.replace(/\s\s+/g, "\n") || "",
+        trnPpsn: "",
+        email: user?.email || "",
+        phone: user?.phone ? `+${user.phone}` : "",
+        refundReason: "",
+        currency: "EUR",
+        amount: config?.refundMinAmount || 50,
+        referenceCode: "",
+        submissionChannel: "portal",
+        jointTenancy: false,
+        paymentMethod: PaymentMethod.EFT,
+        iban: "",
+        bic: "",
+        dueBy: "",
+      });
+      if (iniTelRef.current && user.phone) {
+        iniTelRef.current.value = `+${user.phone}`;
+      }
+    }
+  }, [user, isLoading, reset]);
+
+  // Fetch customers when input changes
+  useEffect(() => {
+    if (customerInputValue.length >= 2) {
+      getCustomers({
+        $filter: `substringof('${customerInputValue}',CustomerName) or substringof('${customerInputValue}',CustomerNumber)`,
+        incDepts: "All",
+        $count: true,
+        $orderby: "CustomerName asc",
+        $skip: 0,
+        $top: 20,
+      });
+    }
+  }, [customerInputValue, getCustomers]);
+
+  // Update customer options when data changes
+  useEffect(() => {
+    if (customersData?.items) {
+      setCustomerOptions(customersData.items);
+    }
+  }, [customersData]);
+
+  const onSubmit = async (data: RefundFormData) => {
+    try {
+      // Get phone number from the input field
+      const fullPhone = iniTelRef.current?.value || data.phone;
+
+      const requestData: CreateRefundApplicationRequest = {
+        ...data,
+        phone: fullPhone,
+      };
+
+      // Create the refund application
+      await createApplication(requestData).unwrap();
+
+      toast.success(t("REFUNDS.FORM.SUCCESS_MESSAGE"));
+
+      // Navigate to the refund details page
+      // navigate(`/refunds/${result.applicationId}`);
+    } catch (error) {
+      console.error("Error creating refund application:", error);
+      const errorMessage =
+        (error as { data?: { message?: string } })?.data?.message ||
+        t("ERRORS.SERVER_ERROR");
+      toast.error(errorMessage);
+    }
+  };
+
   return (
     <Box
       className={`refund-form-container personal_box personal_box_content ${isMobile ? "refund-form-container--mobile" : ""}`}
@@ -113,19 +245,64 @@ export const RefundFormComponent = ({
         {t("REFUNDS.FORM.DESCRIPTION")}
       </Typography>
 
-      <form onSubmit={handleSubmit} className="refund-form">
+      <form onSubmit={handleSubmit(onSubmit)} className="refund-form">
         <Grid container spacing={isMobile ? 2 : 3}>
           {/* Tenant ID */}
           <Grid size={12}>
-            <TextField
-              fullWidth
-              label={t("REFUNDS.FORM.TENANT_ID")}
-              {...register("tenantId", {
-                required: t("ERRORS.REQUIRED"),
-              })}
-              error={!!errors.tenantId}
-              helperText={errors.tenantId?.message}
-              disabled
+            <Controller
+              name="tenantId"
+              control={control}
+              rules={{ required: t("ERRORS.REQUIRED") }}
+              render={({ field: { onChange, value } }) => (
+                <Autocomplete
+                  fullWidth
+                  options={customerOptions}
+                  getOptionLabel={(option) =>
+                    typeof option === "string"
+                      ? option
+                      : `${option.customerNumber} - ${option.customerName}`
+                  }
+                  loading={isFetchingCustomers}
+                  value={
+                    selectedCustomer ||
+                    customerOptions.find(
+                      (c) => c.customerNumber.toString() === value,
+                    ) ||
+                    null
+                  }
+                  onChange={(_, newValue) => {
+                    setSelectedCustomer(newValue);
+                    onChange(newValue?.customerNumber.toString() || "");
+                    if (newValue) {
+                      setValue("applicantName", newValue.customerName);
+                      setValue("address", newValue.address);
+                      setValue("email", newValue.email);
+                      setValue(
+                        "phone",
+                        newValue.phoneNumber ? `+${newValue.phoneNumber}` : "",
+                      );
+                      if (iniTelRef.current && newValue.phoneNumber) {
+                        iniTelRef.current.value = `+${newValue.phoneNumber}`;
+                      }
+                    }
+                  }}
+                  onInputChange={(_, newInputValue) => {
+                    setCustomerInputValue(newInputValue);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={t("REFUNDS.FORM.TENANT_ID")}
+                      error={!!errors.tenantId}
+                      helperText={errors.tenantId?.message}
+                      placeholder={
+                        t("REFUNDS.FORM.TENANT_ID_PLACEHOLDER") ||
+                        "Type to search..."
+                      }
+                    />
+                  )}
+                />
+              )}
             />
           </Grid>
 
@@ -320,124 +497,6 @@ export const RefundFormComponent = ({
             />
           </Grid>
 
-          {/* Document Upload */}
-          <Grid size={12}>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Typography variant="h6" gutterBottom>
-                {t("REFUNDS.FORM.DOCUMENTS")}
-              </Typography>
-              {isHeaderFilesUploaded && (
-                <Alert severity="success" sx={{ mt: 1 }}>
-                  {t("REFUNDS.FORM.DOCUMENTS_SUCCESSFULLY_UPLOADED")}
-                </Alert>
-              )}
-              {headerSendingError && (
-                <Alert severity="error" sx={{ mt: 1 }}>
-                  {headerSendingError}
-                </Alert>
-              )}
-            </Box>
-            <Typography variant="body2" color="textSecondary" gutterBottom>
-              {t("REFUNDS.FORM.DOCUMENTS_DESCRIPTION")}
-            </Typography>
-            <Button
-              variant="outlined"
-              component="label"
-              fullWidth
-              sx={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <Typography sx={{ flex: 1 }}>
-                {t("REFUNDS.FORM.UPLOAD_DOCUMENTS")}
-              </Typography>
-              <input
-                style={{ flex: 1, padding: 1, height: "auto" }}
-                type="file"
-                hidden
-                accept=".pdf,.jpg,.jpeg,.png"
-                onChange={handleFileChange}
-              />
-            </Button>
-            {selectedFiles.length > 0 && (
-              <Box mt={2}>
-                <Typography variant="body2">
-                  {t("REFUNDS.FORM.SELECTED_FILES")}: {selectedFiles.length}
-                </Typography>
-                {selectedFiles.map((file, index) => (
-                  <Typography key={index} variant="caption" display="block">
-                    {file.name} ({(file.size / 1024).toFixed(2)} KB)
-                  </Typography>
-                ))}
-              </Box>
-            )}
-          </Grid>
-          {/* Document LOP Upload */}
-          <Grid size={12}>
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Typography variant="h6" gutterBottom>
-                {t("REFUNDS.FORM.DOCUMENTS_LOP")}
-              </Typography>
-              {isLopFilesUploaded && (
-                <Alert severity="success" sx={{ mt: 1 }}>
-                  {t("REFUNDS.FORM.DOCUMENTS_SUCCESSFULLY_UPLOADED")}
-                </Alert>
-              )}
-              {lopSendingError && (
-                <Alert severity="error" sx={{ mt: 1 }}>
-                  {lopSendingError}
-                </Alert>
-              )}
-            </Box>
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              gutterBottom
-              dangerouslySetInnerHTML={{
-                __html: t("REFUNDS.FORM.DOCUMENTS_LOP_DESCRIPTION"),
-              }}
-            ></Typography>
-            <Button
-              variant="outlined"
-              component="label"
-              fullWidth
-              sx={{ display: "flex", justifyContent: "space-between" }}
-            >
-              <Typography sx={{ flex: 1 }}>
-                {t("REFUNDS.FORM.UPLOAD_DOCUMENTS")}
-              </Typography>
-              <input
-                style={{ flex: 1, padding: 1, height: "auto" }}
-                type="file"
-                hidden
-                accept=".pdf,.jpg,.jpeg,.png"
-                disabled={isLopFilesUploaded}
-                onChange={handleLopFileChange}
-              />
-            </Button>
-            {selectedFiles.length > 0 && (
-              <Box mt={2}>
-                <Typography variant="body2">
-                  {t("REFUNDS.FORM.SELECTED_FILES")}: {selectedLopFiles.length}
-                </Typography>
-                {selectedLopFiles.map((file, index) => (
-                  <Typography key={index} variant="caption" display="block">
-                    {file.name} ({(file.size / 1024).toFixed(2)} KB)
-                  </Typography>
-                ))}
-              </Box>
-            )}
-          </Grid>
           {/* Action Buttons */}
           <Grid size={12}>
             <Box
@@ -451,7 +510,7 @@ export const RefundFormComponent = ({
                 variant="outlined"
                 startIcon={<WestIcon />}
                 onClick={handleCancel}
-                disabled={isCreating || isUploading}
+                disabled={isCreating}
                 fullWidth={isMobile}
               >
                 {t("REFUNDS.FORM.CANCEL")}
@@ -461,10 +520,10 @@ export const RefundFormComponent = ({
                 variant="contained"
                 color="primary"
                 endIcon={<EastIcon />}
-                disabled={!isValid || isCreating || isUploading}
+                disabled={!isValid || isCreating}
                 fullWidth={isMobile}
               >
-                {isCreating || isUploading
+                {isCreating
                   ? t("REFUNDS.FORM.SUBMITTING")
                   : t("REFUNDS.FORM.SUBMIT")}
               </Button>

@@ -17,11 +17,13 @@ import { setError } from "@shared/redux/slices/errorSlice";
 import { setNotify } from "@shared/redux/slices/notifySlice";
 import { useDispatch } from "react-redux";
 import StorageService from "@shared/services/Storage.service";
+import { useConfig } from "@shared/providers/Configuration.provider";
 
 export const ForgotPasswordFormComponent = (): JSX.Element => {
   const [forgotPassword, result] = useForgotPasswordMutation();
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const { config } = useConfig();
   const {
     register,
     formState: { errors },
@@ -89,7 +91,7 @@ export const ForgotPasswordFormComponent = (): JSX.Element => {
             </div>
             <div className="auth-form__input-container ">
               <ReCAPTCHA
-                sitekey={process.env.REACT_APP_PUBLIC_KEY || ""}
+                sitekey={config?.publicKey || ""}
                 onChange={handleRecaptchaChange}
               />
             </div>

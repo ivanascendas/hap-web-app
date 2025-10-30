@@ -24,6 +24,7 @@ import { messagesApi } from "../services/Messages.service";
 import { termsApi } from "../services/Terms.service";
 import { refundsApi } from "../services/Refunds.service";
 import { gl07BatchApi } from "../services/Gl07Batch.service";
+import { configurationsApi } from "@shared/services/Configurations.service";
 
 export const store = configureStore({
   reducer: {
@@ -41,6 +42,7 @@ export const store = configureStore({
     [termsApi.reducerPath]: termsApi.reducer,
     [refundsApi.reducerPath]: refundsApi.reducer,
     [gl07BatchApi.reducerPath]: gl07BatchApi.reducer,
+    [configurationsApi.reducerPath]: configurationsApi.reducer,
     error: errorReducer,
     department: departmentsReducer,
     loader: loaderReducer,
@@ -110,6 +112,7 @@ export const store = configureStore({
       termsApi.middleware,
       refundsApi.middleware,
       gl07BatchApi.middleware,
+      configurationsApi.middleware,
     ),
 });
 

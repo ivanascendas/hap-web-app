@@ -21,6 +21,7 @@ import {
 import { toast } from "react-toastify";
 import "./RefundForm.component.scss";
 import { RefundFormComponent } from "./RefundForm.component";
+import { useConfig } from "@shared/providers/Configuration.provider";
 export type RefundFormProps = {} & CreateRefundApplicationRequest;
 
 interface RefundFormData extends CreateRefundApplicationRequest {
@@ -36,14 +37,23 @@ export const RefundUpdatePage = (): JSX.Element => {
   const user = useSelector(selectUser);
   const isLoading = useSelector(selectUserLoading);
   const navigate = useNavigate();
+  const { config } = useConfig();
   const [getApplication, { data }] = useLazyGetApplicationByIdQuery();
   const iniTelRef = useRef<HTMLInputElement>(null);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
+  const [selectedLopFiles, setSelectedLopFiles] = useState<File[]>([]);
   const [submitApplication, { isLoading: isCreating }] =
     useSubmitApplicationMutation();
   const [uploadDocument, { isLoading: isUploading }] =
     useUploadDocumentMutation();
+
+  const [isHeaderFilesUploaded, setIsHeaderFilesUploaded] = useState(false);
+  const [isLopFilesUploaded, setIsLopFilesUploaded] = useState(false);
+  const [lopSendingError, setLopSendingError] = useState<string | null>(null);
+  const [headerSendingError, setHeaderSendingError] = useState<string | null>(
+    null,
+  );
 
   const { handleSubmit, register, reset, control, setValue, formState } =
     useForm<RefundFormData>({
@@ -64,10 +74,7 @@ export const RefundUpdatePage = (): JSX.Element => {
             : "",
         refundReason: data?.refundReason || "",
         currency: data?.currency || "EUR",
-        amount:
-          data?.amount || process.env.REACT_APP_REFUND_MIN_AMOUNT
-            ? Number(process.env.REACT_APP_REFUND_MIN_AMOUNT)
-            : 50,
+        amount: data?.amount || config?.refundMinAmount || 50,
         referenceCode: data?.referenceCode || "",
         submissionChannel: data?.submissionChannel || "portal",
         jointTenancy: data?.jointTenancy || false,
@@ -132,13 +139,44 @@ export const RefundUpdatePage = (): JSX.Element => {
       toast.success(t("REFUNDS.FORM.SUCCESS_MESSAGE"));
 
       // Upload documents if any
-      if (selectedFiles.length > 0) {
-        for (const file of selectedFiles) {
-          await uploadDocument({
-            applicationId: result.applicationId,
-            documentType: RefundDocumentType.BankHeader,
-            file,
-          }).unwrap();
+      if (!isHeaderFilesUploaded && result && selectedFiles.length > 0) {
+        try {
+          for (const file of selectedFiles) {
+            await uploadDocument({
+              applicationId: result.applicationId,
+              documentType: RefundDocumentType.BankHeader,
+              file,
+            }).unwrap();
+          }
+          setIsHeaderFilesUploaded(true);
+        } catch (error) {
+          setHeaderSendingError(
+            (error as { data?: { message?: string } })?.data?.message ||
+              (error as { data?: { detail?: string } })?.data?.detail ||
+              t("ERRORS.SERVER_ERROR"),
+          );
+          throw error;
+        }
+      }
+
+      // Upload LOP documents if any
+      if (!isLopFilesUploaded && result && selectedLopFiles.length > 0) {
+        try {
+          for (const file of selectedLopFiles) {
+            await uploadDocument({
+              applicationId: result.applicationId,
+              documentType: RefundDocumentType.PermissionLetter,
+              file,
+            }).unwrap();
+          }
+          setIsLopFilesUploaded(true);
+        } catch (error) {
+          setLopSendingError(
+            (error as { data?: { message?: string } })?.data?.message ||
+              (error as { data?: { detail?: string } })?.data?.detail ||
+              t("ERRORS.SERVER_ERROR"),
+          );
+          throw error;
         }
       }
 
@@ -166,6 +204,12 @@ export const RefundUpdatePage = (): JSX.Element => {
       selectedFiles={selectedFiles}
       setSelectedFiles={setSelectedFiles}
       iniTelRef={iniTelRef}
+      selectedLopFiles={selectedLopFiles}
+      setSelectedLopFiles={setSelectedLopFiles}
+      isHeaderFilesUploaded={isHeaderFilesUploaded}
+      isLopFilesUploaded={isLopFilesUploaded}
+      headerSendingError={headerSendingError}
+      lopSendingError={lopSendingError}
     />
   );
 };

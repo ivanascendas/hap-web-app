@@ -21,6 +21,7 @@ import { usePasswordValidator } from "@shared/utils/password.validator";
 import { TextInput } from "../../../common/components/TextInput.component";
 import { PasswordCheckList } from "@components/common/components/PasswordCheckList.component";
 import { Dayjs } from "dayjs";
+import { useConfig } from "@shared/providers/Configuration.provider";
 
 export const RegConfirmFormComponent = (): JSX.Element => {
   const { t } = useTranslation();
@@ -34,20 +35,15 @@ export const RegConfirmFormComponent = (): JSX.Element => {
   const [checkDOB, checkDOBResult] = useDobConfirmationMutation();
 
   const { email, phone, accountNumber } = useSelector(selectUser) || {};
+  const { config } = useConfig();
+
   const passwordConfig = {
-    minLength: parseInt(process.env.REACT_APP_PASSWORD_MIN_LENGTH || "8"),
-    hasNumber: process.env.REACT_APP_PASSWORD_USE_NUMBERS === "true" || false,
-    hasSpecialChar:
-      process.env.REACT_APP_PASSWORD_USE_SPECIAL_CHARACTER === "true" || false,
-    hasUpperCase:
-      process.env.REACT_APP_PASSWORD_USE_UPPERCASE === "true" || false,
-    hasLowerCase:
-      process.env.REACT_APP_PASSWORD_USE_LOWERCASE === "true" || false,
-    charRepeating:
-      (process.env.REACT_APP_PASSWORD_MAX_REPEATING &&
-        process.env.REACT_APP_PASSWORD_MAX_REPEATING !== "false" &&
-        parseInt(process.env.REACT_APP_PASSWORD_MAX_REPEATING)) ||
-      undefined,
+    minLength: config?.passwordMinLength || 8,
+    hasNumber: config?.passwordUseNumbers || false,
+    hasSpecialChar: config?.passwordUseSpecialCharacter || false,
+    hasUpperCase: config?.passwordUseUppercase || false,
+    hasLowerCase: config?.passwordUseLowercase || false,
+    charRepeating: config?.passwordMaxRepeating || undefined,
   };
   const [isPasswordValid, passwordError] = usePasswordValidator(passwordConfig);
   const {

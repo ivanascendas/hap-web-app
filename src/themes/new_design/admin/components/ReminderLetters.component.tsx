@@ -9,6 +9,7 @@ import {
   useGetRemaindersQuery,
   useLazyGetLettersQuery,
 } from "@shared/services/Letters.service";
+import { useConfig } from "@shared/providers/Configuration.provider";
 
 export type InvitionLettersProps = {
   selectedIncDepts: string;
@@ -24,6 +25,7 @@ export const ReminderLettersComponent = ({
   counter,
 }: InvitionLettersProps): JSX.Element => {
   const [generatePdf] = useGenerateReminderPdfMutation();
+  const { config } = useConfig();
   const { data: letters, isFetching } = useGetRemaindersQuery({
     idFrom: customerFrom,
     idTo: customerTo,
@@ -63,7 +65,7 @@ export const ReminderLettersComponent = ({
 
     if (response && response.data) {
       window.open(
-        `${process.env.REACT_APP_BASE_URL}/api/letters/pdf/${encodeURIComponent(response.data)}`,
+        `${config?.baseUrl}/api/letters/pdf/${encodeURIComponent(response.data)}`,
         "_blank",
       );
     }

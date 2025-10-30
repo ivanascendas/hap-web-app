@@ -44,6 +44,7 @@ import moment from "moment";
 import { stringToColor } from "@shared/utils/stringToColor";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
+import { useConfig } from "@shared/providers/Configuration.provider";
 
 export type DrawerProps = {
   anchor?: "left" | "top" | "right" | "bottom";
@@ -65,6 +66,7 @@ export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(
     const navigate = useNavigate();
     const { t } = useTranslation();
     const location = useLocation();
+    const { config } = useConfig();
     const [getDepartments, { isLoading: isDepartmentsLoading }] =
       useGetDepartmentsMutation();
     const departments = useSelector(selectDepartments);
@@ -172,17 +174,19 @@ export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(
                 <ListItemText primary={t(`MAIN.MENU.LOAN_INFO`)} />
               </ListItemButton>
             </ListItem>*/}
-              <ListItem disablePadding>
-                <ListItemButton
-                  onClick={() => handleClick("/refunds")}
-                  selected={location.pathname.includes(`/refunds`)}
-                >
-                  <ListItemIcon>
-                    <AccountBalanceWalletIcon />
-                  </ListItemIcon>
-                  <ListItemText primary={t(`REFUNDS.LIST.TITLE`)} />
-                </ListItemButton>
-              </ListItem>
+              {config?.useRefundFeature && (
+                <ListItem disablePadding>
+                  <ListItemButton
+                    onClick={() => handleClick("/refunds")}
+                    selected={location.pathname.includes(`/refunds`)}
+                  >
+                    <ListItemIcon>
+                      <AccountBalanceWalletIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={t(`REFUNDS.LIST.TITLE`)} />
+                  </ListItemButton>
+                </ListItem>
+              )}
               <ListItem disablePadding>
                 <ListItemButton
                   onClick={() => handleClick("/statements/documents")}
@@ -254,7 +258,11 @@ export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(
                   <Button
                     className="btn-secondary"
                     fullWidth
-                    onClick={() => handleClick("/invoices/rates")}
+                    onClick={() =>
+                      handleClick(
+                        `/invoices/${config?.depDefaultValue || "rates"}`,
+                      )
+                    }
                   >
                     Pay Now
                   </Button>

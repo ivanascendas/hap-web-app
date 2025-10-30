@@ -27,6 +27,7 @@ import logoTransparent from "../../../../assets/img/logo-Transparent.png";
 import { useLogoutMutation } from "@shared/services/Auth.service";
 import { selectUnreadNotificationsCount } from "@shared/redux/slices/notificationsSlice";
 import { Skeleton } from "@mui/material";
+import { useConfig } from "@shared/providers/Configuration.provider";
 
 export type HeaderProps = {
   toogleDrawer?: (event?: React.MouseEvent<HTMLElement>) => void;
@@ -45,6 +46,7 @@ export const HeaderComponent = ({
   const user = useSelector(selectUser);
   const [logout] = useLogoutMutation();
   const navigate = useNavigate();
+  const { config } = useConfig();
 
   const { department } = useParams();
   const unreadCount = useSelector(selectUnreadNotificationsCount);
@@ -198,7 +200,9 @@ export const HeaderComponent = ({
 
             <Button
               className="header_links_pay"
-              onClick={() => navigate(`/invoices/${department || "rates"}`)}
+              onClick={() =>
+                navigate(`/invoices/${config?.depDefaultValue || "rates"}`)
+              }
               sx={{ display: title ? "none !important" : "flex" }}
             >
               {t("CONTENTS.NAV.MAKE_PAYMENT")}
