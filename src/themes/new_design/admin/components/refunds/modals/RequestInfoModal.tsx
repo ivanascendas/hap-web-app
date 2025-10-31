@@ -38,7 +38,9 @@ export const RequestInfoModal: React.FC<RequestInfoModalProps> = ({
   onSuccess,
 }) => {
   const [comment, setComment] = useState("");
-  const [dueBy, setDueBy] = useState<Date | null>(null);
+  const date = new Date();
+  date.setDate(date.getDate() + 7);
+  const [dueBy, setDueBy] = useState<Date | null>(date);
   const [requestInfo, { isLoading }] = useRequestInfoFromTenantMutation();
 
   const handleRequestInfo = async () => {
@@ -85,10 +87,11 @@ export const RequestInfoModal: React.FC<RequestInfoModalProps> = ({
           be returned to &quot;Returned for Information&quot; status.
         </Typography>
 
-        <LocalizationProvider dateAdapter={AdapterDateFns}>
+        {/*<LocalizationProvider dateAdapter={AdapterDateFns}>
           <DateTimePicker
             label="Due By (Required)"
             value={dueBy}
+            sx={{ display: 'none' }}
             onChange={(newValue) => {
               // Convert to Date if it's Dayjs or another format
               if (newValue) {
@@ -105,12 +108,11 @@ export const RequestInfoModal: React.FC<RequestInfoModalProps> = ({
             slotProps={{
               textField: {
                 fullWidth: true,
-                required: true,
                 sx: { mb: 2 },
               },
             }}
           />
-        </LocalizationProvider>
+        </LocalizationProvider>*/}
 
         <TextField
           label="Comment (Optional)"
