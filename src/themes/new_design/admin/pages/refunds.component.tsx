@@ -41,6 +41,7 @@ import { useTranslation } from "react-i18next";
  */
 export const RefundsComponent: React.FC = () => {
   const navigate = useNavigate();
+
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const filters = useSelector(selectAdminFilters);
@@ -48,12 +49,17 @@ export const RefundsComponent: React.FC = () => {
   const { hasRole } = useUserRole();
   const { t } = useTranslation();
   // Fetch data - hooks must be called before any early returns
-
+  const hasRoleAccess =
+    user?.isAdmin ||
+    user?.isSuperAdmin ||
+    hasRole("DMU_L1") ||
+    hasRole("DMU_L2") ||
+    hasRole("AP");
   const [getAdminApplications, { data, isFetching, isError }] =
     useLazyGetAdminApplicationsQuery();
 
   useEffect(() => {
-    if (user?.isAdmin || user?.isSuperAdmin) {
+    if (hasRoleAccess) {
       getAdminApplications({
         $skip: pagination.pageNumber * pagination.pageSize,
         $top: pagination.pageSize,
@@ -68,7 +74,7 @@ export const RefundsComponent: React.FC = () => {
   const totalCount = data?.count || 0;
 
   // Check if user has admin access
-  if (!user?.isAdmin && !user?.isSuperAdmin) {
+  if (!hasRoleAccess) {
     return (
       <Box className="personal_box" sx={{ p: 3, textAlign: "center" }}>
         <Typography variant="h6" color="error">
@@ -145,16 +151,6 @@ export const RefundsComponent: React.FC = () => {
       rowRender: (row: RefundApplicationDto) => formatDate(row.createdAt),
     },
   ];
-
-  if (!hasRole("DMU_L1") && !hasRole("DMU_L2") && !hasRole("AP")) {
-    return (
-      <Box className="refund-details" sx={{ p: 3, textAlign: "center" }}>
-        <Typography variant="h6" color="error">
-          Access Denied
-        </Typography>
-      </Box>
-    );
-  }
 
   return (
     <Box className="personal_box" sx={{}}>

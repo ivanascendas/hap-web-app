@@ -33,17 +33,7 @@ import { useUserRole } from "@shared/hooks/useUserRole";
 import { useEffect } from "react";
 import { useConfig } from "@shared/providers/Configuration.provider";
 
-const pages = [
-  { link: "users", title: "Users", icon: <PeopleIcon /> },
-
-  //  { link: "letters/InvitationLetter", title: "Letters", icon: <MailIcon /> },
-  { link: "reports", title: "Reports", icon: <AssessmentIcon /> },
-  {
-    link: "notifications/forms",
-    title: "Notifications",
-    icon: <NotificationsIcon />,
-  },
-];
+const pages: { link: string; title: string; icon: JSX.Element }[] = [];
 
 const settings = ["Security", "Messages", "Logout"];
 
@@ -71,6 +61,24 @@ const HeaderComponent = ({
     null,
   );
   useEffect(() => {
+    if (
+      ((hasRole("Admin") && hasRole("Manager")) || hasRole("SuperAdmin")) &&
+      pages.length === 0
+    ) {
+      pages.push(
+        ...[
+          { link: "users", title: "Users", icon: <PeopleIcon /> },
+
+          //  { link: "letters/InvitationLetter", title: "Letters", icon: <MailIcon /> },
+          { link: "reports", title: "Reports", icon: <AssessmentIcon /> },
+          {
+            link: "notifications/forms",
+            title: "Notifications",
+            icon: <NotificationsIcon />,
+          },
+        ],
+      );
+    }
     if (
       config?.useRefundFeature &&
       (hasRole("DMU_L1") || hasRole("DMU_L2") || hasRole("AP")) &&
@@ -103,7 +111,7 @@ const HeaderComponent = ({
         icon: <AdminPanelSettingsIcon />,
       });
     }
-  }, [hasRole]);
+  }, [hasRole, pages, config]);
 
   const [logout] = useLogoutMutation();
 

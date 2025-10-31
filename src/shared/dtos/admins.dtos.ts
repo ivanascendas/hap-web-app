@@ -4,6 +4,7 @@ export type UserRoleName =
   | "SuperAdmin"
   | "DMU_L1"
   | "DMU_L2"
+  | "Manager"
   | "AP";
 export interface AdminDto {
   id: string;

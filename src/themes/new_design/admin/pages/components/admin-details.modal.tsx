@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import {
   Dialog,
-  DialogTitle,
   DialogContent,
   DialogActions,
   Button,
@@ -43,8 +42,6 @@ import {
   useUpdateAdminMutation,
   useUpdateAdminPasswordMutation,
 } from "@shared/services/Admins.service";
-import { NotificationComponent } from "@shared/components/Notification.component";
-import { set } from "date-fns";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { default: utils } = require("intl-tel-input/build/js/utils.js");
 
@@ -73,6 +70,7 @@ export const AdminDetailsModal: React.FC<AdminDetailsModalProps> = ({
     "Client",
     "Admin",
     "SuperAdmin",
+    "Manager",
     "DMU_L1",
     "DMU_L2",
     "AP",

@@ -94,8 +94,13 @@ export const router = createBrowserRouter([
     path: "/admin",
     element: (
       <RoleProtected
-        allowedRoles={["Admin", "SuperAdmin"]}
-        redirectTo="/login"
+        allowedRoles={["Admin", "SuperAdmin", "DMU_L1", "DMU_L2", "AP"]}
+        redirectTo="/loginAdmin"
+        roleRedirection={{
+          DMU_L1: "/admin/refunds",
+          DMU_L2: "/admin/refunds",
+          AP: "/admin/refunds",
+        }}
         component={<AdminComponent />}
       />
     ),
@@ -105,8 +110,13 @@ export const router = createBrowserRouter([
         path: "users",
         element: (
           <RoleProtected
-            allowedRoles={["Admin"]}
+            allowedRoles={["Manager", "SuperAdmin"]}
             redirectTo="/loginAdmin"
+            roleRedirection={{
+              DMU_L1: "/admin/refunds",
+              DMU_L2: "/admin/refunds",
+              AP: "/admin/refunds",
+            }}
             component={<UsersComponent />}
           />
         ),
@@ -117,11 +127,23 @@ export const router = createBrowserRouter([
       },
       {
         path: "reports",
-        element: <ReportsComponent />,
+        element: (
+          <RoleProtected
+            allowedRoles={["Manager", "SuperAdmin"]}
+            redirectTo="/loginAdmin"
+            component={<ReportsComponent />}
+          />
+        ),
       },
       {
         path: "notifications/:type",
-        element: <AdminNotificationsComponent />,
+        element: (
+          <RoleProtected
+            allowedRoles={["SuperAdmin", "Manager"]}
+            redirectTo="/loginAdmin"
+            component={<AdminNotificationsComponent />}
+          />
+        ),
       },
       {
         path: "admins",

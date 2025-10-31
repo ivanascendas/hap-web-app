@@ -12,6 +12,7 @@ export type RoleProtectedProps = {
   requireSuperAdmin?: boolean;
   redirectTo?: string;
   fallback?: JSX.Element;
+  roleRedirection?: { [key in UserRoleName]?: string };
 };
 
 /**
@@ -35,6 +36,7 @@ export const RoleProtected = ({
   requireSuperAdmin = false,
   redirectTo = "/unauthorized",
   fallback,
+  roleRedirection,
 }: RoleProtectedProps): JSX.Element => {
   const auth = useAuth();
   const location = useLocation();
@@ -70,10 +72,21 @@ export const RoleProtected = ({
     if (requireAdmin) {
       return userRole.isAdmin || userRole.isSuperAdmin;
     }
-
+    let isAllowedRole = false;
     // Specific roles check
     if (allowedRoles && allowedRoles.length > 0) {
-      return userRole.hasAnyRole(allowedRoles) || userRole.isSuperAdmin;
+      isAllowedRole =
+        userRole.hasAnyRole(allowedRoles) || userRole.isSuperAdmin;
+    }
+
+    if (!isAllowedRole && roleRedirection) {
+      return userRole.hasAnyRole(
+        Object.keys(roleRedirection) as UserRoleName[],
+      );
+    }
+
+    if (!isAllowedRole) {
+      return false;
     }
 
     // No specific role requirements - allow if authenticated
@@ -87,6 +100,21 @@ export const RoleProtected = ({
     }
     console.log("Redirecting to", redirectTo);
     return <Navigate to={redirectTo} state={{ from: location }} replace />;
+  }
+
+  if (roleRedirection) {
+    for (const role in roleRedirection) {
+      if (
+        userRole.hasRole(role as UserRoleName) &&
+        !allowedRoles?.includes(role as UserRoleName)
+      ) {
+        const path = roleRedirection[role as UserRoleName];
+        if (path && location.pathname !== path) {
+          console.log("Redirecting based on role to", path);
+          return <Navigate to={path} state={{ from: location }} replace />;
+        }
+      }
+    }
   }
 
   return <>{component}</>;
