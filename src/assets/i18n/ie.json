@@ -294,6 +294,8 @@
     "RESET": "Athshocraigh",
     "BACK": "Ar ais",
     "UPDATE": "Uasdátaigh",
+    "APPROVE": "Ceadaigh",
+    "REJECT": "Diúltaigh",
     "EDIT": "Cuir in eagar",
     "SAVE": "Sábháil",
     "SEND": "Seol",

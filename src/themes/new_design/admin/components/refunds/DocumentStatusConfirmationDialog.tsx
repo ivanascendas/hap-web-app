@@ -42,7 +42,7 @@ export interface DocumentStatusConfirmationDialogProps {
   /**
    * Current document status (optional)
    */
-  currentStatus?: string;
+  currentStatus?: "VALID" | "INVALID";
 }
 
 /**
@@ -53,7 +53,9 @@ export const DocumentStatusConfirmationDialog: React.FC<
   DocumentStatusConfirmationDialogProps
 > = ({ open, onClose, applicationId, documentId, currentStatus }) => {
   const { t } = useTranslation();
-  const [status, setStatus] = useState<"VALID" | "INVALID" | "">("");
+  const [status, setStatus] = useState<"VALID" | "INVALID" | "">(
+    currentStatus || "",
+  );
   const [comment, setComment] = useState("");
 
   const [confirmStatus, { isLoading, error }] =
@@ -139,28 +141,16 @@ export const DocumentStatusConfirmationDialog: React.FC<
 
       <DialogActions>
         <Button
-          variant="outlined"
-          onClick={() => handleStatusChange("INVALID")}
-          disabled={isLoading}
-        >
-          {isLoading && status === "INVALID"
-            ? t("BUTTONS.SENDING")
-            : t("REFUNDS.STATUS_INVALID")}
-        </Button>
-        <Button
-          onClick={() => handleStatusChange("VALID")}
+          onClick={() =>
+            handleStatusChange(currentStatus === "VALID" ? "VALID" : "INVALID")
+          }
           variant="contained"
           disabled={isLoading}
           startIcon={isLoading && <CircularProgress size={20} />}
         >
-          {isLoading && status === "VALID"
-            ? t("BUTTONS.SENDING")
-            : t("REFUNDS.STATUS_VALID")}
+          {isLoading ? t("BUTTONS.SENDING") : t("BUTTONS.SEND")}
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
-function useffect(arg0: () => void, arg1: (boolean | "VALID" | "INVALID")[]) {
-  throw new Error("Function not implemented.");
-}

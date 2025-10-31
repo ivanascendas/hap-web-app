@@ -293,6 +293,8 @@
     "CONTINUE": "Continue",
     "RESET": "Reset",
     "BACK": "Back",
+    "APPROVE": "Approve",
+    "REJECT": "Reject",
     "UPDATE": "Update",
     "EDIT": "Edit",
     "SAVE": "Save",

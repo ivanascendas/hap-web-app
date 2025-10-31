@@ -6,10 +6,6 @@ import {
   Typography,
   IconButton,
   Chip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Alert,
   CircularProgress,
   Grid,
@@ -27,6 +23,9 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
+import Lightbox from "yet-another-react-lightbox";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import "yet-another-react-lightbox/styles.css";
 import {
   useConfirmDocumentStatusMutation,
   useLazyDownloadDocumentQuery,
@@ -46,7 +45,6 @@ import {
   type VerifyBshResponse,
 } from "@shared/dtos/refund.dtos";
 import { BshComparisonComponent } from "./BshComparisonComponent";
-import { is } from "date-fns/locale";
 
 // Configure PDF.js worker
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
@@ -59,7 +57,6 @@ export const DocumentViewerPage: React.FC = () => {
     documentId: string;
   }>();
   const dispatch = useDispatch();
-
   const [actionError, setActionError] = useState("");
   const [bshCertificateNumber] = useState("");
   const [bshVerificationResult, setBshVerificationResult] =
@@ -74,7 +71,9 @@ export const DocumentViewerPage: React.FC = () => {
   const [pageNumber, setPageNumber] = useState(1);
   const [scale, setScale] = useState(1.0);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [imgUrl, setImgUrl] = useState<string | null>(null);
   const [isLoadingPdf, setIsLoadingPdf] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const user = useSelector(selectUser);
   const isAdmin = user?.isAdmin || user?.isSuperAdmin;
@@ -91,7 +90,9 @@ export const DocumentViewerPage: React.FC = () => {
   const document = application?.documents?.find(
     (doc) => doc.documentId === documentId,
   );
-
+  const [documentStatus, setDocumentStatus] = useState<
+    "VALID" | "INVALID" | undefined
+  >(document?.status || undefined);
   const handleBack = () => {
     navigate(`/admin/refunds/${applicationId}`);
     setBshVerificationData(null);
@@ -120,15 +121,24 @@ export const DocumentViewerPage: React.FC = () => {
     }
   };
 
+  const loadDocument = async () => {
+    if (!applicationId || !documentId) return;
+
+    const result = await getDocumentBlob({
+      applicationId,
+      documentId,
+    }).unwrap();
+
+    // The result should be a Blob
+    return result;
+  };
+
   const loadPdfDocument = async () => {
     if (!applicationId || !documentId) return;
 
     setIsLoadingPdf(true);
     try {
-      const result = await getDocumentBlob({
-        applicationId,
-        documentId,
-      }).unwrap();
+      const result = await loadDocument();
 
       // The result should be a Blob
       if (result instanceof Blob) {
@@ -138,6 +148,27 @@ export const DocumentViewerPage: React.FC = () => {
     } catch {
       dispatch(setError(new Error("Failed to load PDF document")));
       setActionError("Failed to load PDF document");
+      setBshVerificationResult("Failed");
+    } finally {
+      setIsLoadingPdf(false);
+    }
+  };
+
+  const loadImgDocument = async () => {
+    if (!applicationId || !documentId) return;
+
+    setIsLoadingPdf(true);
+    try {
+      const result = await loadDocument();
+
+      // The result should be a Blob
+      if (result instanceof Blob) {
+        const url = URL.createObjectURL(result);
+        setImgUrl(url);
+      }
+    } catch {
+      dispatch(setError(new Error("Failed to load image document")));
+      setActionError("Failed to load image document");
       setBshVerificationResult("Failed");
     } finally {
       setIsLoadingPdf(false);
@@ -154,6 +185,15 @@ export const DocumentViewerPage: React.FC = () => {
     if (document && document.fileName.toLowerCase().endsWith(".pdf")) {
       loadPdfDocument();
     }
+    if (
+      document &&
+      [".jpg", ".jpeg", ".png"].some((ext) =>
+        document.fileName.toLowerCase().endsWith(ext),
+      )
+    ) {
+      loadImgDocument();
+    }
+    setDocumentStatus(document?.status || undefined);
     // Cleanup URL on unmount
     return () => {
       if (pdfUrl) {
@@ -243,6 +283,11 @@ export const DocumentViewerPage: React.FC = () => {
       const msg = t("ERRORS.SERVER_ERROR");
       dispatch(setError(new Error(msg)));
     }
+  };
+
+  const handleBshComparisonOpenDocStatus = (status: string) => {
+    setDocumentStatus(status as "VALID" | "INVALID");
+    setConfirmStatusDialogOpen(true);
   };
 
   const handleBshComparisonCancel = () => {
@@ -468,6 +513,83 @@ export const DocumentViewerPage: React.FC = () => {
                     )}
                   </Box>
                 </>
+              ) : [".jpg", ".jpeg", ".png"].some((ext) =>
+                  document.fileName.toLowerCase().endsWith(ext),
+                ) ? (
+                <>
+                  {/* Image Preview */}
+                  <Box
+                    sx={{
+                      maxHeight: "600px",
+                      overflowY: "auto",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "100%",
+                      cursor: imgUrl ? "pointer" : "default",
+                    }}
+                    onClick={() => imgUrl && setLightboxOpen(true)}
+                  >
+                    {isLoadingPdf ? (
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          minHeight: "400px",
+                        }}
+                      >
+                        <CircularProgress />
+                      </Box>
+                    ) : imgUrl ? (
+                      <Box sx={{ textAlign: "center" }}>
+                        <img
+                          src={imgUrl}
+                          alt={document.fileName}
+                          style={{
+                            maxWidth: "100%",
+                            maxHeight: "500px",
+                            height: "auto",
+                            display: "block",
+                            margin: "0 auto",
+                          }}
+                        />
+                        <Typography
+                          variant="caption"
+                          color="text.secondary"
+                          sx={{ mt: 2, display: "block" }}
+                        >
+                          Click image to view in full screen with zoom
+                        </Typography>
+                      </Box>
+                    ) : (
+                      <Box sx={{ textAlign: "center", p: 3 }}>
+                        <Typography color="text.secondary">
+                          No image available for preview
+                        </Typography>
+                        <Button
+                          variant="outlined"
+                          onClick={handleDownload}
+                          sx={{ mt: 2 }}
+                        >
+                          Download to View
+                        </Button>
+                      </Box>
+                    )}
+                  </Box>
+
+                  {/* Lightbox for full-screen viewing with zoom */}
+                  <Lightbox
+                    open={lightboxOpen}
+                    close={() => setLightboxOpen(false)}
+                    slides={[{ src: imgUrl || "" }]}
+                    plugins={[Zoom]}
+                    zoom={{
+                      maxZoomPixelRatio: 3,
+                      scrollToZoom: true,
+                    }}
+                  />
+                </>
               ) : (
                 <Box sx={{ textAlign: "center" }}>
                   <Typography
@@ -505,7 +627,7 @@ export const DocumentViewerPage: React.FC = () => {
                 application={application || null}
                 bshResult={bshVerificationData}
                 onClose={handleBshComparisonCancel}
-                onConfirm={handleBshComparisonConfirm}
+                onConfirm={handleBshComparisonOpenDocStatus}
                 handleLopRequirementChange={handleLopRequirementChange}
               />
             </Grid>
@@ -514,16 +636,27 @@ export const DocumentViewerPage: React.FC = () => {
       </Box>
       {/* Action Buttons */}
       <Box sx={{ display: "flex", gap: 2, justifyContent: "center" }}>
-        {isAdmin && (
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<CheckCircleIcon />}
-            onClick={() => setConfirmStatusDialogOpen(true)}
-            size="large"
-          >
-            {t("REFUNDS.CONFIRM_DOCUMENT_STATUS")}
-          </Button>
+        {document.docType !== RefundDocumentType.BankHeader && isAdmin && (
+          <>
+            <Button
+              variant="outlined"
+              color="primary"
+              startIcon={<CheckCircleIcon />}
+              onClick={() => handleBshComparisonOpenDocStatus("INVALID")}
+              size="large"
+            >
+              {t("BUTTONS.REJECT")}
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<CheckCircleIcon />}
+              onClick={() => handleBshComparisonOpenDocStatus("VALID")}
+              size="large"
+            >
+              {t("BUTTONS.APPROVE")}
+            </Button>
+          </>
         )}
         {document.docType === RefundDocumentType.BankHeader && (
           <Button
@@ -550,7 +683,7 @@ export const DocumentViewerPage: React.FC = () => {
           onClose={() => setConfirmStatusDialogOpen(false)}
           applicationId={applicationId}
           documentId={documentId}
-          currentStatus={document?.status}
+          currentStatus={documentStatus}
         />
       )}
 

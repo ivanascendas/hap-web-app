@@ -84,7 +84,7 @@ export const BshComparisonComponent: React.FC<BshComparisonComponentProps> = ({
           color="primary"
           disabled={isLoading}
         >
-          {t("REFUNDS.STATUS_INVALID")}
+          {t("BUTTONS.REJECT")}
         </Button>
         <Button
           onClick={() => handleConfirm("VALID")}
@@ -94,7 +94,7 @@ export const BshComparisonComponent: React.FC<BshComparisonComponentProps> = ({
             isLoading || bshResult === null || selectedStatus !== "VALID"
           }
         >
-          {t("REFUNDS.STATUS_VALID")}
+          {t("BUTTONS.APPROVE")}
         </Button>
       </Box>
     </Paper>
