@@ -6,7 +6,7 @@ import { RefundStatus } from "../../dtos/refund.dtos";
  * Admin filters state for refund applications
  */
 export interface AdminFiltersState {
-  status?: RefundStatus;
+  status?: RefundStatus[];
   customerNo?: string;
   department?: string;
   incDept?: string;
@@ -46,7 +46,15 @@ export interface AdminRefundState {
 }
 
 const initialState: AdminRefundState = {
-  adminFilters: {},
+  adminFilters: {
+    status: [
+      RefundStatus.Submitted,
+      RefundStatus.PendingL1,
+      RefundStatus.PendingL2,
+      RefundStatus.PendingAP,
+      RefundStatus.ReturnedForInfo,
+    ],
+  },
   adminPagination: {
     pageNumber: 0,
     pageSize: 7,

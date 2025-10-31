@@ -249,7 +249,7 @@ export interface GL07ReportResponse {
  * Query parameters for getting refund applications
  */
 export interface RefundApplicationQueryParams extends PaggingBaseDto {
-  status?: RefundStatus;
+  statuses?: RefundStatus[];
   department?: string;
   incDept?: string;
   tenantId?: string;

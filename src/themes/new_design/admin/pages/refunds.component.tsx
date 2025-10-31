@@ -63,7 +63,7 @@ export const RefundsComponent: React.FC = () => {
       getAdminApplications({
         $skip: pagination.pageNumber * pagination.pageSize,
         $top: pagination.pageSize,
-        status: filters.status,
+        statuses: filters.status,
         tenantId: filters.customerNo,
         incDept: filters.incDept,
       });

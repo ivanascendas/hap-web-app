@@ -1,5 +1,12 @@
 import React from "react";
-import { Box, MenuItem, Select, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Chip,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { RefundStatus } from "@shared/dtos/refund.dtos";
 import { AdminFiltersState } from "@shared/redux/slices/adminRefundSlice";
 import { getStatusLabel } from "../../utils/statusLabels";
@@ -80,18 +87,39 @@ export const RefundFilters: React.FC<RefundFiltersProps> = ({
         <Typography variant="body2" sx={{ whiteSpace: "nowrap" }}>
           Status:
         </Typography>
-        <Select
-          value={filters.status ?? ""}
-          onChange={(e) =>
+        <Select<RefundStatus[]>
+          multiple
+          value={filters.status ?? []}
+          onChange={(e) => {
+            const value = e.target.value as RefundStatus[];
             onFilterChange({
-              status: e.target.value ? Number(e.target.value) : undefined,
-            })
-          }
+              status: value.length > 0 ? value : undefined,
+            });
+          }}
           displayEmpty
           sx={{ minWidth: "200px" }}
           size="small"
+          renderValue={(selected) => {
+            if (!selected || selected.length === 0) {
+              return <em>All</em>;
+            }
+            return (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                {selected.map((value: RefundStatus) => (
+                  <Chip
+                    key={value}
+                    label={getStatusLabel(value)}
+                    size="small"
+                    sx={{ height: "20px" }}
+                  />
+                ))}
+              </Box>
+            );
+          }}
         >
-          <MenuItem value="">All</MenuItem>
+          <MenuItem value="" disabled>
+            <em>All</em>
+          </MenuItem>
           {allStatuses.map((status) => (
             <MenuItem key={status} value={status}>
               {getStatusLabel(status)}
