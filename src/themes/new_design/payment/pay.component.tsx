@@ -18,7 +18,11 @@ import {
 import "./payment.component.scss";
 
 import WestIcon from "@mui/icons-material/West";
-import { PaymentResultResponseDto } from "@shared/dtos/payments.dto";
+import {
+  DecodedPaymentResponseDto,
+  PaymentResultResponseDto,
+  RawPaymentResponseDto,
+} from "@shared/dtos/payments.dto";
 
 import paymentAccepted from "../../../assets/img/payment_accepted.svg";
 import paymentError from "../../../assets/img/payment_error.svg";
@@ -33,11 +37,15 @@ export const PayComponent = ({ onClose }: PayComponentProps): JSX.Element => {
   const { t } = useTranslation();
   const [showPaymentResponse, setShowPaymentResponse] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [paymentResult, setPaymentResult] =
+    useState<DecodedPaymentResponseDto | null>(null);
   const payments = useSelector(selectInvoicesToPay);
   const [payInvoices] = usePayInvoicesMutation();
-  const [confirmPayment] = useConfirmPaymentMutation();
+  const [confirmPayment, { isLoading: isConfirming }] =
+    useConfirmPaymentMutation();
   const navigate = useNavigate();
   const iframeRef = useRef<HTMLDivElement>(null);
+  const hasProcessedPayment = useRef<boolean>(false);
 
   const { config } = useConfiguration();
 
@@ -48,6 +56,18 @@ export const PayComponent = ({ onClose }: PayComponentProps): JSX.Element => {
       iFrame.parentNode?.removeChild(iFrame);
     }
   };
+
+  useEffect(() => {
+    if (
+      paymentResult !== null &&
+      !isConfirming &&
+      !hasProcessedPayment.current
+    ) {
+      hasProcessedPayment.current = true;
+      handleConfirmPayment(paymentResult);
+    }
+  }, [paymentResult, isConfirming]);
+
   const createIframe = (): void => {
     const iframe = document.createElement("iframe");
     iframe.frameBorder = "no";
@@ -59,41 +79,40 @@ export const PayComponent = ({ onClose }: PayComponentProps): JSX.Element => {
     iframeRef.current?.appendChild(iframe);
   };
 
-  const decode = (str: string) =>
-    decodeURIComponent(
-      atob(str)
-        .split("")
-        .map(function (c) {
-          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-        })
-        .join(""),
-    );
+  const handleConfirmPayment = async (
+    decodedResponse: DecodedPaymentResponseDto,
+  ) => {
+    try {
+      const paymentResponseDto: PaymentResultResponseDto = {
+        Timestamp: decodedResponse.TIMESTAMP,
+        OrderId: decodedResponse.ORDER_ID,
+        ResultCode: decodedResponse.RESULT,
+        Message: decodedResponse.MESSAGE,
+        PasRef: decodedResponse.PASREF,
+        AuthCode: decodedResponse.AUTHCODE,
+        Sha1Hash: decodedResponse.SHA1HASH,
+        BodyContent: decodedResponse,
+      };
+      await confirmPayment(paymentResponseDto);
+      setShowPaymentResponse(decodedResponse.RESULT);
+      closeIframe();
+    } catch (error) {
+      closeIframe();
+      console.log("Error parsing JSON:", { error });
+    }
+  };
 
   const onReceiveMessage = async (data: string) => {
-    if (typeof data === "string" && data.length > 0) {
+    console.log("Received message:", data);
+    if (!isConfirming && typeof data === "string" && data.length > 0) {
       try {
         const parsedData = JSON.parse(data);
 
-        if (!parsedData.iframe) {
-          const paymentResponse: any = {};
-          Object.keys(parsedData).forEach((key) => {
-            paymentResponse[key] = decode(parsedData[key]);
-          });
+        if (!parsedData.iframe && !paymentResult) {
+          const decodedResponse: DecodedPaymentResponseDto =
+            decodePaymentResponse(parsedData);
 
-          const paymentResponseDto: PaymentResultResponseDto = {
-            Timestamp: paymentResponse["TIMESTAMP"],
-            OrderId: paymentResponse["ORDER_ID"],
-            ResultCode: paymentResponse["RESULT"],
-            Message: paymentResponse["MESSAGE"],
-            PasRef: paymentResponse["PASREF"],
-            AuthCode: paymentResponse["AUTHCODE"],
-            Sha1Hash: paymentResponse["SHA1HASH"],
-            BodyContent: paymentResponse,
-          };
-
-          await confirmPayment(paymentResponseDto);
-          setShowPaymentResponse(paymentResponse["RESULT"]);
-          closeIframe();
+          setPaymentResult(decodedResponse);
         } else {
           setIsLoading(false);
         }
@@ -102,6 +121,25 @@ export const PayComponent = ({ onClose }: PayComponentProps): JSX.Element => {
         console.log("Error parsing JSON:", { error, data });
       }
     }
+  };
+
+  const decodePaymentResponse = (
+    raw: RawPaymentResponseDto,
+  ): DecodedPaymentResponseDto => {
+    const decoded: any = {};
+    Object.keys(raw).forEach((key) => {
+      try {
+        decoded[key] = decodeURIComponent(
+          atob(raw[key as keyof RawPaymentResponseDto] || "")
+            .split("")
+            .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+            .join(""),
+        );
+      } catch {
+        decoded[key] = raw[key as keyof RawPaymentResponseDto];
+      }
+    });
+    return decoded as DecodedPaymentResponseDto;
   };
 
   const init = (): void => {
