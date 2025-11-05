@@ -37,8 +37,6 @@ export const PayComponent = ({ onClose }: PayComponentProps): JSX.Element => {
   const { t } = useTranslation();
   const [showPaymentResponse, setShowPaymentResponse] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [paymentResult, setPaymentResult] =
-    useState<DecodedPaymentResponseDto | null>(null);
   const payments = useSelector(selectInvoicesToPay);
   const [payInvoices] = usePayInvoicesMutation();
   const [confirmPayment, { isLoading: isConfirming }] =
@@ -56,18 +54,6 @@ export const PayComponent = ({ onClose }: PayComponentProps): JSX.Element => {
       iFrame.parentNode?.removeChild(iFrame);
     }
   };
-
-  useEffect(() => {
-    if (
-      paymentResult !== null &&
-      !isConfirming &&
-      !hasProcessedPayment.current
-    ) {
-      hasProcessedPayment.current = true;
-      handleConfirmPayment(paymentResult);
-    }
-  }, [paymentResult, isConfirming]);
-
   const createIframe = (): void => {
     const iframe = document.createElement("iframe");
     iframe.frameBorder = "no";
@@ -81,7 +67,7 @@ export const PayComponent = ({ onClose }: PayComponentProps): JSX.Element => {
 
   const handleConfirmPayment = async (
     decodedResponse: DecodedPaymentResponseDto,
-  ) => {
+  ): Promise<boolean> => {
     try {
       const paymentResponseDto: PaymentResultResponseDto = {
         Timestamp: decodedResponse.TIMESTAMP,
@@ -93,33 +79,50 @@ export const PayComponent = ({ onClose }: PayComponentProps): JSX.Element => {
         Sha1Hash: decodedResponse.SHA1HASH,
         BodyContent: decodedResponse,
       };
+      console.log("Confirming payment:", paymentResponseDto);
       await confirmPayment(paymentResponseDto);
       setShowPaymentResponse(decodedResponse.RESULT);
+      setIsLoading(false);
       closeIframe();
+      return true;
     } catch (error) {
       closeIframe();
       console.log("Error parsing JSON:", { error });
+      return false;
     }
   };
 
   const onReceiveMessage = async (data: string) => {
     console.log("Received message:", data);
-    if (!isConfirming && typeof data === "string" && data.length > 0) {
-      try {
-        const parsedData = JSON.parse(data);
+    if (isConfirming || typeof data !== "string" || data.length === 0) {
+      return;
+    }
 
-        if (!parsedData.iframe && !paymentResult) {
-          const decodedResponse: DecodedPaymentResponseDto =
-            decodePaymentResponse(parsedData);
+    try {
+      const parsedData = JSON.parse(data);
 
-          setPaymentResult(decodedResponse);
-        } else {
-          setIsLoading(false);
-        }
-      } catch (error) {
-        closeIframe();
-        console.log("Error parsing JSON:", { error, data });
+      if (parsedData.iframe) {
+        setIsLoading(false);
+        return;
       }
+
+      if (hasProcessedPayment.current) {
+        return;
+      }
+
+      hasProcessedPayment.current = true;
+      const decodedResponse: DecodedPaymentResponseDto =
+        decodePaymentResponse(parsedData);
+
+      const confirmed = await handleConfirmPayment(decodedResponse);
+
+      if (!confirmed) {
+        hasProcessedPayment.current = false;
+      }
+    } catch (error) {
+      hasProcessedPayment.current = false;
+      closeIframe();
+      console.log("Error parsing JSON:", { error, data });
     }
   };
 
@@ -143,6 +146,9 @@ export const PayComponent = ({ onClose }: PayComponentProps): JSX.Element => {
   };
 
   const init = (): void => {
+    hasProcessedPayment.current = false;
+    setIsLoading(true);
+    setShowPaymentResponse("");
     payInvoices(payments)
       .then((r) => r.data)
       .then((data) => {

@@ -19,7 +19,7 @@ import {
   usePhoneConfirmationRequestMutation,
   useSaveUserDataMutation,
 } from "../../shared/services/Auth.service";
-import { ExsistingTenantDto } from "../../shared/dtos/existing-tenant.dto";
+import { ExistingTenantDto } from "../../shared/dtos/existing-tenant.dto";
 import { useForm } from "react-hook-form";
 import { getErrorMessage } from "../../shared/utils/getErrorMessage";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
@@ -63,7 +63,7 @@ export const AccountComponent = (): JSX.Element => {
     watch,
     reset,
     trigger,
-  } = useForm<ExsistingTenantDto>({
+  } = useForm<ExistingTenantDto>({
     mode: "all",
     defaultValues: {
       EmailId: user?.email || "",
@@ -83,12 +83,12 @@ export const AccountComponent = (): JSX.Element => {
     EmailConfirmed,
     PhoneNumberConfirmed,
     DefaultMFA,
-  }: ExsistingTenantDto) => {
+  }: ExistingTenantDto) => {
     const countryData = iniTelReff.current
       ?.getInstance()
       ?.getSelectedCountryData();
     const phone = PhoneNumber.replace("+", "");
-    const model: ExsistingTenantDto = {
+    const model: ExistingTenantDto = {
       EmailId,
       PhoneNumber: `${phone}`,
       PhoneCountryCode: countryData?.dialCode || "353",
@@ -132,7 +132,7 @@ export const AccountComponent = (): JSX.Element => {
 
   useEffect(() => {
     if (!isLoading && user?.defaultMFA) {
-      const data: ExsistingTenantDto = {
+      const data: ExistingTenantDto = {
         EmailConfirmed: user?.emailConfirmed || false,
         PhoneNumberConfirmed: user?.phoneNumberConfirmed || false,
         PhoneNumber: user?.phone || "",

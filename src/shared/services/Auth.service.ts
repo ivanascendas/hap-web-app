@@ -26,7 +26,7 @@ import { UserModel } from "../models/user.model";
 import { notificationsApi } from "./Notifications.service";
 import {
   CheckValidContactDto,
-  ExsistingTenantDto,
+  ExistingTenantDto,
 } from "../dtos/existing-tenant.dto";
 import { ChangePasswordDto } from "../dtos/change-password.dto";
 import { use } from "i18next";
@@ -334,9 +334,9 @@ export const authApi = createApi({
       }),
     }),
 
-    /** Sends a POST request to the `/api/user/SaveExistingTenantMFA` endpoint with the provided `ExsistingTenantDto` object, and returns `void`. */
-    saveUserData: builder.mutation<void, ExsistingTenantDto>({
-      query: (body: ExsistingTenantDto) => ({
+    /** Sends a POST request to the `/api/user/SaveExistingTenantMFA` endpoint with the provided `ExistingTenantDto` object, and returns `void`. */
+    saveUserData: builder.mutation<void, ExistingTenantDto>({
+      query: (body: ExistingTenantDto) => ({
         url: "/api/user/SaveExistingTenantMFA",
         method: "POST",
         body: JSON.stringify(body),

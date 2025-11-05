@@ -7,7 +7,6 @@ import {
   Tooltip,
   IconButton,
   TextField,
-  FormHelperText,
   Skeleton,
   FormControlLabel,
   Checkbox,
@@ -17,7 +16,7 @@ import { useTranslation } from "react-i18next";
 import CloseIcon from "@mui/icons-material/Close";
 import { IntlTelInputComponent } from "./IntlTelInput.component";
 import { useForm } from "react-hook-form";
-import { ExsistingTenantDto } from "../dtos/existing-tenant.dto";
+import { ExistingTenantDto } from "../dtos/existing-tenant.dto";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser, setUser } from "../redux/slices/authSlice";
 import { getErrorMessage } from "../utils/getErrorMessage";
@@ -73,7 +72,7 @@ export const ExistingTenantPopupComponent = ({
     watch,
     reset,
     trigger,
-  } = useForm<ExsistingTenantDto>({
+  } = useForm<ExistingTenantDto>({
     mode: "all",
     defaultValues: {
       EmailId: user?.email || "",
@@ -95,7 +94,7 @@ export const ExistingTenantPopupComponent = ({
     EmailConfirmed,
     PhoneNumberConfirmed,
     DefaultMFA,
-  }: ExsistingTenantDto) => {
+  }: ExistingTenantDto) => {
     const countryData = iniTelReff.current
       ?.getInstance()
       ?.getSelectedCountryData();
@@ -103,7 +102,7 @@ export const ExistingTenantPopupComponent = ({
       countryData?.dialCode || "353",
       "",
     );
-    const model: ExsistingTenantDto = {
+    const model: ExistingTenantDto = {
       EmailId,
       PhoneNumber: `${countryData?.dialCode || "353"}${phone}`,
       PhoneCountryCode: countryData?.dialCode || "353",
@@ -142,7 +141,7 @@ export const ExistingTenantPopupComponent = ({
 
   useEffect(() => {
     if (!isLoading && user?.defaultMFA) {
-      const data: ExsistingTenantDto = {
+      const data: ExistingTenantDto = {
         EmailConfirmed: user?.emailConfirmed || false,
         PhoneNumberConfirmed: user?.phoneNumberConfirmed || false,
         PhoneNumber: user ? `+${user?.phone?.replace("+", "")}` : "",

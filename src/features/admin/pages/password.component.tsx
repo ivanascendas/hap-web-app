@@ -3,9 +3,9 @@ import { useTranslation } from "react-i18next";
 import { PasswordsFormComponent } from "../../account/compomnents/PasswordsForm.component";
 import { MFAControlComponent } from "../../account/compomnents/MFAControl.component";
 import "./password.component.scss";
-import { NotificationComponent } from "../../../shared/components/Notification.component";
+import React from "react";
 import { MFAMethod } from "../../../shared/dtos/user.dto";
-import { ExsistingTenantDto } from "../../../shared/dtos/existing-tenant.dto";
+import { ExistingTenantDto } from "../../../shared/dtos/existing-tenant.dto";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser, setUser } from "../../../shared/redux/slices/authSlice";
 import { useSaveUserDataMutation } from "../../../shared/services/Auth.service";
@@ -16,7 +16,7 @@ export const PasswordComponent = () => {
   const [updateUser, result] = useSaveUserDataMutation();
   const dispatch = useDispatch();
   const mfaChangeHandler = (mfaMethod: MFAMethod) => {
-    const model: ExsistingTenantDto = {
+    const model: ExistingTenantDto = {
       EmailId: user?.email || "",
       PhoneNumber: user?.phone || "",
       PhoneNumberConfirmed: user?.phoneNumberConfirmed || false,

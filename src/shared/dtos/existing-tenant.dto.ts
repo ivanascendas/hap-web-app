@@ -1,6 +1,6 @@
 import { FieldValues } from "react-hook-form";
 
-export interface ExsistingTenantDto extends FieldValues {
+export interface ExistingTenantDto extends FieldValues {
   DefaultMFA: string;
   EmailConfirmed: boolean;
   PhoneNumberConfirmed: boolean;

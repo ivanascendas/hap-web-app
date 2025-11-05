@@ -21,14 +21,13 @@ import {
   usePhoneConfirmationRequestMutation,
   useSaveUserDataMutation,
 } from "@shared/services/Auth.service";
-import { ExsistingTenantDto } from "@shared/dtos/existing-tenant.dto";
+import { ExistingTenantDto } from "@shared/dtos/existing-tenant.dto";
 import { useForm } from "react-hook-form";
 import { getErrorMessage } from "@shared/utils/getErrorMessage";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
 import UserIcon from "@mui/icons-material/Person";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import { Iti } from "intl-tel-input";
 import { MFAMethod } from "@shared/dtos/user.dto";
 import { OTPConfirmPopupComponent } from "./compomnents/OTPConfirmPopup.component";
 import { MFAControlComponent } from "./compomnents/MFAControl.component";
@@ -39,11 +38,8 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { PhoneInput } from "@shared/components/PhoneInput.component";
 import { stringToColor } from "@shared/utils/stringToColor";
-import { log } from "console";
 import { PhoneData } from "@shared/hooks/usePhoneInput";
-
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { default: utils } = require("intl-tel-input/build/js/utils.js");
+import { toast } from "react-toastify";
 
 export const AccountComponent = (): JSX.Element => {
   const { t } = useTranslation();
@@ -70,7 +66,7 @@ export const AccountComponent = (): JSX.Element => {
     setValue,
     watch,
     reset,
-  } = useForm<ExsistingTenantDto>({
+  } = useForm<ExistingTenantDto>({
     mode: "all",
     defaultValues: {
       EmailId: user?.email || "",
@@ -90,21 +86,12 @@ export const AccountComponent = (): JSX.Element => {
     EmailConfirmed,
     PhoneNumberConfirmed,
     DefaultMFA,
-  }: ExsistingTenantDto) => {
-    console.log("onSubmit called with:", {
-      EmailId,
-      PhoneNumber,
-      EmailConfirmed,
-      PhoneNumberConfirmed,
-      DefaultMFA,
-      phoneData,
-    });
-
+  }: ExistingTenantDto) => {
     const countryData = iniTelReff.current
       ?.getInstance()
       ?.getSelectedCountryData();
     const phone = PhoneNumber.replace("+", "");
-    const model: ExsistingTenantDto = {
+    const model: ExistingTenantDto = {
       EmailId,
       PhoneNumber: `${phone}`,
       PhoneCountryCode: countryData?.dialCode || "353",
@@ -148,7 +135,7 @@ export const AccountComponent = (): JSX.Element => {
 
   useEffect(() => {
     if (!isLoading && user?.defaultMFA) {
-      const data: ExsistingTenantDto = {
+      const data: ExistingTenantDto = {
         EmailConfirmed: user?.emailConfirmed || false,
         PhoneNumberConfirmed: user?.phoneNumberConfirmed || false,
         PhoneNumber: user?.phone || "",
@@ -177,20 +164,13 @@ export const AccountComponent = (): JSX.Element => {
     const isPhoneNumberConfirmed =
       values.PhoneNumber.replace("+", "") === user?.phone?.replace("+", "");
     const isEmailConfirmed = values.EmailId === user?.email;
-    console.log({
-      isPhoneNumberConfirmed,
-      isEmailConfirmed,
-      errors,
-      formState,
-      compares: [values.PhoneNumber, user?.phone, values.EmailId, user?.email],
-    });
+
     setValue("PhoneNumberConfirmed", isPhoneNumberConfirmed);
     setValue("EmailConfirmed", isEmailConfirmed);
   }, [formState]);
 
   useEffect(() => {
     if (smsConfirmResult.isSuccess) {
-      //  console.log({ smsConfirmResult });
       dispatch(
         setUser({
           phone: getValues("PhoneNumber").replace("+", ""),
@@ -221,6 +201,31 @@ export const AccountComponent = (): JSX.Element => {
       }
     },
   );
+  const handleMfaChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      setValue("DefaultMFA", e.target.value, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
+      const data: ExistingTenantDto = {
+        EmailConfirmed: user?.emailConfirmed || false,
+        PhoneNumberConfirmed: user?.phoneNumberConfirmed || false,
+        PhoneNumber: user?.phone || "",
+        EmailId: user?.email || "",
+        DefaultMFA: e.target.value || "Email",
+        PhoneCountryCode: user?.phoneCountryCode || "353",
+        PhoneExcludingCountryCode:
+          user?.phone?.replace(user?.phoneCountryCode || "353", "") || "",
+      };
+      await updateUser(data);
+    } catch (error) {
+      console.error("Error updating MFA method:", error);
+      toast.error(
+        t("MESSAGES.MFA_UPDATE_ERROR") || "Error updating MFA method",
+      );
+    }
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -270,7 +275,7 @@ export const AccountComponent = (): JSX.Element => {
             <Tab
               icon={<LockOpenIcon />}
               iconPosition="start"
-              label={t("CONTENTS.NAV.CHANGE_PASSWORD")}
+              label={t("CONTENTS.NAV.SECURITY")}
             />
           </Tabs>
         </Box>
@@ -403,13 +408,7 @@ export const AccountComponent = (): JSX.Element => {
                   <MFAControlComponent
                     //{...register("DefaultMFA")}
                     defaultValue={watch("DefaultMFA")} // Add this line
-                    onChange={(e) => {
-                      setValue("DefaultMFA", e.target.value, {
-                        shouldDirty: true,
-                        shouldTouch: true,
-                        shouldValidate: true,
-                      });
-                    }}
+                    onChange={handleMfaChange}
                   />
                 ) : (
                   <Skeleton

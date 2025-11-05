@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "../Invoices.component.scss";
@@ -17,7 +10,6 @@ import { BalanceRequestDto } from "@shared/dtos/balance-request.dto";
 import { BalanceDto } from "@shared/dtos/balance.dto";
 import { MobileInvoicesListComponent } from "./MobileInvoicesList.component";
 import { useDispatch, useSelector } from "react-redux";
-import DownloadForOfflineIcon from "@mui/icons-material/Download";
 import { InvoiceDto, InvoiceQueryParams } from "@shared/dtos/invoice.dtos";
 import { QueryActionCreatorResult } from "@reduxjs/toolkit/query";
 import {
@@ -29,10 +21,8 @@ import {
   setInvoicesToPay,
 } from "@shared/redux/slices/paymentSlice";
 import { useLazyGetPropertiesQuery } from "@shared/services/Statements.service";
-import EastIcon from "@mui/icons-material/East";
 import { setError } from "@shared/redux/slices/errorSlice";
 import { useNavigate } from "react-router-dom";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { InvoicePaymentPopupComponent } from "./InvoicePaymentPopup.component";
 import { PaymentDto } from "@shared/dtos/payments.dto";
 import { SummaryBoxComponent } from "@components/common/components/summary-box.component";
@@ -147,9 +137,36 @@ export const RatesInvoicesComponent = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     row: InvoiceDto,
   ) => {
-    const { value } = e.target;
+    const input: HTMLInputElement = e.target as HTMLInputElement;
+    const { value, selectionStart } = e.target;
+    const cursorPos = selectionStart || 0;
     const numericValue = Number(value.replace(/[^0-9.-]+/g, ""));
+    const beforeCursor = value.substring(0, cursorPos);
+    //const separatorsBefore = (beforeCursor.match(/[,\s]/g) || []).length;
+
     setSelectedInvoices(numericValue);
+
+    requestAnimationFrame(() => {
+      if (input) {
+        const formattedValue = currency.format(numericValue || 0);
+        const digitsBeforeCursor = beforeCursor.replace(/[^0-9]/g, "").length;
+
+        let newPos = 0;
+        let digitCount = 0;
+
+        for (let i = 0; i < formattedValue.length; i++) {
+          if (/[0-9]/.test(formattedValue[i])) {
+            digitCount++;
+            if (digitCount >= digitsBeforeCursor) {
+              newPos = i + 1;
+              break;
+            }
+          }
+        }
+
+        input.setSelectionRange(newPos, newPos);
+      }
+    });
   };
 
   /**
