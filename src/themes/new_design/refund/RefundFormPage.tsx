@@ -17,6 +17,15 @@ import {
   RefundDocumentType,
 } from "@shared/dtos/refund.dtos";
 import { toast } from "react-toastify";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography,
+  Box,
+} from "@mui/material";
 import "./RefundForm.component.scss";
 import { RefundFormComponent } from "./RefundForm.component";
 import { useConfig } from "@shared/providers/Configuration.provider";
@@ -48,6 +57,7 @@ export const RefundFormPage = (): JSX.Element => {
   const [headerSendingError, setHeaderSendingError] = useState<string | null>(
     null,
   );
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [createApplication, { isLoading: isCreating }] =
     useCreateApplicationMutation();
   const [uploadDocument, { isLoading: isUploading }] =
@@ -170,8 +180,8 @@ export const RefundFormPage = (): JSX.Element => {
         }
       }
 
-      // Navigate to the refund details page
-      navigate(`/refunds/${result.applicationId}`);
+      // Show success modal instead of toast
+      setShowSuccessModal(true);
     } catch (error) {
       console.error("Error creating refund application:", error);
       const errorMessage =
@@ -181,25 +191,94 @@ export const RefundFormPage = (): JSX.Element => {
     }
   };
 
+  const handleSuccessModalClose = () => {
+    setShowSuccessModal(false);
+    navigate("/refunds");
+  };
+
   return (
-    <RefundFormComponent
-      title={t("REFUNDS.FORM.TITLE")}
-      handleSubmit={handleSubmit(onSubmit)}
-      register={register}
-      control={control}
-      formState={formState}
-      setValue={setValue}
-      isCreating={isCreating}
-      isUploading={isUploading}
-      selectedFiles={selectedFiles}
-      setSelectedFiles={setSelectedFiles}
-      iniTelRef={iniTelRef}
-      selectedLopFiles={selectedLopFiles}
-      setSelectedLopFiles={setSelectedLopFiles}
-      isHeaderFilesUploaded={isHeaderFilesUploaded}
-      isLopFilesUploaded={isLopFilesUploaded}
-      headerSendingError={headerSendingError}
-      lopSendingError={lopSendingError}
-    />
+    <>
+      <RefundFormComponent
+        title={t("REFUNDS.FORM.TITLE")}
+        handleSubmit={handleSubmit(onSubmit)}
+        register={register}
+        control={control}
+        formState={formState}
+        setValue={setValue}
+        isCreating={isCreating}
+        isUploading={isUploading}
+        selectedFiles={selectedFiles}
+        setSelectedFiles={setSelectedFiles}
+        iniTelRef={iniTelRef}
+        selectedLopFiles={selectedLopFiles}
+        setSelectedLopFiles={setSelectedLopFiles}
+        isHeaderFilesUploaded={isHeaderFilesUploaded}
+        isLopFilesUploaded={isLopFilesUploaded}
+        headerSendingError={headerSendingError}
+        lopSendingError={lopSendingError}
+      />
+
+      {/* Success Modal */}
+      <Dialog
+        open={showSuccessModal}
+        onClose={(event, reason) => {
+          // Prevent closing by clicking outside or pressing ESC
+          if (reason === "backdropClick" || reason === "escapeKeyDown") {
+            return;
+          }
+          handleSuccessModalClose();
+        }}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle
+          sx={{
+            textAlign: "center",
+            paddingTop: 4,
+            paddingBottom: 2,
+          }}
+        >
+          {t("REFUNDS.FORM.SUCCESS_TITLE")}
+        </DialogTitle>
+        <DialogContent>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              padding: 2,
+            }}
+          >
+            <Typography
+              variant="body1"
+              sx={{
+                textAlign: "center",
+                marginBottom: 2,
+              }}
+            >
+              {t("REFUNDS.FORM.SUCCESS_POPUP_MESSAGE")}
+            </Typography>
+          </Box>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            justifyContent: "center",
+            paddingBottom: 3,
+          }}
+        >
+          <Button
+            onClick={handleSuccessModalClose}
+            variant="contained"
+            color="primary"
+            size="large"
+            sx={{
+              minWidth: 120,
+            }}
+          >
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };

@@ -152,7 +152,10 @@
   "MESSAGE_PAGE": {
     "TITLE": "Teachtaireachtaí",
     "NO_MESSAGES": "Níl aon teachtaireachtaí",
-    "KEY": "Eochair"
+    "KEY": "Eochair",
+    "MARK_ALL_AS_READ": "Marcáil Gach Ceann mar Léite",
+    "MARK_ALL_AS_READ_SUCCESS": "Marcáladh gach teachtaireacht mar léite",
+    "MARK_ALL_AS_READ_ERROR": "Theip ar gach teachtaireacht a mharcáil mar léite"
   },
   "FORGOT_PASSWORD": {
     "TITLE": "Athshocraigh Pasfhocal",
@@ -422,7 +425,8 @@
     "PAYMENT_PROCESSING": "Léireofar d’íocaíocht le déanaí ar do chuntas amárach.",
     "PASSWORD_IS_CHANGED": "Athraíodh an pasfhocal.",
     "LETTER_BEFORE_LOGIN": "Sula logáil tú isteach caithfidh tú litir a bheith faighte agat ina raibh a\n                Pasfhocal Sealadach.",
-    "CUSTOMER_NUMBER_EXPL": "Seo d’uimhir chustaiméara. Ba cheart go mbeifeá in ann é seo a fháil ar aon litir a sheol muid\n                     chugat."
+    "CUSTOMER_NUMBER_EXPL": "Seo d’uimhir chustaiméara. Ba cheart go mbeifeá in ann é seo a fháil ar aon litir a sheol muid\n                     chugat.",
+    "PAYMENT_ACCEPTED_TITLE2": "Seolfar cóip den admháil chuig do ríomhphost freisin."
   },
   "MAIN": {
     "PAY_BUTTON": "Íoc",
@@ -612,7 +616,8 @@
       "EIRCODE": "Éirchód",
       "EMAIL": "Ríomhphost",
       "PHONE": "Fón"
-    }
+    },
+    "SAVE_INFO": "Sábháil Faisnéis"
   },
   "PAYMENT_DETAILS": {
     "TITLE": "Sonraí Íocaíochta",
@@ -1002,7 +1007,9 @@
       "CANCEL": "Cealaigh",
       "SUBMIT": "Cuir Iarratas Isteach",
       "SUBMITTING": "Á Chur Isteach...",
-      "SUCCESS_MESSAGE": "D'éirigh le hiarratas aisíocaíochta a chur isteach"
+      "SUCCESS_MESSAGE": "D'éirigh le hiarratas aisíocaíochta a chur isteach",
+      "SUCCESS_TITLE": "Iarratas Curtha Isteach",
+      "SUCCESS_POPUP_MESSAGE": "Go raibh maith agat as d'iarratas. De ghnáth tógann sé 10 lá oibre iarratas aisíocaíochta a phróiseáil."
     },
     "LIST": {
       "TITLE": "Iarratais Aisíocaíochta",
@@ -1089,8 +1096,7 @@
     "DOCUMENT_DOWNLOADED": "D'éirigh le híoslódáil doiciméad",
     "DOWNLOAD_ERROR": "Theip ar íoslódáil doiciméad",
     "ERROR_OCCURRED": "Tharla earráid",
-    "CURRENT_STATUS": "Stádas Reatha",
-    "PAYMENT_ACCEPTED_TITLE2": "Seolfar cóip den admháil chuig do ríomhphost freisin."
+    "CURRENT_STATUS": "Stádas Reatha"
   },
   "PAYMENT_METHODS": {
     "EFT": "Aistriú Cistí Leictreonach (EFT)",

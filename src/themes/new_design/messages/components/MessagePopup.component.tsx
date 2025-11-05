@@ -1,7 +1,7 @@
 import { Box, Modal, Typography } from "@mui/material";
 import { NotificationDto } from "@shared/dtos/messages.dtos";
 import CloseIcon from "@mui/icons-material/Close";
-
+import React from "react";
 import moment from "moment";
 import { useMarkAsReadMutation } from "@shared/services/Notifications.service";
 import { useEffect } from "react";

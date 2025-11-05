@@ -152,7 +152,10 @@
   "MESSAGE_PAGE": {
     "TITLE": "Messages",
     "NO_MESSAGES": "No messages",
-    "KEY": "Key"
+    "KEY": "Key",
+    "MARK_ALL_AS_READ": "Mark All as Read",
+    "MARK_ALL_AS_READ_SUCCESS": "All messages marked as read",
+    "MARK_ALL_AS_READ_ERROR": "Failed to mark all messages as read"
   },
   "FORGOT_PASSWORD": {
     "TITLE": "Reset Password",
@@ -432,6 +435,7 @@
     "ACCOUNT": "Account",
     "INFO": "Info",
     "PAY": "Pay",
+    "SAVE_INFO": "Save Information",
     "MENU": {
       "HAP": "Hap",
       "RATES": "Hap",
@@ -968,12 +972,21 @@
       "TENANT_ID": "Tenant ID / Customer Number",
       "APPLICANT_NAME": "Applicant Name",
       "ADDRESS": "Address",
+      "ADDRESS1": "Address Line 1",
+      "ADDRESS2": "Address Line 2",
+      "ADDRESS_INFO": "Address Information",
+      "TOWN": "Town",
+      "COUNTY": "County",
       "TRN_PPSN": "TRN / PPSN",
       "CONTACT_INFO": "Contact Information",
       "EMAIL": "Email",
       "PHONE": "Phone Number",
+      "DEPARTMENT": "Department",
+      "INC_DEPT": "Income Department",
+      "REQUESTED_AMOUNT": "Requested Amount",
       "REFUND_DETAILS": "Refund Details",
       "REFUND_REASON": "Reason for Refund",
+      "REASON": "Reason for Refund",
       "AMOUNT": "Amount",
       "CURRENCY": "Currency",
       "REFERENCE_CODE": "Reference Code",
@@ -994,6 +1007,9 @@
       "SUBMIT": "Submit Application",
       "SUBMITTING": "Submitting...",
       "SUCCESS_MESSAGE": "Refund application submitted successfully",
+      "SUCCESS_TITLE": "Application Submitted",
+      "SUCCESS_POPUP_MESSAGE": "Thank you for your application. It normally takes 10 working days to process a refund application.",
+
       "MIN_AMOUNT_NOTICE": "Minimum refund amount is {{amount}}"
     },
     "LIST": {

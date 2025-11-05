@@ -8,7 +8,10 @@ import {
   TablePagination,
   Typography,
 } from "@mui/material";
-import { useLazyGetNotificationsQuery } from "@shared/services/Notifications.service";
+import {
+  useLazyGetNotificationsQuery,
+  useMarkAllAsReadMutation,
+} from "@shared/services/Notifications.service";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { selectUser } from "@shared/redux/slices/authSlice";
@@ -23,13 +26,15 @@ import {
   selectNotificationsCount,
 } from "@shared/redux/slices/notificationsSlice";
 import { TablePaginationActions } from "@shared/components/TablePaginationActions";
+import { toast } from "react-toastify";
 
 export const MessagesComponent = (): JSX.Element => {
   const { isAuthenticated } = useAuth();
   const user = useSelector(selectUser);
   const notifications = useSelector(selectNotifications);
   const totalCount = useSelector(selectNotificationsCount);
-  const [getNotificaitons, { isFetching }] = useLazyGetNotificationsQuery();
+  const [getNotifications, { isFetching }] = useLazyGetNotificationsQuery();
+  const [markAllAsRead] = useMarkAllAsReadMutation();
   const [page, setPage] = React.useState(0);
   const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
@@ -40,7 +45,7 @@ export const MessagesComponent = (): JSX.Element => {
 
   useEffect(() => {
     if (isAuthenticated) {
-      const request = getNotificaitons({
+      const request = getNotifications({
         apar_id: user?.accountNumber || parseInt(user?.customerNo || "0"),
         $count: true,
         $orderby: "SentDate desc",
@@ -56,6 +61,16 @@ export const MessagesComponent = (): JSX.Element => {
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
+  };
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await markAllAsRead();
+      toast.success(t("MESSAGE_PAGE.MARK_ALL_AS_READ_SUCCESS"));
+    } catch (error) {
+      console.error("Error marking all as read:", error);
+      toast.error(t("MESSAGE_PAGE.MARK_ALL_AS_READ_ERROR"));
+    }
   };
 
   const handleChangeRowsPerPage = (
@@ -82,8 +97,12 @@ export const MessagesComponent = (): JSX.Element => {
     <Box sx={{ flexGrow: 1 }} className="messages rates_statement_container ">
       <Box className="messages_header">
         {t("MESSAGE_PAGE.TITLE")}
-        <Button startIcon={<CheckBoxIcon />} className="btn-secondary">
-          Mark All as Read
+        <Button
+          startIcon={<CheckBoxIcon />}
+          onClick={handleMarkAllAsRead}
+          className="btn-secondary"
+        >
+          {t("MESSAGE_PAGE.MARK_ALL_AS_READ")}
         </Button>
       </Box>
       <Box className="personal_box messages_content">
