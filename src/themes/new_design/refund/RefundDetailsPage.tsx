@@ -120,7 +120,7 @@ export const RefundDetailsPage = (): JSX.Element => {
                 alignItems: isMobile ? "flex-start" : "center",
                 flexDirection: isMobile ? "column" : "row",
                 gap: 2,
-                justifyContent: "space-between",
+                justifyContent: "start",
               }}
             >
               <Chip
@@ -138,41 +138,8 @@ export const RefundDetailsPage = (): JSX.Element => {
                     application.approvalSteps?.findLast(
                       (step) => step.action === ApprovalAction.RequestInfo,
                     )?.comment
-                  }{" "}
-                  {application.dueBy &&
-                    `Due Date: ${new Date(application.dueBy).toLocaleString()}`}
+                  }
                 </Typography>
-              )}
-              {application.status === RefundStatus.ReturnedForInfo && (
-                <Box
-                  sx={{
-                    flex: "none",
-                    display: "flex",
-                    gap: 1,
-                    mt: 1,
-                    width: isMobile ? "100%" : "auto",
-                  }}
-                >
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() =>
-                      navigate(`/refunds/${application.applicationId}/update`)
-                    }
-                    fullWidth={isMobile}
-                  >
-                    {t("BUTTONS.UPDATE")}
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleSubmit()}
-                    fullWidth={isMobile}
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? t("BUTTONS.SENDING") : t("BUTTONS.SEND")}
-                  </Button>
-                </Box>
               )}
             </Box>
           </Grid>
@@ -328,7 +295,54 @@ export const RefundDetailsPage = (): JSX.Element => {
           <Typography variant="body1">{application.adminNotes}</Typography>
         </Paper>
       )}
-
+      {application.status === RefundStatus.ReturnedForInfo && (
+        <Paper
+          sx={{
+            p: isMobile ? 2 : 3,
+            mt: isMobile ? 2 : 3,
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: isMobile ? "flex-start" : "center",
+              flexDirection: isMobile ? "column" : "row",
+              gap: 2,
+              justifyContent: "space-between",
+            }}
+          >
+            <Box
+              sx={{
+                flex: "none",
+                display: "flex",
+                gap: 1,
+                mt: 1,
+                width: isMobile ? "100%" : "auto",
+              }}
+            >
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() =>
+                  navigate(`/refunds/${application.applicationId}/update`)
+                }
+                fullWidth={isMobile}
+              >
+                {t("BUTTONS.UPDATE")}
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleSubmit()}
+                fullWidth={isMobile}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? t("BUTTONS.SENDING") : t("BUTTONS.SEND")}
+              </Button>
+            </Box>
+          </Box>
+        </Paper>
+      )}
       {/* Upload Document Modal */}
       <UploadDocumentModal
         open={uploadModalOpen}
