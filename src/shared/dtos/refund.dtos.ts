@@ -21,6 +21,9 @@ export enum RefundStatus {
   Gl07Generated,
   Exported,
   Posted,
+  AssignedL1,
+  AssignedL2,
+  AssignedAP,
 }
 
 /**
@@ -54,6 +57,22 @@ export interface ApprovalStepDto {
 }
 
 /**
+ * Data transfer object for resubmitting a refund application.
+ *
+ * @interface RefundApplicationResubmitDto
+ * @property {string} refundReason - The reason for requesting the refund
+ * @property {boolean} jointTenancy - Indicates whether the account is held in joint tenancy
+ * @property {string} iban - International Bank Account Number for the refund recipient
+ * @property {string} bic - Bank Identifier Code (SWIFT code) for the recipient's bank
+ */
+export interface RefundApplicationResubmitDto {
+  refundReason: string;
+  jointTenancy: boolean;
+  iban: string;
+  bic: string;
+}
+
+/**
  * Refund application DTO
  *     "applicationId": "559b7cdb-7f45-4588-af45-549434cf4300",
             "tenantId": "61716",
@@ -68,6 +87,7 @@ export interface ApprovalStepDto {
             "updatedAt": "2025-10-10T10:22:48.312468",
             "closedAt": null
  */
+
 export interface RefundApplicationDto {
   applicationId: string;
   applicantName: string;
@@ -114,6 +134,12 @@ export interface RefundApplicationDto {
   adminNotes?: string;
   documents?: RefundDocumentDto[];
   approvalSteps?: ApprovalStepDto[];
+
+  // Assignment information
+  assignedToId: null;
+  assignedAt: null;
+  assignedLevel: null;
+  isAssigned: false;
 }
 
 /**
@@ -337,4 +363,16 @@ export interface ConfirmDocumentStatusResponse {
 export interface DownloadDocumentRequest {
   applicationId: string;
   documentId: string;
+}
+
+/**
+ * Response for assign a refund
+ */
+export interface AssignRefundResponse {
+  applicationId: string;
+  status: RefundStatus;
+  assignedToId: string;
+  assignedLevel: number;
+  message: string;
+  actionAt: Date;
 }

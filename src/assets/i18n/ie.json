@@ -1009,7 +1009,9 @@
       "SUBMITTING": "Á Chur Isteach...",
       "SUCCESS_MESSAGE": "D'éirigh le hiarratas aisíocaíochta a chur isteach",
       "SUCCESS_TITLE": "Iarratas Curtha Isteach",
-      "SUCCESS_POPUP_MESSAGE": "Go raibh maith agat as d'iarratas. De ghnáth tógann sé 10 lá oibre iarratas aisíocaíochta a phróiseáil."
+      "SUCCESS_POPUP_MESSAGE": "Go raibh maith agat as d'iarratas. De ghnáth tógann sé 10 lá oibre iarratas aisíocaíochta a phróiseáil.",
+      "CHOOSE_ADMIN": "Roghnaigh Riarthóir",
+      "CHOOSE_ADMIN_PLACEHOLDER": "Clóscríobh chun cuardach..."
     },
     "LIST": {
       "TITLE": "Iarratais Aisíocaíochta",

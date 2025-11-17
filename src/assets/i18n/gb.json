@@ -1009,7 +1009,8 @@
       "SUCCESS_MESSAGE": "Refund application submitted successfully",
       "SUCCESS_TITLE": "Application Submitted",
       "SUCCESS_POPUP_MESSAGE": "Thank you for your application. It normally takes 10 working days to process a refund application.",
-
+      "CHOOSE_ADMIN": "Choose Admin",
+      "CHOOSE_ADMIN_PLACEHOLDER": "Type to search...",
       "MIN_AMOUNT_NOTICE": "Minimum refund amount is {{amount}}"
     },
     "LIST": {

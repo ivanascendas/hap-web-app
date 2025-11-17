@@ -16,11 +16,14 @@ import {
   Cancel,
   Info,
   Block,
+  SwapHoriz,
 } from "@mui/icons-material";
 import { selectUser } from "@shared/redux/slices/authSlice";
 import {
   useLazyGetApplicationByIdQuery,
   useLazyDownloadDocumentQuery,
+  useAssignApplicationsMutation,
+  useUnassignApplicationsMutation,
 } from "@shared/services/Refunds.service";
 import { RefundStatusBadge } from "../components/refunds/RefundStatusBadge";
 import { DocumentsList } from "../components/refunds/DocumentsList";
@@ -33,8 +36,16 @@ import { formatCurrency, formatDate } from "../utils/statusLabels";
 import { hasPermission, getUserApprovalLevel } from "../utils/rolePermissions";
 import "./refund-details.component.scss";
 import { useUserRole } from "@shared/hooks/useUserRole";
+import { ReassignModal } from "../components/refunds/modals/ReassignModal";
+import { RefundStatus } from "@shared/dtos/refund.dtos";
 
-type ModalType = "approve" | "reject" | "requestInfo" | "cancel" | null;
+type ModalType =
+  | "approve"
+  | "reject"
+  | "requestInfo"
+  | "cancel"
+  | "reassign"
+  | null;
 
 /**
  * RefundDetailsComponent - Detailed view of a refund application
@@ -45,16 +56,22 @@ export const RefundDetailsComponent: React.FC = () => {
   const user = useSelector(selectUser);
   const [modalOpen, setModalOpen] = useState<ModalType>(null);
 
+  const [assignApplication, { isSuccess: isAssigned }] =
+    useAssignApplicationsMutation();
+  const [unassignApplication, { isSuccess: isUnassigned }] =
+    useUnassignApplicationsMutation();
+
   // Fetch application details
   const [getDetails, { data: application, isLoading, isError }] =
     useLazyGetApplicationByIdQuery();
   const [downloadDoc] = useLazyDownloadDocumentQuery();
   const { hasRole } = useUserRole();
+
   useEffect(() => {
     if (user && id) {
       getDetails(id);
     }
-  }, [user, id, getDetails]);
+  }, [user, id, getDetails, isAssigned, isUnassigned]);
 
   if (!hasRole("DMU_L1") && !hasRole("DMU_L2") && !hasRole("AP")) {
     return (
@@ -91,18 +108,29 @@ export const RefundDetailsComponent: React.FC = () => {
   }
 
   const level = getUserApprovalLevel(user, application.status);
+  const canReassign = hasPermission("reassign", user, application);
+  const canAssign = level
+    ? hasPermission(
+        `assignL${level}` as "assignL1" | "assignL2" | "assignL3",
+        user,
+        application,
+      )
+    : false;
+  const canUnassign = level
+    ? hasPermission("unassign", user, application)
+    : false;
   const canApprove = level
     ? hasPermission(
         `approveL${level}` as "approveL1" | "approveL2" | "approveL3",
         user,
-        application.status,
+        application,
       )
     : false;
   const canReject = level
     ? hasPermission(
         `rejectL${level}` as "rejectL1" | "rejectL2" | "rejectL3",
         user,
-        application.status,
+        application,
       )
     : false;
   const canRequestInfo =
@@ -110,10 +138,10 @@ export const RefundDetailsComponent: React.FC = () => {
       ? hasPermission(
           `requestInfoL${level}` as "requestInfoL1" | "requestInfoL2",
           user,
-          application.status,
+          application,
         )
       : false;
-  const canCancel = hasPermission("cancel", user, application.status);
+  const canCancel = hasPermission("cancel", user, application);
 
   const handleDownload = (docId: string) => {
     downloadDoc({
@@ -139,7 +167,17 @@ export const RefundDetailsComponent: React.FC = () => {
         <Typography variant="h5" sx={{ flex: 1 }}>
           Refund Application Details
         </Typography>
-        <RefundStatusBadge status={application.status} size="medium" />
+        <RefundStatusBadge
+          assignName={
+            application.status === RefundStatus.AssignedL1 ||
+            application.status === RefundStatus.AssignedL2 ||
+            application.status === RefundStatus.AssignedAP
+              ? application.assignedToId
+              : undefined
+          }
+          status={application.status}
+          size="medium"
+        />
       </Box>
 
       <Grid container spacing={3}>
@@ -314,6 +352,44 @@ export const RefundDetailsComponent: React.FC = () => {
               </Typography>
               <Divider sx={{ mb: 2 }} />
               <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+                {canReassign && (
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    startIcon={<SwapHoriz />}
+                    onClick={() => setModalOpen("reassign")}
+                  >
+                    Reassign
+                  </Button>
+                )}
+                {canUnassign && (
+                  <Button
+                    variant="contained"
+                    color="error"
+                    startIcon={<Cancel />}
+                    onClick={() =>
+                      unassignApplication({
+                        applicationId: application.applicationId,
+                      })
+                    }
+                  >
+                    Unassign (L{level})
+                  </Button>
+                )}
+                {canAssign && (
+                  <Button
+                    variant="contained"
+                    color="success"
+                    startIcon={<CheckCircle />}
+                    onClick={() =>
+                      assignApplication({
+                        applicationId: application.applicationId,
+                      })
+                    }
+                  >
+                    Assign (L{level})
+                  </Button>
+                )}
                 {canApprove && (
                   <Button
                     variant="contained"
@@ -388,6 +464,12 @@ export const RefundDetailsComponent: React.FC = () => {
           )}
         </>
       )}
+      <ReassignModal
+        open={modalOpen === "reassign"}
+        applicationId={application.applicationId}
+        onClose={() => setModalOpen(null)}
+        onSuccess={() => navigate("/admin/refunds")}
+      />
       <CancelModal
         open={modalOpen === "cancel"}
         applicationId={application.applicationId}

@@ -32,6 +32,9 @@ export const getStatusLabel = (status: RefundStatus): string => {
     [RefundStatus.Gl07Generated]: "GL07 Generated",
     [RefundStatus.Exported]: "Exported",
     [RefundStatus.Posted]: "Posted",
+    [RefundStatus.AssignedL1]: "Assigned L1",
+    [RefundStatus.AssignedL2]: "Assigned L2",
+    [RefundStatus.AssignedAP]: "Assigned AP",
   };
 
   return labels[status] || "Unknown Status";
@@ -62,6 +65,9 @@ export const getStatusColor = (status: RefundStatus): StatusColor => {
     [RefundStatus.Gl07Generated]: { color: "#757575" }, // grey
     [RefundStatus.Exported]: { color: "#757575" }, // grey
     [RefundStatus.Posted]: { color: "#2e7d32" }, // success green
+    [RefundStatus.AssignedL1]: { color: "#1976d2" }, // info blue
+    [RefundStatus.AssignedL2]: { color: "#1976d2" }, // info blue
+    [RefundStatus.AssignedAP]: { color: "#1976d2" }, // info blue
   };
 
   return colors[status] || { color: "#757575" };

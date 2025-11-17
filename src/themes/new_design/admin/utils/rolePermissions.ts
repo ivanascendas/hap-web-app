@@ -1,5 +1,5 @@
 import { UserModel } from "@shared/models/user.model";
-import { RefundStatus } from "@shared/dtos/refund.dtos";
+import { RefundApplicationDto, RefundStatus } from "@shared/dtos/refund.dtos";
 
 /**
  * Action types for refund application management
@@ -8,11 +8,16 @@ export type ActionType =
   | "approveL1"
   | "approveL2"
   | "approveL3"
+  | "assignL1"
+  | "assignL2"
+  | "assignL3"
   | "rejectL1"
   | "rejectL2"
   | "rejectL3"
   | "requestInfoL1"
   | "requestInfoL2"
+  | "unassign"
+  | "reassign"
   | "cancel"
   | "view";
 
@@ -39,10 +44,10 @@ export type ActionType =
 export const hasPermission = (
   action: ActionType,
   user: UserModel | null,
-  status: RefundStatus,
+  application: RefundApplicationDto,
 ): boolean => {
   if (!user) return false;
-
+  const { status, assignedToId, isAssigned } = application;
   const finalStatuses = [
     RefundStatus.Gl07Generated,
     RefundStatus.Exported,
@@ -50,39 +55,92 @@ export const hasPermission = (
   ];
 
   switch (action) {
+    case "assignL1":
+      return !!user.isAdmin && !isAssigned && status === RefundStatus.PendingL1;
+    case "assignL2":
+      // Assignment actions are not handled here
+      return !!user.isAdmin && !isAssigned && status === RefundStatus.PendingL2;
+    case "assignL3":
+      // Assignment actions are not handled here
+      return !!user.isAdmin && !isAssigned && status === RefundStatus.PendingAP;
     // DMU Level 1 actions
     case "approveL1":
-      return !!user.isAdmin && status === RefundStatus.PendingL1;
+      return (
+        !!user.isAdmin &&
+        isAssigned &&
+        status === RefundStatus.AssignedL1 &&
+        user.customerNo === assignedToId
+      );
+    case "unassign":
+      return !!user.isAdmin && isAssigned && user.customerNo === assignedToId;
 
     case "rejectL1":
-      return !!user.isAdmin && status === RefundStatus.PendingL1;
+      return (
+        !!user.isAdmin &&
+        isAssigned &&
+        status === RefundStatus.AssignedL1 &&
+        user.customerNo === assignedToId
+      );
 
     case "requestInfoL1":
-      return !!user.isAdmin && status === RefundStatus.PendingL1;
+      return (
+        !!user.isAdmin &&
+        isAssigned &&
+        status === RefundStatus.AssignedL1 &&
+        user.customerNo === assignedToId
+      );
 
     // DMU Level 2 actions
     case "approveL2":
-      return !!user.isAdmin && status === RefundStatus.PendingL2;
+      return (
+        !!user.isAdmin &&
+        isAssigned &&
+        status === RefundStatus.AssignedL2 &&
+        user.customerNo === assignedToId
+      );
 
     case "rejectL2":
-      return !!user.isAdmin && status === RefundStatus.PendingL2;
+      return (
+        !!user.isAdmin &&
+        isAssigned &&
+        status === RefundStatus.AssignedL2 &&
+        user.customerNo === assignedToId
+      );
 
     case "requestInfoL2":
-      return !!user.isAdmin && status === RefundStatus.PendingL2;
+      return (
+        !!user.isAdmin &&
+        isAssigned &&
+        status === RefundStatus.AssignedL2 &&
+        user.customerNo === assignedToId
+      );
 
     // AP Level 3 actions
     case "approveL3":
-      return !!user.isSuperAdmin && status === RefundStatus.PendingAP;
+      return (
+        !!user.isAdmin &&
+        isAssigned &&
+        status === RefundStatus.AssignedAP &&
+        user.customerNo === assignedToId
+      );
 
     case "rejectL3":
-      return !!user.isSuperAdmin && status === RefundStatus.PendingAP;
+      return (
+        !!user.isAdmin &&
+        isAssigned &&
+        status === RefundStatus.AssignedAP &&
+        user.customerNo === assignedToId
+      );
 
     // Cancel action (available to all admin roles before final statuses)
     case "cancel":
       return (
-        (!!user.isAdmin || !!user.isSuperAdmin) &&
+        ((!!user.isAdmin && user.customerNo === assignedToId) ||
+          !!user.isSuperAdmin) &&
         !finalStatuses.includes(status)
       );
+    case "reassign":
+      return !!user.isSuperAdmin && isAssigned;
 
     // View action (all admins can view)
     case "view":
@@ -112,12 +170,15 @@ export const getUserApprovalLevel = (
   if (!user) return null;
 
   if (user.isAdmin) {
-    if (status === RefundStatus.PendingL1) return 1;
-    if (status === RefundStatus.PendingL2) return 2;
+    if (status === RefundStatus.PendingL1 || status === RefundStatus.AssignedL1)
+      return 1;
+    if (status === RefundStatus.PendingL2 || status === RefundStatus.AssignedL2)
+      return 2;
   }
 
   if (user.isSuperAdmin) {
-    if (status === RefundStatus.PendingAP) return 3;
+    if (status === RefundStatus.PendingAP || status === RefundStatus.AssignedAP)
+      return 3;
   }
 
   return null;
@@ -127,12 +188,12 @@ export const getUserApprovalLevel = (
  * Checks if a user can perform any action on a refund application
  *
  * @param user - The user model with role information
- * @param status - The current status of the refund application
+ * @param application - The refund application
  * @returns True if the user can perform at least one action
  *
  * @example
  * ```typescript
- * const canAct = canPerformAnyAction(user, status);
+ * const canAct = canPerformAnyAction(user, application);
  * if (canAct) {
  *   // Show action buttons
  * }
@@ -140,7 +201,7 @@ export const getUserApprovalLevel = (
  */
 export const canPerformAnyAction = (
   user: UserModel | null,
-  status: RefundStatus,
+  application: RefundApplicationDto,
 ): boolean => {
   if (!user) return false;
 
@@ -156,5 +217,5 @@ export const canPerformAnyAction = (
     "cancel",
   ];
 
-  return actions.some((action) => hasPermission(action, user, status));
+  return actions.some((action) => hasPermission(action, user, application));
 };

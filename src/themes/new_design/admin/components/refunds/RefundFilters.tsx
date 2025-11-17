@@ -61,6 +61,9 @@ export const RefundFilters: React.FC<RefundFiltersProps> = ({
     RefundStatus.Gl07Generated,
     RefundStatus.Exported,
     RefundStatus.Posted,
+    RefundStatus.AssignedL1,
+    RefundStatus.AssignedL2,
+    RefundStatus.AssignedAP,
   ];
 
   return (

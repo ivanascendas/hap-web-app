@@ -100,12 +100,6 @@
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"
   },
-  "jest": {
-    "moduleNameMapper": {
-      "^@components/(.*)$": "<rootDir>/src/themes/new_design/$1",
-      "^@shared/(.*)$": "<rootDir>/src/shared/$1"
-    }
-  },
   "overrides": {
     "svgo": "^3.0.0",
     "postcss": "^8.4.47",

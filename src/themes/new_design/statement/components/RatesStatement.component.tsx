@@ -1,23 +1,9 @@
-import {
-  Box,
-  CircularProgress,
-  FormControl,
-  FormControlLabel,
-  InputLabel,
-  MenuItem,
-  Modal,
-  Select,
-  Skeleton,
-  Switch,
-  TablePagination,
-} from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, TablePagination } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "../Statement.component.scss";
-import {
-  useLazyGetPropertiesQuery,
-  useLazyGetStatementsQuery,
-} from "@shared/services/Statements.service";
+import React from "react";
+import { useLazyGetStatementsQuery } from "@shared/services/Statements.service";
 import moment from "moment";
 import currency from "@shared/utils/currency";
 import { useAuth } from "@shared/providers/Auth.provider";
@@ -27,7 +13,6 @@ import {
 } from "@shared/dtos/statement.dtos";
 import { ColumnItem, TableComponent } from "@shared/components/Table.component";
 import { BalanceRequestDto } from "@shared/dtos/balance-request.dto";
-import { BalanceDto } from "@shared/dtos/balance.dto";
 import { MobileStatementsListComponent } from "./MobileStatementsList.component";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -163,12 +148,6 @@ export const RatesStatementComponent = ({
   return (
     <>
       <Box className="rates_statement_container">
-        <Box
-          className="personal_box_filter"
-          sx={{ margin: { xs: "0.5rem", md: "0 2.25rem" } }}
-        >
-          <Box sx={{ flex: "2" }}></Box>
-        </Box>
         <Box
           className=" personal_box personal_box_content"
           sx={{ display: { xs: "none", md: "block" } }}

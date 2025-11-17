@@ -12,9 +12,6 @@ import {
   useLazyDownloadRatesPdfQuery,
   useLazyGetBalanceQuery,
 } from "@shared/services/Statements.service";
-import currency from "@shared/utils/currency";
-
-import DownloadForOfflineIcon from "@mui/icons-material/Download";
 
 import { StatementQueryParams } from "@shared/dtos/statement.dtos";
 import React, { useState } from "react";
@@ -85,6 +82,7 @@ export const StatementComponent = (): JSX.Element => {
               flexGrow: 1,
               display: "flex",
               paddingTop: 0,
+              paddingBottom: 0,
               flexDirection: { xs: "column", md: "row" },
               marginBottom: { xs: "1rem", md: "0" },
               marginLeft: { xs: "0.625rem", md: "0" },

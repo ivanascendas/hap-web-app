@@ -134,6 +134,10 @@ export const RefundUpdatePage = (): JSX.Element => {
         status: RefundStatus.Submitted,
         bshVerified: false,
         dueBy: data.dueBy ? new Date(data.dueBy) : undefined,
+        assignedToId: null,
+        assignedAt: null,
+        assignedLevel: null,
+        isAssigned: false,
       }).unwrap();
 
       toast.success(t("REFUNDS.FORM.SUCCESS_MESSAGE"));

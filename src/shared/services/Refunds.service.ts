@@ -22,6 +22,7 @@ import {
   RefundDocumentType,
   ConfirmDocumentStatusRequest,
   ConfirmDocumentStatusResponse,
+  AssignRefundResponse,
 } from "../dtos/refund.dtos";
 
 /**
@@ -411,6 +412,59 @@ export const refundsApi = createApi({
     }),
 
     /**
+     * Reassign refund application at admin
+     */
+    reassignApplications: builder.mutation<
+      AssignRefundResponse,
+      { applicationId: string; targetAdminId: string }
+    >({
+      query: ({ applicationId, targetAdminId }) => ({
+        url: `/api/refunds/admin/applications/${applicationId}/reassign`,
+        method: "POST",
+        body: JSON.stringify({ targetAdminId }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: (result, error, { applicationId }) => [
+        { type: "RefundApplication", id: applicationId },
+        { type: "RefundApplication", id: "ADMIN_LIST" },
+      ],
+    }),
+    /**
+     * Assign refund application at admin
+     */
+    assignApplications: builder.mutation<
+      AssignRefundResponse,
+      { applicationId: string }
+    >({
+      query: ({ applicationId }) => ({
+        url: `/api/refunds/admin/applications/${applicationId}/assign`,
+        method: "POST",
+      }),
+      invalidatesTags: (result, error, { applicationId }) => [
+        { type: "RefundApplication", id: applicationId },
+        { type: "RefundApplication", id: "ADMIN_LIST" },
+      ],
+    }),
+
+    /**
+     * Unassign refund application at admin
+     */
+    unassignApplications: builder.mutation<
+      AssignRefundResponse,
+      { applicationId: string }
+    >({
+      query: ({ applicationId }) => ({
+        url: `/api/refunds/admin/applications/${applicationId}/unassign`,
+        method: "POST",
+      }),
+      invalidatesTags: (result, error, { applicationId }) => [
+        { type: "RefundApplication", id: applicationId },
+        { type: "RefundApplication", id: "ADMIN_LIST" },
+      ],
+    }),
+    /**
      * Approve refund application at specific level (admin only)
      */
     approveApplicationByLevel: builder.mutation<
@@ -547,4 +601,7 @@ export const {
   useRequestInfoFromTenantMutation,
   useCancelApplicationByAdminMutation,
   useConfirmDocumentStatusMutation,
+  useReassignApplicationsMutation,
+  useAssignApplicationsMutation,
+  useUnassignApplicationsMutation,
 } = refundsApi;
