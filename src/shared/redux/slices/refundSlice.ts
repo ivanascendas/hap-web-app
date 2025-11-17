@@ -68,6 +68,7 @@ const refundSlice = createSlice({
       state: RefundState,
       action: PayloadAction<RefundApplicationQueryParams>,
     ) => {
+      console.log("Filters set to:", state.filters, action.payload);
       state.filters = { ...state.filters, ...action.payload };
     },
 

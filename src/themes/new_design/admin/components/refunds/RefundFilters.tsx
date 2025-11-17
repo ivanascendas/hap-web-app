@@ -1,6 +1,7 @@
 import React from "react";
 import {
   Box,
+  Button,
   Chip,
   MenuItem,
   Select,
@@ -10,6 +11,8 @@ import {
 import { RefundStatus } from "@shared/dtos/refund.dtos";
 import { AdminFiltersState } from "@shared/redux/slices/adminRefundSlice";
 import { getStatusLabel } from "../../utils/statusLabels";
+import { selectUser } from "@shared/redux/slices/authSlice";
+import { useSelector } from "react-redux";
 
 /**
  * Props for RefundFilters component
@@ -65,6 +68,8 @@ export const RefundFilters: React.FC<RefundFiltersProps> = ({
     RefundStatus.AssignedL2,
     RefundStatus.AssignedAP,
   ];
+
+  const user = useSelector(selectUser);
 
   return (
     <Box
@@ -166,6 +171,44 @@ export const RefundFilters: React.FC<RefundFiltersProps> = ({
       )}
 
       <Box sx={{ flex: 1 }} />
+      {filters.assignedToId && (
+        <Button
+          variant="outlined"
+          onClick={() =>
+            onFilterChange({
+              status: [
+                RefundStatus.Submitted,
+                RefundStatus.PendingL1,
+                RefundStatus.PendingL2,
+                RefundStatus.PendingAP,
+                RefundStatus.ReturnedForInfo,
+              ],
+              assignedToId: undefined,
+            })
+          }
+        >
+          Clear Assigned To
+        </Button>
+      )}
+
+      <Box sx={{ flex: 1 }} />
+      {!filters.assignedToId && user && (
+        <Button
+          variant="outlined"
+          onClick={() =>
+            onFilterChange({
+              status: [
+                RefundStatus.AssignedL1,
+                RefundStatus.AssignedL2,
+                RefundStatus.AssignedAP,
+              ],
+              assignedToId: user.customerNo,
+            })
+          }
+        >
+          Show Main
+        </Button>
+      )}
 
       {/* Customer No / Search */}
       <Box

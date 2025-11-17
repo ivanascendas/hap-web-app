@@ -80,13 +80,15 @@ export const RefundStatusBadge: React.FC<RefundStatusBadgeProps> = ({
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 1, flex: "none" }}>
-      <Typography component="span">
-        <Typography component="strong" sx={{ fontWeight: 600 }}>
-          Assigned To:
+      {assignName && (
+        <Typography component="span">
+          <Typography component="strong" sx={{ fontWeight: 600 }}>
+            Assigned To:
+          </Typography>
+          &nbsp;&nbsp;
+          {assignName || ""}
         </Typography>
-        &nbsp;&nbsp;
-        {assignName || ""}
-      </Typography>
+      )}
       <Chip
         label={label}
         size={size}

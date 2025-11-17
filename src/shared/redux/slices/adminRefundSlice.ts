@@ -11,6 +11,7 @@ export interface AdminFiltersState {
   department?: string;
   incDept?: string;
   search?: string;
+  assignedToId?: string;
 }
 
 /**

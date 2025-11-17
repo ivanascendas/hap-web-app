@@ -66,6 +66,7 @@ export const RefundsComponent: React.FC = () => {
         statuses: filters.status,
         tenantId: filters.customerNo,
         incDept: filters.incDept,
+        assignedToId: filters.assignedToId,
       });
     }
   }, [user, getAdminApplications, filters, pagination]);
@@ -137,6 +138,10 @@ export const RefundsComponent: React.FC = () => {
       label: "Amount",
       rowRender: (row: RefundApplicationDto) =>
         formatCurrency(row.amount, row.currency || "EUR"),
+    },
+    {
+      key: "assignedToId",
+      label: "Assigned To",
     },
     {
       key: "status",

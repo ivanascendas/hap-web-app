@@ -282,6 +282,7 @@ export interface RefundApplicationQueryParams extends PaggingBaseDto {
   dateFrom?: string;
   dateTo?: string;
   search?: string;
+  assignedToId?: string;
 }
 
 /**
