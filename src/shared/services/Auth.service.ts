@@ -10,7 +10,6 @@ import { ForgotPasswordRequestDto } from "../dtos/forgotPassword.dto";
 import customBaseQuery from "../utils/customBaseQuery";
 import {
   clearToken,
-  clearUser,
   setTmpToken,
   setToken,
   setUser,
@@ -99,9 +98,8 @@ export const authApi = createApi({
       }),
       onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
         try {
-          dispatch(clearUser());
           const { data } = await queryFulfilled;
-          if (data && !data.isSuperAdmin && data.customerNo) {
+          if (data && !data.isSuperAdmin && !data.isAdmin && data.customerNo) {
             dispatch(
               authApi.endpoints.checkValidContact.initiate(
                 parseInt(data.customerNo),

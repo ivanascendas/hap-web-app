@@ -69,6 +69,11 @@ export const RefundListPage = (): JSX.Element => {
     {
       key: "applicantName",
       label: "REFUNDS.LIST.APPLICATION_NUMBER",
+      rowRender: (row: RefundApplicationDto) => (
+        <Typography variant="body2" fontFamily="monospace">
+          {row.referenceCode} - {row.applicantName}
+        </Typography>
+      ),
     },
     {
       key: "amount",

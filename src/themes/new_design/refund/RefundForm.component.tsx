@@ -297,7 +297,11 @@ export const RefundFormComponent = ({
                   value: /^[A-Z]{2}[0-9]{2}[A-Z0-9]+$/,
                   message: t("ERRORS.INVALID_IBAN"),
                 },
+                onChange: (e) => {
+                  e.target.value = e.target.value.toUpperCase();
+                },
               })}
+              inputProps={{ style: { textTransform: "uppercase" } }}
               error={!!errors.iban}
               helperText={errors.iban?.message}
             />

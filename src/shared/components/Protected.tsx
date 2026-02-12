@@ -23,7 +23,7 @@ export const Protected = ({ component }: ProtectedProps): JSX.Element => {
     if (auth.isTokenRecived && !auth.isAuthenticated) {
       navigate("/login", { state: { from: location } });
     }
-  }, [auth]);
+  }, [auth.isTokenRecived, auth.isAuthenticated, navigate, location]);
 
   return <MainComponent>{component}</MainComponent>;
 };

@@ -20,7 +20,7 @@ export const AdminComponent = () => {
     if (auth.isTokenRecived && !auth.isAuthenticated) {
       navigate("/loginAdmin", { state: { from: location } });
     }
-  }, [auth]);
+  }, [auth.isTokenRecived, auth.isAuthenticated]);
 
   return (
     <Paper className="admin-container">

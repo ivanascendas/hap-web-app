@@ -66,11 +66,12 @@ const customBaseQuery: BaseQueryFn<
     //dispatch(setloading(true));
     const result = await baseQuery(args, api, extraOptions);
     if (result.error) {
+      const url = typeof args !== "string" ? args.url : args;
+
       if (
         result.error.status === 403 &&
         typeof args !== "string" &&
-        (args.url.includes("/api/user/logout") ||
-          args.url.includes("/api/user"))
+        (url.includes("/api/user/logout") || url.includes("/api/user"))
       ) {
         dispatch(clearToken());
         dispatch(
@@ -78,11 +79,17 @@ const customBaseQuery: BaseQueryFn<
         );
       }
       if (result.error.status === 401) {
-        dispatch(authApi.endpoints.logout.initiate());
+        // Avoid infinite loop: don't dispatch logout if the failing request IS the logout request
+        if (!url.includes("/api/user/logout")) {
+          dispatch(authApi.endpoints.logout.initiate());
+        } else {
+          // Logout itself failed with 401 — just clear token directly
+          dispatch(clearToken());
+        }
       } else if (
         !(
           typeof args !== "string" &&
-          args.url.includes("/api/statement/details/invoice/file") &&
+          url.includes("/api/statement/details/invoice/file") &&
           result.error.status === 404
         )
       ) {

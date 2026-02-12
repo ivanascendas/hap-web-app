@@ -106,7 +106,13 @@ export const LoginFormComponent = ({
         state: { from: location },
       });
     }
-  }, [auth]);
+  }, [
+    auth.isTokenRecived,
+    auth.isAuthenticated,
+    navigate,
+    successUrl,
+    location,
+  ]);
 
   if (
     result.isSuccess &&

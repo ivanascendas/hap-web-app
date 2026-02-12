@@ -12,10 +12,12 @@ export const adminsApi = createApi({
   baseQuery: customBaseQuery,
   endpoints: (builder) => ({
     getAdmins: builder.query<AdminDto[], void>({
-      query: () => ({
-        url: "/api/user/GetAdmins",
-        method: "GET",
-      }),
+      query: () => {
+        return {
+          url: "/api/user/GetAdmins",
+          method: "GET",
+        };
+      },
     }),
     createAdmin: builder.mutation<void, CreateAdminDto>({
       query: (body) => ({

@@ -52,9 +52,15 @@ export const RoleProtected = ({
   // First, check authentication
   useEffect(() => {
     if (auth.isTokenRecived && !auth.isAuthenticated) {
-      navigate("/login", { state: { from: location } });
+      navigate(redirectTo || "/login", { state: { from: location } });
     }
-  }, [auth, navigate, location]);
+  }, [
+    auth.isTokenRecived,
+    auth.isAuthenticated,
+    navigate,
+    location,
+    redirectTo,
+  ]);
 
   // If not authenticated yet, return empty fragment while waiting
   if (!auth.isAuthenticated) {

@@ -56,10 +56,8 @@ export const RefundDetailsComponent: React.FC = () => {
   const user = useSelector(selectUser);
   const [modalOpen, setModalOpen] = useState<ModalType>(null);
 
-  const [assignApplication, { isSuccess: isAssigned }] =
-    useAssignApplicationsMutation();
-  const [unassignApplication, { isSuccess: isUnassigned }] =
-    useUnassignApplicationsMutation();
+  const [assignApplication] = useAssignApplicationsMutation();
+  const [unassignApplication] = useUnassignApplicationsMutation();
 
   // Fetch application details
   const [getDetails, { data: application, isLoading, isError }] =
@@ -71,7 +69,7 @@ export const RefundDetailsComponent: React.FC = () => {
     if (user && id) {
       getDetails(id);
     }
-  }, [user, id, getDetails, isAssigned, isUnassigned]);
+  }, [user, id, getDetails]);
 
   if (!hasRole("DMU_L1") && !hasRole("DMU_L2") && !hasRole("AP")) {
     return (
@@ -341,7 +339,13 @@ export const RefundDetailsComponent: React.FC = () => {
         )}
 
         {/* Action Buttons */}
-        {(canApprove || canReject || canRequestInfo || canCancel) && (
+        {(canAssign ||
+          canReassign ||
+          canUnassign ||
+          canApprove ||
+          canReject ||
+          canRequestInfo ||
+          canCancel) && (
           <Grid size={12}>
             <Paper
               className="details-section"

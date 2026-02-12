@@ -14,7 +14,7 @@ import logo from "../../../../assets/img/HAP2.png";
 import iconLogo from "../../../../assets/img/Icon2.png";
 import { selectUser } from "@shared/redux/slices/authSlice";
 import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Badge, Button, Drawer } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useLocation } from "react-router-dom";
@@ -114,6 +114,7 @@ const HeaderComponent = ({
   }, [hasRole, pages, config]);
 
   const [logout] = useLogoutMutation();
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -164,7 +165,7 @@ const HeaderComponent = ({
         case "Terms":
           break;
         case "Logout":
-          logout();
+          logout().then(() => navigate("/loginAdmin"));
           break;
         default:
           break;
