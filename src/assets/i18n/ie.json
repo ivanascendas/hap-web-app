@@ -550,6 +550,8 @@
     "CURRENT_PASSWORD": "Pasfhocal reatha",
     "NEW_PASSWORD": "Pasfhocal nua",
     "CONFIRM_PASSWORD": "Deimhnigh pasfhocal",
+    "CONFIRM_PASSWORD_TITLE": "Deimhnigh do phasfhocal",
+    "CONFIRM_PASSWORD_SUBTITLE": "Iontráil do phasfhocal reatha le leanúint ar aghaidh",
     "BUTTONS": {
       "UPDATE": "Uasdátaigh",
       "CHANGE": "Athraigh"

@@ -550,6 +550,8 @@
     "CURRENT_PASSWORD": "Current Password",
     "NEW_PASSWORD": "New Password",
     "CONFIRM_PASSWORD": "Confirm Password",
+    "CONFIRM_PASSWORD_TITLE": "Confirm your password",
+    "CONFIRM_PASSWORD_SUBTITLE": "Please enter your current password to continue",
     "BUTTONS": {
       "UPDATE": "Update",
       "CHANGE": "Change"

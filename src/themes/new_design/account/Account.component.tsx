@@ -32,6 +32,7 @@ import { MFAMethod } from "@shared/dtos/user.dto";
 import { OTPConfirmPopupComponent } from "./compomnents/OTPConfirmPopup.component";
 import { MFAControlComponent } from "./compomnents/MFAControl.component";
 import { PasswordsFormComponent } from "./compomnents/PasswordsForm.component";
+import { PasswordConfirmPopupComponent } from "./compomnents/PasswordConfirmPopup.component";
 import { IntlTelInputRef } from "intl-tel-input/react";
 import { TextInput } from "@components/common/components/TextInput.component";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -53,6 +54,8 @@ export const AccountComponent = (): JSX.Element => {
   const iniTelReff = useRef<IntlTelInputRef>();
   const [tabValue, setTabValue] = useState(0);
   const [showOtpPopup, setShowOtpPopup] = useState(false);
+  const [showPasswordPopup, setShowPasswordPopup] = useState(false);
+  const [pendingPassword, setPendingPassword] = useState("");
   const isPhoneDirty = useRef<boolean>(false);
   const phoneData = useRef<PhoneData | null>(null);
   const dispatch = useDispatch();
@@ -125,8 +128,14 @@ export const AccountComponent = (): JSX.Element => {
         });
       });
     } else {
-      setShowOtpPopup(true);
+      setShowPasswordPopup(true);
     }
+  };
+
+  const handlePasswordConfirmed = (password: string) => {
+    setPendingPassword(password);
+    setShowPasswordPopup(false);
+    setShowOtpPopup(true);
   };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -422,14 +431,23 @@ export const AccountComponent = (): JSX.Element => {
           </Box>
         </Box>
       </Box>
+      <PasswordConfirmPopupComponent
+        open={showPasswordPopup}
+        onClose={() => setShowPasswordPopup(false)}
+        onConfirm={handlePasswordConfirmed}
+      />
       <OTPConfirmPopupComponent
         isChecked={getValues().PhoneNumberConfirmed}
         open={showOtpPopup && !getValues().PhoneNumberConfirmed}
-        onClose={() => setShowOtpPopup(false)}
+        onClose={() => {
+          setShowOtpPopup(false);
+          setPendingPassword("");
+        }}
         onSendOtp={() =>
           smsRequest({
             PhoneNumber: getValues().PhoneNumber,
             UserId: user?.customerNo || "",
+            Password: pendingPassword || undefined,
           })
         }
         onConfirm={(otp) =>
@@ -439,11 +457,15 @@ export const AccountComponent = (): JSX.Element => {
       />
       <OTPConfirmPopupComponent
         isChecked={getValues().EmailConfirmed}
-        onClose={() => setShowOtpPopup(false)}
+        onClose={() => {
+          setShowOtpPopup(false);
+          setPendingPassword("");
+        }}
         onSendOtp={() =>
           emailRequest({
             EmailId: getValues().EmailId,
             UserId: user?.customerNo || "",
+            Password: pendingPassword || undefined,
           })
         }
         onConfirm={(otp) =>
