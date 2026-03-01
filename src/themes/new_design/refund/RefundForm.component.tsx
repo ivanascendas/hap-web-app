@@ -22,6 +22,7 @@ import {
   FormState,
   Control,
   UseFormSetValue,
+  UseFormWatch,
 } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { IntlTelInputComponent } from "@shared/components/IntlTelInput.component";
@@ -44,6 +45,7 @@ export type RefundFormProps = {
 
   selectedLopFiles: File[];
   setSelectedLopFiles: React.Dispatch<React.SetStateAction<File[]>>;
+  watch: UseFormWatch<RefundFormData>;
   iniTelRef: React.RefObject<HTMLInputElement>;
   isHeaderFilesUploaded?: boolean;
   isLopFilesUploaded?: boolean;
@@ -53,6 +55,7 @@ export type RefundFormProps = {
 
 interface RefundFormData extends CreateRefundApplicationRequest {
   phoneInput?: string;
+  movedHouse?: boolean;
 }
 
 /**
@@ -74,6 +77,7 @@ export const RefundFormComponent = ({
   isLopFilesUploaded,
   headerSendingError,
   lopSendingError,
+  watch,
   iniTelRef,
   title,
 }: RefundFormProps): JSX.Element => {
@@ -84,6 +88,16 @@ export const RefundFormComponent = ({
 
   // Screen size detection
   const isMobile = useMediaQuery("(max-width:768px)");
+
+  // Watch movedHouse checkbox to toggle address editability
+  const movedHouse = watch("movedHouse");
+
+  // Reset address to user's stored value when movedHouse is unchecked
+  React.useEffect(() => {
+    if (!movedHouse && user?.address) {
+      setValue("address", user.address.replace(/\s\s+/g, "\n"));
+    }
+  }, [movedHouse, user, setValue]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -119,6 +133,7 @@ export const RefundFormComponent = ({
           <Grid size={12}>
             <TextField
               fullWidth
+              required
               label={t("REFUNDS.FORM.TENANT_ID")}
               {...register("tenantId", {
                 required: t("ERRORS.REQUIRED"),
@@ -133,6 +148,7 @@ export const RefundFormComponent = ({
           <Grid size={12}>
             <TextField
               fullWidth
+              required
               label={t("REFUNDS.FORM.APPLICANT_NAME")}
               {...register("applicantName", {
                 required: t("ERRORS.REQUIRED"),
@@ -145,6 +161,7 @@ export const RefundFormComponent = ({
           <Grid size={12}>
             <TextField
               fullWidth
+              required
               multiline
               rows={4}
               label={t("REFUNDS.FORM.ADDRESS")}
@@ -153,10 +170,33 @@ export const RefundFormComponent = ({
               })}
               error={!!errors.address}
               helperText={errors.address?.message}
+              disabled={!movedHouse}
             />
           </Grid>
 
-          {/* TRN/PPSN */}
+          {/* Moved House */}
+          <Grid size={12}>
+            <FormControl fullWidth>
+              <Controller
+                name="movedHouse"
+                control={control}
+                render={({ field: { value, onChange, ...field } }) => (
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        {...field}
+                        checked={!!value}
+                        onChange={(e) => onChange(e.target.checked)}
+                      />
+                    }
+                    label={t("REFUNDS.FORM.MOVED_HOUSE")}
+                  />
+                )}
+              />
+            </FormControl>
+          </Grid>
+
+          {/* TRN/PPSN 
           <Grid size={12}>
             <TextField
               fullWidth
@@ -169,7 +209,7 @@ export const RefundFormComponent = ({
               error={!!errors.trnPpsn}
               helperText={errors.trnPpsn?.message}
             />
-          </Grid>
+          </Grid>*/}
 
           {/* Contact Information */}
           <Grid size={12}>
@@ -181,6 +221,7 @@ export const RefundFormComponent = ({
           <Grid size={isMobile ? 12 : 6}>
             <TextField
               fullWidth
+              required
               type="email"
               label={t("REFUNDS.FORM.EMAIL")}
               {...register("email", {
@@ -212,7 +253,7 @@ export const RefundFormComponent = ({
             </Typography>
           </Grid>
 
-          {/* Refund Reason */}
+          {/* Refund Reason
           <Grid size={12}>
             <TextField
               fullWidth
@@ -229,12 +270,13 @@ export const RefundFormComponent = ({
               error={!!errors.refundReason}
               helperText={errors.refundReason?.message}
             />
-          </Grid>
+          </Grid> */}
 
           {/* Amount and Currency */}
           <Grid size={isMobile ? 12 : 6}>
             <TextField
               fullWidth
+              required
               type="number"
               label={t("REFUNDS.FORM.AMOUNT")}
               {...register("amount", {
@@ -290,6 +332,7 @@ export const RefundFormComponent = ({
           <Grid size={12}>
             <TextField
               fullWidth
+              required
               label={t("REFUNDS.FORM.IBAN")}
               {...register("iban", {
                 required: t("ERRORS.REQUIRED"),
@@ -311,6 +354,7 @@ export const RefundFormComponent = ({
           <Grid size={12}>
             <TextField
               fullWidth
+              required
               label={t("REFUNDS.FORM.BIC")}
               {...register("bic", {
                 required: t("ERRORS.REQUIRED"),

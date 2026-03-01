@@ -394,7 +394,7 @@ export const authApi = createApi({
      * @param body - The `EmailConfirmationRequestDto` object containing the data to be sent in the request body.
      * @returns `void`
      */
-    emailConfirmationRequest: builder.mutation<
+    emailRegConfirmationRequest: builder.mutation<
       void,
       EmailConfirmationRequestDto
     >({
@@ -410,9 +410,31 @@ export const authApi = createApi({
      * @param body - The `EmailConfirmationDto` object containing the `userId` and `code` to be sent in the request body.
      * @returns `void`
      */
-    emailConfirmation: builder.mutation<void, EmailConfirmationDto>({
+    emailRegConfirmation: builder.mutation<void, EmailConfirmationDto>({
       query: (body) => ({
         url: `/api/user/EmailRegConfirmation?userId=${body.userId}&token=${body.code}`,
+        method: "POST",
+      }),
+    }),
+    emailConfirmationRequest: builder.mutation<
+      void,
+      EmailConfirmationRequestDto
+    >({
+      query: (body) => ({
+        url: "/api/user/EmailConfirmationRequest",
+        method: "POST",
+        body,
+      }),
+    }),
+    /**
+     * Sends a POST request to the `/api/user/EmailRegConfirmation` endpoint with the provided `EmailConfirmationDto` object, and returns `void`.
+     *
+     * @param body - The `EmailConfirmationDto` object containing the `userId` and `code` to be sent in the request body.
+     * @returns `void`
+     */
+    emailConfirmation: builder.mutation<void, EmailConfirmationDto>({
+      query: (body) => ({
+        url: `/api/user/EmailConfirmation?userId=${body.userId}&token=${body.code}`,
         method: "POST",
       }),
     }),
@@ -451,7 +473,9 @@ export const {
   useChangePasswordMutation,
   useCheckValidContactMutation,
   usePhoneConfirmationRequestMutation,
+  useEmailRegConfirmationRequestMutation,
+  useEmailConfirmationMutation,
   useEmailConfirmationRequestMutation,
   usePhoneConfirmationMutation,
-  useEmailConfirmationMutation,
+  useEmailRegConfirmationMutation,
 } = authApi;

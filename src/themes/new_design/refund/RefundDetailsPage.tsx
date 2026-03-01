@@ -124,7 +124,9 @@ export const RefundDetailsPage = (): JSX.Element => {
               }}
             >
               <Chip
-                label={t(`REFUNDS.STATUS.${application.status}`)}
+                label={t(
+                  `REFUNDS.STATUS.${application.status == RefundStatus.PendingL1 || application.status == RefundStatus.PendingL2 || application.status == RefundStatus.PendingAP ? 11 : application.status}`,
+                )}
                 color={getStatusColor(application.status)}
                 sx={{ mt: 1 }}
               />
@@ -224,15 +226,17 @@ export const RefundDetailsPage = (): JSX.Element => {
           <Typography variant="h6" gutterBottom>
             {t("REFUNDS.DETAILS.DOCUMENTS")}
           </Typography>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<CloudUploadIcon />}
-            onClick={() => setUploadModalOpen(true)}
-            fullWidth={isMobile}
-          >
-            {t("REFUNDS.UPLOAD.BUTTON")}
-          </Button>
+          {application.status === RefundStatus.ReturnedForInfo && (
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<CloudUploadIcon />}
+              onClick={() => setUploadModalOpen(true)}
+              fullWidth={isMobile}
+            >
+              {t("REFUNDS.UPLOAD.BUTTON")}
+            </Button>
+          )}
         </Box>
         <Divider sx={{ mb: 2 }} />
         {documents && documents.length > 0 ? (

@@ -991,6 +991,7 @@
       "CURRENCY": "Currency",
       "REFERENCE_CODE": "Reference Code",
       "JOINT_TENANCY": "Joint Tenancy",
+      "MOVED_HOUSE": "I have moved house?",
       "PAYMENT_INFO": "Payment Information",
       "PAYMENT_METHOD": "Payment Method",
       "IBAN": "IBAN",
@@ -1058,7 +1059,8 @@
       "7": "Cancelled",
       "8": "Gl07 Generated",
       "9": "Exported",
-      "10": "Posted"
+      "10": "Posted",
+      "11": "Progress"
     },
     "DOCUMENT_TYPE": {
       "0": "Bank Header",

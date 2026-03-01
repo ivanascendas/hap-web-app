@@ -26,6 +26,7 @@ export type RefundFormProps = {} & CreateRefundApplicationRequest;
 
 interface RefundFormData extends CreateRefundApplicationRequest {
   phoneInput?: string;
+  movedHouse?: boolean;
 }
 
 /**
@@ -55,7 +56,7 @@ export const RefundUpdatePage = (): JSX.Element => {
     null,
   );
 
-  const { handleSubmit, register, reset, control, setValue, formState } =
+  const { handleSubmit, register, reset, control, setValue, formState, watch } =
     useForm<RefundFormData>({
       mode: "all",
       defaultValues: {
@@ -203,6 +204,7 @@ export const RefundUpdatePage = (): JSX.Element => {
       control={control}
       formState={formState}
       setValue={setValue}
+      watch={watch}
       isCreating={isCreating}
       isUploading={isUploading}
       selectedFiles={selectedFiles}

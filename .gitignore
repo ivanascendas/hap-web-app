@@ -31,3 +31,5 @@ doc/
 build 2.zip
 
 *.md
+
+.vscode/

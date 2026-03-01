@@ -13,8 +13,8 @@ import { selectUser, setUser } from "../../shared/redux/slices/authSlice";
 import { selectUserLoading } from "../../shared/redux/slices/loaderSlice";
 
 import {
-  useEmailConfirmationMutation,
-  useEmailConfirmationRequestMutation,
+  useEmailRegConfirmationMutation,
+  useEmailRegConfirmationRequestMutation,
   usePhoneConfirmationMutation,
   usePhoneConfirmationRequestMutation,
   useSaveUserDataMutation,
@@ -43,9 +43,9 @@ export const AccountComponent = (): JSX.Element => {
   const isLoading = useSelector(selectUserLoading);
   const [updateUser, result] = useSaveUserDataMutation();
   const [smsRequest] = usePhoneConfirmationRequestMutation();
-  const [emailRequest] = useEmailConfirmationRequestMutation();
+  const [emailRequest] = useEmailRegConfirmationRequestMutation();
   const [smsConfirm, smsConfirmResult] = usePhoneConfirmationMutation();
-  const [emailConfirm, emailConfirmResult] = useEmailConfirmationMutation();
+  const [emailConfirm, emailConfirmResult] = useEmailRegConfirmationMutation();
   const iniTelReff = useRef<IntlTelInputRef>();
   const iniTelinst = useRef<Iti>();
   const [tabValue, setTabValue] = useState(0);

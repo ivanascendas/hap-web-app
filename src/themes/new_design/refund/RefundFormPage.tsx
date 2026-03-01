@@ -33,6 +33,7 @@ export type RefundFormProps = {} & CreateRefundApplicationRequest;
 
 interface RefundFormData extends CreateRefundApplicationRequest {
   phoneInput?: string;
+  movedHouse?: boolean;
 }
 
 /**
@@ -63,7 +64,7 @@ export const RefundFormPage = (): JSX.Element => {
   const [uploadDocument, { isLoading: isUploading }] =
     useUploadDocumentMutation();
 
-  const { handleSubmit, register, reset, control, setValue, formState } =
+  const { handleSubmit, register, reset, control, setValue, formState, watch } =
     useForm<RefundFormData>({
       mode: "all",
       defaultValues: {
@@ -79,6 +80,7 @@ export const RefundFormPage = (): JSX.Element => {
         referenceCode: "",
         submissionChannel: "portal",
         jointTenancy: false,
+        movedHouse: false,
         paymentMethod: PaymentMethod.EFT,
         iban: "",
         bic: "",
@@ -101,6 +103,7 @@ export const RefundFormPage = (): JSX.Element => {
         referenceCode: "",
         submissionChannel: "portal",
         jointTenancy: false,
+        movedHouse: false,
         paymentMethod: PaymentMethod.EFT,
         iban: "",
         bic: "",
@@ -205,6 +208,7 @@ export const RefundFormPage = (): JSX.Element => {
         control={control}
         formState={formState}
         setValue={setValue}
+        watch={watch}
         isCreating={isCreating}
         isUploading={isUploading}
         selectedFiles={selectedFiles}

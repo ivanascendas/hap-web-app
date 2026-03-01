@@ -80,17 +80,28 @@ export const RefundListPage = (): JSX.Element => {
       label: "REFUNDS.LIST.REQUESTED_AMOUNT",
       rowRender: (row) => `€${row.amount?.toFixed(2) || "0.00"}`,
     },
+    // ...existing code...
     {
       key: "status",
       label: "REFUNDS.LIST.STATUS",
-      rowRender: (row) => (
-        <Chip
-          label={t(`REFUNDS.STATUS.${row.status}`)}
-          color={getStatusColor(row.status)}
-          size="small"
-        />
-      ),
+      rowRender: (row) => {
+        const knownStatuses: RefundStatus[] = [
+          RefundStatus.Approved,
+          RefundStatus.Rejected,
+          RefundStatus.Posted,
+          RefundStatus.ReturnedForInfo,
+        ];
+        const statusKey = knownStatuses.includes(row.status) ? row.status : 11;
+        return (
+          <Chip
+            label={t(`REFUNDS.STATUS.${statusKey}`)}
+            color={getStatusColor(row.status)}
+            size="small"
+          />
+        );
+      },
     },
+    // ...existing code...
     {
       key: "updatedAt",
       label: "REFUNDS.LIST.SUBMITTED_DATE",

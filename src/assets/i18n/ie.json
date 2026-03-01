@@ -982,6 +982,7 @@
       "CURRENCY": "Airgeadra",
       "REFERENCE_CODE": "Cód Tagartha",
       "JOINT_TENANCY": "Comhthionóntacht",
+      "MOVED_HOUSE": "Ar bhog mé teach?",
       "PAYMENT_INFO": "Faisnéis Íocaíochta",
       "PAYMENT_METHOD": "Modh Íocaíochta",
       "IBAN": "IBAN",
@@ -1058,7 +1059,8 @@
       "7": "Cealaithe",
       "8": "Gl07 Ginte",
       "9": "Onnmhairithe",
-      "10": "Postáilte"
+      "10": "Postáilte",
+      "11": "Íoctha"
     },
     "DOCUMENT_TYPE": {
       "0": "Ceannteideal Bainc",
