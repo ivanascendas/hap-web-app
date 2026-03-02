@@ -436,6 +436,7 @@ export const authApi = createApi({
       query: (body) => ({
         url: `/api/user/EmailConfirmation?userId=${body.userId}&token=${body.code}`,
         method: "POST",
+        body,
       }),
     }),
   }),

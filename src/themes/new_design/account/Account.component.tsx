@@ -199,14 +199,18 @@ export const AccountComponent = (): JSX.Element => {
       phoneData.current = callback();
 
       if (phoneData.current?.phoneNumber) {
-        console.log(
-          "getPhoneDataCallback called, phoneData:",
-          phoneData.current,
-        );
-        setValue("PhoneNumber", phoneData.current.phoneNumber);
-        setValue("PhoneCountryCode", phoneData.current.countryCode);
-        setValue("PhoneExcludingCountryCode", phoneData.current.localNumber);
-        isPhoneDirty.current = true;
+        const newPhone = phoneData.current.localNumber.replace("+", "");
+        const currentPhone = getValues("PhoneNumber").replace("+", "");
+
+        if (
+          newPhone !== currentPhone ||
+          phoneData.current.countryCode !== getValues("PhoneCountryCode")
+        ) {
+          setValue("PhoneNumber", phoneData.current.phoneNumber);
+          setValue("PhoneCountryCode", phoneData.current.countryCode);
+          setValue("PhoneExcludingCountryCode", phoneData.current.localNumber);
+          isPhoneDirty.current = true;
+        }
       }
     },
   );

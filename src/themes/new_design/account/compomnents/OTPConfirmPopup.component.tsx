@@ -49,7 +49,7 @@ export const OTPConfirmPopupComponent = ({
             <CloseIcon />
           </IconButton>
         </Box>
-        <OTPInputsComponent length={4} onConfirm={sendConfirmationHandler} />
+        <OTPInputsComponent length={6} onConfirm={sendConfirmationHandler} />
         <Box className="otp-popup__actions">
           <button className="btn-primary" onClick={onSendOtp}>
             Update Number
