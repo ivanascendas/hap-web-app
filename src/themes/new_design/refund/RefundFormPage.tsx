@@ -2,7 +2,7 @@ import React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import { selectUser } from "@shared/redux/slices/authSlice";
+import { selectBalance, selectUser } from "@shared/redux/slices/authSlice";
 import { useForm } from "react-hook-form";
 import { selectUserLoading } from "@shared/redux/slices/loaderSlice";
 import { useNavigate } from "react-router-dom";
@@ -45,7 +45,7 @@ export const RefundFormPage = (): JSX.Element => {
   const isLoading = useSelector(selectUserLoading);
   const navigate = useNavigate();
   const { config } = useConfig();
-
+  const balance = useSelector(selectBalance);
   const iniTelRef = useRef<HTMLInputElement>(null);
   const [isHeaderFilesUploaded, setIsHeaderFilesUploaded] = useState(false);
   const [isLopFilesUploaded, setIsLopFilesUploaded] = useState(false);
@@ -76,7 +76,7 @@ export const RefundFormPage = (): JSX.Element => {
         phone: user?.phone ? `+${user.phone}` : "",
         refundReason: ``,
         currency: "EUR",
-        amount: 50,
+        amount: balance?.closingBalance || 50,
         referenceCode: "",
         submissionChannel: "portal",
         jointTenancy: false,
@@ -99,7 +99,7 @@ export const RefundFormPage = (): JSX.Element => {
         phone: user?.phone ? `+${user.phone}` : "",
         refundReason: "",
         currency: "EUR",
-        amount: config?.refundMinAmount || 50,
+        amount: balance?.closingBalance || config?.refundMinAmount || 50,
         referenceCode: "",
         submissionChannel: "portal",
         jointTenancy: false,

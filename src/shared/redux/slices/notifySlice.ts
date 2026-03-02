@@ -79,6 +79,24 @@ const notifySlice = createSlice({
         state.message = "MESSAGES.DOWNLOAD_SUCCESS";
       },
     );
+    builder.addMatcher(
+      authApi.endpoints.phoneConfirmation.matchFulfilled,
+      (state: NotifyState, action: PayloadAction<any>) => {
+        state.message = "MESSAGES.PHONE_VERIFIED";
+      },
+    );
+    builder.addMatcher(
+      authApi.endpoints.emailRegConfirmation.matchFulfilled,
+      (state: NotifyState, action: PayloadAction<any>) => {
+        state.message = "MESSAGES.EMAIL_VERIFIED";
+      },
+    );
+    builder.addMatcher(
+      authApi.endpoints.emailConfirmation.matchFulfilled,
+      (state: NotifyState, action: PayloadAction<any>) => {
+        state.message = "MESSAGES.EMAIL_VERIFIED";
+      },
+    );
   },
 });
 

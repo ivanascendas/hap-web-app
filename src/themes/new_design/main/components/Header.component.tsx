@@ -48,7 +48,7 @@ export const HeaderComponent = ({
   const navigate = useNavigate();
   const { config } = useConfig();
 
-  const { department } = useParams();
+  const department = config?.depDefaultValue || "rates";
   const unreadCount = useSelector(selectUnreadNotificationsCount);
   const [anchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
