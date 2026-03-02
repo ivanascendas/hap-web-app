@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate, useLocation, Navigate } from "react-router-dom";
 import { useAuth } from "../providers/Auth.provider";
 import { useUserRole } from "../hooks/useUserRole";
-import { MainComponent } from "../../features/main/main.component";
+import { MainComponent } from "@components/main/main.component";
 import { UserRoleName } from "@shared/dtos/admins.dtos";
 
 export type RoleProtectedProps = {
