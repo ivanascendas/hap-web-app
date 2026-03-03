@@ -143,7 +143,6 @@ export const RefundFormComponent = ({
               disabled
             />
           </Grid>
-
           {/* Applicant Name */}
           <Grid size={12}>
             <TextField
@@ -156,24 +155,7 @@ export const RefundFormComponent = ({
               error={!!errors.applicantName}
               helperText={errors.applicantName?.message}
             />
-          </Grid>
-          {/* Address */}
-          <Grid size={12}>
-            <TextField
-              fullWidth
-              required
-              multiline
-              rows={4}
-              label={t("REFUNDS.FORM.ADDRESS")}
-              {...register("address", {
-                required: t("ERRORS.REQUIRED"),
-              })}
-              error={!!errors.address}
-              helperText={errors.address?.message}
-              disabled={!movedHouse}
-            />
-          </Grid>
-
+          </Grid>{" "}
           {/* Moved House */}
           <Grid size={12}>
             <FormControl fullWidth>
@@ -195,7 +177,25 @@ export const RefundFormComponent = ({
               />
             </FormControl>
           </Grid>
-
+          {/* Address */}
+          <Grid size={12}>
+            <TextField
+              fullWidth
+              required
+              multiline
+              rows={4}
+              label={t("REFUNDS.FORM.ADDRESS")}
+              {...register("address", {
+                required: t("ERRORS.REQUIRED"),
+                validate: (value) =>
+                  /\S[\s\S]*\n[\s\S]*\S/.test(value ?? "") ||
+                  t("ERRORS.ADDRESS_MIN_TWO_LINES"),
+              })}
+              error={!!errors.address}
+              helperText={errors.address?.message}
+              disabled={!movedHouse}
+            />
+          </Grid>
           {/* TRN/PPSN 
           <Grid size={12}>
             <TextField
@@ -210,14 +210,12 @@ export const RefundFormComponent = ({
               helperText={errors.trnPpsn?.message}
             />
           </Grid>*/}
-
           {/* Contact Information */}
           <Grid size={12}>
             <Typography variant="h6" gutterBottom>
               {t("REFUNDS.FORM.CONTACT_INFO")}
             </Typography>
           </Grid>
-
           <Grid size={isMobile ? 12 : 6}>
             <TextField
               fullWidth
@@ -235,7 +233,6 @@ export const RefundFormComponent = ({
               helperText={errors.email?.message}
             />
           </Grid>
-
           <Grid size={isMobile ? 12 : 6}>
             <IntlTelInputComponent
               ref={iniTelRef}
@@ -245,14 +242,12 @@ export const RefundFormComponent = ({
               }}
             />
           </Grid>
-
           {/* Refund Details */}
           <Grid size={12}>
             <Typography variant="h6" gutterBottom>
               {t("REFUNDS.FORM.REFUND_DETAILS")}
             </Typography>
           </Grid>
-
           {/* Refund Reason
           <Grid size={12}>
             <TextField
@@ -271,12 +266,10 @@ export const RefundFormComponent = ({
               helperText={errors.refundReason?.message}
             />
           </Grid> */}
-
           {/* Amount and Currency */}
           <Grid size={isMobile ? 12 : 6}>
             <TextField
               fullWidth
-              required
               type="number"
               label={t("REFUNDS.FORM.AMOUNT")}
               {...register("amount", {
@@ -287,10 +280,10 @@ export const RefundFormComponent = ({
               helperText={errors.amount?.message}
               InputProps={{
                 startAdornment: <Typography>€</Typography>,
+                readOnly: true,
               }}
             />
           </Grid>
-
           <Grid size={isMobile ? 12 : 6}>
             <Alert severity="info" sx={{ mt: isMobile ? 0 : -0.5 }}>
               {t("REFUNDS.FORM.MIN_AMOUNT_NOTICE", {
@@ -298,7 +291,6 @@ export const RefundFormComponent = ({
               })}
             </Alert>
           </Grid>
-
           {/* Joint Tenancy */}
           <Grid size={12} sx={{ display: "none" }}>
             <FormControl fullWidth>
@@ -320,14 +312,12 @@ export const RefundFormComponent = ({
               />
             </FormControl>
           </Grid>
-
           {/* Payment Information */}
           <Grid size={12}>
             <Typography variant="h6" gutterBottom>
               {t("REFUNDS.FORM.PAYMENT_INFO")}
             </Typography>
           </Grid>
-
           {/* IBAN */}
           <Grid size={12}>
             <TextField
@@ -349,7 +339,6 @@ export const RefundFormComponent = ({
               helperText={errors.iban?.message}
             />
           </Grid>
-
           {/* BIC */}
           <Grid size={12}>
             <TextField
@@ -367,7 +356,6 @@ export const RefundFormComponent = ({
               helperText={errors.bic?.message}
             />
           </Grid>
-
           {/* Document Upload */}
           <Grid size={12}>
             <Box

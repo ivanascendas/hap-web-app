@@ -16,9 +16,10 @@ import {
 import { StatementQueryParams } from "@shared/dtos/statement.dtos";
 import React, { useState } from "react";
 import { HeaderStatementComponent } from "./components/Header.component";
+import { useConfiguration } from "@shared/hooks/useConfiguration";
 
 export const StatementComponent = (): JSX.Element => {
-  const { department } = useParams();
+  const department = useConfiguration().config?.depDefaultValue;
   const { t } = useTranslation();
   const [dto, setDto] = React.useState<StatementQueryParams | null>(null);
   const [downloadPdf] = useLazyDownloadRatesPdfQuery();

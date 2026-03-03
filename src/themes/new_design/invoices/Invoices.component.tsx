@@ -29,7 +29,7 @@ export const InvoicesComponent = (): JSX.Element => {
           className={showMonthly ? "" : "page_wrap_height"}
         >
           <Button
-            onClick={() => navigate("/statements/rates")}
+            onClick={() => navigate("/statements")}
             startIcon={<WestIcon />}
             sx={{
               marginLeft: "2.56rem",

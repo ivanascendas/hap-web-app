@@ -54,9 +54,7 @@ export const Redirect = (): JSX.Element => {
   if (!auth.isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   } else {
-    return (
-      <Navigate to="/statements/rates" state={{ from: location }} replace />
-    );
+    return <Navigate to="/statements" state={{ from: location }} replace />;
   }
 };
 
@@ -83,7 +81,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <LoginFormComponent successUrl={"/statements/rates"} />,
+    element: <LoginFormComponent successUrl={"/statements"} />,
   },
 
   {
@@ -265,7 +263,7 @@ export const router = createBrowserRouter([
   },
   {
     index: true,
-    path: "/statements/:department",
+    path: "/statements",
     element: <Protected component={<StatementComponent />} />,
   },
 

@@ -1,18 +1,15 @@
 import React from "react";
 import {
-  Avatar,
   Box,
-  Button,
-  IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Modal,
   Toolbar,
   Typography,
 } from "@mui/material";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Drawer from "@mui/material/Drawer";
 import { useTranslation } from "react-i18next";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
@@ -25,7 +22,7 @@ import ErrorRoundedIcon from "@mui/icons-material/ErrorRounded";
 import "./Drawer.component.scss";
 import logo from "../../../../assets/img/HAP2.png";
 import { useSelector } from "react-redux";
-import { selectBalance, selectUser } from "@shared/redux/slices/authSlice";
+import { selectUser } from "@shared/redux/slices/authSlice";
 import useWindowDimensions from "@shared/hooks/useWindowDimensions";
 import { forwardRef, useEffect } from "react";
 import {
@@ -37,11 +34,9 @@ import { useGetDepartmentsMutation } from "@shared/services/Department.service";
 import { useAuth } from "@shared/providers/Auth.provider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { selectUnreadNotificationsCount } from "@shared/redux/slices/notificationsSlice";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import currency from "@shared/utils/currency";
+
 import { useLazyGetBalanceQuery } from "@shared/services/Statements.service";
 import moment from "moment";
-import { stringToColor } from "@shared/utils/stringToColor";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import { useConfig } from "@shared/providers/Configuration.provider";
@@ -56,10 +51,9 @@ export type DrawerProps = {
 export type NavItem = { icon: JSX.Element; url: string };
 
 export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(
-  ({ anchor, open, onClose, openContactPopup }: DrawerProps, ref) => {
+  ({ open, onClose, openContactPopup }: DrawerProps, ref) => {
     const user = useSelector(selectUser);
 
-    const balance = useSelector(selectBalance);
     const { width } = useWindowDimensions();
     const { isAuthenticated } = useAuth();
     const unreadCount = useSelector(selectUnreadNotificationsCount);
@@ -78,7 +72,7 @@ export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(
       [key: string]: { icon: JSX.Element; url: string };
     } = {
       ["RENTS"]: { icon: <LocalAtmOutlinedIcon />, url: "/statements/rents" },
-      ["RATES"]: { icon: <EuroOutlinedIcon />, url: "/statements/rates" },
+      ["RATES"]: { icon: <EuroOutlinedIcon />, url: "/statements" },
       ["LOANS"]: { icon: <CreditScoreIcon />, url: "/statements/loans" },
       ["LOAN_INFO"]: {
         icon: <ErrorRoundedIcon />,
@@ -89,7 +83,9 @@ export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(
 
     const handleClick = (url: string) => {
       navigate(url);
-      onClose && onClose();
+      if (onClose) {
+        onClose();
+      }
     };
 
     useEffect(() => {
@@ -214,8 +210,20 @@ export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(
                   </div>
                 </ListItemButton>
               </ListItem>
+              <ListItem disablePadding>
+                <ListItemButton
+                  onClick={() => handleClick(`/account`)}
+                  selected={location.pathname.includes(`/account`)}
+                >
+                  <ListItemIcon>
+                    {" "}
+                    <AccountCircleIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={t("MAIN.MENU.ACCOUNT")} />
+                </ListItemButton>
+              </ListItem>
 
-              <ListItem>
+              {/*<ListItem>
                 <Box className="profile-block">
                   <Box
                     className="user-info"
@@ -267,7 +275,7 @@ export const DrawerComponent = forwardRef<HTMLDivElement, DrawerProps>(
                     Pay Now
                   </Button>
                 </Box>
-              </ListItem>
+              </ListItem>*/}
             </List>
             <List sx={{ marginTop: "auto" }}>
               <ListItem disablePadding>

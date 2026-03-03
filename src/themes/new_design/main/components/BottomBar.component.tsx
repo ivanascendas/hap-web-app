@@ -60,7 +60,7 @@ export const BottomBarComponent = () => {
           <IconButton
             color="inherit"
             className={`mobile-menu__item ${location.pathname.startsWith("/statements") ? "active" : ""}`}
-            onClick={() => navigate("/statements/rates")}
+            onClick={() => navigate("/statements")}
             aria-label={t("CONTENTS.NAV.STATEMENT")}
           >
             <MenuIcon />

@@ -77,7 +77,7 @@ export const MfaLogin = ({
     if (result.isSuccess) {
       dispatch(setToken(result.data));
       setTimeout(() => {
-        navigate("/statements/rates");
+        navigate("/statements");
       }, 0);
     }
   }, [result]);

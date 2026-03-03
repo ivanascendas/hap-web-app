@@ -67,7 +67,7 @@ export const RegMfaFormComponent = (): JSX.Element => {
   useEffect(() => {
     console.log({ token });
     if (token) {
-      navigate("/statements/rates");
+      navigate("/statements");
       console.log({ token });
     }
   }, [token]);

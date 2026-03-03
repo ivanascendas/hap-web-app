@@ -283,7 +283,7 @@ export const PayComponent = ({ onClose }: PayComponentProps): JSX.Element => {
                 sx={{ margin: "0 3rem" }}
                 className="btn-secondary"
                 startIcon={<WestIcon />}
-                onClick={() => navigate("/statements/rates")}
+                onClick={() => navigate("/statements")}
               >
                 {t("PAYMENT.BACK_TO_STAT")}
               </Button>

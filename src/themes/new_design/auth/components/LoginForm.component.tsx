@@ -22,7 +22,6 @@ import { getErrorMessage } from "@shared/utils/getErrorMessage";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "@shared/redux/slices/authSlice";
 import { MfaLogin } from "./MfaLogin.component";
-import { NotificationComponent } from "@shared/components/Notification.component";
 import StorageService from "@shared/services/Storage.service";
 import { setError } from "@shared/redux/slices/errorSlice";
 import { useAuth } from "@shared/providers/Auth.provider";
@@ -103,7 +102,7 @@ export const LoginFormComponent = ({
 
   useEffect(() => {
     if (auth.isTokenRecived && auth.isAuthenticated) {
-      navigate(successUrl || "/statements/rates", {
+      navigate(successUrl || "/statements", {
         state: { from: location },
       });
     }
@@ -145,7 +144,7 @@ export const LoginFormComponent = ({
           ) : (
             <>
               <h1 className="auth-form__title">{t("SIGN_IN.TITLE")}</h1>
-              {(!successUrl || successUrl === "/statements/rates") && (
+              {(!successUrl || successUrl === "/statements") && (
                 <div className="auth-form__subtitle">
                   {t("SIGN_IN.SUB_TITLE")}
                 </div>
@@ -153,7 +152,7 @@ export const LoginFormComponent = ({
               <form
                 className="auth-form__form"
                 onSubmit={handleSubmit(
-                  !successUrl || successUrl === "/statements/rates"
+                  !successUrl || successUrl === "/statements"
                     ? submitHandler
                     : submitAdminHandler,
                 )}

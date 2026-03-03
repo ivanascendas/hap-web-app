@@ -475,7 +475,7 @@ export const PaymentComponent = (): JSX.Element => {
       >
         <Button
           sx={{ display: { xs: "none !important", md: "flex !important" } }}
-          onClick={() => navigate("/statements/rates")}
+          onClick={() => navigate("/statements")}
           startIcon={<WestIcon />}
         >
           {t("BUTTONS.BACK_TO_STATEMENTS")}
