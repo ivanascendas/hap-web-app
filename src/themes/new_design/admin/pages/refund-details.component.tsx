@@ -278,14 +278,14 @@ export const RefundDetailsComponent: React.FC = () => {
                   </Typography>
                   <Typography variant="body2">{application.bic}</Typography>
                 </Grid>
-                <Grid size={3}>
+                <Grid size={3} sx={{ display: "none" }}>
                   <Typography variant="caption" color="text.secondary">
                     TRN/PPSN
                   </Typography>
                   <Typography variant="body2">{application.trnPpsn}</Typography>
                 </Grid>
               </Grid>
-              <Grid size={12}>
+              <Grid size={12} sx={{ display: "none" }}>
                 <Typography variant="caption" color="text.secondary">
                   Refund Reason
                 </Typography>
@@ -391,7 +391,7 @@ export const RefundDetailsComponent: React.FC = () => {
                       })
                     }
                   >
-                    Assign (L{level})
+                    Assign To Me (L{level})
                   </Button>
                 )}
                 {canApprove && (
