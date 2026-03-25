@@ -66,78 +66,106 @@ export const hasPermission = (
     // DMU Level 1 actions
     case "approveL1":
       return (
-        !!user.isAdmin &&
-        isAssigned &&
-        status === RefundStatus.AssignedL1 &&
-        user.customerNo === assignedToId
+        (!!user.isSuperAdmin &&
+          (status === RefundStatus.AssignedL1 ||
+            status === RefundStatus.PendingL1)) ||
+        (!!user.isAdmin &&
+          isAssigned &&
+          status === RefundStatus.AssignedL1 &&
+          user.customerNo === assignedToId)
       );
     case "unassign":
-      return !!user.isAdmin && isAssigned && user.customerNo === assignedToId;
+      return (
+        (!!user.isAdmin && isAssigned && user.customerNo === assignedToId) ||
+        !!user.isSuperAdmin
+      );
 
     case "rejectL1":
       return (
-        !!user.isAdmin &&
-        isAssigned &&
-        status === RefundStatus.AssignedL1 &&
-        user.customerNo === assignedToId
+        (!!user.isAdmin &&
+          isAssigned &&
+          status === RefundStatus.AssignedL1 &&
+          user.customerNo === assignedToId) ||
+        (!!user.isSuperAdmin &&
+          (status === RefundStatus.AssignedL1 ||
+            status === RefundStatus.PendingL1))
       );
 
     case "requestInfoL1":
       return (
-        !!user.isAdmin &&
-        isAssigned &&
-        status === RefundStatus.AssignedL1 &&
-        user.customerNo === assignedToId
+        (!!user.isAdmin &&
+          isAssigned &&
+          status === RefundStatus.AssignedL1 &&
+          user.customerNo === assignedToId) ||
+        (!!user.isSuperAdmin &&
+          (status === RefundStatus.AssignedL1 ||
+            status === RefundStatus.PendingL1))
       );
 
     // DMU Level 2 actions
     case "approveL2":
       return (
-        !!user.isAdmin &&
-        isAssigned &&
-        status === RefundStatus.AssignedL2 &&
-        user.customerNo === assignedToId
+        (!!user.isAdmin &&
+          isAssigned &&
+          status === RefundStatus.AssignedL2 &&
+          user.customerNo === assignedToId) ||
+        (!!user.isSuperAdmin &&
+          (status === RefundStatus.AssignedL2 ||
+            status === RefundStatus.PendingL2))
       );
 
     case "rejectL2":
       return (
-        !!user.isAdmin &&
-        isAssigned &&
-        status === RefundStatus.AssignedL2 &&
-        user.customerNo === assignedToId
+        (!!user.isAdmin &&
+          isAssigned &&
+          status === RefundStatus.AssignedL2 &&
+          user.customerNo === assignedToId) ||
+        (!!user.isSuperAdmin &&
+          (status === RefundStatus.AssignedL2 ||
+            status === RefundStatus.PendingL2))
       );
 
     case "requestInfoL2":
       return (
-        !!user.isAdmin &&
-        isAssigned &&
-        status === RefundStatus.AssignedL2 &&
-        user.customerNo === assignedToId
+        (!!user.isAdmin &&
+          isAssigned &&
+          status === RefundStatus.AssignedL2 &&
+          user.customerNo === assignedToId) ||
+        (!!user.isSuperAdmin &&
+          (status === RefundStatus.AssignedL2 ||
+            status === RefundStatus.PendingL2))
       );
 
     // AP Level 3 actions
     case "approveL3":
       return (
-        !!user.isAdmin &&
-        isAssigned &&
-        status === RefundStatus.AssignedAP &&
-        user.customerNo === assignedToId
+        (!!user.isAdmin &&
+          isAssigned &&
+          status === RefundStatus.AssignedAP &&
+          user.customerNo === assignedToId) ||
+        (!!user.isSuperAdmin &&
+          (status === RefundStatus.AssignedAP ||
+            status === RefundStatus.PendingAP))
       );
 
     case "rejectL3":
       return (
-        !!user.isAdmin &&
-        isAssigned &&
-        status === RefundStatus.AssignedAP &&
-        user.customerNo === assignedToId
+        (!!user.isAdmin &&
+          isAssigned &&
+          status === RefundStatus.AssignedAP &&
+          user.customerNo === assignedToId) ||
+        (!!user.isSuperAdmin &&
+          (status === RefundStatus.AssignedAP ||
+            status === RefundStatus.PendingAP))
       );
 
     // Cancel action (available to all admin roles before final statuses)
     case "cancel":
       return (
-        ((!!user.isAdmin && user.customerNo === assignedToId) ||
+        (((!!user.isAdmin && user.customerNo === assignedToId) ||
           !!user.isSuperAdmin) &&
-        !finalStatuses.includes(status)
+          !finalStatuses.includes(status)) ||
+        (!!user.isSuperAdmin && !finalStatuses.includes(status))
       );
     case "reassign":
       return !!user.isSuperAdmin && isAssigned;
