@@ -179,6 +179,106 @@ export const RefundDetailsComponent: React.FC = () => {
       </Box>
 
       <Grid container spacing={3}>
+        {/* Action Buttons */}
+        {(canAssign ||
+          canReassign ||
+          canUnassign ||
+          canApprove ||
+          canReject ||
+          canRequestInfo ||
+          canCancel) && (
+          <Grid size={12}>
+            <Paper
+              className="details-section"
+              sx={{ backgroundColor: "#ffffff" }}
+            >
+              <Typography variant="h6" className="section-title">
+                Actions
+              </Typography>
+              <Divider sx={{ mb: 2 }} />
+              <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+                {canReassign && (
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    startIcon={<SwapHoriz />}
+                    onClick={() => setModalOpen("reassign")}
+                  >
+                    Reassign
+                  </Button>
+                )}
+                {canUnassign && (
+                  <Button
+                    variant="contained"
+                    color="error"
+                    startIcon={<Cancel />}
+                    onClick={() =>
+                      unassignApplication({
+                        applicationId: application.applicationId,
+                      })
+                    }
+                  >
+                    Unassign (L{level})
+                  </Button>
+                )}
+                {canAssign && (
+                  <Button
+                    variant="contained"
+                    color="success"
+                    startIcon={<CheckCircle />}
+                    onClick={() =>
+                      assignApplication({
+                        applicationId: application.applicationId,
+                      })
+                    }
+                  >
+                    Assign To Me (L{level})
+                  </Button>
+                )}
+                {canApprove && (
+                  <Button
+                    variant="contained"
+                    color="success"
+                    startIcon={<CheckCircle />}
+                    onClick={() => setModalOpen("approve")}
+                  >
+                    Approve (L{level})
+                  </Button>
+                )}
+                {canReject && (
+                  <Button
+                    variant="contained"
+                    color="error"
+                    startIcon={<Cancel />}
+                    onClick={() => setModalOpen("reject")}
+                  >
+                    Reject (L{level})
+                  </Button>
+                )}
+                {canRequestInfo && (
+                  <Button
+                    variant="contained"
+                    color="info"
+                    startIcon={<Info />}
+                    onClick={() => setModalOpen("requestInfo")}
+                  >
+                    Request Info (L{level})
+                  </Button>
+                )}
+                {canCancel && (
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    startIcon={<Block />}
+                    onClick={() => setModalOpen("cancel")}
+                  >
+                    Cancel Application
+                  </Button>
+                )}
+              </Box>
+            </Paper>
+          </Grid>
+        )}
         {/* Application Summary */}
         <Grid size={12}>
           <Paper className="details-section">
@@ -334,107 +434,6 @@ export const RefundDetailsComponent: React.FC = () => {
               </Typography>
               <Divider sx={{ mb: 2 }} />
               <ApprovalHistoryTimeline steps={application.approvalSteps} />
-            </Paper>
-          </Grid>
-        )}
-
-        {/* Action Buttons */}
-        {(canAssign ||
-          canReassign ||
-          canUnassign ||
-          canApprove ||
-          canReject ||
-          canRequestInfo ||
-          canCancel) && (
-          <Grid size={12}>
-            <Paper
-              className="details-section"
-              sx={{ backgroundColor: "#ffffff" }}
-            >
-              <Typography variant="h6" className="section-title">
-                Actions
-              </Typography>
-              <Divider sx={{ mb: 2 }} />
-              <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-                {canReassign && (
-                  <Button
-                    variant="contained"
-                    color="warning"
-                    startIcon={<SwapHoriz />}
-                    onClick={() => setModalOpen("reassign")}
-                  >
-                    Reassign
-                  </Button>
-                )}
-                {canUnassign && (
-                  <Button
-                    variant="contained"
-                    color="error"
-                    startIcon={<Cancel />}
-                    onClick={() =>
-                      unassignApplication({
-                        applicationId: application.applicationId,
-                      })
-                    }
-                  >
-                    Unassign (L{level})
-                  </Button>
-                )}
-                {canAssign && (
-                  <Button
-                    variant="contained"
-                    color="success"
-                    startIcon={<CheckCircle />}
-                    onClick={() =>
-                      assignApplication({
-                        applicationId: application.applicationId,
-                      })
-                    }
-                  >
-                    Assign To Me (L{level})
-                  </Button>
-                )}
-                {canApprove && (
-                  <Button
-                    variant="contained"
-                    color="success"
-                    startIcon={<CheckCircle />}
-                    onClick={() => setModalOpen("approve")}
-                  >
-                    Approve (L{level})
-                  </Button>
-                )}
-                {canReject && (
-                  <Button
-                    variant="contained"
-                    color="error"
-                    startIcon={<Cancel />}
-                    onClick={() => setModalOpen("reject")}
-                  >
-                    Reject (L{level})
-                  </Button>
-                )}
-                {canRequestInfo && (
-                  <Button
-                    variant="contained"
-                    color="info"
-                    startIcon={<Info />}
-                    onClick={() => setModalOpen("requestInfo")}
-                  >
-                    Request Info (L{level})
-                  </Button>
-                )}
-                {canCancel && (
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    startIcon={<Block />}
-                    onClick={() => setModalOpen("cancel")}
-                  >
-                    Cancel Application
-                  </Button>
-                )}
-              </Box>
             </Paper>
           </Grid>
         )}
