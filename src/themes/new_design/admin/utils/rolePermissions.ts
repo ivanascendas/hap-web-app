@@ -77,7 +77,7 @@ export const hasPermission = (
     case "unassign":
       return (
         (!!user.isAdmin && isAssigned && user.customerNo === assignedToId) ||
-        !!user.isSuperAdmin
+        (isAssigned && !!user.isSuperAdmin)
       );
 
     case "rejectL1":
