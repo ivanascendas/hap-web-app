@@ -149,336 +149,340 @@ export const RefundDetailsComponent: React.FC = () => {
   };
 
   return (
-    <Box
-      className="refund-details"
-      sx={{ height: "calc(100vh - 15rem)", overflowY: "auto", pb: 10 }}
-    >
-      {/* Header */}
-      <Box sx={{ mb: 3, display: "flex", alignItems: "center", gap: 2 }}>
-        <Button
-          startIcon={<ArrowBack />}
-          onClick={() => navigate("/admin/refunds")}
-          variant="outlined"
-        >
-          Back
-        </Button>
-        <Typography variant="h5" sx={{ flex: 1 }}>
-          Refund Application Details
-        </Typography>
-        <RefundStatusBadge
-          assignName={
-            application.status === RefundStatus.AssignedL1 ||
-            application.status === RefundStatus.AssignedL2 ||
-            application.status === RefundStatus.AssignedAP
-              ? application.assignedToId
-              : undefined
-          }
-          status={application.status}
-          size="medium"
-        />
-      </Box>
+    <Box sx={{ height: "calc(100vh - 15rem)", overflowY: "auto", pb: 10 }}>
+      <Box className="refund-details">
+        {/* Header */}
+        <Box sx={{ mb: 3, display: "flex", alignItems: "center", gap: 2 }}>
+          <Button
+            startIcon={<ArrowBack />}
+            onClick={() => navigate("/admin/refunds")}
+            variant="outlined"
+          >
+            Back
+          </Button>
+          <Typography variant="h5" sx={{ flex: 1 }}>
+            Refund Application Details
+          </Typography>
+          <RefundStatusBadge
+            assignName={
+              application.status === RefundStatus.AssignedL1 ||
+              application.status === RefundStatus.AssignedL2 ||
+              application.status === RefundStatus.AssignedAP
+                ? application.assignedToId
+                : undefined
+            }
+            status={application.status}
+            size="medium"
+          />
+        </Box>
 
-      <Grid container spacing={3}>
-        {/* Action Buttons */}
-        {(canAssign ||
-          canReassign ||
-          canUnassign ||
-          canApprove ||
-          canReject ||
-          canRequestInfo ||
-          canCancel) && (
+        <Grid container spacing={3}>
+          {/* Action Buttons */}
+          {(canAssign ||
+            canReassign ||
+            canUnassign ||
+            canApprove ||
+            canReject ||
+            canRequestInfo ||
+            canCancel) && (
+            <Grid size={12}>
+              <Paper
+                className="details-section"
+                sx={{ backgroundColor: "#ffffff" }}
+              >
+                <Typography variant="h6" className="section-title">
+                  Actions
+                </Typography>
+                <Divider sx={{ mb: 2 }} />
+                <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+                  {canReassign && (
+                    <Button
+                      variant="contained"
+                      color="warning"
+                      startIcon={<SwapHoriz />}
+                      onClick={() => setModalOpen("reassign")}
+                    >
+                      Reassign
+                    </Button>
+                  )}
+                  {canUnassign && (
+                    <Button
+                      variant="contained"
+                      color="error"
+                      startIcon={<Cancel />}
+                      onClick={() =>
+                        unassignApplication({
+                          applicationId: application.applicationId,
+                        })
+                      }
+                    >
+                      Unassign (L{level})
+                    </Button>
+                  )}
+                  {canAssign && (
+                    <Button
+                      variant="contained"
+                      color="success"
+                      startIcon={<CheckCircle />}
+                      onClick={() =>
+                        assignApplication({
+                          applicationId: application.applicationId,
+                        })
+                      }
+                    >
+                      Assign To Me (L{level})
+                    </Button>
+                  )}
+                  {canApprove && (
+                    <Button
+                      variant="contained"
+                      color="success"
+                      startIcon={<CheckCircle />}
+                      onClick={() => setModalOpen("approve")}
+                    >
+                      Approve (L{level})
+                    </Button>
+                  )}
+                  {canReject && (
+                    <Button
+                      variant="contained"
+                      color="error"
+                      startIcon={<Cancel />}
+                      onClick={() => setModalOpen("reject")}
+                    >
+                      Reject (L{level})
+                    </Button>
+                  )}
+                  {canRequestInfo && (
+                    <Button
+                      variant="contained"
+                      color="info"
+                      startIcon={<Info />}
+                      onClick={() => setModalOpen("requestInfo")}
+                    >
+                      Request Info (L{level})
+                    </Button>
+                  )}
+                  {canCancel && (
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      startIcon={<Block />}
+                      onClick={() => setModalOpen("cancel")}
+                    >
+                      Cancel Application
+                    </Button>
+                  )}
+                </Box>
+              </Paper>
+            </Grid>
+          )}
+          {/* Application Summary */}
           <Grid size={12}>
-            <Paper
-              className="details-section"
-              sx={{ backgroundColor: "#ffffff" }}
-            >
+            <Paper className="details-section">
               <Typography variant="h6" className="section-title">
-                Actions
+                Application Summary
               </Typography>
               <Divider sx={{ mb: 2 }} />
-              <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-                {canReassign && (
-                  <Button
-                    variant="contained"
-                    color="warning"
-                    startIcon={<SwapHoriz />}
-                    onClick={() => setModalOpen("reassign")}
-                  >
-                    Reassign
-                  </Button>
-                )}
-                {canUnassign && (
-                  <Button
-                    variant="contained"
-                    color="error"
-                    startIcon={<Cancel />}
-                    onClick={() =>
-                      unassignApplication({
-                        applicationId: application.applicationId,
-                      })
-                    }
-                  >
-                    Unassign (L{level})
-                  </Button>
-                )}
-                {canAssign && (
-                  <Button
-                    variant="contained"
-                    color="success"
-                    startIcon={<CheckCircle />}
-                    onClick={() =>
-                      assignApplication({
-                        applicationId: application.applicationId,
-                      })
-                    }
-                  >
-                    Assign To Me (L{level})
-                  </Button>
-                )}
-                {canApprove && (
-                  <Button
-                    variant="contained"
-                    color="success"
-                    startIcon={<CheckCircle />}
-                    onClick={() => setModalOpen("approve")}
-                  >
-                    Approve (L{level})
-                  </Button>
-                )}
-                {canReject && (
-                  <Button
-                    variant="contained"
-                    color="error"
-                    startIcon={<Cancel />}
-                    onClick={() => setModalOpen("reject")}
-                  >
-                    Reject (L{level})
-                  </Button>
-                )}
-                {canRequestInfo && (
-                  <Button
-                    variant="contained"
-                    color="info"
-                    startIcon={<Info />}
-                    onClick={() => setModalOpen("requestInfo")}
-                  >
-                    Request Info (L{level})
-                  </Button>
-                )}
-                {canCancel && (
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    startIcon={<Block />}
-                    onClick={() => setModalOpen("cancel")}
-                  >
-                    Cancel Application
-                  </Button>
-                )}
-              </Box>
-            </Paper>
-          </Grid>
-        )}
-        {/* Application Summary */}
-        <Grid size={12}>
-          <Paper className="details-section">
-            <Typography variant="h6" className="section-title">
-              Application Summary
-            </Typography>
-            <Divider sx={{ mb: 2 }} />
-            <Grid container spacing={2}>
-              <Grid size={3}>
-                <Typography variant="caption" color="text.secondary">
-                  Application ID
-                </Typography>
-                <Typography variant="body2" fontFamily="monospace">
-                  {application.referenceCode}
-                </Typography>
-              </Grid>
-              <Grid size={3}>
-                <Typography variant="caption" color="text.secondary">
-                  Amount
-                </Typography>
-                <Typography variant="body2" fontWeight={600}>
-                  {formatCurrency(application.amount, application.currency)}
-                </Typography>
-              </Grid>
-              <Grid size={3}>
-                <Typography variant="caption" color="text.secondary">
-                  Created
-                </Typography>
-                <Typography variant="body2">
-                  {formatDate(application.createdAt)}
-                </Typography>
-              </Grid>
-              <Grid size={3}>
-                <Typography variant="caption" color="text.secondary">
-                  Updated
-                </Typography>
-                <Typography variant="body2">
-                  {formatDate(application.updatedAt)}
-                </Typography>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
-
-        {/* Applicant Info */}
-        <Grid size={12}>
-          <Paper className="details-section">
-            <Typography variant="h6" className="section-title">
-              Applicant Information
-            </Typography>
-            <Divider sx={{ mb: 2 }} />
-            <Grid container spacing={2}>
-              <Grid size={3}>
-                <Typography variant="caption" color="text.secondary">
-                  Name
-                </Typography>
-                <Typography variant="body2">
-                  {application.applicantName}
-                </Typography>
-              </Grid>
-              <Grid size={3}>
-                <Typography variant="caption" color="text.secondary">
-                  Customer No
-                </Typography>
-                <Typography variant="body2">{application.tenantId}</Typography>
-              </Grid>
-              <Grid size={3}>
-                <Typography variant="caption" color="text.secondary">
-                  Email
-                </Typography>
-                <Typography variant="body2">{application.email}</Typography>
-              </Grid>
-              <Grid size={3}>
-                <Typography variant="caption" color="text.secondary">
-                  Phone
-                </Typography>
-                <Typography variant="body2">
-                  {application.phoneCode} {application.phone}
-                </Typography>
-              </Grid>
-              <Grid size={12}>
-                <Typography variant="caption" color="text.secondary">
-                  Address
-                </Typography>
-                <Typography variant="body2">{application.address}</Typography>
-              </Grid>
-              <Grid size={12} container spacing={2}>
-                <Grid size={6}>
+              <Grid container spacing={2}>
+                <Grid size={3}>
                   <Typography variant="caption" color="text.secondary">
-                    IBAN
+                    Application ID
                   </Typography>
-                  <Typography variant="body2">{application.iban}</Typography>
+                  <Typography variant="body2" fontFamily="monospace">
+                    {application.referenceCode}
+                  </Typography>
                 </Grid>
                 <Grid size={3}>
                   <Typography variant="caption" color="text.secondary">
-                    BIC
+                    Amount
                   </Typography>
-                  <Typography variant="body2">{application.bic}</Typography>
+                  <Typography variant="body2" fontWeight={600}>
+                    {formatCurrency(application.amount, application.currency)}
+                  </Typography>
                 </Grid>
-                <Grid size={3} sx={{ display: "none" }}>
+                <Grid size={3}>
                   <Typography variant="caption" color="text.secondary">
-                    TRN/PPSN
+                    Created
                   </Typography>
-                  <Typography variant="body2">{application.trnPpsn}</Typography>
+                  <Typography variant="body2">
+                    {formatDate(application.createdAt)}
+                  </Typography>
+                </Grid>
+                <Grid size={3}>
+                  <Typography variant="caption" color="text.secondary">
+                    Updated
+                  </Typography>
+                  <Typography variant="body2">
+                    {formatDate(application.updatedAt)}
+                  </Typography>
                 </Grid>
               </Grid>
-              <Grid size={12} sx={{ display: "none" }}>
-                <Typography variant="caption" color="text.secondary">
-                  Refund Reason
-                </Typography>
-                <Typography variant="body2">
-                  {application.refundReason}
-                </Typography>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Grid>
-
-        {/* Documents */}
-        <Grid
-          size={6}
-          sx={{
-            display:
-              application.documents && application.documents.length > 0
-                ? "block"
-                : "none",
-          }}
-        >
-          <Paper className="details-section">
-            <Typography variant="h6" className="section-title">
-              Documents
-            </Typography>
-            <Divider sx={{ mb: 2 }} />
-            <DocumentsList
-              documents={application.documents || []}
-              applicationId={application.applicationId}
-              onDownload={handleDownload}
-              onDocumentClick={(documentId) =>
-                navigate(
-                  `/admin/refunds/${application.applicationId}/documents/${documentId}`,
-                )
-              }
-            />
-          </Paper>
-        </Grid>
-
-        {/* Approval History */}
-        {application.approvalSteps && application.approvalSteps.length > 0 && (
-          <Grid size={6}>
-            <Paper className="details-section">
-              <Typography variant="h6" className="section-title">
-                Approval History
-              </Typography>
-              <Divider sx={{ mb: 2 }} />
-              <ApprovalHistoryTimeline steps={application.approvalSteps} />
             </Paper>
           </Grid>
-        )}
-      </Grid>
 
-      {/* Modals */}
-      {level && (
-        <>
-          <ApproveModal
-            open={modalOpen === "approve"}
-            applicationId={application.applicationId}
-            level={level}
-            onClose={() => setModalOpen(null)}
-            onSuccess={() => navigate("/admin/refunds")}
-          />
-          <RejectModal
-            open={modalOpen === "reject"}
-            applicationId={application.applicationId}
-            level={level}
-            onClose={() => setModalOpen(null)}
-            onSuccess={() => navigate("/admin/refunds")}
-          />
-          {level < 3 && (
-            <RequestInfoModal
-              open={modalOpen === "requestInfo"}
+          {/* Applicant Info */}
+          <Grid size={12}>
+            <Paper className="details-section">
+              <Typography variant="h6" className="section-title">
+                Applicant Information
+              </Typography>
+              <Divider sx={{ mb: 2 }} />
+              <Grid container spacing={2}>
+                <Grid size={3}>
+                  <Typography variant="caption" color="text.secondary">
+                    Name
+                  </Typography>
+                  <Typography variant="body2">
+                    {application.applicantName}
+                  </Typography>
+                </Grid>
+                <Grid size={3}>
+                  <Typography variant="caption" color="text.secondary">
+                    Customer No
+                  </Typography>
+                  <Typography variant="body2">
+                    {application.tenantId}
+                  </Typography>
+                </Grid>
+                <Grid size={3}>
+                  <Typography variant="caption" color="text.secondary">
+                    Email
+                  </Typography>
+                  <Typography variant="body2">{application.email}</Typography>
+                </Grid>
+                <Grid size={3}>
+                  <Typography variant="caption" color="text.secondary">
+                    Phone
+                  </Typography>
+                  <Typography variant="body2">
+                    {application.phoneCode} {application.phone}
+                  </Typography>
+                </Grid>
+                <Grid size={12}>
+                  <Typography variant="caption" color="text.secondary">
+                    Address
+                  </Typography>
+                  <Typography variant="body2">{application.address}</Typography>
+                </Grid>
+                <Grid size={12} container spacing={2}>
+                  <Grid size={6}>
+                    <Typography variant="caption" color="text.secondary">
+                      IBAN
+                    </Typography>
+                    <Typography variant="body2">{application.iban}</Typography>
+                  </Grid>
+                  <Grid size={3}>
+                    <Typography variant="caption" color="text.secondary">
+                      BIC
+                    </Typography>
+                    <Typography variant="body2">{application.bic}</Typography>
+                  </Grid>
+                  <Grid size={3} sx={{ display: "none" }}>
+                    <Typography variant="caption" color="text.secondary">
+                      TRN/PPSN
+                    </Typography>
+                    <Typography variant="body2">
+                      {application.trnPpsn}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Grid size={12} sx={{ display: "none" }}>
+                  <Typography variant="caption" color="text.secondary">
+                    Refund Reason
+                  </Typography>
+                  <Typography variant="body2">
+                    {application.refundReason}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid>
+
+          {/* Documents */}
+          <Grid
+            size={6}
+            sx={{
+              display:
+                application.documents && application.documents.length > 0
+                  ? "block"
+                  : "none",
+            }}
+          >
+            <Paper className="details-section">
+              <Typography variant="h6" className="section-title">
+                Documents
+              </Typography>
+              <Divider sx={{ mb: 2 }} />
+              <DocumentsList
+                documents={application.documents || []}
+                applicationId={application.applicationId}
+                onDownload={handleDownload}
+                onDocumentClick={(documentId) =>
+                  navigate(
+                    `/admin/refunds/${application.applicationId}/documents/${documentId}`,
+                  )
+                }
+              />
+            </Paper>
+          </Grid>
+
+          {/* Approval History */}
+          {application.approvalSteps &&
+            application.approvalSteps.length > 0 && (
+              <Grid size={6}>
+                <Paper className="details-section">
+                  <Typography variant="h6" className="section-title">
+                    Approval History
+                  </Typography>
+                  <Divider sx={{ mb: 2 }} />
+                  <ApprovalHistoryTimeline steps={application.approvalSteps} />
+                </Paper>
+              </Grid>
+            )}
+        </Grid>
+
+        {/* Modals */}
+        {level && (
+          <>
+            <ApproveModal
+              open={modalOpen === "approve"}
               applicationId={application.applicationId}
-              level={level as 1 | 2}
+              level={level}
               onClose={() => setModalOpen(null)}
               onSuccess={() => navigate("/admin/refunds")}
             />
-          )}
-        </>
-      )}
-      <ReassignModal
-        open={modalOpen === "reassign"}
-        applicationId={application.applicationId}
-        onClose={() => setModalOpen(null)}
-        onSuccess={() => navigate("/admin/refunds")}
-      />
-      <CancelModal
-        open={modalOpen === "cancel"}
-        applicationId={application.applicationId}
-        onClose={() => setModalOpen(null)}
-        onSuccess={() => navigate("/admin/refunds")}
-      />
+            <RejectModal
+              open={modalOpen === "reject"}
+              applicationId={application.applicationId}
+              level={level}
+              onClose={() => setModalOpen(null)}
+              onSuccess={() => navigate("/admin/refunds")}
+            />
+            {level < 3 && (
+              <RequestInfoModal
+                open={modalOpen === "requestInfo"}
+                applicationId={application.applicationId}
+                level={level as 1 | 2}
+                onClose={() => setModalOpen(null)}
+                onSuccess={() => navigate("/admin/refunds")}
+              />
+            )}
+          </>
+        )}
+        <ReassignModal
+          open={modalOpen === "reassign"}
+          applicationId={application.applicationId}
+          onClose={() => setModalOpen(null)}
+          onSuccess={() => navigate("/admin/refunds")}
+        />
+        <CancelModal
+          open={modalOpen === "cancel"}
+          applicationId={application.applicationId}
+          onClose={() => setModalOpen(null)}
+          onSuccess={() => navigate("/admin/refunds")}
+        />
+      </Box>
     </Box>
   );
 };

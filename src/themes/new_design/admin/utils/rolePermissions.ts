@@ -56,20 +56,34 @@ export const hasPermission = (
 
   switch (action) {
     case "assignL1":
-      return !!user.isAdmin && !isAssigned && status === RefundStatus.PendingL1;
+      return (
+        ((!!user.isAdmin && !isAssigned) ||
+          (isAssigned && !!user.isSuperAdmin)) &&
+        status === RefundStatus.PendingL1
+      );
     case "assignL2":
       // Assignment actions are not handled here
-      return !!user.isAdmin && !isAssigned && status === RefundStatus.PendingL2;
+      return (
+        ((!!user.isAdmin && !isAssigned) ||
+          (isAssigned && !!user.isSuperAdmin)) &&
+        status === RefundStatus.PendingL2
+      );
     case "assignL3":
       // Assignment actions are not handled here
-      return !!user.isAdmin && !isAssigned && status === RefundStatus.PendingAP;
+      return (
+        ((!!user.isAdmin && !isAssigned) ||
+          (isAssigned && !!user.isSuperAdmin)) &&
+        status === RefundStatus.PendingAP
+      );
     // DMU Level 1 actions
     case "approveL1":
       return (
         (!!user.isSuperAdmin &&
+          isAssigned &&
           (status === RefundStatus.AssignedL1 ||
             status === RefundStatus.PendingL1)) ||
         (!!user.isAdmin &&
+          isAssigned &&
           isAssigned &&
           status === RefundStatus.AssignedL1 &&
           user.customerNo === assignedToId)
@@ -87,6 +101,7 @@ export const hasPermission = (
           status === RefundStatus.AssignedL1 &&
           user.customerNo === assignedToId) ||
         (!!user.isSuperAdmin &&
+          isAssigned &&
           (status === RefundStatus.AssignedL1 ||
             status === RefundStatus.PendingL1))
       );
@@ -98,6 +113,7 @@ export const hasPermission = (
           status === RefundStatus.AssignedL1 &&
           user.customerNo === assignedToId) ||
         (!!user.isSuperAdmin &&
+          isAssigned &&
           (status === RefundStatus.AssignedL1 ||
             status === RefundStatus.PendingL1))
       );
@@ -110,6 +126,7 @@ export const hasPermission = (
           status === RefundStatus.AssignedL2 &&
           user.customerNo === assignedToId) ||
         (!!user.isSuperAdmin &&
+          isAssigned &&
           (status === RefundStatus.AssignedL2 ||
             status === RefundStatus.PendingL2))
       );
@@ -121,6 +138,7 @@ export const hasPermission = (
           status === RefundStatus.AssignedL2 &&
           user.customerNo === assignedToId) ||
         (!!user.isSuperAdmin &&
+          isAssigned &&
           (status === RefundStatus.AssignedL2 ||
             status === RefundStatus.PendingL2))
       );
@@ -132,6 +150,7 @@ export const hasPermission = (
           status === RefundStatus.AssignedL2 &&
           user.customerNo === assignedToId) ||
         (!!user.isSuperAdmin &&
+          isAssigned &&
           (status === RefundStatus.AssignedL2 ||
             status === RefundStatus.PendingL2))
       );
@@ -144,6 +163,7 @@ export const hasPermission = (
           status === RefundStatus.AssignedAP &&
           user.customerNo === assignedToId) ||
         (!!user.isSuperAdmin &&
+          isAssigned &&
           (status === RefundStatus.AssignedAP ||
             status === RefundStatus.PendingAP))
       );
@@ -155,6 +175,7 @@ export const hasPermission = (
           status === RefundStatus.AssignedAP &&
           user.customerNo === assignedToId) ||
         (!!user.isSuperAdmin &&
+          isAssigned &&
           (status === RefundStatus.AssignedAP ||
             status === RefundStatus.PendingAP))
       );
