@@ -374,6 +374,7 @@ export const RefundFormComponent = ({
                   message: t("ERRORS.INVALID_BIC"),
                 },
               })}
+              inputProps={{ style: { textTransform: "uppercase" } }}
               error={!!errors.bic}
               helperText={errors.bic?.message}
             />
