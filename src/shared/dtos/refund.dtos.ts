@@ -224,8 +224,17 @@ export interface VerifyBshResponse {
     bic: string | null;
     accountName: string | null;
     statementDate: string | null;
-    bicConfidence: number | null;
     customerAddress: string | null;
+    ibanConfidence: number | null;
+    isIbanLowConfidence: boolean;
+    bicConfidence: number | null;
+    isBicLowConfidence: boolean;
+    accountNameConfidence: number | null;
+    isAccountNameLowConfidence: boolean;
+    statementDateConfidence: number | null;
+    isStatementDateLowConfidence: boolean;
+    customerAddressConfidence: number | null;
+    isCustomerAddressLowConfidence: boolean;
   };
 }
 

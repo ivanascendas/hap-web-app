@@ -18,6 +18,7 @@ import {
 import type { RefundApplicationDto } from "@shared/dtos/refund.dtos";
 import type { VerifyBshResponse } from "@shared/dtos/refund.dtos";
 import { MaskedField } from "@shared/components/MaskedField";
+import { ConfidenceBadge } from "@shared/components/ConfidenceBadge";
 
 interface BshComparisonTableProps {
   selectedStatus: string;
@@ -103,13 +104,30 @@ export const BshComparisonTableComponent: React.FC<BshComparisonTableProps> = ({
       extractedValue: bshResult?.extracted?.iban || "-",
       renderForm: () => <MaskedField value={application?.iban} type="iban" />,
       renderExtracted: () => (
-        <MaskedField value={bshResult?.extracted?.iban} type="iban" />
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <MaskedField value={bshResult?.extracted?.iban} type="iban" />
+          <ConfidenceBadge
+            confidence={bshResult?.extracted?.ibanConfidence}
+            isLowConfidence={bshResult?.extracted?.isIbanLowConfidence}
+          />
+        </Box>
       ),
     },
     {
       field: "Address",
       formValue: application?.address || "-",
       extractedValue: bshResult?.extracted?.customerAddress || "-",
+      renderExtracted: () => (
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <span>{bshResult?.extracted?.customerAddress || "-"}</span>
+          <ConfidenceBadge
+            confidence={bshResult?.extracted?.customerAddressConfidence}
+            isLowConfidence={
+              bshResult?.extracted?.isCustomerAddressLowConfidence
+            }
+          />
+        </Box>
+      ),
     },
     {
       field: "Date",
@@ -119,6 +137,19 @@ export const BshComparisonTableComponent: React.FC<BshComparisonTableProps> = ({
       extractedValue: bshResult?.extracted?.statementDate
         ? new Date(bshResult.extracted.statementDate).toLocaleDateString()
         : "-",
+      renderExtracted: () => (
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <span>
+            {bshResult?.extracted?.statementDate
+              ? new Date(bshResult.extracted.statementDate).toLocaleDateString()
+              : "-"}
+          </span>
+          <ConfidenceBadge
+            confidence={bshResult?.extracted?.statementDateConfidence}
+            isLowConfidence={bshResult?.extracted?.isStatementDateLowConfidence}
+          />
+        </Box>
+      ),
     },
     {
       field: "LOP is Required",
