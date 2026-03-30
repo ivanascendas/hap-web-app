@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import type { RefundApplicationDto } from "@shared/dtos/refund.dtos";
 import type { VerifyBshResponse } from "@shared/dtos/refund.dtos";
 import { BshComparisonTableComponent } from "./BshComparisonTableComponent";
+import ErrorBoundary from "@shared/components/ErrorBoundary";
 
 interface BshComparisonDialogProps {
   open: boolean;
@@ -55,12 +56,14 @@ export const BshComparisonDialog: React.FC<BshComparisonDialogProps> = ({
         <Typography variant="h6">BSH Verification - Compare Data</Typography>
       </DialogTitle>
       <DialogContent>
-        <BshComparisonTableComponent
-          application={application}
-          bshResult={bshResult}
-          selectedStatus={selectedStatus}
-          handleStatusChange={handleStatusChange}
-        />
+        <ErrorBoundary name="BshComparison">
+          <BshComparisonTableComponent
+            application={application}
+            bshResult={bshResult}
+            selectedStatus={selectedStatus}
+            handleStatusChange={handleStatusChange}
+          />
+        </ErrorBoundary>
       </DialogContent>
       <DialogActions sx={{ p: 2, gap: 1 }}>
         <Button onClick={handleCancel} variant="outlined" disabled={isLoading}>

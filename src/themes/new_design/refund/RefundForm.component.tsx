@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Button,
@@ -27,6 +27,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import { IntlTelInputComponent } from "@shared/components/IntlTelInput.component";
 import { CreateRefundApplicationRequest } from "@shared/dtos/refund.dtos";
+import {
+  validateFiles,
+  ALLOWED_EXTENSIONS,
+} from "@shared/utils/fileValidation";
 import "./RefundForm.component.scss";
 import { useConfig } from "@shared/providers/Configuration.provider";
 import { validatePPSN } from "@shared/utils/validation.utils";
@@ -89,6 +93,10 @@ export const RefundFormComponent = ({
   // Screen size detection
   const isMobile = useMediaQuery("(max-width:768px)");
 
+  // File validation error state
+  const [headerFileError, setHeaderFileError] = useState<string>("");
+  const [lopFileError, setLopFileError] = useState<string>("");
+
   // Watch movedHouse checkbox to toggle address editability
   const movedHouse = watch("movedHouse");
 
@@ -101,13 +109,27 @@ export const RefundFormComponent = ({
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      setSelectedFiles(Array.from(event.target.files));
+      const files = Array.from(event.target.files);
+      const validationError = validateFiles(files);
+      if (validationError) {
+        setHeaderFileError(t(validationError.i18nKey));
+        return;
+      }
+      setHeaderFileError("");
+      setSelectedFiles(files);
     }
   };
 
   const handleLopFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      setSelectedLopFiles(Array.from(event.target.files));
+      const files = Array.from(event.target.files);
+      const validationError = validateFiles(files);
+      if (validationError) {
+        setLopFileError(t(validationError.i18nKey));
+        return;
+      }
+      setLopFileError("");
+      setSelectedLopFiles(files);
     }
   };
 
@@ -352,6 +374,7 @@ export const RefundFormComponent = ({
                   message: t("ERRORS.INVALID_BIC"),
                 },
               })}
+              inputProps={{ style: { textTransform: "uppercase" } }}
               error={!!errors.bic}
               helperText={errors.bic?.message}
             />
@@ -395,10 +418,15 @@ export const RefundFormComponent = ({
                 style={{ flex: 1, padding: 1, height: "auto" }}
                 type="file"
                 hidden
-                accept=".pdf,.jpg,.jpeg,.png"
+                accept={ALLOWED_EXTENSIONS}
                 onChange={handleFileChange}
               />
             </Button>
+            {headerFileError && (
+              <Alert severity="error" sx={{ mt: 1 }}>
+                {headerFileError}
+              </Alert>
+            )}
             {selectedFiles.length > 0 && (
               <Box mt={2}>
                 <Typography variant="body2">
@@ -456,11 +484,16 @@ export const RefundFormComponent = ({
                 style={{ flex: 1, padding: 1, height: "auto" }}
                 type="file"
                 hidden
-                accept=".pdf,.jpg,.jpeg,.png"
+                accept={ALLOWED_EXTENSIONS}
                 disabled={isLopFilesUploaded}
                 onChange={handleLopFileChange}
               />
             </Button>
+            {lopFileError && (
+              <Alert severity="error" sx={{ mt: 1 }}>
+                {lopFileError}
+              </Alert>
+            )}
             {selectedFiles.length > 0 && (
               <Box mt={2}>
                 <Typography variant="body2">

@@ -3,6 +3,9 @@ import { errorHandler } from "./getErrorMessage";
 import { authApi } from "../services/Auth.service";
 import { RootState } from "../redux/store";
 import { clearToken } from "../redux/slices/authSlice";
+import { setError } from "../redux/slices/errorSlice";
+import { t } from "i18next";
+import { getCorrelationId } from "./correlationId";
 
 /**
  * Custom base query function for Redux Toolkit Query.
@@ -24,6 +27,7 @@ const baseQuery = fetchBaseQuery({
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
     }
+    headers.set("X-Correlation-Id", getCorrelationId());
     return headers;
   },
 });
@@ -55,6 +59,37 @@ type BodyParams<T> = { [key: string]: string } | string | T;
  * This function dispatches a loading state before making the request and handles errors by dispatching appropriate actions.
  * It also includes custom logic for handling specific error statuses, such as logging out the user on a 401 Unauthorized error.
  */
+/** Maximum number of automatic retries for 429 responses. */
+const MAX_429_RETRIES = 2;
+/** Default delay (ms) when Retry-After header is missing. */
+const DEFAULT_RETRY_DELAY_MS = 5_000;
+/** Upper bound (ms) for Retry-After to prevent absurdly long waits. */
+const MAX_RETRY_DELAY_MS = 30_000;
+
+/**
+ * Parse the Retry-After header value into milliseconds.
+ * Supports both delay-seconds (integer) and HTTP-date formats.
+ * Returns null if the header is missing or unparseable.
+ */
+export function parseRetryAfter(headerValue: string | null): number | null {
+  if (!headerValue) return null;
+
+  // Try integer seconds first
+  const seconds = Number(headerValue);
+  if (!Number.isNaN(seconds) && seconds >= 0) {
+    return Math.min(seconds * 1000, MAX_RETRY_DELAY_MS);
+  }
+
+  // Try HTTP-date (e.g. "Wed, 21 Oct 2015 07:28:00 GMT")
+  const date = Date.parse(headerValue);
+  if (!Number.isNaN(date)) {
+    const delayMs = date - Date.now();
+    return Math.min(Math.max(delayMs, 0), MAX_RETRY_DELAY_MS);
+  }
+
+  return null;
+}
+
 const customBaseQuery: BaseQueryFn<
   string | { url: string; method: string; body?: BodyParams<string> },
   unknown,
@@ -64,7 +99,48 @@ const customBaseQuery: BaseQueryFn<
 
   try {
     //dispatch(setloading(true));
-    const result = await baseQuery(args, api, extraOptions);
+    let result = await baseQuery(args, api, extraOptions);
+
+    // --- Handle 429 Too Many Requests with auto-retry ---
+    if (result.error && result.error.status === 429) {
+      const retryAfterHeader =
+        (result.meta as any)?.response?.headers?.get?.("Retry-After") ?? null;
+
+      let retried = false;
+      for (let attempt = 0; attempt < MAX_429_RETRIES; attempt++) {
+        const delayMs =
+          parseRetryAfter(retryAfterHeader) ?? DEFAULT_RETRY_DELAY_MS;
+
+        // Notify user about the wait
+        const delaySec = Math.ceil(delayMs / 1000);
+        dispatch(
+          setError({
+            message: `${t("ERRORS.TOO_MANY_REQUESTS")}. ${t("ERRORS.RETRY_IN", { defaultValue: `Retrying in ${delaySec}s…`, seconds: delaySec })}`,
+            duration: delayMs + 1000,
+          }),
+        );
+
+        await new Promise((resolve) => setTimeout(resolve, delayMs));
+        result = await baseQuery(args, api, extraOptions);
+
+        if (!result.error || result.error.status !== 429) {
+          retried = true;
+          break;
+        }
+      }
+
+      // If still 429 after all retries, show final user-friendly message and return
+      if (result.error && result.error.status === 429) {
+        dispatch(setError({ message: t("ERRORS.TOO_MANY_REQUESTS") }));
+        return result;
+      }
+
+      // If retry succeeded, fall through to normal result processing below
+      if (retried && !result.error) {
+        return result;
+      }
+    }
+
     if (result.error) {
       const url = typeof args !== "string" ? args.url : args;
 

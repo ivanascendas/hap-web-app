@@ -9,6 +9,7 @@ import { createTheme } from "@mui/material/styles";
 import { IdlePopupModal } from "@shared/components/IdlePopup.modal";
 import { ConfigurationProvider } from "@shared/providers/Configuration.provider";
 import { useConfiguration } from "@shared/hooks/useConfiguration";
+import ErrorBoundary from "@shared/components/ErrorBoundary";
 
 function AppContent() {
   const [shoeIDLE, setShowIDLE] = useState(false);
@@ -55,9 +56,11 @@ function AppContent() {
 
 function App() {
   return (
-    <ConfigurationProvider>
-      <AppContent />
-    </ConfigurationProvider>
+    <ErrorBoundary name="Root">
+      <ConfigurationProvider>
+        <AppContent />
+      </ConfigurationProvider>
+    </ErrorBoundary>
   );
 }
 export default App;

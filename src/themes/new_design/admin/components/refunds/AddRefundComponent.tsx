@@ -34,7 +34,7 @@ import {
 import "../../../refund/RefundForm.component.scss";
 import { isValid } from "date-fns";
 
-import { toast } from "react-toastify";
+import { showToast } from "@shared/utils/showToast";
 import { useCreateApplicationMutation } from "@shared/services/Refunds.service";
 import { selectUserLoading } from "@shared/redux/slices/loaderSlice";
 import {
@@ -217,7 +217,7 @@ export const AddRefundComponent = (): JSX.Element => {
       // Create the refund application
       const result = await createApplication(requestData).unwrap();
 
-      toast.success(t("REFUNDS.FORM.SUCCESS_MESSAGE"));
+      showToast("success", t("REFUNDS.FORM.SUCCESS_MESSAGE"));
 
       // Navigate to the refund details page
       navigate(`/admin/refunds/${result.applicationId}`);
@@ -227,7 +227,7 @@ export const AddRefundComponent = (): JSX.Element => {
         (error as { data?: { message?: string } })?.data?.message ||
         (error as { data?: { detail?: string } })?.data?.detail ||
         t("ERRORS.SERVER_ERROR");
-      toast.error(errorMessage);
+      showToast("error", errorMessage);
     }
   };
 

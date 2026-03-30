@@ -26,7 +26,7 @@ import {
   selectNotificationsCount,
 } from "@shared/redux/slices/notificationsSlice";
 import { TablePaginationActions } from "@shared/components/TablePaginationActions";
-import { toast } from "react-toastify";
+import { showToast } from "@shared/utils/showToast";
 
 export const MessagesComponent = (): JSX.Element => {
   const { isAuthenticated } = useAuth();
@@ -66,10 +66,10 @@ export const MessagesComponent = (): JSX.Element => {
   const handleMarkAllAsRead = async () => {
     try {
       await markAllAsRead();
-      toast.success(t("MESSAGE_PAGE.MARK_ALL_AS_READ_SUCCESS"));
+      showToast("success", t("MESSAGE_PAGE.MARK_ALL_AS_READ_SUCCESS"));
     } catch (error) {
       console.error("Error marking all as read:", error);
-      toast.error(t("MESSAGE_PAGE.MARK_ALL_AS_READ_ERROR"));
+      showToast("error", t("MESSAGE_PAGE.MARK_ALL_AS_READ_ERROR"));
     }
   };
 

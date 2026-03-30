@@ -16,9 +16,10 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import InfoOutlineIcon from "@mui/icons-material/InfoOutline";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
-import { ToastContainer, toast, ToastContentProps } from "react-toastify";
+import { ToastContainer, ToastContentProps } from "react-toastify";
 import { Box, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { showToastContent } from "../utils/showToast";
 
 export type NotificationProps = {
   title: string;
@@ -56,10 +57,11 @@ export const NotificationComponent = (): JSX.Element => {
   const { t } = useTranslation();
   useEffect(() => {
     if (notify) {
-      toast.success(Notification, {
+      const body = t(notify);
+      showToastContent("success", Notification, body, {
         data: {
           title: "Success",
-          body: t(notify),
+          body,
         },
         autoClose: notifyDuration || 5000,
         onClose: () => {
@@ -69,10 +71,11 @@ export const NotificationComponent = (): JSX.Element => {
       });
     }
     if (error) {
-      toast.error(Notification, {
+      const body = t(error);
+      showToastContent("error", Notification, body, {
         data: {
           title: "Error",
-          body: t(error),
+          body,
         },
         autoClose: errorDuration || 5000,
         onClose: () => {

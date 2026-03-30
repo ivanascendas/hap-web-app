@@ -17,6 +17,8 @@ import {
 } from "@mui/material";
 import type { RefundApplicationDto } from "@shared/dtos/refund.dtos";
 import type { VerifyBshResponse } from "@shared/dtos/refund.dtos";
+import { MaskedField } from "@shared/components/MaskedField";
+import { ConfidenceBadge } from "@shared/components/ConfidenceBadge";
 
 interface BshComparisonTableProps {
   selectedStatus: string;
@@ -100,11 +102,32 @@ export const BshComparisonTableComponent: React.FC<BshComparisonTableProps> = ({
       field: "IBAN",
       formValue: application?.iban || "-",
       extractedValue: bshResult?.extracted?.iban || "-",
+      renderForm: () => <MaskedField value={application?.iban} type="iban" />,
+      renderExtracted: () => (
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <MaskedField value={bshResult?.extracted?.iban} type="iban" />
+          <ConfidenceBadge
+            confidence={bshResult?.extracted?.ibanConfidence}
+            isLowConfidence={bshResult?.extracted?.isIbanLowConfidence}
+          />
+        </Box>
+      ),
     },
     {
       field: "Address",
       formValue: application?.address || "-",
       extractedValue: bshResult?.extracted?.customerAddress || "-",
+      renderExtracted: () => (
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <span>{bshResult?.extracted?.customerAddress || "-"}</span>
+          <ConfidenceBadge
+            confidence={bshResult?.extracted?.customerAddressConfidence}
+            isLowConfidence={
+              bshResult?.extracted?.isCustomerAddressLowConfidence
+            }
+          />
+        </Box>
+      ),
     },
     {
       field: "Date",
@@ -114,6 +137,19 @@ export const BshComparisonTableComponent: React.FC<BshComparisonTableProps> = ({
       extractedValue: bshResult?.extracted?.statementDate
         ? new Date(bshResult.extracted.statementDate).toLocaleDateString()
         : "-",
+      renderExtracted: () => (
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <span>
+            {bshResult?.extracted?.statementDate
+              ? new Date(bshResult.extracted.statementDate).toLocaleDateString()
+              : "-"}
+          </span>
+          <ConfidenceBadge
+            confidence={bshResult?.extracted?.statementDateConfidence}
+            isLowConfidence={bshResult?.extracted?.isStatementDateLowConfidence}
+          />
+        </Box>
+      ),
     },
     {
       field: "LOP is Required",
@@ -166,8 +202,14 @@ export const BshComparisonTableComponent: React.FC<BshComparisonTableProps> = ({
             {comparisonData.map((row, index) => (
               <TableRow key={index}>
                 <TableCell sx={{ fontWeight: "medium" }}>{row.field}</TableCell>
-                <TableCell>{row.formValue}</TableCell>
-                <TableCell>{row.extractedValue}</TableCell>
+                <TableCell>
+                  {row.renderForm ? row.renderForm() : row.formValue}
+                </TableCell>
+                <TableCell>
+                  {row.renderExtracted
+                    ? row.renderExtracted()
+                    : row.extractedValue}
+                </TableCell>
                 <TableCell sx={{ textAlign: "center" }}>
                   <MatchCheckbox
                     appValue={row.formValue}
