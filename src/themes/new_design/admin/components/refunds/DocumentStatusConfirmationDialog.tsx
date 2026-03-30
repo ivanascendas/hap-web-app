@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import { useConfirmDocumentStatusMutation } from "@shared/services/Refunds.service";
-import { toast } from "react-toastify";
+import { showToast } from "@shared/utils/showToast";
 
 export interface DocumentStatusConfirmationDialogProps {
   /**
@@ -72,13 +72,17 @@ export const DocumentStatusConfirmationDialog: React.FC<
         comment,
       }).unwrap();
 
-      toast.success(
+      showToast(
+        "success",
         t("REFUNDS.DOCUMENT_STATUS_CONFIRMED", { status: result.status }),
       );
       onClose();
     } catch (err) {
       const error = err as { data?: { detail?: string } };
-      toast.error(error?.data?.detail || t("REFUNDS.CONFIRM_STATUS_ERROR"));
+      showToast(
+        "error",
+        error?.data?.detail || t("REFUNDS.CONFIRM_STATUS_ERROR"),
+      );
     }
   };
 

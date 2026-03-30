@@ -18,7 +18,7 @@ import {
   RefundDocumentType,
   RefundStatus,
 } from "@shared/dtos/refund.dtos";
-import { toast } from "react-toastify";
+import { showToast } from "@shared/utils/showToast";
 import "./RefundForm.component.scss";
 import { RefundFormComponent } from "./RefundForm.component";
 import { useConfig } from "@shared/providers/Configuration.provider";
@@ -141,7 +141,7 @@ export const RefundUpdatePage = (): JSX.Element => {
         isAssigned: false,
       }).unwrap();
 
-      toast.success(t("REFUNDS.FORM.SUCCESS_MESSAGE"));
+      showToast("success", t("REFUNDS.FORM.SUCCESS_MESSAGE"));
 
       // Upload documents if any
       if (!isHeaderFilesUploaded && result && selectedFiles.length > 0) {
@@ -192,7 +192,7 @@ export const RefundUpdatePage = (): JSX.Element => {
       const errorMessage =
         (error as { data?: { message?: string } })?.data?.message ||
         t("ERRORS.SERVER_ERROR");
-      toast.error(errorMessage);
+      showToast("error", errorMessage);
     }
   };
 

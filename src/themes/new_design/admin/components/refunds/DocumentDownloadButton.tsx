@@ -3,7 +3,7 @@ import { IconButton, Tooltip, CircularProgress } from "@mui/material";
 import { Download } from "@mui/icons-material";
 import { useTranslation } from "react-i18next";
 import { useLazyDownloadDocumentQuery } from "@shared/services/Refunds.service";
-import { toast } from "react-toastify";
+import { showToast } from "@shared/utils/showToast";
 
 export interface DocumentDownloadButtonProps {
   /**
@@ -52,14 +52,14 @@ export const DocumentDownloadButton: React.FC<DocumentDownloadButtonProps> = ({
       e.preventDefault();
       e.stopPropagation();
       if (!applicationId || !documentId) {
-        toast.error(t("REFUNDS.DOWNLOAD_ERROR"));
+        showToast("error", t("REFUNDS.DOWNLOAD_ERROR"));
         return;
       }
       await downloadDocument({ applicationId, documentId });
-      toast.success(t("REFUNDS.DOCUMENT_DOWNLOADED"));
+      showToast("success", t("REFUNDS.DOCUMENT_DOWNLOADED"));
     } catch (err) {
       const error = err as { data?: { detail?: string } };
-      toast.error(error?.data?.detail || t("REFUNDS.DOWNLOAD_ERROR"));
+      showToast("error", error?.data?.detail || t("REFUNDS.DOWNLOAD_ERROR"));
     }
     return;
   };

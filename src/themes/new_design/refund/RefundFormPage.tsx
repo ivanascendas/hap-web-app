@@ -16,7 +16,7 @@ import {
   RefundApplicationDto,
   RefundDocumentType,
 } from "@shared/dtos/refund.dtos";
-import { toast } from "react-toastify";
+import { showToast } from "@shared/utils/showToast";
 import {
   Dialog,
   DialogTitle,
@@ -127,7 +127,7 @@ export const RefundFormPage = (): JSX.Element => {
       };
 
       if (selectedFiles.length === 0) {
-        toast.error(t("REFUNDS.FORM.ERROR_NO_DOCUMENTS"));
+        showToast("error", t("REFUNDS.FORM.ERROR_NO_DOCUMENTS"));
         return;
       }
       let result: RefundApplicationDto | null = null;
@@ -139,7 +139,7 @@ export const RefundFormPage = (): JSX.Element => {
         result = sendResult;
       }
 
-      toast.success(t("REFUNDS.FORM.SUCCESS_MESSAGE"));
+      showToast("success", t("REFUNDS.FORM.SUCCESS_MESSAGE"));
 
       // Upload documents if any
       if (!isHeaderFilesUploaded && result && selectedFiles.length > 0) {
@@ -190,7 +190,7 @@ export const RefundFormPage = (): JSX.Element => {
       const errorMessage =
         (error as { data?: { message?: string } })?.data?.message ||
         t("ERRORS.SERVER_ERROR");
-      toast.error(errorMessage);
+      showToast("error", errorMessage);
     }
   };
 

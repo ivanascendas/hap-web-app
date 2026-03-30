@@ -40,7 +40,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { PhoneInput } from "@shared/components/PhoneInput.component";
 import { stringToColor } from "@shared/utils/stringToColor";
 import { PhoneData } from "@shared/hooks/usePhoneInput";
-import { toast } from "react-toastify";
+import { showToast } from "@shared/utils/showToast";
 
 export const AccountComponent = (): JSX.Element => {
   const { t } = useTranslation();
@@ -234,7 +234,8 @@ export const AccountComponent = (): JSX.Element => {
       await updateUser(data);
     } catch (error) {
       console.error("Error updating MFA method:", error);
-      toast.error(
+      showToast(
+        "error",
         t("MESSAGES.MFA_UPDATE_ERROR") || "Error updating MFA method",
       );
     }
