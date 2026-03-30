@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import type { RefundApplicationDto } from "@shared/dtos/refund.dtos";
 import type { VerifyBshResponse } from "@shared/dtos/refund.dtos";
 import { BshComparisonTableComponent } from "./BshComparisonTableComponent";
+import ErrorBoundary from "@shared/components/ErrorBoundary";
 
 interface BshComparisonComponentProps {
   title: string;
@@ -61,13 +62,15 @@ export const BshComparisonComponent: React.FC<BshComparisonComponentProps> = ({
         <Typography variant="h6">BSH Verification - {title}</Typography>
       </Box>
       <Box>
-        <BshComparisonTableComponent
-          application={application}
-          bshResult={bshResult}
-          selectedStatus={selectedStatus}
-          handleStatusChange={handleStatusChange}
-          lopRequirementChange={setLopRequirement}
-        />
+        <ErrorBoundary name="BshComparison">
+          <BshComparisonTableComponent
+            application={application}
+            bshResult={bshResult}
+            selectedStatus={selectedStatus}
+            handleStatusChange={handleStatusChange}
+            lopRequirementChange={setLopRequirement}
+          />
+        </ErrorBoundary>
       </Box>
       <Box
         sx={{

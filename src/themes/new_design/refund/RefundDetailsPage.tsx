@@ -28,6 +28,7 @@ import { UploadDocumentModal } from "./UploadDocumentModal";
 import { ResubmitApplicationModal } from "./ResubmitApplicationModal";
 import "./RefundDetails.component.scss";
 import { selectUser } from "@shared/redux/slices/authSlice";
+import ErrorBoundary from "@shared/components/ErrorBoundary";
 import { useSelector } from "react-redux";
 
 export const RefundDetailsPage = (): JSX.Element => {
@@ -364,11 +365,13 @@ export const RefundDetailsPage = (): JSX.Element => {
         </Paper>
       )}
       {/* Upload Document Modal */}
-      <UploadDocumentModal
-        open={uploadModalOpen}
-        onClose={() => setUploadModalOpen(false)}
-        applicationId={id || ""}
-      />
+      <ErrorBoundary name="UploadDocument">
+        <UploadDocumentModal
+          open={uploadModalOpen}
+          onClose={() => setUploadModalOpen(false)}
+          applicationId={id || ""}
+        />
+      </ErrorBoundary>
 
       {/* Resubmit Application Modal */}
       <ResubmitApplicationModal
