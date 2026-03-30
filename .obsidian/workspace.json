@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/tasks/task-send-correlation-id.md",
+                "file": "docs/tasks/task-fix-duplicate-notifications.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "task-send-correlation-id"
+              "title": "task-fix-duplicate-notifications"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "docs/tasks/task-send-correlation-id.md",
+                "file": "docs/tasks/task-fix-duplicate-notifications.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for task-send-correlation-id"
+              "title": "Backlinks for task-fix-duplicate-notifications"
             }
           },
           {
@@ -113,12 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "docs/tasks/task-send-correlation-id.md",
+                "file": "docs/tasks/task-fix-duplicate-notifications.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from task-send-correlation-id"
+              "title": "Outgoing links from task-fix-duplicate-notifications"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "docs/tasks/task-send-correlation-id.md",
+                "file": "docs/tasks/task-fix-duplicate-notifications.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of task-send-correlation-id"
+              "title": "Outline of task-fix-duplicate-notifications"
             }
           }
         ]
@@ -188,6 +188,7 @@
   "active": "b2d0925f441edc39",
   "lastOpenFiles": [
     "docs/Kanban.md",
+    "docs/tasks/task-send-correlation-id.md",
     "docs/tasks/task-handle-429-rate-limit.md",
     "docs/tasks/task-textract-error-messages.md",
     "docs/tasks/task-display-confidence-scores.md",
