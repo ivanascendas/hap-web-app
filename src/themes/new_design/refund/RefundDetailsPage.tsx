@@ -13,6 +13,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { MaskedField } from "@shared/components/MaskedField";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   useLazyDownloadDocumentQuery,
@@ -179,8 +180,23 @@ export const RefundDetailsPage = (): JSX.Element => {
               {t("REFUNDS.DETAILS.PAYMENT_INFO")}
             </Typography>
             <Typography variant="body1" sx={{ wordBreak: "break-all" }}>
-              (IBAN): {application.iban}{" "}
-              {application.bic && ` / (BIC): ${application.bic}`}
+              (IBAN):{" "}
+              <MaskedField
+                value={application.iban}
+                type="iban"
+                variant="body1"
+              />{" "}
+              {application.bic && (
+                <>
+                  {" "}
+                  / (BIC):{" "}
+                  <MaskedField
+                    value={application.bic}
+                    type="bic"
+                    variant="body1"
+                  />
+                </>
+              )}
               {application.jointTenancy &&
                 ` (${t("REFUNDS.DETAILS.JOINT_TENANCY")})`}
             </Typography>

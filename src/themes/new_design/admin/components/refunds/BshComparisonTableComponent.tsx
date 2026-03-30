@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import type { RefundApplicationDto } from "@shared/dtos/refund.dtos";
 import type { VerifyBshResponse } from "@shared/dtos/refund.dtos";
+import { MaskedField } from "@shared/components/MaskedField";
 
 interface BshComparisonTableProps {
   selectedStatus: string;
@@ -100,6 +101,10 @@ export const BshComparisonTableComponent: React.FC<BshComparisonTableProps> = ({
       field: "IBAN",
       formValue: application?.iban || "-",
       extractedValue: bshResult?.extracted?.iban || "-",
+      renderForm: () => <MaskedField value={application?.iban} type="iban" />,
+      renderExtracted: () => (
+        <MaskedField value={bshResult?.extracted?.iban} type="iban" />
+      ),
     },
     {
       field: "Address",
@@ -166,8 +171,14 @@ export const BshComparisonTableComponent: React.FC<BshComparisonTableProps> = ({
             {comparisonData.map((row, index) => (
               <TableRow key={index}>
                 <TableCell sx={{ fontWeight: "medium" }}>{row.field}</TableCell>
-                <TableCell>{row.formValue}</TableCell>
-                <TableCell>{row.extractedValue}</TableCell>
+                <TableCell>
+                  {row.renderForm ? row.renderForm() : row.formValue}
+                </TableCell>
+                <TableCell>
+                  {row.renderExtracted
+                    ? row.renderExtracted()
+                    : row.extractedValue}
+                </TableCell>
                 <TableCell sx={{ textAlign: "center" }}>
                   <MatchCheckbox
                     appValue={row.formValue}

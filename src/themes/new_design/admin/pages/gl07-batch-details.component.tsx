@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { MaskedField } from "@shared/components/MaskedField";
 import {
   Box,
   Typography,
@@ -207,16 +208,23 @@ export const Gl07BatchDetailsComponent: React.FC = () => {
     {
       key: "trn" as const,
       label: "TRN/PPSN",
+      rowRender: (row: Gl07LineDto) => (
+        <MaskedField value={row.trn} type="ppsn" />
+      ),
     },
     {
       key: "bankIban" as const,
       label: "IBAN",
-      rowRender: (row: Gl07LineDto) => row.bankIban || "-",
+      rowRender: (row: Gl07LineDto) => (
+        <MaskedField value={row.bankIban} type="iban" />
+      ),
     },
     {
       key: "bankBic" as const,
       label: "BIC",
-      rowRender: (row: Gl07LineDto) => row.bankBic || "-",
+      rowRender: (row: Gl07LineDto) => (
+        <MaskedField value={row.bankBic} type="bic" />
+      ),
     },
     {
       key: "amount" as const,

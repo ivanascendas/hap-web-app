@@ -9,6 +9,7 @@ import {
   Divider,
 } from "@mui/material";
 import { useParams, useNavigate } from "react-router-dom";
+import { MaskedField } from "@shared/components/MaskedField";
 import { useSelector } from "react-redux";
 import {
   ArrowBack,
@@ -370,21 +371,19 @@ export const RefundDetailsComponent: React.FC = () => {
                     <Typography variant="caption" color="text.secondary">
                       IBAN
                     </Typography>
-                    <Typography variant="body2">{application.iban}</Typography>
+                    <MaskedField value={application.iban} type="iban" />
                   </Grid>
                   <Grid size={3}>
                     <Typography variant="caption" color="text.secondary">
                       BIC
                     </Typography>
-                    <Typography variant="body2">{application.bic}</Typography>
+                    <MaskedField value={application.bic} type="bic" />
                   </Grid>
                   <Grid size={3} sx={{ display: "none" }}>
                     <Typography variant="caption" color="text.secondary">
                       TRN/PPSN
                     </Typography>
-                    <Typography variant="body2">
-                      {application.trnPpsn}
-                    </Typography>
+                    <MaskedField value={application.trnPpsn} type="ppsn" />
                   </Grid>
                 </Grid>
                 <Grid size={12} sx={{ display: "none" }}>
