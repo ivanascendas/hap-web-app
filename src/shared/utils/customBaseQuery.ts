@@ -5,6 +5,7 @@ import { RootState } from "../redux/store";
 import { clearToken } from "../redux/slices/authSlice";
 import { setError } from "../redux/slices/errorSlice";
 import { t } from "i18next";
+import { getCorrelationId } from "./correlationId";
 
 /**
  * Custom base query function for Redux Toolkit Query.
@@ -26,6 +27,7 @@ const baseQuery = fetchBaseQuery({
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
     }
+    headers.set("X-Correlation-Id", getCorrelationId());
     return headers;
   },
 });

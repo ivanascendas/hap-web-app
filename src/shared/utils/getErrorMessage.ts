@@ -1,5 +1,16 @@
 import { t, TFunction } from "i18next";
 import { setError } from "../redux/slices/errorSlice";
+import { getCorrelationId } from "./correlationId";
+
+/**
+ * Append the session correlation ID to an error message so users can
+ * quote it when contacting support. Format: "msg (Ref: abc12-…)"
+ */
+function withCorrelationId(message: string): string {
+  const id = getCorrelationId();
+  // Show only the first 8 chars to keep the toast short
+  return `${message} (Ref: ${id.slice(0, 8)})`;
+}
 
 /**
  * Mapping of backend Textract error message patterns to i18n keys.
@@ -93,11 +104,13 @@ export const errorHandler = (error: unknown) => {
       // Try Textract error mapping first
       const textractMsg = mapTextractError(data);
       if (textractMsg) {
-        return setError({ message: textractMsg });
+        return setError({ message: withCorrelationId(textractMsg) });
       }
-      return setError({ message: t(data) });
+      return setError({ message: withCorrelationId(t(data)) });
     } else if (data.status == 400) {
-      return setError({ message: t("ERRORS.ACCESS_DENIED") });
+      return setError({
+        message: withCorrelationId(t("ERRORS.ACCESS_DENIED")),
+      });
     }
 
     // Extract message from structured error response
@@ -105,33 +118,33 @@ export const errorHandler = (error: unknown) => {
     if (typeof rawMessage === "string") {
       const textractMsg = mapTextractError(rawMessage);
       if (textractMsg) {
-        return setError({ message: textractMsg });
+        return setError({ message: withCorrelationId(textractMsg) });
       }
     }
 
     return setError({
-      message: t(rawMessage),
+      message: withCorrelationId(t(rawMessage)),
     });
   } else {
     if (error instanceof Error) {
       const textractMsg = mapTextractError(error.message);
       if (textractMsg) {
-        return setError({ message: textractMsg });
+        return setError({ message: withCorrelationId(textractMsg) });
       }
-      return setError({ message: t(error.message) });
+      return setError({ message: withCorrelationId(t(error.message)) });
     } else if (typeof error === "string") {
       const textractMsg = mapTextractError(error);
       if (textractMsg) {
-        return setError({ message: textractMsg });
+        return setError({ message: withCorrelationId(textractMsg) });
       }
-      return setError({ message: t(error) });
+      return setError({ message: withCorrelationId(t(error)) });
     } else if (
       typeof error === "object" &&
       (error as any).data &&
       typeof (error as any).data === "string"
     ) {
-      return setError({ message: t((error as any).data) });
+      return setError({ message: withCorrelationId(t((error as any).data)) });
     }
   }
-  return setError({ message: t("ERRORS.UNKNOWN_ERROR") });
+  return setError({ message: withCorrelationId(t("ERRORS.UNKNOWN_ERROR")) });
 };
