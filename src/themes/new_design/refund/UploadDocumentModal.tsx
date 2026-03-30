@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { RefundDocumentType } from "@shared/dtos/refund.dtos";
 import { useUploadDocumentMutation } from "@shared/services/Refunds.service";
+import { validateFile, ALLOWED_EXTENSIONS } from "@shared/utils/fileValidation";
 
 interface UploadDocumentModalProps {
   open: boolean;
@@ -47,22 +48,9 @@ export const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // Validate file type
-      const allowedTypes = [
-        "application/pdf",
-        "image/jpeg",
-        "image/jpg",
-        "image/png",
-      ];
-      if (!allowedTypes.includes(file.type)) {
-        setError(t("REFUNDS.UPLOAD.INVALID_FILE_TYPE"));
-        return;
-      }
-
-      // Validate file size (max 10MB)
-      const maxSize = 10 * 1024 * 1024; // 10MB
-      if (file.size > maxSize) {
-        setError(t("REFUNDS.UPLOAD.FILE_TOO_LARGE"));
+      const validationError = validateFile(file);
+      if (validationError) {
+        setError(t(validationError.i18nKey));
         return;
       }
 
@@ -172,7 +160,7 @@ export const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({
               <input
                 type="file"
                 hidden
-                accept=".pdf,.jpg,.jpeg,.png"
+                accept={ALLOWED_EXTENSIONS}
                 style={{ flex: 1, padding: 1, height: "auto" }}
                 onChange={handleFileChange}
               />
