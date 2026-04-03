@@ -32,6 +32,7 @@ import { RefundDetailsPage } from "@components/refund/RefundDetailsPage";
 import { RefundsComponent } from "@components/admin/pages/refunds.component";
 import { RefundDetailsComponent } from "@components/admin/pages/refund-details.component";
 import { DocumentViewerPage } from "@components/admin/components/refunds/DocumentViewerPage";
+import { DocumentRedactionPage } from "@components/admin/components/refunds/DocumentRedactionPage";
 import { RefundUpdatePage } from "@components/refund/RefundUpdatePage";
 import { Gl07BatchesComponent } from "@components/admin/pages/gl07-batches.component";
 import { CreateGl07BatchComponent } from "@components/admin/pages/create-gl07-batch.component";
@@ -202,6 +203,26 @@ export const router = createBrowserRouter([
             allowedRoles={["DMU_L1", "DMU_L2", "AP"]}
             redirectTo="/admin/users"
             component={<DocumentViewerPage />}
+          />
+        ),
+      },
+      {
+        path: "refunds/:applicationId/documents/:documentId/redact",
+        element: (
+          <RoleProtected
+            allowedRoles={["DMU_L1"]}
+            redirectTo="/unauthorized"
+            component={<DocumentRedactionPage />}
+          />
+        ),
+      },
+      {
+        path: "refunds/:applicationId/documents/:documentId/redact/:versionId",
+        element: (
+          <RoleProtected
+            allowedRoles={["DMU_L1"]}
+            redirectTo="/unauthorized"
+            component={<DocumentRedactionPage />}
           />
         ),
       },

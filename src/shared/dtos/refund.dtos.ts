@@ -386,3 +386,43 @@ export interface AssignRefundResponse {
   message: string;
   actionAt: Date;
 }
+
+/**
+ * Area to be redacted (blurred) in a document
+ */
+export interface RedactionArea {
+  x: number; // pixels from left edge of source image
+  y: number; // pixels from top edge of source image
+  width: number;
+  height: number;
+}
+
+/**
+ * Request to redact (blur) a document
+ */
+export interface RedactDocumentRequest {
+  areas: RedactionArea[];
+}
+
+/**
+ * Response after redacting a document
+ */
+export interface RedactDocumentResponse {
+  documentId: string;
+  newStoragePath: string;
+  createdVersionId: string | null;
+  redactedAt: string; // ISO 8601 datetime
+}
+
+/**
+ * Document version in version history
+ */
+export interface DocumentVersionDto {
+  versionId: string;
+  documentId: string;
+  fileName: string;
+  mimeType: string;
+  createdAt: string; // ISO 8601 datetime
+  createdBy: string;
+  expiresAt: string; // ISO 8601 datetime
+}

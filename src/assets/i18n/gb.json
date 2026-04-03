@@ -1056,7 +1056,37 @@
       "DOCUMENTS": "Documents",
       "DOWNLOAD": "Download",
       "NO_DOCUMENTS": "No documents uploaded",
-      "ADMIN_NOTES": "Admin Notes"
+      "ADMIN_NOTES": "Admin Notes",
+      "REDACT_BUTTON": "Edit & Redact"
+    },
+    "REDACTION": {
+      "TITLE": "Document Redaction",
+      "BACK_TO_DOCUMENT": "Back to Document",
+      "DOCUMENT_ID": "Document ID: {{id}}",
+      "LOAD_ERROR": "Failed to load document for redaction",
+      "SUCCESS": "Document redacted successfully",
+      "ERROR": "Failed to redact document",
+      "ZOOM_IN": "Zoom in",
+      "ZOOM_OUT": "Zoom out",
+      "DELETE_SELECTED": "Delete selected",
+      "UNDO_LAST": "Undo last",
+      "APPLY_BUTTON": "Apply ({{count}})",
+      "APPLYING": "Applying...",
+      "CONFIRM_TITLE": "Apply redaction",
+      "CONFIRM_MESSAGE": "You are about to redact {{count}} area(s). This action cannot be undone.",
+      "ADMIN_NOTES": "Admin notes",
+      "CONFIRM_BUTTON": "Apply"
+    },
+    "VERSIONS": {
+      "TITLE": "Version History",
+      "LOAD_ERROR": "Failed to load versions",
+      "EMPTY": "No previous versions",
+      "VERSION_LABEL": "Version {{number}}",
+      "CREATED_BY": "Created by: {{name}}",
+      "DOWNLOAD": "Download",
+      "DELETE": "Delete",
+      "CONFIRM_DELETE_TITLE": "Delete version",
+      "CONFIRM_DELETE": "Are you sure you want to delete this version?"
     },
     "STATUS": {
       "0": "Submitted",

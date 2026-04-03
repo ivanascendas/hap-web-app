@@ -23,6 +23,9 @@ import {
   ConfirmDocumentStatusRequest,
   ConfirmDocumentStatusResponse,
   AssignRefundResponse,
+  RedactDocumentRequest,
+  RedactDocumentResponse,
+  DocumentVersionDto,
 } from "../dtos/refund.dtos";
 
 /**
@@ -265,16 +268,27 @@ export const refundsApi = createApi({
      */
     getDocumentBlob: builder.query<
       Blob,
-      { applicationId: string; documentId: string }
+      {
+        applicationId: string;
+        documentId: string;
+        format?: "pdf" | "jpg";
+        versionId?: string;
+      }
     >({
-      query: ({ applicationId, documentId }) => ({
-        url: `/api/refunds/applications/${applicationId}/documents/${documentId}/download`,
-        method: "GET",
-        responseType: "blob",
-        responseHandler: async (response: Response) => {
-          return await response.blob();
-        },
-      }),
+      query: ({ applicationId, documentId, format, versionId }) => {
+        const params = new URLSearchParams();
+        if (format) params.set("format", format);
+        if (versionId) params.set("versionId", versionId);
+        const queryString = params.toString();
+        return {
+          url: `/api/refunds/applications/${applicationId}/documents/${documentId}/download${queryString ? `?${queryString}` : ""}`,
+          method: "GET",
+          responseType: "blob",
+          responseHandler: async (response: Response) => {
+            return await response.blob();
+          },
+        };
+      },
     }),
 
     /**
@@ -570,6 +584,73 @@ export const refundsApi = createApi({
         { type: "RefundApplication", id: "ADMIN_LIST" },
       ],
     }),
+
+    /**
+     * Redact (blur) sensitive areas of a document (admin L1 only)
+     */
+    redactDocument: builder.mutation<
+      RedactDocumentResponse,
+      {
+        applicationId: string;
+        documentId: string;
+        body: RedactDocumentRequest;
+      }
+    >({
+      query: ({ applicationId, documentId, body }) => ({
+        url: `/api/refunds/admin/applications/${applicationId}/documents/${documentId}/redact`,
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: (result, error, { applicationId }) => [
+        { type: "RefundApplication", id: applicationId },
+        { type: "RefundDocument", id: applicationId },
+      ],
+    }),
+
+    /**
+     * Get document version history (admin L1 only)
+     */
+    getDocumentVersions: builder.query<
+      DocumentVersionDto[],
+      { applicationId: string; documentId: string }
+    >({
+      query: ({ applicationId, documentId }) => ({
+        url: `/api/refunds/admin/applications/${applicationId}/documents/${documentId}/versions`,
+        method: "GET",
+      }),
+      providesTags: (result, error, { applicationId, documentId }) => [
+        {
+          type: "RefundDocument",
+          id: `${applicationId}_${documentId}_versions`,
+        },
+      ],
+    }),
+
+    /**
+     * Delete a specific version of a document (admin L1 only)
+     */
+    deleteDocumentVersion: builder.mutation<
+      void,
+      {
+        applicationId: string;
+        documentId: string;
+        versionId: string;
+      }
+    >({
+      query: ({ applicationId, documentId, versionId }) => ({
+        url: `/api/refunds/admin/applications/${applicationId}/documents/${documentId}/versions/${versionId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: (result, error, { applicationId, documentId }) => [
+        {
+          type: "RefundDocument",
+          id: `${applicationId}_${documentId}_versions`,
+        },
+      ],
+    }),
   }),
 });
 
@@ -604,4 +685,8 @@ export const {
   useReassignApplicationsMutation,
   useAssignApplicationsMutation,
   useUnassignApplicationsMutation,
+  useRedactDocumentMutation,
+  useGetDocumentVersionsQuery,
+  useLazyGetDocumentVersionsQuery,
+  useDeleteDocumentVersionMutation,
 } = refundsApi;

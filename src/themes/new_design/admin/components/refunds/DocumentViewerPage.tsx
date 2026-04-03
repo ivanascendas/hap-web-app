@@ -331,6 +331,18 @@ export const DocumentViewerPage: React.FC = () => {
         <Typography variant="h5" sx={{ flex: 1 }}>
           Document Viewer
         </Typography>
+        {isAdmin && (
+          <Button
+            variant="outlined"
+            onClick={() =>
+              navigate(
+                `/admin/refunds/${applicationId}/documents/${documentId}/redact`,
+              )
+            }
+          >
+            {t("REFUNDS.DETAILS.REDACT_BUTTON")}
+          </Button>
+        )}
         <Button
           variant="outlined"
           onClick={handleDownload}

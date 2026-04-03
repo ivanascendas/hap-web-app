@@ -1056,7 +1056,37 @@
       "DOCUMENTS": "Doiciméid",
       "DOWNLOAD": "Íoslódáil",
       "NO_DOCUMENTS": "Níor uaslódáladh aon doiciméid",
-      "ADMIN_NOTES": "Nótaí Riaracháin"
+      "ADMIN_NOTES": "Nótaí Riaracháin",
+      "REDACT_BUTTON": "Cuir in Eagar & Foluain"
+    },
+    "REDACTION": {
+      "TITLE": "Cinsireacht Doiciméid",
+      "BACK_TO_DOCUMENT": "Ar ais chuig an doiciméad",
+      "DOCUMENT_ID": "Aitheantas Doiciméid: {{id}}",
+      "LOAD_ERROR": "Theip ar luchtú an doiciméid le haghaidh cinsireachta",
+      "SUCCESS": "D'éirigh le cinsireacht an doiciméid",
+      "ERROR": "Theip ar chinsireacht an doiciméid",
+      "ZOOM_IN": "Súmáil isteach",
+      "ZOOM_OUT": "Súmáil amach",
+      "DELETE_SELECTED": "Scrios roghnaithe",
+      "UNDO_LAST": "Cealaigh an ceann deireanach",
+      "APPLY_BUTTON": "Cuir i bhfeidhm ({{count}})",
+      "APPLYING": "Á chur i bhfeidhm...",
+      "CONFIRM_TITLE": "Cuir cinsireacht i bhfeidhm",
+      "CONFIRM_MESSAGE": "Tá tú chun {{count}} limistéar a chinsireacht. Ní féidir an gníomh seo a chealú.",
+      "ADMIN_NOTES": "Nótaí riaracháin",
+      "CONFIRM_BUTTON": "Cuir i bhfeidhm"
+    },
+    "VERSIONS": {
+      "TITLE": "Stair Leaganacha",
+      "LOAD_ERROR": "Theip ar luchtú na leaganacha",
+      "EMPTY": "Níl aon leaganacha roimhe seo",
+      "VERSION_LABEL": "Leagan {{number}}",
+      "CREATED_BY": "Cruthaithe ag: {{name}}",
+      "DOWNLOAD": "Íoslódáil",
+      "DELETE": "Scrios",
+      "CONFIRM_DELETE_TITLE": "Scrios leagan",
+      "CONFIRM_DELETE": "An bhfuil tú cinnte gur mian leat an leagan seo a scriosadh?"
     },
     "STATUS": {
       "0": "Curtha Isteach",
