@@ -219,48 +219,54 @@ export const refundsApi = createApi({
      */
     downloadDocument: builder.query<
       Blob,
-      { applicationId: string; documentId: string }
+      { applicationId: string; documentId: string; versionId?: string }
     >({
-      query: ({ applicationId, documentId }) => ({
-        url: `/api/refunds/applications/${applicationId}/documents/${documentId}/download`,
-        method: "GET",
-        responseType: "blob",
-        responseHandler: async (response: Response) => {
-          const blob = await response.blob();
-          const contentDisposition = response.headers.get(
-            "Content-Disposition",
-          );
-          let filename = `document_${documentId}`;
+      query: ({ applicationId, documentId, versionId }) => {
+        const params = new URLSearchParams();
+        if (versionId) params.set("versionId", versionId);
+        const queryString = params.toString();
 
-          if (contentDisposition) {
-            const filenameMatch = contentDisposition.match(
-              /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/,
+        return {
+          url: `/api/refunds/applications/${applicationId}/documents/${documentId}/download${queryString ? `?${queryString}` : ""}`,
+          method: "GET",
+          responseType: "blob",
+          responseHandler: async (response: Response) => {
+            const blob = await response.blob();
+            const contentDisposition = response.headers.get(
+              "Content-Disposition",
             );
-            if (filenameMatch && filenameMatch[1]) {
-              filename = filenameMatch[1].replace(/['"]/g, "");
-            }
-          }
+            let filename = `document_${documentId}`;
 
-          if (blob) {
-            // Type assertion for IE11 compatibility
-            const nav = window.navigator as Navigator & {
-              msSaveOrOpenBlob?: (blob: Blob, filename: string) => void;
-            };
-
-            if (nav.msSaveOrOpenBlob) {
-              nav.msSaveOrOpenBlob(blob, filename);
-            } else {
-              const a = document.createElement("a");
-              document.body.appendChild(a);
-              a.href = window.URL.createObjectURL(blob);
-              a.download = filename;
-              a.click();
-              document.body.removeChild(a);
-              window.URL.revokeObjectURL(a.href);
+            if (contentDisposition) {
+              const filenameMatch = contentDisposition.match(
+                /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/,
+              );
+              if (filenameMatch && filenameMatch[1]) {
+                filename = filenameMatch[1].replace(/['"]/g, "");
+              }
             }
-          }
-        },
-      }),
+
+            if (blob) {
+              // Type assertion for IE11 compatibility
+              const nav = window.navigator as Navigator & {
+                msSaveOrOpenBlob?: (blob: Blob, filename: string) => void;
+              };
+
+              if (nav.msSaveOrOpenBlob) {
+                nav.msSaveOrOpenBlob(blob, filename);
+              } else {
+                const a = document.createElement("a");
+                document.body.appendChild(a);
+                a.href = window.URL.createObjectURL(blob);
+                a.download = filename;
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(a.href);
+              }
+            }
+          },
+        };
+      },
     }),
 
     /**
@@ -607,6 +613,12 @@ export const refundsApi = createApi({
       invalidatesTags: (result, error, { applicationId }) => [
         { type: "RefundApplication", id: applicationId },
         { type: "RefundDocument", id: applicationId },
+        result
+          ? {
+              type: "RefundDocument",
+              id: `${applicationId}_${result.documentId}_versions`,
+            }
+          : { type: "RefundDocument", id: "UNKNOWN_VERSIONS" },
       ],
     }),
 

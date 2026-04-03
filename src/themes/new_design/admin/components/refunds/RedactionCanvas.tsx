@@ -19,6 +19,7 @@ export interface RedactionCanvasProps {
   selectedRectId: string | null;
   onSelectRect: (id: string | null) => void;
   zoom: number;
+  onImageLoadError?: () => void;
 }
 
 export const RedactionCanvas: React.FC<RedactionCanvasProps> = ({
@@ -28,6 +29,7 @@ export const RedactionCanvas: React.FC<RedactionCanvasProps> = ({
   selectedRectId,
   onSelectRect,
   zoom,
+  onImageLoadError,
 }) => {
   const stageRef = useRef<Konva.Stage>(null);
   const [image, setImage] = useState<HTMLImageElement | null>(null);
@@ -63,6 +65,7 @@ export const RedactionCanvas: React.FC<RedactionCanvasProps> = ({
     img.onerror = () => {
       setLoadError(true);
       setImage(null);
+      onImageLoadError?.();
     };
     img.src = imageUrl;
 
@@ -70,7 +73,7 @@ export const RedactionCanvas: React.FC<RedactionCanvasProps> = ({
       img.onload = null;
       img.onerror = null;
     };
-  }, [imageUrl]);
+  }, [imageUrl, onImageLoadError]);
 
   const scale = useMemo(() => {
     if (!image) return { x: 1, y: 1 };

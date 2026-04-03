@@ -17,28 +17,30 @@ import {
 } from "@mui/material";
 import {
   Delete as DeleteIcon,
-  Download as DownloadIcon,
   Edit as EditIcon,
+  Visibility as ViewIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   useDeleteDocumentVersionMutation,
   useGetDocumentVersionsQuery,
-  useLazyGetDocumentBlobQuery,
 } from "@shared/services/Refunds.service";
+import { showToast } from "@shared/utils/showToast";
 import { formatVersionDate } from "@shared/utils/versionDateFormatter";
 
 export interface DocumentVersionsPanelProps {
   applicationId: string;
   documentId: string;
   currentLocale?: string;
+  currentVersionId?: string;
 }
 
 export const DocumentVersionsPanel: React.FC<DocumentVersionsPanelProps> = ({
   applicationId,
   documentId,
   currentLocale = "en",
+  currentVersionId,
 }) => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
@@ -49,7 +51,6 @@ export const DocumentVersionsPanel: React.FC<DocumentVersionsPanelProps> = ({
     documentId,
   });
   const [deleteVersion] = useDeleteDocumentVersionMutation();
-  const [downloadDocument] = useLazyGetDocumentBlobQuery();
 
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
@@ -62,18 +63,16 @@ export const DocumentVersionsPanel: React.FC<DocumentVersionsPanelProps> = ({
     );
   }, [data]);
 
-  const handleRedact = (versionId: string) => {
+  const handleRedact = (versionId?: string) => {
     navigate(
-      `/admin/refunds/${applicationId}/documents/${documentId}/redact/${versionId}`,
+      `/admin/refunds/${applicationId}/documents/${documentId}/redact${versionId ? `/${versionId}` : ""}`,
     );
   };
 
-  const handleDownload = async () => {
-    try {
-      await downloadDocument({ applicationId, documentId }).unwrap();
-    } catch {
-      // Keep silent here to avoid duplicate toasts with existing global notifications.
-    }
+  const handleViewVersion = (versionId?: string) => {
+    navigate(
+      `/admin/refunds/${applicationId}/documents/${documentId}/redact${versionId ? `/${versionId}` : ""}`,
+    );
   };
 
   const handleConfirmDelete = async () => {
@@ -85,6 +84,9 @@ export const DocumentVersionsPanel: React.FC<DocumentVersionsPanelProps> = ({
         documentId,
         versionId: confirmDeleteId,
       }).unwrap();
+      showToast("success", t("REFUNDS.VERSIONS.DELETE_SUCCESS"));
+    } catch {
+      showToast("error", t("REFUNDS.VERSIONS.DELETE_ERROR"));
     } finally {
       setPendingDeleteId(null);
       setConfirmDeleteId(null);
@@ -92,10 +94,33 @@ export const DocumentVersionsPanel: React.FC<DocumentVersionsPanelProps> = ({
   };
 
   return (
-    <Paper sx={{ p: 2, borderRadius: 1, height: "100%", minHeight: 360 }}>
-      <Typography variant="h6" sx={{ mb: 2 }}>
-        {t("REFUNDS.VERSIONS.TITLE")}
-      </Typography>
+    <Paper
+      sx={{
+        p: 2,
+        borderRadius: 1,
+        height: "100%",
+        minHeight: 360,
+        minWidth: 300,
+      }}
+    >
+      <Stack
+        direction={{ xs: "column", sm: "row" }}
+        spacing={1}
+        justifyContent="space-between"
+        alignItems={{ xs: "stretch", sm: "center" }}
+        sx={{ mb: 2 }}
+      >
+        <Typography variant="h6">{t("REFUNDS.VERSIONS.TITLE")}</Typography>
+
+        <Button
+          size="small"
+          variant="outlined"
+          startIcon={<ViewIcon />}
+          onClick={() => handleViewVersion()}
+        >
+          {t("REFUNDS.VERSIONS.VIEW_CURRENT")}
+        </Button>
+      </Stack>
 
       {isLoading && (
         <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
@@ -164,14 +189,7 @@ export const DocumentVersionsPanel: React.FC<DocumentVersionsPanelProps> = ({
                 >
                   {t("REFUNDS.VERSIONS.REDACT")}
                 </Button>
-                <Button
-                  size="small"
-                  variant="outlined"
-                  startIcon={<DownloadIcon />}
-                  onClick={handleDownload}
-                >
-                  {t("REFUNDS.VERSIONS.DOWNLOAD")}
-                </Button>
+
                 <Button
                   size="small"
                   variant="outlined"

@@ -45,6 +45,7 @@ export const DocumentRedactionPage: React.FC = () => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [imageLoadError, setImageLoadError] = useState<string | null>(null);
+  const [reloadKey, setReloadKey] = useState(0);
 
   const document = useMemo(
     () => application?.documents?.find((d) => d.documentId === documentId),
@@ -67,6 +68,11 @@ export const DocumentRedactionPage: React.FC = () => {
           format: "jpg",
           versionId,
         }).unwrap();
+
+        if (blob.type && !blob.type.startsWith("image/")) {
+          throw new Error("INVALID_IMAGE_FORMAT");
+        }
+
         const objectUrl = URL.createObjectURL(blob);
 
         if (isMounted) {
@@ -75,10 +81,14 @@ export const DocumentRedactionPage: React.FC = () => {
           // Component unmounted before we could set the URL, so revoke it
           URL.revokeObjectURL(objectUrl);
         }
-      } catch {
+      } catch (error) {
         if (isMounted) {
           setImageUrl(null);
-          setImageLoadError(t("REFUNDS.REDACTION.LOAD_ERROR"));
+          setImageLoadError(
+            error instanceof Error && error.message === "INVALID_IMAGE_FORMAT"
+              ? t("REFUNDS.REDACTION.INVALID_FORMAT")
+              : t("REFUNDS.REDACTION.LOAD_ERROR"),
+          );
         }
       } finally {
         if (isMounted) {
@@ -99,7 +109,15 @@ export const DocumentRedactionPage: React.FC = () => {
         return null;
       });
     };
-  }, [applicationId, documentId, document, versionId, getDocumentBlob, t]);
+  }, [
+    applicationId,
+    documentId,
+    document,
+    versionId,
+    getDocumentBlob,
+    reloadKey,
+    t,
+  ]);
 
   const handleApply = async (
     areas: { x: number; y: number; width: number; height: number }[],
@@ -107,14 +125,25 @@ export const DocumentRedactionPage: React.FC = () => {
     if (!applicationId || !documentId) return;
 
     try {
-      await redactDocument({
+      const result = await redactDocument({
         applicationId,
         documentId,
-        body: { areas },
+        body: { areas, versionId },
       }).unwrap();
 
+      setRectangles([]);
+      setSelectedRectId(null);
       showToast("success", t("REFUNDS.REDACTION.SUCCESS"));
-      navigate(`/admin/refunds/${applicationId}/documents/${documentId}`);
+
+      if (result.createdVersionId) {
+        navigate(
+          `/admin/refunds/${applicationId}/documents/${documentId}/redact`,
+          { replace: true },
+        );
+        return;
+      }
+
+      setReloadKey((prev) => prev + 1);
     } catch {
       showToast("error", t("REFUNDS.REDACTION.ERROR"));
     }
@@ -144,7 +173,7 @@ export const DocumentRedactionPage: React.FC = () => {
   }
 
   return (
-    <Container maxWidth="xl" sx={{ py: 3 }}>
+    <Container sx={{ py: 3, maxWidth: "1270px !important" }}>
       <NotificationComponent />
 
       <Breadcrumbs sx={{ mb: 2 }}>
@@ -217,6 +246,9 @@ export const DocumentRedactionPage: React.FC = () => {
                 selectedRectId={selectedRectId}
                 onSelectRect={setSelectedRectId}
                 zoom={zoom}
+                onImageLoadError={() =>
+                  setImageLoadError(t("REFUNDS.REDACTION.INVALID_FORMAT"))
+                }
               />
             )}
           </Box>
@@ -226,6 +258,7 @@ export const DocumentRedactionPage: React.FC = () => {
           applicationId={applicationId}
           documentId={documentId}
           currentLocale={i18n.language}
+          currentVersionId={versionId}
         />
       </Box>
     </Container>

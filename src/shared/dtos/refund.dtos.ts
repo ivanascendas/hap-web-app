@@ -402,6 +402,7 @@ export interface RedactionArea {
  */
 export interface RedactDocumentRequest {
   areas: RedactionArea[];
+  versionId?: string; // If not provided, redaction will be applied to the latest version
 }
 
 /**
