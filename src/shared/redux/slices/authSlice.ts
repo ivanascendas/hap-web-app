@@ -2,19 +2,25 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserModel } from "../../models/user.model";
 import { TokenDto } from "../../dtos/token.dto";
 import { RootState } from "../store";
-import localStorageService from "../../services/Storage.service";
-import { authApi } from "../../services/Auth.service";
+import {
+  setStoredToken,
+  clearStoredToken,
+} from "../../utils/secureTokenStorage";
+import { authApi } from "@shared/services/Auth.service";
+import { BalanceDto } from "@shared/dtos/balance.dto";
 
 export type AuthState = {
   user: UserModel | null;
   tmpTokenData: TokenDto | null;
   tokenData: TokenDto | null;
+  banalce: BalanceDto | null;
 };
 
 const initialState: AuthState = {
   user: null,
   tmpTokenData: null,
   tokenData: null,
+  banalce: null,
 };
 
 const userSlice = createSlice({
@@ -30,13 +36,12 @@ const userSlice = createSlice({
       state.user = { ...state.user, ...action.payload } as UserModel;
     },
     /**
-     * Updates the token data in the auth state and stores the token in local storage.
+     * Updates the token data in the auth state and stores the token in session storage.
      * @param state - The current auth state.
      * @param action - The action payload containing the new token data to update.
      */
     setToken: (state, action: PayloadAction<TokenDto>) => {
-      console.log(action.payload);
-      localStorageService.setItem('token', JSON.stringify(action.payload));
+      setStoredToken(action.payload);
       state.tokenData = action.payload;
       state.tmpTokenData = null;
     },
@@ -56,12 +61,11 @@ const userSlice = createSlice({
       state.user = null;
     },
     /**
-     * Clears the token data from the auth state and removes the token from local storage.
+     * Clears the token data from the auth state and removes the token from storage.
      * @param state - The current auth state.
      */
     clearToken: (state) => {
-      console.log("clearToken");
-      localStorageService.removeItem('token');
+      clearStoredToken();
       state.tokenData = null;
     },
     /**
@@ -71,58 +75,88 @@ const userSlice = createSlice({
     clearTmpToken: (state) => {
       state.tmpTokenData = null;
     },
-  }, extraReducers: (builder) => {
 
+    setBalance: (state, action: PayloadAction<BalanceDto>) => {
+      state.banalce = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
     /** Handles the fulfilled action from the `getUserData` API endpoint. */
-    builder.addMatcher(authApi.endpoints.userdata.matchFulfilled, (state, action) => {
-      state.user = action.payload;
-    });
+    builder.addMatcher(
+      authApi.endpoints.userdata.matchFulfilled,
+      (state, action) => {
+        state.user = action.payload;
+      },
+    );
     /** Handles the rejected action from the `getUserData` API endpoint. */
-    builder.addMatcher(authApi.endpoints.userdata.matchRejected, (state, action) => {
-
-      if ((action.payload as any)?.data?.status === 401) {
-        localStorageService.removeItem('token');
+    builder.addMatcher(
+      authApi.endpoints.userdata.matchRejected,
+      (state, action) => {
+        if ((action.payload as any)?.data?.status === 401) {
+          clearStoredToken();
+          state.user = null;
+          state.tokenData = null;
+          state.tmpTokenData = null;
+        }
+      },
+    );
+    /** Handles the fulfilled action from the `logout` API endpoint. */
+    builder.addMatcher(
+      authApi.endpoints.logout.matchFulfilled,
+      (state, action) => {
+        clearStoredToken();
         state.user = null;
         state.tokenData = null;
         state.tmpTokenData = null;
-      }
-    });
-    /** Handles the fulfilled action from the `logout` API endpoint. */
-    builder.addMatcher(authApi.endpoints.logout.matchFulfilled, (state, action) => {
-      localStorageService.removeItem('token');
-      state.user = null;
-      state.tokenData = null;
-      state.tmpTokenData = null;
-    });
+      },
+    );
 
     /** Handles the rejected action from the `logout` API endpoint. */
-    builder.addMatcher(authApi.endpoints.logout.matchRejected, (state, action) => {
-
-      if ((action.payload as any)?.data?.status === 401) {
-        localStorageService.removeItem('token');
-        state.user = null;
-        state.tokenData = null;
-        state.tmpTokenData = null;
-      }
-    });
+    builder.addMatcher(
+      authApi.endpoints.logout.matchRejected,
+      (state, action) => {
+        if ((action.payload as any)?.data?.status === 401) {
+          clearStoredToken();
+          state.user = null;
+          state.tokenData = null;
+          state.tmpTokenData = null;
+        }
+      },
+    );
 
     /** Handles the fulfilled action from the `checkValidContact` API endpoint. */
-    builder.addMatcher(authApi.endpoints.checkValidContact.matchFulfilled, (state, action) => {
-      state.user = {
-        ...state.user,
-        defaultMFA: action.payload.defaultMFA,
-        emailConfirmed: action.payload.isEmailConfirmed,
-        phoneNumberConfirmed: action.payload.isPhoneConfirmed
-      } as UserModel;
-    });
-
-
-  }
+    builder.addMatcher(
+      authApi.endpoints.checkValidContact.matchFulfilled,
+      (state, action) => {
+        state.user = {
+          ...state.user,
+          defaultMFA: action.payload.defaultMFA,
+          emailConfirmed: action.payload.isEmailConfirmed,
+          phoneNumberConfirmed: action.payload.isPhoneConfirmed,
+        } as UserModel;
+      },
+    );
+  },
 });
-export const selectUser = (state: RootState): UserModel | null => state.auth.user;
-export const selectTmpToken = (state: RootState): TokenDto | null => state.auth.tmpTokenData;
-export const selectToken = (state: RootState): TokenDto | null => state.auth.tokenData;
+export const selectUser = (state: RootState): UserModel | null =>
+  state.auth.user;
+export const selectUsername = (state: RootState): string | null =>
+  state.auth.user?.customerName || null;
+export const selectBalance = (state: RootState): BalanceDto | null =>
+  state.auth.banalce;
+export const selectTmpToken = (state: RootState): TokenDto | null =>
+  state.auth.tmpTokenData;
+export const selectToken = (state: RootState): TokenDto | null =>
+  state.auth.tokenData;
 
-export const { setUser, clearUser, setTmpToken, setToken, clearTmpToken, clearToken } = userSlice.actions;
+export const {
+  setBalance,
+  setUser,
+  clearUser,
+  setTmpToken,
+  setToken,
+  clearTmpToken,
+  clearToken,
+} = userSlice.actions;
 
 export default userSlice.reducer;

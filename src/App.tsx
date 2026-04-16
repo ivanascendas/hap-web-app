@@ -1,19 +1,24 @@
 import { RouterProvider } from "react-router-dom";
 import { router } from "./AppRoutes";
-import "./shared/utils/i18n";
+import React, { useState } from "react";
+import "@shared/utils/i18n";
 import { IdleTimerProvider } from "react-idle-timer";
-import { useAuth } from "./shared/providers/Auth.provider";
+import { useAuth } from "@shared/providers/Auth.provider";
 import { ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-import { useState } from "react";
-import { IdlePopupModal } from "./shared/components/IdlePopup.modal";
-function App() {
+import { IdlePopupModal } from "@shared/components/IdlePopup.modal";
+import { ConfigurationProvider } from "@shared/providers/Configuration.provider";
+import { useConfiguration } from "@shared/hooks/useConfiguration";
+import ErrorBoundary from "@shared/components/ErrorBoundary";
+
+function AppContent() {
   const [shoeIDLE, setShowIDLE] = useState(false);
   const { isAuthenticated } = useAuth();
+  const { config } = useConfiguration();
   const theme = createTheme({
     palette: {
       primary: {
-        main: "#ef642d",
+        main: "#7a003c",
       },
       secondary: {
         main: "#f5f7fa",
@@ -33,16 +38,11 @@ function App() {
   const handleOnIdle = async () => {
     setShowIDLE(isAuthenticated);
   };
-  console.log(process.env.REACT_APP_IDLE);
 
   return (
     <ThemeProvider theme={theme}>
       <IdleTimerProvider
-        timeout={
-          process.env.REACT_APP_IDLE
-            ? parseInt(process.env.REACT_APP_IDLE)
-            : undefined
-        } // 10 minutes
+        timeout={config?.idle || 600000} // 10 minutes
         onIdle={handleOnIdle}
       >
         <RouterProvider router={router} />
@@ -51,6 +51,16 @@ function App() {
         <IdlePopupModal open={shoeIDLE} onClose={() => setShowIDLE(false)} />
       )}
     </ThemeProvider>
+  );
+}
+
+function App() {
+  return (
+    <ErrorBoundary name="Root">
+      <ConfigurationProvider>
+        <AppContent />
+      </ConfigurationProvider>
+    </ErrorBoundary>
   );
 }
 export default App;

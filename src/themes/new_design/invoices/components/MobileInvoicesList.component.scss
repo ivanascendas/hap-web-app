@@ -1,0 +1,121 @@
+@import "../../../../assets/styles/variables.scss";
+
+.table-invoices-mobile {
+  background: $secondary !important;
+  padding: 0 0.625rem;
+
+  &_group {
+    &_header {
+      padding: 0.875rem 0 0.4375rem 0;
+      color: $secondary600;
+      font-size: 1rem;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    &_list {
+      .MuiButtonBase-root {
+        //color: #36383d;
+        text-transform: none;
+
+        &:not(:hover) {
+          background: $secondary100;
+        }
+
+        .table-statements-mobile_group_list_item_date {
+          line-height: 0.875rem;
+          background-color: $secondary400 !important;
+          border-radius: 50%;
+          width: 1.875rem;
+          height: 1.875rem;
+          display: block;
+          text-align: center;
+          padding: 0.4375rem;
+          font-size: 0.75rem !important;
+          font-weight: 700;
+
+          span {
+            font-size: 1.0625rem !important;
+            display: block;
+          }
+        }
+      }
+
+      &_item {
+        display: flex;
+        width: 98% !important;
+        box-shadow: 0 0 0.5625rem 0px rgba(220, 224, 231, 0.85);
+        background: $secondary100;
+        border-radius: 0.9125rem;
+        padding: 0.625rem 0px;
+        align-items: center;
+        margin-right: 0.9rem;
+        border-left: 0.25rem solid $secondary100;
+
+        &.selected {
+          border-left: 0.25rem solid rgba($primary700, $alpha: 0.7);
+        }
+
+        &_date {
+          margin: auto;
+          background-color: $secondary400 !important;
+          border-radius: 50%;
+          width: 1.875rem;
+          height: 1.875rem;
+          display: block;
+          text-align: center;
+          padding: 0.4375rem;
+          font-size: 0.75rem !important;
+          font-weight: 700;
+          margin-left: 0.625rem;
+
+          span {
+            font-size: 1.0625rem !important;
+            display: block;
+          }
+        }
+
+        &_referance {
+          color: #36383d;
+          text-transform: uppercase;
+          flex: 1;
+          font-size: 0.875rem;
+          white-space: nowrap;
+          font-weight: 700;
+          align-items: start;
+          justify-content: start;
+          display: flex;
+        }
+
+        &_amount {
+          flex: none !important;
+          margin-right: 1.25rem;
+          line-height: 1;
+
+          .balance {
+            align-items: start;
+          }
+        }
+
+        &_chevron {
+          flex: none !important;
+          display: flex;
+          margin-right: 1.25rem;
+        }
+
+        .balance {
+          display: flex;
+          flex-direction: column;
+          color: $error;
+          font-size: 1rem;
+          font-weight: 300;
+
+          span {
+            color: $success;
+            font-size: 0.625rem;
+          }
+        }
+      }
+    }
+  }
+}

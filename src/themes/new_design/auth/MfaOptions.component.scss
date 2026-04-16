@@ -1,0 +1,31 @@
+@import "../../../assets/styles/variables.scss";
+
+.mfa-optgions {
+  &__label {
+    width: calc(100% - 0.5rem);
+    display: inline-block;
+    color: black;
+    border-width: 0.0625rem; // 1px
+    border-style: solid;
+    border-color: black;
+    border-image: initial;
+    padding: 0.25rem; // 20px
+    border-radius: 2.625rem; // 10px
+    margin: 0.1875rem; // 3px
+    white-space: nowrap;
+    margin-left: 0rem !important;
+    margin-right: 1rem !important;
+
+    @media screen and (max-width: $mobileSize) {
+      padding: 0.2375rem; // 15px
+
+      .MuiFormControlLabel-label {
+        font-size: 0.875rem; // 14px
+      }
+    }
+
+    &:has(input:checked) {
+      background: rgba(210, 84, 34, 0.125);
+    }
+  }
+}

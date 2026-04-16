@@ -1,0 +1,239 @@
+@import "variables.scss";
+@import "fonts.scss";
+@import "forms.scss";
+@import "functions.scss";
+
+body {
+  @include theme;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  font-family: "Roboto", sans-serif;
+  line-height: 1.1;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+a,
+.link-element {
+  color: $primary700;
+  text-decoration: none;
+  cursor: pointer;
+  line-height: 0.9625rem; // 15.4px
+  font-size: 0.875rem; // 14px
+
+  p {
+    color: $primary700;
+  }
+
+  svg {
+    fill: $primary700;
+    color: $primary700;
+  }
+}
+
+.link-underline {
+  text-decoration: underline !important;
+}
+
+.error {
+  margin-top: 0.5rem; // 8px
+  color: $error;
+  font-size: 0.8125rem; // 13px
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  top: -1rem; // -16px
+}
+
+.mt-20 {
+  margin-top: 1.25rem !important; // 20px
+}
+
+.mb-20 {
+  margin-bottom: 1.25rem !important; // 20px
+}
+
+label {
+  &.required {
+    &::after {
+      content: "*";
+      color: $error;
+      margin-left: 0.2rem;
+    }
+  }
+}
+
+.h_title {
+  display: inline-flex;
+  padding-bottom: 0.25rem; // 4px
+  font-size: 1.625rem; // 26px
+  color: $primary900;
+  font-weight: bold;
+}
+
+.personal_box {
+  box-shadow: 0 0 0.5625rem 0 rgba(220, 224, 231, 0.85); // 9px
+  border-radius: 0.6875rem; // 11px
+  padding: 1.25rem; // 20px
+  background: $secondary100;
+  margin-bottom: 4.625rem; // 74px
+  line-height: 1.2;
+  max-width: 93%;
+  margin: 0 2.1875rem; // 35px
+
+  @media screen and (max-width: $mobileSize) {
+    margin: 0 0.625rem; // 10px
+    margin-bottom: pxToRem(50) !important;
+  }
+}
+
+.page_wrap {
+  @media screen and (min-width: $mobileSize) {
+    height: 100vh;
+    background: $secondary;
+    box-sizing: border-box;
+    padding: 5rem 0 3.125rem 0; // 80px 0 50px 0
+    position: relative;
+  }
+
+  &_height {
+    box-sizing: border-box;
+    max-width: 65rem; // 1040px
+    margin: auto;
+    padding-bottom: 0.0625rem; // 1px
+
+    &_title {
+      padding-bottom: 0.625rem; // 10px
+
+      @media screen and (min-width: 48rem) {
+        // 768px
+        display: flex;
+        margin-top: 0.25rem; // 4px
+        align-items: center;
+        justify-content: space-between;
+        padding: 2.1875rem 0; // 35px
+        background: #f5f7fa;
+      }
+
+      .policy_title {
+        margin-top: 4.8125rem; // 77px
+      }
+
+      .h_title.cookie_title {
+        display: block;
+
+        span {
+          font-weight: 400;
+          font-size: 1.25rem; // 20px
+        }
+      }
+    }
+  }
+}
+
+.clr_black {
+  color: #000;
+}
+
+.clr_grey {
+  color: #7f7f7f;
+}
+
+._light_grey {
+  background-color: #e0e0e0;
+}
+
+.clr_orange {
+  color: #ef642d;
+}
+
+.clr_green {
+  color: $success;
+}
+
+.text_red {
+  color: $error;
+}
+
+.ripple {
+  position: relative;
+  overflow: hidden;
+  transform: translate3d(0, 0, 0);
+}
+
+.ripple:after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, #000 10%, transparent 10.01%);
+  background-repeat: no-repeat;
+  background-position: 50%;
+  transform: scale(10, 10);
+  opacity: 0;
+  transition:
+    transform 0.5s,
+    opacity 1s;
+}
+
+.ripple:active:after {
+  transform: scale(0, 0);
+  opacity: 0.2;
+  transition: 0s;
+}
+
+.popup {
+  position: absolute;
+  background: #fff;
+  border: none;
+  border-radius: 6px;
+  width: 458px;
+  min-height: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  box-shadow:
+    0 24px 24px 0 rgba(0, 0, 0, 0.3),
+    0 0 24px 0 rgba(0, 0, 0, 0.22);
+}
+
+.header_links_pay {
+  margin-right: 1.625rem; // 26px
+  width: 9.75rem; // 156px
+  height: 2.875rem; // 46px
+  line-height: 2.875rem; // 46px
+  border-radius: 0.1875rem; // 3px
+  background: rgb(255, 140, 61);
+  background: linear-gradient(
+    85deg,
+    rgba(255, 140, 61, 1) 0%,
+    rgba(231, 18, 0, 1) 100%
+  );
+  color: #fff;
+  font-size: 0.9375rem; // 15px
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 1.875rem; // 0 30px
+  text-transform: none;
+}

@@ -7,7 +7,6 @@ import {
   Tooltip,
   IconButton,
   TextField,
-  FormHelperText,
   Skeleton,
   FormControlLabel,
   Checkbox,
@@ -17,7 +16,7 @@ import { useTranslation } from "react-i18next";
 import CloseIcon from "@mui/icons-material/Close";
 import { IntlTelInputComponent } from "./IntlTelInput.component";
 import { useForm } from "react-hook-form";
-import { ExsistingTenantDto } from "../dtos/existing-tenant.dto";
+import { ExistingTenantDto } from "../dtos/existing-tenant.dto";
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser, setUser } from "../redux/slices/authSlice";
 import { getErrorMessage } from "../utils/getErrorMessage";
@@ -34,7 +33,7 @@ import {
 
 import WestIcon from "@mui/icons-material/West";
 import { VerificationInputComponent } from "./VerificationInput.component";
-import { MFAControlComponent } from "../../features/account/compomnents/MFAControl.component";
+import { MFAControlComponent } from "@components/account/compomnents/MFAControl.component";
 import { IntlTelInputRef } from "intl-tel-input/react";
 const { default: utils } = require("intl-tel-input/build/js/utils.js");
 
@@ -73,7 +72,7 @@ export const ExistingTenantPopupComponent = ({
     watch,
     reset,
     trigger,
-  } = useForm<ExsistingTenantDto>({
+  } = useForm<ExistingTenantDto>({
     mode: "all",
     defaultValues: {
       EmailId: user?.email || "",
@@ -95,7 +94,7 @@ export const ExistingTenantPopupComponent = ({
     EmailConfirmed,
     PhoneNumberConfirmed,
     DefaultMFA,
-  }: ExsistingTenantDto) => {
+  }: ExistingTenantDto) => {
     const countryData = iniTelReff.current
       ?.getInstance()
       ?.getSelectedCountryData();
@@ -103,7 +102,7 @@ export const ExistingTenantPopupComponent = ({
       countryData?.dialCode || "353",
       "",
     );
-    const model: ExsistingTenantDto = {
+    const model: ExistingTenantDto = {
       EmailId,
       PhoneNumber: `${countryData?.dialCode || "353"}${phone}`,
       PhoneCountryCode: countryData?.dialCode || "353",
@@ -142,8 +141,7 @@ export const ExistingTenantPopupComponent = ({
 
   useEffect(() => {
     if (!isLoading && user?.defaultMFA) {
-      console.log({ user });
-      const data: ExsistingTenantDto = {
+      const data: ExistingTenantDto = {
         EmailConfirmed: user?.emailConfirmed || false,
         PhoneNumberConfirmed: user?.phoneNumberConfirmed || false,
         PhoneNumber: user ? `+${user?.phone?.replace("+", "")}` : "",
@@ -156,7 +154,7 @@ export const ExistingTenantPopupComponent = ({
 
       reset(data);
       iniTelReff.current?.getInstance()?.setNumber(data.PhoneNumber);
-      console.log("reset", { data });
+
       if (isPhoneDirty.current) {
         isPhoneDirty.current = !(
           formState.submitCount === 0 &&
@@ -171,11 +169,7 @@ export const ExistingTenantPopupComponent = ({
     const isPhoneNumberConfirmed =
       values.PhoneNumber.replace("+", "") === user?.phone?.replace("+", "");
     const isEmailConfirmed = values.EmailId === user?.email;
-    console.log({
-      isPhoneNumberConfirmed,
-      isEmailConfirmed,
-      compares: [values.PhoneNumber, user?.phone, values.EmailId, user?.email],
-    });
+
     setValue("PhoneNumberConfirmed", isPhoneNumberConfirmed);
     setValue("EmailConfirmed", isEmailConfirmed);
   }, [formState, user]);

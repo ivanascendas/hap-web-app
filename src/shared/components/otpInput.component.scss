@@ -1,5 +1,9 @@
 .otp-input {
-  span {
+  span:not(
+      .MuiPickersSectionList-section,
+      .MuiPickersInputBase-sectionAfter,
+      .MuiPickersSectionList-section
+    ) {
     display: flex;
     justify-content: space-between;
     text-align: end;

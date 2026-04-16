@@ -43,6 +43,28 @@
           "endsPattern": "IIS Express is running."
         }
       }
+    },
+    {
+      "label": "HapBackendDebug",
+      "type": "shell",
+      "command": "dotnet",
+      "args": [
+        "run",
+        "--project",
+        "${workspaceFolder}/../HapBackend/HapBackend/HapBackend.csproj"
+      ],
+      "isBackground": true,
+      "problemMatcher": {
+        "owner": "custom",
+        "pattern": {
+          "regexp": "^$"
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "Build started",
+          "endsPattern": "Build succeeded|Build failed"
+        }
+      }
     }
   ]
 }

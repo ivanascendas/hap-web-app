@@ -15,10 +15,10 @@ class RealexHppUtils {
   private isAndroidOrIOs = /Android|iPad|iPhone|iPod/.test(navigator.userAgent);
 
   private isMobileXS =
-    ((window.innerWidth > 0 ? window.innerWidth : screen.width) <= 360
+    ((window.innerWidth > 0 ? window.innerWidth : window.screen.width) <= 360
       ? true
       : false) ||
-    ((window.innerHeight > 0 ? window.innerHeight : screen.height) <= 360
+    ((window.innerHeight > 0 ? window.innerHeight : window.screen.height) <= 360
       ? true
       : false); // eslint-disable-line no-restricted-globals
 

@@ -1,29 +1,43 @@
+import React from "react";
 import { createBrowserRouter, Navigate, useLocation } from "react-router-dom";
-
-import { Protected } from "./shared/components/Protected";
-import { StatementComponent } from "./features/statement/Statement.component";
+import { Protected } from "@shared/components/Protected";
+import { RoleProtected } from "@shared/components/RoleProtected";
+import { UnauthorizedPage } from "@shared/components/UnauthorizedPage";
+import { StatementComponent } from "@components/statement/Statement.component";
 import { useAuth } from "./shared/providers/Auth.provider";
-import { LoginFormComponent } from "./features/auth/components/LoginForm.component";
-import { ForgotPasswordFormComponent } from "./features/auth/components/ForgotPasswordForm.component";
-import { RegistrationComponent } from "./features/auth/components/Registration.components";
-import { ResetPasswordComponent } from "./features/auth/components/ResetPassword.component";
-import { CookieComponent } from "./features/cookie/cookie.component";
-import { DataComponent } from "./features/cookie/data.component";
-import { AccountComponent } from "./features/account/Account.component";
-import { MessagesComponent } from "./features/messages/Messages.component";
-import { ContactsComponent } from "./features/contacts/Contacts.component";
-import { InvoicesComponent } from "./features/invoices/Invoices.component";
-import { PaymentComponent } from "./features/payment/payment.component";
-import { PayComponent } from "./features/payment/pay.component";
-import { AdminComponent } from "./features/admin/admin.component";
-import { UsersComponent } from "./features/admin/pages/users.component";
-import { LettersComponent } from "./features/admin/pages/letters.component";
-import { ReportsComponent } from "./features/admin/pages/reports.component";
-import { AdminNotificationsComponent } from "./features/admin/pages/notifications.component";
-import { AdminsComponent } from "./features/admin/pages/admins.component";
-import { PasswordComponent } from "./features/admin/pages/password.component";
-import { AdminMessagesComponent } from "./features/admin/pages/messages.component";
-import { TermsComponent } from "./features/admin/pages/terms.copmonent";
+import { LoginFormComponent } from "@components/auth/components/LoginForm.component";
+import { ForgotPasswordFormComponent } from "@components/auth/components/ForgotPasswordForm.component";
+import { RegistrationComponent } from "@components/auth/components/Registration.components";
+import { ResetPasswordComponent } from "@components/auth/components/ResetPassword.component";
+import { CookieComponent } from "@components/cookie/cookie.component";
+import { DataComponent } from "@components/cookie/data.component";
+import { AccountComponent } from "@components/account/Account.component";
+import { MessagesComponent } from "@components/messages/Messages.component";
+import { ContactsComponent } from "@components/contacts/Contacts.component";
+import { InvoicesComponent } from "@components/invoices/Invoices.component";
+import { PaymentComponent } from "@components/payment/payment.component";
+import { PayComponent } from "@components/payment/pay.component";
+import { AdminComponent } from "@components/admin/admin.component";
+import { UsersComponent } from "@components/admin/pages/users.component";
+import { LettersComponent } from "@components/admin/pages/letters.component";
+import { ReportsComponent } from "@components/admin/pages/reports.component";
+import { AdminNotificationsComponent } from "@components/admin/pages/notifications.component";
+import { AdminsComponent } from "@components/admin/pages/admins.component";
+import { PasswordComponent } from "@components/admin/pages/password.component";
+import { AdminMessagesComponent } from "@components/admin/pages/messages.component";
+import { TermsComponent } from "@components/admin/pages/terms.copmonent";
+import { RefundListPage } from "@components/refund/RefundListPage";
+import { RefundFormPage } from "@components/refund/RefundFormPage";
+import { RefundDetailsPage } from "@components/refund/RefundDetailsPage";
+import { RefundsComponent } from "@components/admin/pages/refunds.component";
+import { RefundDetailsComponent } from "@components/admin/pages/refund-details.component";
+import { DocumentViewerPage } from "@components/admin/components/refunds/DocumentViewerPage";
+import { DocumentRedactionPage } from "@components/admin/components/refunds/DocumentRedactionPage";
+import { RefundUpdatePage } from "@components/refund/RefundUpdatePage";
+import { Gl07BatchesComponent } from "@components/admin/pages/gl07-batches.component";
+import { CreateGl07BatchComponent } from "@components/admin/pages/create-gl07-batch.component";
+import { Gl07BatchDetailsComponent } from "@components/admin/pages/gl07-batch-details.component";
+import { AddRefundComponent } from "@components/admin/components/refunds/AddRefundComponent";
 
 /**
  * Redirect component that handles user authentication and navigation.
@@ -41,9 +55,7 @@ export const Redirect = (): JSX.Element => {
   if (!auth.isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   } else {
-    return (
-      <Navigate to="/statements/rates" state={{ from: location }} replace />
-    );
+    return <Navigate to="/statements" state={{ from: location }} replace />;
   }
 };
 
@@ -70,7 +82,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <LoginFormComponent successUrl={"/statements/rates"} />,
+    element: <LoginFormComponent successUrl={"/statements"} />,
   },
 
   {
@@ -79,12 +91,34 @@ export const router = createBrowserRouter([
   },
   {
     path: "/admin",
-    element: <AdminComponent />,
+    element: (
+      <RoleProtected
+        allowedRoles={["Admin", "SuperAdmin", "DMU_L1", "DMU_L2", "AP"]}
+        redirectTo="/loginAdmin"
+        roleRedirection={{
+          DMU_L1: "/admin/refunds",
+          DMU_L2: "/admin/refunds",
+          AP: "/admin/refunds",
+        }}
+        component={<AdminComponent />}
+      />
+    ),
     children: [
       {
         index: true,
         path: "users",
-        element: <UsersComponent />,
+        element: (
+          <RoleProtected
+            allowedRoles={["Manager", "SuperAdmin"]}
+            redirectTo="/loginAdmin"
+            roleRedirection={{
+              DMU_L1: "/admin/refunds",
+              DMU_L2: "/admin/refunds",
+              AP: "/admin/refunds",
+            }}
+            component={<UsersComponent />}
+          />
+        ),
       },
       {
         path: "letters/:type",
@@ -92,15 +126,33 @@ export const router = createBrowserRouter([
       },
       {
         path: "reports",
-        element: <ReportsComponent />,
+        element: (
+          <RoleProtected
+            allowedRoles={["Manager", "SuperAdmin"]}
+            redirectTo="/loginAdmin"
+            component={<ReportsComponent />}
+          />
+        ),
       },
       {
         path: "notifications/:type",
-        element: <AdminNotificationsComponent />,
+        element: (
+          <RoleProtected
+            allowedRoles={["SuperAdmin", "Manager"]}
+            redirectTo="/loginAdmin"
+            component={<AdminNotificationsComponent />}
+          />
+        ),
       },
       {
         path: "admins",
-        element: <AdminsComponent />,
+        element: (
+          <RoleProtected
+            allowedRoles={["SuperAdmin"]}
+            redirectTo="/admin/users"
+            component={<AdminsComponent />}
+          />
+        ),
       },
       {
         path: "security",
@@ -113,6 +165,96 @@ export const router = createBrowserRouter([
       {
         path: "terms",
         element: <TermsComponent />,
+      },
+      {
+        path: "refunds",
+        element: (
+          <RoleProtected
+            allowedRoles={["DMU_L1", "DMU_L2", "AP"]}
+            redirectTo="/admin/users"
+            component={<RefundsComponent />}
+          />
+        ),
+      },
+      {
+        path: "refunds/:id",
+        element: (
+          <RoleProtected
+            allowedRoles={["DMU_L1", "DMU_L2", "AP"]}
+            redirectTo="/admin/users"
+            component={<RefundDetailsComponent />}
+          />
+        ),
+      },
+      {
+        path: "refunds/new",
+        element: (
+          <RoleProtected
+            allowedRoles={["DMU_L1", "DMU_L2", "AP"]}
+            redirectTo="/admin/users"
+            component={<AddRefundComponent />}
+          />
+        ),
+      },
+      {
+        path: "refunds/:applicationId/documents/:documentId",
+        element: (
+          <RoleProtected
+            allowedRoles={["DMU_L1", "DMU_L2", "AP"]}
+            redirectTo="/admin/users"
+            component={<DocumentViewerPage />}
+          />
+        ),
+      },
+      {
+        path: "refunds/:applicationId/documents/:documentId/redact",
+        element: (
+          <RoleProtected
+            allowedRoles={["DMU_L1"]}
+            redirectTo="/unauthorized"
+            component={<DocumentRedactionPage />}
+          />
+        ),
+      },
+      {
+        path: "refunds/:applicationId/documents/:documentId/redact/:versionId",
+        element: (
+          <RoleProtected
+            allowedRoles={["DMU_L1"]}
+            redirectTo="/unauthorized"
+            component={<DocumentRedactionPage />}
+          />
+        ),
+      },
+      {
+        path: "gl07-batches",
+        element: (
+          <RoleProtected
+            allowedRoles={["AP"]}
+            redirectTo="/admin/users"
+            component={<Gl07BatchesComponent />}
+          />
+        ),
+      },
+      {
+        path: "gl07-batches/create",
+        element: (
+          <RoleProtected
+            allowedRoles={["AP"]}
+            redirectTo="/admin/users"
+            component={<CreateGl07BatchComponent />}
+          />
+        ),
+      },
+      {
+        path: "gl07-batches/:id",
+        element: (
+          <RoleProtected
+            allowedRoles={["AP"]}
+            redirectTo="/admin/users"
+            component={<Gl07BatchDetailsComponent />}
+          />
+        ),
       },
     ],
   },
@@ -137,8 +279,12 @@ export const router = createBrowserRouter([
     element: <DataComponent />,
   },
   {
+    path: "/unauthorized",
+    element: <UnauthorizedPage />,
+  },
+  {
     index: true,
-    path: "/statements/:department",
+    path: "/statements",
     element: <Protected component={<StatementComponent />} />,
   },
 
@@ -165,5 +311,22 @@ export const router = createBrowserRouter([
   {
     path: "/payment/pay",
     element: <Protected component={<PayComponent />} />,
+  },
+  {
+    path: "/refunds",
+    element: <Protected component={<RefundListPage />} />,
+  },
+  {
+    path: "/refunds/new",
+    element: <Protected component={<RefundFormPage />} />,
+  },
+  {
+    path: "/refunds/:id",
+    element: <Protected component={<RefundDetailsPage />} />,
+  },
+
+  {
+    path: "/refunds/:id/update",
+    element: <Protected component={<RefundUpdatePage />} />,
   },
 ]);

@@ -6,7 +6,7 @@ import {
   InvoiceQueryParams,
   InvoicesResponse,
 } from "../dtos/invoice.dtos";
-import { PaymentModel } from "../../features/payment/payment.model";
+import { PaymentModel } from "@components/payment/payment.model";
 import {
   PaymentDto,
   PaymentResponseDto,
@@ -30,6 +30,24 @@ export const paymentsApi = createApi({
     payInvoices: builder.mutation<PaymentResponseDto, PaymentDto[]>({
       query: (data: PaymentModel[]) => ({
         url: "/api/payment/pay",
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+    }),
+
+    getPaymentInfo: builder.query<PaymentDto, void>({
+      query: () => ({
+        url: "/api/payment/info",
+        method: "GET",
+      }),
+    }),
+
+    setPaymentInfo: builder.mutation<PaymentDto, PaymentDto>({
+      query: (data) => ({
+        url: "/api/payment/info",
         method: "POST",
         body: JSON.stringify(data),
         headers: {
@@ -78,4 +96,6 @@ export const {
   useLazyDownloadInvoicePdfQuery,
   usePayInvoicesMutation,
   useConfirmPaymentMutation,
+  useLazyGetPaymentInfoQuery,
+  useSetPaymentInfoMutation,
 } = paymentsApi;

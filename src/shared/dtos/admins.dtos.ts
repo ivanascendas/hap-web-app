@@ -1,3 +1,11 @@
+export type UserRoleName =
+  | "Client"
+  | "Admin"
+  | "SuperAdmin"
+  | "DMU_L1"
+  | "DMU_L2"
+  | "Manager"
+  | "AP";
 export interface AdminDto {
   id: string;
   email: string;
@@ -8,6 +16,7 @@ export interface AdminDto {
   userName: string;
   incDepts: string[];
   password?: string;
+  roles: UserRoleName[];
 }
 
 export interface CreateAdminDto {
@@ -19,6 +28,7 @@ export interface CreateAdminDto {
   TwoFactorEnabled: boolean;
   LockoutEnabled: boolean;
   IncDepts: string[];
+  Roles: UserRoleName[];
 }
 
 export interface UpdatePasswordByAdminDto {
@@ -33,6 +43,7 @@ interface AdminRequestDto {
   TwoFactorEnabled: boolean;
   LockoutEnabled: boolean;
   IncDepts: string[];
+  Roles: UserRoleName[];
 }
 
 export interface UpdateAdminDto extends AdminRequestDto {

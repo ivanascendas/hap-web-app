@@ -6,8 +6,7 @@ import {
 } from "../services/Auth.service";
 import { useDispatch, useSelector } from "react-redux";
 import { selectToken } from "../redux/slices/authSlice";
-import StorageService from "../services/Storage.service";
-import { TokenDto } from "../dtos/token.dto";
+import { getStoredToken } from "../utils/secureTokenStorage";
 
 export type AuthContextType = {
   isTokenRecived: boolean;
@@ -60,7 +59,7 @@ export const AuthProvider = ({
 
   useEffect(() => {
     if (!tokenData) {
-      tokenData = StorageService.getObject<TokenDto>("token");
+      tokenData = getStoredToken();
       if (tokenData) {
         handleToken(tokenData, dispatch);
       }

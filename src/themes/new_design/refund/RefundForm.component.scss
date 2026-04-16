@@ -1,0 +1,80 @@
+@import "../../../assets/styles/variables.scss";
+
+.refund-form-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .MuiFormLabel-asterisk {
+    color: red;
+  }
+
+  .refund-form {
+    margin-top: 2rem;
+  }
+
+  // Мобильные устройства (< 768px)
+  @media screen and (max-width: $mobileSize) {
+    padding: 0.5rem;
+    margin: 0;
+
+    &--mobile {
+      .refund-form {
+        margin-top: 1rem;
+      }
+
+      .MuiTextField-root {
+        .MuiInputBase-root {
+          font-size: 1rem;
+        }
+
+        .MuiInputLabel-root {
+          font-size: 0.875rem;
+        }
+      }
+
+      .MuiButton-root {
+        font-size: 0.9375rem;
+        padding: 0.625rem 1.25rem;
+      }
+
+      .MuiTypography-h5 {
+        font-size: 1.25rem;
+        line-height: 1.3;
+        margin-bottom: 0.75rem;
+      }
+
+      .MuiTypography-body1 {
+        font-size: 0.875rem;
+      }
+
+      .MuiAlert-root {
+        font-size: 0.8125rem;
+      }
+
+      .MuiFormControlLabel-root {
+        .MuiFormControlLabel-label {
+          font-size: 0.875rem;
+        }
+      }
+    }
+  }
+
+  // Планшеты (768px - 1024px)
+  @media screen and (min-width: $mobileSize) and (max-width: 64rem) {
+    padding: 1rem;
+
+    .refund-form {
+      margin-top: 1.5rem;
+    }
+
+    .MuiButton-root {
+      padding: 0.75rem 1.5rem;
+    }
+  }
+
+  // Десктоп маленький (1024px - 1200px)
+  @media screen and (min-width: 64rem) and (max-width: $desktopLgSize) {
+    padding: 1.5rem;
+  }
+}

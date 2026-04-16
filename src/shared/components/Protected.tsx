@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useAuth } from "../providers/Auth.provider";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { MainComponent } from "../../features/main/Main.component";
+import { MainComponent } from "@components/main/main.component";
 
 type ProtectedProps = {
   component: JSX.Element;
@@ -23,7 +23,7 @@ export const Protected = ({ component }: ProtectedProps): JSX.Element => {
     if (auth.isTokenRecived && !auth.isAuthenticated) {
       navigate("/login", { state: { from: location } });
     }
-  }, [auth]);
+  }, [auth.isTokenRecived, auth.isAuthenticated, navigate, location]);
 
   return <MainComponent>{component}</MainComponent>;
 };

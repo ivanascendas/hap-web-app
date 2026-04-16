@@ -4,7 +4,7 @@
     "TITLE2": "CUNTAS TAIRSÍ CHUSTAIMÉIRA",
     "TITLE3": "Tairseach Custaiméara Údaráis Áitiúil",
     "WELCOME": "fáilte",
-    "FOOTER_TEXT": "Local Authority Customer Portal",
+    "FOOTER_TEXT": "Tairseach Custaiméara Údaráis Áitiúil",
     "HEADER": {
       "BUTTONS": {
         "LOGIN": "Logáil Isteach",
@@ -43,9 +43,14 @@
     "INVALID_COUNTRY_CODE": "Cuir isteach cód tíre Fóin bhailí",
     "INVALID_PHONE_SHORT": "Cuir isteach Fón bailí gan cód tíre a áireamh",
     "INVALID_MFA": "Tá MFA réamhshocraithe ag teastáil",
+    "UPLOAD_FAILED": "Theip ar uaslódáil an doiciméid. Bain triail eile as le do thoil.",
     "EMAIL_CONFIRMATION_REQUIRED": "Tá Ríomhphost Deimhnithe ag teastáil",
     "PHONE_CONFIRMATION_REQUIRED": "Tá Uimhir Theileafóin Deimhnithe ag teastáil",
     "INVALID_ACCOUNT_NUMBER": "Cuir isteach Slánuimhir bhailí",
+    "INVALID_IBAN": "Cuir isteach IBAN bailí",
+    "INVALID_BIC": "Cuir isteach cód BIC/SWIFT bailí",
+    "INVALID_PPSN": "Formáid PPSN neamhbhailí. Formáid a bhfuiltear ag súil léi: 7 digit agus 1-2 litir ina dhiaidh (m.sh., 1234567T nó 1234567TW)",
+    "ADDRESS_MIN_TWO_LINES": "Caithfidh an seoladh a bheith ar a laghad 2 líne",
     "passwordValidationMinLength": "Tá an pasfhocal ró-ghearr",
     "passwordValidationLowerCase": "Ní mór 1 litir chás íochtair ar a laghad a bheith sa phasfhocal",
     "passwordValidationUpperCase": "Ní mór 1 litir chás uachtair ar a laghad a bheith sa phasfhocal",
@@ -57,6 +62,13 @@
     "AMOUNT_SHOULD_BE_GREATER": "Ba chóir go mbeadh an méid níos mó ná ",
     "AMOUNT_SHOULD_NOT_BE_GREATER": " Níor chóir go mbeadh an méid níos mó ná ",
     "UNKNOWN_ERROR": "Tharla earráid neamhaithnid",
+    "TEXTRACT_UNSUPPORTED_DOCUMENT": "Ní thacaítear le formáid an doiciméid. Uaslódáil comhad PDF, PNG, JPEG, nó TIFF le do thoil.",
+    "TEXTRACT_BAD_DOCUMENT": "Is cosúil go bhfuil an doiciméad truaillithe nó nach féidir é a léamh. Seiceáil an comhad agus bain triail eile as.",
+    "TEXTRACT_DOCUMENT_TOO_LARGE": "Tá an doiciméad ró-mhór le próiseáil. Uaslódáil comhad níos lú ná 5 MB le do thoil.",
+    "TEXTRACT_INVALID_PARAMETER": "Níorbh fhéidir an doiciméad a phróiseáil. D'fhéadfadh sé a bheith truaillithe nó i bhformáid neamhthacaithe.",
+    "TEXTRACT_THROTTLING": "An iomarca iarratas próiseála doiciméad. Fan nóiméad agus bain triail eile as le do thoil.",
+    "TEXTRACT_PROCESSING_ERROR": "Níorbh fhéidir an doiciméad a phróiseáil. Bain triail eile as nó uaslódáil comhad difriúil.",
+    "TEXTRACT_SERVICE_UNAVAILABLE": "Níl seirbhís próiseála doiciméad ar fáil go sealadach. Bain triail eile as ar ball.",
     "WRONG_DATA": "paraiméadair mhícheart",
     "INVALID_INCOME_DEPARTMENT": "Roinn ioncaim neamhbhailí",
     "EMPTY_PHONE": "Ní féidir uimhir theileafóin a bheith folamh",
@@ -125,6 +137,7 @@
     "PASSWORDS_INFO": "Ní mór litir chás uachtair amháin agus uimhir amháin a bheith sa phasfhocal",
     "ACCOUNT_NUMBER_INFO": "Seo d’uimhir chustaiméara. Ba cheart go mbeifeá in ann é seo a fháil ar aon litir a sheol muid\n                     chugat.",
     "MFA_INFO": "Molaimid go láidir go roghnaíonn tú fíordheimhniú ilfhachtóiriúil (MFA). Feabhsóidh sé seo slándáil do chuntais. <br/> Roghnaigh OTP SMS nó OTP Ríomhphoist. Gheobhaidh tú cód ansin le cur isteach gach uair a gheobhaidh tú rochtain ar an Tairseach GRÉASÁIN chun d'aitheantas a dhearbhú. Mura mian leat cód a fháil, roghnaigh Gan MFA. Ní mholtar é seo. <br/> Is féidir leat do rogha a athrú am ar bith i do Phróifíl Tairsí GRÉASÁIN.",
+    "MFA_INFO_2": "Roghnaigh OTP SMS nó OTP Ríomhphoist. Gheobhaidh tú cód ansin le cur isteach gach uair a gheobhaidh tú rochtain ar an Tairseach GRÉASÁIN chun d'aitheantas a dhearbhú. Mura mian leat cód a fháil, roghnaigh Gan MFA. Ní mholtar é seo. <br/> Is féidir leat do rogha a athrú am ar bith i do Phróifíl Tairsí GRÉASÁIN.",
     "BUTTONS": {
       "GET_IN_TOUCH": "Téigh i dteagmháil",
       "NEXT": "Ar Aghaidh",
@@ -147,7 +160,10 @@
   "MESSAGE_PAGE": {
     "TITLE": "Teachtaireachtaí",
     "NO_MESSAGES": "Níl aon teachtaireachtaí",
-    "KEY": "Eochair"
+    "KEY": "Eochair",
+    "MARK_ALL_AS_READ": "Marcáil Gach Ceann mar Léite",
+    "MARK_ALL_AS_READ_SUCCESS": "Marcáladh gach teachtaireacht mar léite",
+    "MARK_ALL_AS_READ_ERROR": "Theip ar gach teachtaireacht a mharcáil mar léite"
   },
   "FORGOT_PASSWORD": {
     "TITLE": "Athshocraigh Pasfhocal",
@@ -160,9 +176,9 @@
   },
   "POPUPS": {
     "TERM_AND_CONDITIONS": {
-      "TITLE": "Terms and Conditions",
-      "CONTENT_1": "THESE TERMS AND CONDITIONS APPLY TO AND GOVERN YOUR ACCESS TO AND USE OF SOUTH DUBLIN COUNTY COUNCIL MOBILE RENTS SERVICE APP",
-      "CONTENT_2": "IT IS IMPORTANT THAT YOU READ AND UNDERSTAND OUR TERMS AND CONDITIONS AS BY DOWNLOADING THE APP YOU INDICATE THAT YOU ACCEPT THESE TERMS AND CONDITIONS. IF YOU DO NOT AGREE TO THESE TERMS AND CONDITIONS THEN DO NOT DOWNLOAD THE APP",
+      "TITLE": "Téarmaí agus Coinníollacha",
+      "CONTENT_1": "BAINEANN NA TÉARMAÍ AGUS COINNÍOLLACHA SEO LE DO ROCHTAIN AR AGUS D'ÚSÁID AN AIP SEIRBHÍSÍ CÍOSA PÓCA CHOMHAIRLE CONTAE BHAILE ÁTHA CLIATH THEAS AGUS RIALAÍONN SÉ É",
+      "CONTENT_2": "TÁ SÉ TÁBHACHTACH GO LÉANN TÚ AGUS GO DTUIGEANN TÚ ÁR dTÉARMAÍ AGUS COINNÍOLLACHA MAR TRÍ AN AIP A ÍOSLÓDÁIL CUIREANN TÚ IN IÚL GO nGLACANN TÚ LEIS NA TÉARMAÍ AGUS COINNÍOLLACHA SEO. MURA nAONTAÍONN TÚ LEIS NA TÉARMAÍ AGUS COINNÍOLLACHA SEO NÁ HÍOSLÓDÁIL AN AIP",
       "STATE_1": {
         "TITLE": "1. Availability and registration",
         "DESCRIPTION_1": "We have made this SOUTH DUBLIN COUNTY COUNCIL MOBILE RENTS SERVICE (the <b>App</b>) available to you for your own personal use only and only for the purposes of facilitating your use of accessing your rent account online (the <b>Service</b>).",
@@ -240,6 +256,7 @@
     "ADMIN_DETAILS": {
       "TITLE": "Sonraí riarthóra",
       "INCOME_DEPARTMENTS": "Ranna Ioncaim",
+      "ROLES": "Róil",
       "LABELS": {
         "ADMIN_NAME": "Ainm Riarthóra",
         "EMAIL": "Ríomhphost",
@@ -288,9 +305,12 @@
     "RESET": "Athshocraigh",
     "BACK": "Ar ais",
     "UPDATE": "Uasdátaigh",
+    "APPROVE": "Ceadaigh",
+    "REJECT": "Diúltaigh",
     "EDIT": "Cuir in eagar",
     "SAVE": "Sábháil",
     "SEND": "Seol",
+    "SENDING": "Á Sheoladh...",
     "OK": "Ceart go leor",
     "NEXT": "Ar Aghaidh",
     "PREV": "Roimhe",
@@ -413,7 +433,8 @@
     "PAYMENT_PROCESSING": "Léireofar d’íocaíocht le déanaí ar do chuntas amárach.",
     "PASSWORD_IS_CHANGED": "Athraíodh an pasfhocal.",
     "LETTER_BEFORE_LOGIN": "Sula logáil tú isteach caithfidh tú litir a bheith faighte agat ina raibh a\n                Pasfhocal Sealadach.",
-    "CUSTOMER_NUMBER_EXPL": "Seo d’uimhir chustaiméara. Ba cheart go mbeifeá in ann é seo a fháil ar aon litir a sheol muid\n                     chugat."
+    "CUSTOMER_NUMBER_EXPL": "Seo d’uimhir chustaiméara. Ba cheart go mbeifeá in ann é seo a fháil ar aon litir a sheol muid\n                     chugat.",
+    "PAYMENT_ACCEPTED_TITLE2": "Seolfar cóip den admháil chuig do ríomhphost freisin."
   },
   "MAIN": {
     "PAY_BUTTON": "Íoc",
@@ -422,6 +443,7 @@
     "ACCOUNT": "Cuntas",
     "INFO": "Eolas",
     "PAY": "Íoc",
+    "SAVE_INFO": "Sábháil Faisnéis",
     "MENU": {
       "HAP": "ÍCT",
       "RATES": "ÍCT",
@@ -536,6 +558,8 @@
     "CURRENT_PASSWORD": "Pasfhocal reatha",
     "NEW_PASSWORD": "Pasfhocal nua",
     "CONFIRM_PASSWORD": "Deimhnigh pasfhocal",
+    "CONFIRM_PASSWORD_TITLE": "Deimhnigh do phasfhocal",
+    "CONFIRM_PASSWORD_SUBTITLE": "Iontráil do phasfhocal reatha le leanúint ar aghaidh",
     "BUTTONS": {
       "UPDATE": "Uasdátaigh",
       "CHANGE": "Athraigh"
@@ -602,7 +626,8 @@
       "EIRCODE": "Éirchód",
       "EMAIL": "Ríomhphost",
       "PHONE": "Fón"
-    }
+    },
+    "SAVE_INFO": "Sábháil Faisnéis"
   },
   "PAYMENT_DETAILS": {
     "TITLE": "Sonraí Íocaíochta",
@@ -622,8 +647,8 @@
     "LABEL_BALANCE": "Iarmhéid:"
   },
   "COOKIE": {
-    "TITLE": "Cookie Policy",
-    "DESCRIPTION": "Fat new smallness few supposing suspicion two. Course sir people worthy\n        horses add entire suffer. How one dull get busy dare far. At principle\n        perfectly by sweetness do. As mr started arrival subject by believe.\n        Strictly numerous outlived kindness whatever on we no on addition. He do\n        subjects prepared bachelor juvenile ye oh. He feelings removing informed\n        he as ignorant we prepared. Evening do forming observe spirits is in.\n        Country hearted be of justice sending. On so they as with room cold ye.\n        Be call four my went mean. Celebrated if remarkably especially an. Going\n        eat set she books found met aware. Sex reached suppose our whether. Oh\n        really by an manner sister so. One sportsman tolerably him extensive put\n        she immediate. He abroad of cannot looked in. Continuing interested ten\n        stimulated prosperous frequently all boisterous nay. Of oh really he\n        extent horses wicket. Carried nothing on am warrant towards. Polite in\n        of in oh needed itself silent course. Assistance travelling so\n        especially do prosperous appearance mr no celebrated. Wanted easily in\n        my called formed suffer. Songs hoped sense as taken ye mirth at. Believe\n        fat how six drawing pursuit minutes far. Same do seen head am part it\n        dear open to. Whatever may scarcely judgment had. Far curiosity\n        incommode now led smallness allowance. Favour bed assure son things yet.\n        She consisted consulted elsewhere happiness disposing household any old\n        the. Widow downs you new shade drift hopes small. So otherwise commanded\n        sweetness we improving. Instantly by daughters resembled unwilling\n        principle so middleton. Fail most room even gone her end like.\n        Comparison dissimilar unpleasant six compliment two unpleasing any add.\n        Ashamed my company thought wishing colonel it prevent he in. Pretended\n        residence are something far engrossed old off. One advanced diverted\n        domestic sex repeated bringing you old. Possible procured her trifling\n        laughter thoughts property she met way. Companions shy had solicitude\n        favourable own. Which could saw guest man now heard but. Lasted my\n        coming uneasy marked so should. Gravity letters it amongst herself\n        dearest an windows by. Wooded ladies she basket season age her uneasy\n        saw. Discourse unwilling am no described dejection incommode no\n        listening of. Before nature his parish boy. Its had resolving otherwise\n        she contented therefore. Afford relied warmth out sir hearts sister use\n        garden. Men day warmth formed admire former simple. Humanity declared\n        vicinity continue supplied no an. He hastened am no property exercise\n        of. Dissimilar comparison no terminated devonshire no literature on. Say\n        most yet head room such just easy. Expenses as material breeding\n        insisted building to in. Continual so distrusts pronounce by unwilling\n        listening. Thing do taste on we manor. Him had wound use found hoped. Of\n        distrusts immediate enjoyment curiosity do. Marianne numerous saw\n        thoughts the humoured. Surprise steepest recurred landlord mr wandered\n        amounted of. Continuing devonshire but considered its. Rose past oh shew\n        roof is song neat. Do depend better praise do friend garden an wonder\n        to. Intention age nay otherwise but breakfast. Around garden beyond to\n        extent by. Oh he decisively impression attachment friendship so if\n        everything. Whose her enjoy chief new young. Felicity if ye required\n        likewise so doubtful. On so attention necessary at by provision\n        otherwise existence direction. Unpleasing up announcing unpleasant\n        themselves oh do on. Way advantage age led listening belonging\n        supposing.",
+    "TITLE": "Beartas Fianán",
+    "DESCRIPTION": "Cuirfear téacs beartais fianán ar fáil anseo.",
     "POPUP": {
       "TITLE": "Úsáideann an Suíomh Gréasáin seo fianáin.",
       "CONTENT": "Ní úsáideann ISC ÍCT ach fianáin ar an suíomh gréasáin seo agus ar an bhfeidhmchlár seo \n             atá fíor-riachtanach le haghaidh seirbhísí a iarrann tú. Le haghaidh tuilleadh eolais, féach ar ár\n             <a ng-href=\"#/data\">Ráiteas um Chosaint Sonraí</a>agus <a ng-href=\"#/cookie\">Ráiteas Fianáin</a>.",
@@ -675,13 +700,13 @@
       "ENTER_TITLE": "Cuir isteach Teideal",
       "ENTER_TEXT": "Cuir isteach téacs",
       "SUMMARY_TABLE": {
-        "TITLE": "Notifications Summary Report",
+        "TITLE": "Tuarascáil Achoimre Fógraí",
         "COLUMNS": {
-          "NOTIFICATION_DATE": "Date",
-          "NOTIFICATION_MESSAGE": "Message",
-          "NOTIFICATION_STATUS": " Status",
-          "NOTIFICATION_AMOUNT": "No Acs",
-          "NOTIFICATION_DEVICES": "Device Summary"
+          "NOTIFICATION_DATE": "Dáta",
+          "NOTIFICATION_MESSAGE": "Teachtaireacht",
+          "NOTIFICATION_STATUS": " Stádas",
+          "NOTIFICATION_AMOUNT": "Líon Cuntas",
+          "NOTIFICATION_DEVICES": "Achoimre Gléas"
         }
       }
     }
@@ -711,6 +736,7 @@
       "LOGOUT": "Logáil amach",
       "ACCOUNT_INF": "Eolas Cuntais",
       "CHANGE_PASSWORD": "Athraigh Pasfhocal",
+      "SECURITY": "Slándáil",
       "ADMIN": "Riarthóir",
       "PASSWORD": "Slándáil",
       "MESSAGES": "Teachtaireachtaí",
@@ -879,12 +905,12 @@
     }
   },
   "DOCUMENTS": {
-    "DATE_CELL": "Date of upload",
-    "DOC_NAME_CELL": "Document Name"
+    "DATE_CELL": "Dáta uaslódála",
+    "DOC_NAME_CELL": "Ainm Doiciméid"
   },
   "COOKIE_PAGE": {
-    "SUB_TITLE": "Cookie Statement for",
-    "TITLE": "HAP WebPay Portal",
+    "SUB_TITLE": "Ráiteas Fianán le haghaidh",
+    "TITLE": "Tairseach WebPay ÍCT",
     "CONTENT": "<h2>Introduction</h2>\n            <p>This cookie statement has been created for the Housing Assistance Payment (“HAP”) WebPay Portal (WebPay”).</p>\n            <p>This cookie statement provides information about the use of cookies and similar technologies when someone uses the WebPay Portal and your rights. If you are looking for information about the data processing within the WebPay Portal then please go to the data protection statement. </p>\n            <h2>Who we are and why do we require your information?</h2>\n            <p>The HAP Scheme is a social housing support scheme, established by the Government of Ireland within the Department of Housing, Local Government and Heritage (the “DHLGH”). The DHPLG in conjunction with the Local Authorities of Ireland are the data controllers for the HAP scheme. </p>\n            <p>The data controllers established the Housing Assistance Payment Shared Service Centre (“HAP SSC”), to provide specific financial transactional and reporting services on behalf of all Local Authorities and the DHLGH.</p>\n            <p>The HAP SSC is part of Limerick City and County Council and acts as a data processor for the data controllers.</p>\n            <p>The WebPay portal has been created as a way for people who are participating in HAP to view the transactions in their account with their Local Authority and to make online payments.The WebPay portal has been created as a way for people who are participating in HAP to view the transactions in their account with their Local Authority and to make online payments.\n            <h2>Why do we have a cookie statement?</h2>\n            <p>When you visit any website, it may store or retrieve information on your browser, mostly in the form of cookies. This cookie statement is to give you more information about our use of cookies and similar technologies and let you know what rights you have. </p>\n            <h2>What information do we store when you visit the WebPay Portal?</h2>\n            <p>Cookies can take a variety of forms. The WebPay Portal website uses the following types of cookie technologies:</p>\n            <h3>Browser Cookies</h3>\n            <p>A cookie is a small piece of data (text file) that a website – when visited by a user – asks your browser to store on your device in order to remember this information. This information might be about you, your preferences or your device and is mostly used to make the site work as you expect it to. The information does not usually directly identify you, but it can give you a more personalized web experience. Those cookies are set by us and called first-party cookies.</p>\n            <h3>Local storage</h3>\n            <p>Local Storage is a type of web storage that allows websites and apps to store and access data right in the browser with no expiration date. This means the data stored in the browser will persist even after the browser window has been closed. The WebPay Portal needs to store essential information on your device in order to operate. The WebPay Portal will access this information whenever you login to WebPay.</p>\n            <h2>What do we use cookies for?</h2>\n            <p>The WebPay Portal uses only cookies and other technologies that are strictly necessary for the services requested by you and to make it operate safely and efficiently. We do not set any functional, performance, analytical, tracking or advertising cookies.</p>\n            <h3>Strictly Necessary Cookies</h3>\n            <p>These cookies are necessary for the website to function and cannot be switched off in our systems. They are usually only set in response to actions made by you which amount to a request for services, such as setting your privacy preferences, logging in or filling in forms. You can set your browser to block or alert you about these cookies, but some parts of the site will not then work. These cookies do not store any personally identifiable information.</p>\n            <table>\n                <tr>\n                    <th>Cookie name</th>\n                    <th>Cookie Purpose</th>\n                    <th>Lifespan</th>\n                    <th>Owner</th>\n                </tr>\n                <tr>\n                    <td>Recaptcha</td>\n                    <td>This cookie ensures that only our customers can reset their passwords and prevents automated reset password attempts.</td>\n                    <td>One Year</td>\n                    <td>First Party</td>\n                </tr>\n            </table>\n            <h3>Local storage</h3>\n            <p>The following local storage items will appear on your device</p>\n            <table>\n                <tr>\n                    <th>Host</th>\n                    <th>Key</th>\n                    <th>Purpose</th>\n                    <th>Lifespan</th>\n                </tr>\n                <tr>\n                    <td>Happayments.limerick.ie</td>\n                    <td>userName</td>\n                    <td>This records your user name</td>\n                    <td>Persistent</td>\n                </tr>\n                <tr>\n                    <td>Happayments.limerick.ie</td>\n                    <td>isLogged</td>\n                    <td>Who is logged in</td>\n                    <td>Persistent</td>\n                </tr>\n                <tr>\n                    <td>Happayments.limerick.ie</td>\n                    <td>isShowHint</td>\n                    <td>Password hint</td>\n                    <td>Persistent</td>\n                </tr>\n                <tr>\n                    <td>Happayments.limerick.ie</td>\n                    <td>token</td>\n                    <td>This is a unique ID for the session</td>\n                    <td>Persistent</td>\n                </tr>\n                \n                <tr>\n                    <td>Happayments.limerick.ie</td>\n                    <td>cookieBanner</td>\n                    <td>This records whether you have seen the cookie banner</td>\n                    <td>Persistent</td>\n                </tr>\n            </table>\n            <h3>Device data Collection and use of technical information</h3>\n            <p>WebPay uses session cookies that we transfer to your computer for the duration of your visit. We use the session cookie to track your progress through the site, allowing us to maintain the security and integrity of the data being used. Technical details in connection with visits to this website are logged by our internet service provider for our statistical purposes. The technical details logged are confined to the following items:</p>\n            <ul>\n                <li>the IP address of the visitor's web server</li>\n                <li>the top-level domain name used (for example .i.e, .com, .org, .net)</li>\n                <li>the previous website address from which the visitor reached us, including any search terms used</li>\n                <li>data which show the traffic of visitors around this web site</li>\n                <li>the type of web browser used by the website visitor. WebPay will make no attempt to identify individual visitors, or to associate the technical details listed above with any individual</li>\n            </ul>\n            <p>This information is only used for technical purposes and not used for any further processing purposes.</p>\n            <h2>Controlling cookies</h2>\n            <p>The WebPay Portal will only work if the strictly necessary cookies and local storage operate as intended. You can clear these after you have left the WebPay Portal as follows:</p>\n            <h3>How to clear browser cookies</h3>\n            <p>If you'd like to find out how to stop websites using cookies to remember what websites you visit, choose your browser from the list. This will take you to the browser's respective page where you can learn how to manage your cookies and site data:</p>\n            <ul>\n                <li>Chrome</li>\n                <li>Safari</li>\n                <li>Firefox</li>\n                <li>Internet Explorer</li>\n            </ul>\n            <p>How to clear local storage</p>\n            <ul>\n                <li>Open the Google Chrome Console by pressing F12 key</li>\n                <li>Select “Application” in the console’s top menu</li>\n                <li>Select “Local Storage” in the console’s left menu</li>\n                <li>Right click your site(s) and click clear to delete the local storage</li>\n            </ul>\n            <p>Similar options are available in other browsers.</p>\n            <h2>Further information</h2>\n            <p>You can obtain further information about </p>\n            <ul>\n                <li>the HAP Scheme at our website; <a href=\"www.hap.ie\">www.hap.ie</a></li>\n                <li>contact details for each Local Authority; <a href=\"www.hap.ie/localauthorities/\">www.hap.ie/localauthorities/</a></li>\n                <li>the data processing carried out by the HAP SSC; <a href=\"www.hap.ie/privacy\">www.hap.ie/privacy</a><br>\n                    Please be aware that a different set of cookies will be processed when you go to the HAP.ie website, you can obtain more information about the cookies on the <a href=\"HAP.ie\">HAP.ie</a> website</li>\n                <li>the data processing carried out by Limerick City and County Council; <a href=\"www.limerick.ie/council/services/your-council/privacy-statement-limerick-city-and-county-council\">www.limerick.ie/council/services/your-council/privacy-statement-limerick-city-and-county-council</a></li>\n            </ul>\n            <h2>Your Data Protection Rights</h2>\n            <p>To the extent that the HAP SSC as Data Processor processes your personal data for or on behalf of the Data Controllers, the Data Processor undertakes to notify the relevant Data Controller if it receives any complaint, notice or communication which relates directly or indirectly to the processing of your personal data or to compliance with applicable Data Protection Law and provide the Data Controller with full co-operation and assistance in relation to any such complaint, notice or communication.\n                The HAP SSC as Data Processor can provide you with the relevant contact details for your relevant Local Authority (Data Controller).\n                </p>\n            <p>You have the right to request access to personal data held about you, obtain confirmation as to whether data concerning you exists, be informed of the content and source of data and check its accuracy. In addition, if the data held by us is found to be inaccurate you have the right to change, remove, block, or object to the use of, personal data held by your Local Authority, which is shared with HAP SSC. You also have the right to data portability. In certain circumstances blocking access to data may delay or remove access to a service where the data is required by law or for essential purposes related to delivery of a service to you. To exercise these rights, you should contact Limerick City and County Council at the following address:</p>\n            <p class=\"align-center\">email: <a href=\"mailto:dataprotectionofficer@limerick.ie\">dataprotectionofficer@limerick.ie</a><br>\n                Data Protection Officer,<br>\n                Limerick City and County Council,<br>\n                Merchants Quay,<br>\n                Limerick</p>\n            <h2>Right of Complaint to the Data Protection Commission</h2>\n            <p>If you are not satisfied with the outcome of the response you received from Limerick City and County Council in relation to your request, then you are entitled to make a complaint to the Data Protection Commission who may investigate the matter for you.</p>\n            <p>The Data Protection Commission’s website is www.dataprotection.ie or you can contact their office at:</p>\n            <p class=\"align-center\">Lo Call Number: 1890 252 231<br>\n                E-mail: <a href=\"mailto:info@dataprotection.ie\">info@dataprotection.ie</a><br><br>\n                Postal Address:<br>\n                Data Protection Commission<br>\n                Canal House<br>\n                Station Road<br>\n                Portarlington<br>\n                Co. Laois. R32 AP23</p>\n            <p>Last updated December 2020</p>"
   },
   "INVOICE_DETAILS": {
@@ -947,5 +973,202 @@
     "9": "Deireadh Fómhair",
     "10": "Samhain",
     "11": "Mí na Nollag"
+  },
+  "REFUNDS": {
+    "FORM": {
+      "TITLE": "Iarratas Nua ar Aisíocaíocht",
+      "TITLE_UPDATE": "Nuashonraigh Iarratas Aisíocaíochta",
+      "DESCRIPTION": "Comhlánaigh an fhoirm thíos chun iarratas ar aisíocaíocht a chur isteach",
+      "TENANT_ID": "ID Tionónta / Uimhir Chustaiméara",
+      "APPLICANT_NAME": "Ainm an Iarratasóra",
+      "ADDRESS": "Seoladh",
+      "TRN_PPSN": "TRN / PPSN",
+      "DEPARTMENT": "Roinn",
+      "INC_DEPT": "Roinn Ioncaim",
+      "REQUESTED_AMOUNT": "Méid Iarrtha",
+      "REFUND_DETAILS": "Sonraí Aisíocaíochta",
+      "REFUND_REASON": "Cúis leis an Aisíocaíocht",
+      "AMOUNT": "Méid",
+      "CURRENCY": "Airgeadra",
+      "REFERENCE_CODE": "Cód Tagartha",
+      "JOINT_TENANCY": "Comhthionóntacht",
+      "MOVED_HOUSE": "Ar bhog mé teach",
+      "PAYMENT_INFO": "Faisnéis Íocaíochta",
+      "PAYMENT_METHOD": "Modh Íocaíochta",
+      "IBAN": "IBAN",
+      "BIC": "BIC / Cód SWIFT",
+      "DUE_BY": "Dlite Faoi Dháta",
+      "REASON": "Cúis leis an Aisíocaíocht",
+      "CONTACT_INFO": "Faisnéis Teagmhála",
+      "EMAIL": "Ríomhphost",
+      "PHONE": "Uimhir Theileafóin",
+      "ADDRESS_INFO": "Faisnéis Seolta",
+      "ADDRESS1": "Líne Seolta 1",
+      "ADDRESS2": "Líne Seolta 2",
+      "TOWN": "Baile",
+      "COUNTY": "Contae",
+      "MIN_AMOUNT_NOTICE": "Is é {{amount}} an t-íosmhéid aisíocaíochta",
+      "DOCUMENTS": "Doiciméid Tacaíochta",
+      "DOCUMENTS_DESCRIPTION": "Uaslódáil aon doiciméid tacaíochta (PDF, JPG, PNG)",
+      "DOCUMENTS_LOP": "Doiciméid LOP Tacaíochta",
+      "DOCUMENTS_LOP_DESCRIPTION": "Tá Litir Ceada (LOP) ag teastáil sna cásanna seo a leanas: <ul> <li>Aisíocaíocht comhthionóntachta ach níl an ráiteas bainc ach in ainm amháin</li><li>Aisíocaíocht tionóntachta singil ach tá an ráiteas bainc in ainmneacha comhpháirteacha</li><li>Tá an aisíocaíocht á íoc le cuntas tríú páirtí (LOP ag teastáil ón tríú páirtí)</li></ul>",
+      "DOCUMENTS_SUCCESSFULLY_UPLOADED": "D'éirigh le doiciméid a uaslódáil",
+      "UPLOAD_DOCUMENTS": "Roghnaigh Comhaid",
+      "SELECTED_FILES": "Comhaid Roghnaithe",
+      "CANCEL": "Cealaigh",
+      "SUBMIT": "Cuir Iarratas Isteach",
+      "SUBMITTING": "Á Chur Isteach...",
+      "SUCCESS_MESSAGE": "D'éirigh le hiarratas aisíocaíochta a chur isteach",
+      "SUCCESS_TITLE": "Iarratas Curtha Isteach",
+      "SUCCESS_POPUP_MESSAGE": "Go raibh maith agat as d'iarratas. De ghnáth tógann sé 10 lá oibre iarratas aisíocaíochta a phróiseáil.",
+      "CHOOSE_ADMIN": "Roghnaigh Riarthóir",
+      "CHOOSE_ADMIN_PLACEHOLDER": "Clóscríobh chun cuardach..."
+    },
+    "LIST": {
+      "TITLE": "Iarratais Aisíocaíochta",
+      "NEW_APPLICATION": "Iarratas Nua",
+      "FILTER_STATUS": "Scag de réir Stádais",
+      "ALL": "Gach Stádas",
+      "CREDIT_ERROR": "Caithfidh do chuntas a bheith i gcreidmheas sula ndéanann tú iarratas ar aisíocaíocht.",
+      "APPLICATION_NUMBER": "Iarratas #",
+      "DEPARTMENT": "Roinn",
+      "REQUESTED_AMOUNT": "Méid Iarrtha",
+      "STATUS": "Stádas",
+      "SUBMITTED_DATE": "Curtha Isteach",
+      "ACTIONS": "Gníomhartha",
+      "VIEW": "Féach ar Shonraí",
+      "NO_REFUNDS": "Níor aimsíodh aon iarratais aisíocaíochta"
+    },
+    "DETAILS": {
+      "PAYMENT_INFO": "Faisnéis Íocaíochta",
+      "TITLE": "Sonraí Iarratais Aisíocaíochta",
+      "BACK_TO_LIST": "Ar Ais chuig an Liosta",
+      "STATUS": "Stádas",
+      "DEPARTMENT": "Roinn",
+      "REQUESTED_AMOUNT": "Méid Iarrtha",
+      "APPROVED_AMOUNT": "Méid Ceadaithe",
+      "REASON": "Cúis",
+      "EMAIL": "Ríomhphost",
+      "PHONE": "Teileafón",
+      "SUBMITTED_DATE": "Dáta Curtha Isteach",
+      "BSH_VERIFIED": "BSH Fíoraithe",
+      "VERIFIED": "Fíoraithe",
+      "DOCUMENTS": "Doiciméid",
+      "DOWNLOAD": "Íoslódáil",
+      "NO_DOCUMENTS": "Níor uaslódáladh aon doiciméid",
+      "ADMIN_NOTES": "Nótaí Riaracháin",
+      "REDACT_BUTTON": "Cuir in Eagar & Foluain"
+    },
+    "REDACTION": {
+      "TITLE": "Cinsireacht Doiciméid",
+      "BACK_TO_DOCUMENT": "Ar ais chuig an doiciméad",
+      "DOCUMENT_ID": "Aitheantas Doiciméid: {{id}}",
+      "LOAD_ERROR": "Theip ar luchtú an doiciméid le haghaidh cinsireachta",
+      "INVALID_FORMAT": "Formáid chomhaid neamhbhailí. Ní féidir ach doiciméid íomhá a chinsireacht anseo.",
+      "SUCCESS": "D'éirigh le cinsireacht an doiciméid",
+      "ERROR": "Theip ar chinsireacht an doiciméid",
+      "ZOOM_IN": "Súmáil isteach",
+      "ZOOM_OUT": "Súmáil amach",
+      "DELETE_SELECTED": "Scrios roghnaithe",
+      "UNDO_LAST": "Cealaigh an ceann deireanach",
+      "APPLY_BUTTON": "Cuir i bhfeidhm ({{count}})",
+      "APPLYING": "Á chur i bhfeidhm...",
+      "CONFIRM_TITLE": "Cuir cinsireacht i bhfeidhm",
+      "CONFIRM_MESSAGE": "Tá tú chun {{count}} limistéar a chinsireacht. Ní féidir an gníomh seo a chealú.",
+      "ADMIN_NOTES": "Nótaí riaracháin",
+      "CONFIRM_BUTTON": "Cuir i bhfeidhm"
+    },
+    "VERSIONS": {
+      "TITLE": "Stair Leaganacha",
+      "LOAD_ERROR": "Theip ar luchtú na leaganacha",
+      "EMPTY": "Níl aon leaganacha roimhe seo",
+      "VERSION_LABEL": "Leagan {{number}}",
+      "CREATED_BY": "Cruthaithe ag: {{name}}",
+      "REDACT": "Cuir in Eagar & Foluain",
+      "VIEW_CURRENT": "Féach ar an leagan reatha",
+      "VIEW": "Féach",
+      "DELETE": "Scrios",
+      "DELETE_SUCCESS": "Leagan scriosta go rathúil",
+      "DELETE_ERROR": "Theip ar dhílchur an leagain",
+      "CONFIRM_DELETE_TITLE": "Scrios leagan",
+      "CONFIRM_DELETE": "An bhfuil tú cinnte gur mian leat an leagan seo a scriosadh?"
+    },
+    "STATUS": {
+      "0": "Curtha Isteach",
+      "1": "Ar Feitheamh Leibhéal 1",
+      "2": "Ar Feitheamh Leibhéal 2",
+      "3": "Ar Feitheamh Ceadaithe",
+      "4": "Curtha ar Ais le haghaidh Eolais",
+      "5": "Ceadaithe",
+      "6": "Diúltaithe",
+      "7": "Cealaithe",
+      "8": "Gl07 Ginte",
+      "9": "Onnmhairithe",
+      "10": "Postáilte",
+      "11": "Íoctha"
+    },
+    "DOCUMENT_TYPE": {
+      "0": "Ceannteideal Bainc",
+      "1": "Litir Ceada",
+      "2": "Doiciméad Aitheantais",
+      "3": "Tríú Páirtí",
+      "4": "Seic",
+      "5": "Ceist"
+    },
+    "UPLOAD": {
+      "TITLE": "Uaslódáil Doiciméad",
+      "BUTTON": "Uaslódáil Doiciméad",
+      "DOCUMENT_TYPE": "Cineál Doiciméid",
+      "SELECT_FILE": "Roghnaigh Comhad",
+      "FILE_REQUIREMENTS": "Formáidí inghlactha: PDF, JPG, PNG (uasmhéid 10MB)",
+      "UPLOAD_BUTTON": "Uaslódáil",
+      "NO_FILE_SELECTED": "Roghnaigh comhad le huaslódáil le do thoil",
+      "INVALID_FILE_TYPE": "Cineál comhaid neamhbhailí. Roghnaigh comhad PDF, JPG nó PNG le do thoil.",
+      "FILE_TOO_LARGE": "Sáraíonn méid an chomhaid teorainn 10MB"
+    },
+    "RESUBMIT": {
+      "TITLE": "Athchur Iarratais",
+      "REFUND_REASON": "Cúis Aisíocaíochta",
+      "IBAN": "IBAN",
+      "BIC": "BIC / Cód Swift",
+      "JOINT_TENANCY": "Comhthionóntacht"
+    },
+    "CONFIRM_DOCUMENT_STATUS": "Dearbhaigh Stádas an Doiciméid",
+    "STATUS_LABEL": "Stádas",
+    "STATUS_VALID": "Bailí",
+    "STATUS_INVALID": "Neamhbhailí",
+    "COMMENT": "Trácht",
+    "ENTER_REASON_FOR_CONFIRMATION": "Cuir isteach an fáth le haghaidh dearbhú láimhe...",
+    "DOCUMENT_STATUS_CONFIRMED": "Stádas doiciméad dearbhaithe mar {{status}}",
+    "CONFIRM_STATUS_ERROR": "Theip ar dhearbhú stádas doiciméad",
+    "DOWNLOAD_DOCUMENT": "Íoslódáil Doiciméad",
+    "DOCUMENT_DOWNLOADED": "D'éirigh le híoslódáil doiciméad",
+    "DOWNLOAD_ERROR": "Theip ar íoslódáil doiciméad",
+    "ERROR_OCCURRED": "Tharla earráid",
+    "CURRENT_STATUS": "Stádas Reatha"
+  },
+  "PAYMENT_METHODS": {
+    "EFT": "Aistriú Cistí Leictreonach (EFT)",
+    "CHEQUE": "Seic",
+    "BANK_TRANSFER": "Aistriú Bainc"
+  },
+  "DEPARTMENTS": {
+    "RATES": "Rátaí",
+    "RENT": "Cíos",
+    "HOUSING": "Tithíocht"
+  },
+  "COMMON": {
+    "LOADING": "Á Lódáil...",
+    "CANCEL": "Cealaigh",
+    "CONFIRM": "Dearbhaigh",
+    "CONFIRMING": "Ag Dearbhú...",
+    "ROWS": "Rónna"
+  },
+  "UNAUTHORIZED": {
+    "TITLE": "Rochtain Diúltaithe",
+    "MESSAGE": "Níl cead agat rochtain a fháil ar an leathanach seo.",
+    "DESCRIPTION": "Má chreideann tú gur earráid é seo, déan teagmháil le do riarthóir le do thoil.",
+    "GO_BACK": "Téigh ar Ais",
+    "GO_HOME": "Téigh go Baile"
   }
 }

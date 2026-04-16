@@ -1,0 +1,222 @@
+@import "../../../assets/styles/variables.scss";
+
+.statement-container {
+  padding: 1.875rem 0;
+
+  .header-balance-text {
+    display: flex;
+    justify-content: flex-end;
+    color: black;
+    opacity: 0.6;
+  }
+
+  .header-balance-value {
+    display: flex;
+    justify-content: flex-end;
+    color: black;
+    font-weight: bold;
+    font-size: 1.1875rem;
+  }
+
+  .h_title {
+    display: flex;
+    padding-bottom: 0.25rem;
+    font-size: 1.625rem;
+    color: #000;
+    font-weight: bold;
+    margin-left: 2.1875rem;
+
+    @media screen and (max-width: $mobileSize) {
+      margin-left: 0.625rem;
+    }
+
+    p {
+      //font-weight: 400;
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  .h_title_right {
+    justify-content: end;
+    align-items: end;
+
+    @media screen and (max-width: $mobileSize) {
+      display: flex;
+    }
+
+    .print-text {
+      margin-left: auto;
+    }
+
+    .print_btn {
+      background-color: $button-color-main;
+      color: $dark-text;
+      border: none;
+      text-transform: none;
+      padding: 0.5rem 0.75rem;
+      border-radius: 1.5rem;
+      margin-right: 2rem;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+
+      @include themed-box-shadow($mid-gray);
+
+      &:hover {
+        background-color: $button-color-hover;
+      }
+
+      &:disabled {
+        background-color: $button-color-disabled;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+
+      svg {
+        fill: $dark-text !important;
+      }
+    }
+  }
+
+  .personal_box {
+    &_filter {
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+
+      &_balance {
+        flex: 3;
+        align-items: end;
+        flex-direction: column;
+        color: $primary900;
+      }
+
+      &_title {
+        font-size: 0.8125rem;
+        margin-right: 1.4375rem;
+        opacity: 0.6;
+      }
+
+      &_value {
+        font-size: 1.225rem;
+        font-weight: bold;
+      }
+    }
+
+    &_content {
+      margin-top: 1.25rem;
+    }
+  }
+}
+
+.rates_statement_container {
+  .personal_box {
+    border-radius: 1.5rem;
+    padding: 0;
+
+    &_filter {
+      display: none;
+      @media screen and (max-width: $mobileSize) {
+        flex-direction: column;
+        .MuiBox-root {
+          width: 100%;
+
+          fieldset {
+            top: 0 !important;
+          }
+        }
+      }
+      .MuiFormControl-root {
+        .MuiInputBase-root {
+          border: 1px solid $light-gray;
+          background-color: $white;
+          height: 2rem !important;
+          fieldset {
+            background-color: $white;
+            z-index: -1;
+          }
+        }
+
+        div[role="combobox"] {
+          padding: 0rem 0.75rem;
+
+          input {
+            height: 1.5rem !important;
+          }
+        }
+
+        .MuiInputBase-root {
+          border-radius: 1.5rem;
+          height: 2.863rem;
+
+          legend {
+            display: none;
+          }
+        }
+
+        .MuiInputLabel-root.MuiFormLabel-filled {
+          display: none;
+        }
+      }
+    }
+
+    .download-icon {
+      text-transform: none !important;
+      font-weight: bold;
+      border-radius: 1.5rem;
+      border: 1px solid $light-gray;
+      padding: 0.3rem 0.75rem;
+      align-self: end;
+    }
+
+    .table-pagination-actions {
+      margin: 0 1rem 1rem;
+      flex-shrink: 0;
+      margin-left: 2.5em;
+      display: flex;
+      gap: 0.5em;
+
+      button {
+        border-radius: 1.5rem;
+        border: 1px solid $dark-gray;
+        color: $black;
+        text-transform: none !important;
+        padding: 0.3rem 0.75rem;
+        font-weight: bold;
+        background-color: transparent;
+
+        @include themed-box-shadow($mid-gray);
+
+        &:hover {
+          background-color: rgba($button-color-hover, 0.2);
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+          opacity: 0.6;
+        }
+
+        svg {
+          fill: $dark-text !important;
+        }
+      }
+    }
+
+    .strong {
+      font-weight: bold !important;
+      color: $black;
+
+      &__negative {
+        font-weight: bold !important;
+        color: $black;
+
+        &::before {
+          content: "– ";
+          font-weight: bold;
+          margin-right: 0.2rem;
+          color: $primary600;
+        }
+      }
+    }
+  }
+}

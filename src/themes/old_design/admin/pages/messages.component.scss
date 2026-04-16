@@ -1,0 +1,23 @@
+.messages-page {
+  .personal_box_row {
+    display: flex;
+    padding: 15px 0;
+    align-items: center;
+
+    &_header {
+      border-bottom: 2px solid rgb(128, 128, 128) !important;
+    }
+
+    &:not(:last-child) {
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    span {
+      width: 450px;
+    }
+
+    strong:first-child {
+      width: 320px;
+    }
+  }
+}

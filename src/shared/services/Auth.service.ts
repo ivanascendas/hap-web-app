@@ -10,7 +10,6 @@ import { ForgotPasswordRequestDto } from "../dtos/forgotPassword.dto";
 import customBaseQuery from "../utils/customBaseQuery";
 import {
   clearToken,
-  clearUser,
   setTmpToken,
   setToken,
   setUser,
@@ -26,7 +25,7 @@ import { UserModel } from "../models/user.model";
 import { notificationsApi } from "./Notifications.service";
 import {
   CheckValidContactDto,
-  ExsistingTenantDto,
+  ExistingTenantDto,
 } from "../dtos/existing-tenant.dto";
 import { ChangePasswordDto } from "../dtos/change-password.dto";
 import { use } from "i18next";
@@ -99,10 +98,8 @@ export const authApi = createApi({
       }),
       onQueryStarted: async (_, { dispatch, queryFulfilled }) => {
         try {
-          dispatch(clearUser());
           const { data } = await queryFulfilled;
-          console.log({ userdata: data });
-          if (data && !data.isSuperAdmin && data.customerNo) {
+          if (data && !data.isSuperAdmin && !data.isAdmin && data.customerNo) {
             dispatch(
               authApi.endpoints.checkValidContact.initiate(
                 parseInt(data.customerNo),
@@ -127,12 +124,15 @@ export const authApi = createApi({
      * @returns The `TokenDto` object containing the authentication token.
      */
     login: builder.mutation<TokenDto, LoginDto>({
-      query: ({ username, password, mfaMethod }) => {
+      query: ({ username, password, mfaMethod }: LoginDto) => {
         const usernameHash = base64EncodeUrl(username);
         const passwordHash = base64EncodeUrl(password);
         return {
           url: `/token`,
           method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
           body: toUrlEncoded({
             grant_type: "password",
             username: usernameHash,
@@ -179,6 +179,9 @@ export const authApi = createApi({
         return {
           url: `/token`,
           method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
           body: toUrlEncoded({
             grant_type: "code",
             v: codeHash,
@@ -329,9 +332,9 @@ export const authApi = createApi({
       }),
     }),
 
-    /** Sends a POST request to the `/api/user/SaveExistingTenantMFA` endpoint with the provided `ExsistingTenantDto` object, and returns `void`. */
-    saveUserData: builder.mutation<void, ExsistingTenantDto>({
-      query: (body: ExsistingTenantDto) => ({
+    /** Sends a POST request to the `/api/user/SaveExistingTenantMFA` endpoint with the provided `ExistingTenantDto` object, and returns `void`. */
+    saveUserData: builder.mutation<void, ExistingTenantDto>({
+      query: (body: ExistingTenantDto) => ({
         url: "/api/user/SaveExistingTenantMFA",
         method: "POST",
         body: JSON.stringify(body),
@@ -391,7 +394,7 @@ export const authApi = createApi({
      * @param body - The `EmailConfirmationRequestDto` object containing the data to be sent in the request body.
      * @returns `void`
      */
-    emailConfirmationRequest: builder.mutation<
+    emailRegConfirmationRequest: builder.mutation<
       void,
       EmailConfirmationRequestDto
     >({
@@ -407,10 +410,33 @@ export const authApi = createApi({
      * @param body - The `EmailConfirmationDto` object containing the `userId` and `code` to be sent in the request body.
      * @returns `void`
      */
-    emailConfirmation: builder.mutation<void, EmailConfirmationDto>({
+    emailRegConfirmation: builder.mutation<void, EmailConfirmationDto>({
       query: (body) => ({
         url: `/api/user/EmailRegConfirmation?userId=${body.userId}&token=${body.code}`,
         method: "POST",
+      }),
+    }),
+    emailConfirmationRequest: builder.mutation<
+      void,
+      EmailConfirmationRequestDto
+    >({
+      query: (body) => ({
+        url: "/api/user/EmailConfirmationRequest",
+        method: "POST",
+        body,
+      }),
+    }),
+    /**
+     * Sends a POST request to the `/api/user/EmailRegConfirmation` endpoint with the provided `EmailConfirmationDto` object, and returns `void`.
+     *
+     * @param body - The `EmailConfirmationDto` object containing the `userId` and `code` to be sent in the request body.
+     * @returns `void`
+     */
+    emailConfirmation: builder.mutation<void, EmailConfirmationDto>({
+      query: (body) => ({
+        url: `/api/user/EmailConfirmation?userId=${body.userId}&token=${body.code}`,
+        method: "POST",
+        body,
       }),
     }),
   }),
@@ -448,7 +474,9 @@ export const {
   useChangePasswordMutation,
   useCheckValidContactMutation,
   usePhoneConfirmationRequestMutation,
+  useEmailRegConfirmationRequestMutation,
+  useEmailConfirmationMutation,
   useEmailConfirmationRequestMutation,
   usePhoneConfirmationMutation,
-  useEmailConfirmationMutation,
+  useEmailRegConfirmationMutation,
 } = authApi;

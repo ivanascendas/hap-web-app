@@ -1,9 +1,9 @@
-//colors
-$primary900: #130603;
-$primary700: #9e310f;
-$primary600: rgb(234, 48, 31);
-$primary500: #ef642d;
-$primary400: rgb(246, 162, 96);
+$primary900: #34001a;
+//$primary700: #9e310f;
+$primary500: #7a003c;
+$primary600: rgba($primary500, 0.8);
+
+$primary400: rgba($primary500, 0.6);
 $primaryBlue: #005d8a;
 $secondaryGray: #595959;
 $secondaryGray600: #4c4c4c;
@@ -15,10 +15,27 @@ $secondary650: #7f7f7f;
 $secondary200: #f7f8f9;
 $secondary: #f5f7fa; //
 $secondary100: #ffffff;
-$success: #116419;
-$error: #ac1111;
+$success: #509f7b;
+$success-icon: #3f735c;
+$success-bg: green;
+$error: #d06961;
 $errorBorder: #d25422;
 $referenceColor: #ef642d;
+
+$light-gray: #d2d2d4;
+$dark-gray: #434343;
+$soft-gray: #f5f5f7;
+$mid-gray: #444444;
+$pale-gray: #f4f4f6;
+$silver: #dadada;
+$steel-gray: #d2d2d3;
+$charcoal: #414141;
+$blush: #f9f2f5;
+$black: #1e1e1e;
+$almost-white: #fefefe;
+$light-silver: #dbdbdb;
+$graphite: #454545;
+$white: #ffffff;
 
 $border-input-color: rgba(0, 0, 0, 0.23);
 
@@ -37,7 +54,114 @@ $desktopMdSize: 56.25rem; // 900px ÷ 16
 $desktopLgSize: 75rem; // 1200px ÷ 16
 $placeholder_size: 1.125rem; // 18px ÷ 16
 
+// Base variables
+$light-text: #000000;
+$dark-text: #ffffff;
+
+$button-color-main: #7a003c; // main button color (from images)
+$button-color-hover: #8b0045; // hover or active state (approx)
+$button-color-disabled: #d8d8d8; // disabled button (light gray)
+$primary700: $button-color-main;
+$secondary: $soft-gray; // Base box shadow mixin
+
+$border-radius: 1.5rem;
+
+@mixin themed-box-shadow($color) {
+  box-shadow: 0 2px 4px #{rgba($color, 0.2)};
+}
+
+// Named color map
+$theme-colors: (
+  light-gray: $light-gray,
+  dark-gray: $dark-gray,
+  soft-gray: $soft-gray,
+  mid-gray: $mid-gray,
+  pale-gray: $pale-gray,
+  silver: $silver,
+  steel-gray: $steel-gray,
+  charcoal: $charcoal,
+  blush: $blush,
+  black: $black,
+  almost-white: $almost-white,
+  light-silver: $light-silver,
+  graphite: $graphite,
+  white: $white,
+  button-main: $button-color-main,
+  button-hover: $button-color-hover,
+  button-disabled: $button-color-disabled,
+);
+
+// Function to determine text color
+@function get-text-color($bg) {
+  @if (lightness($bg) > 50) {
+    @return $light-text;
+  } @else {
+    @return $dark-text;
+  }
+}
+
+// Generate classes with clear names
+@each $name, $color in $theme-colors {
+  .theme-#{$name} {
+    background-color: $color !important;
+    color: get-text-color($color) !important;
+    border-color: $color !important;
+    @include themed-box-shadow($color);
+  }
+}
+
+// Button-specific styles
+
+.button,
+.btn-primary {
+  background-color: $button-color-main;
+  color: $dark-text;
+  border: none;
+  padding: 1.05rem 1.5rem;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  border-radius: 1.5rem !important;
+  width: 100%;
+
+  @include themed-box-shadow($mid-gray);
+
+  &:hover {
+    background-color: $button-color-hover;
+  }
+
+  &:disabled {
+    background-color: $button-color-disabled;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.btn-secondary {
+  background-color: $white !important;
+  color: $primary700 !important;
+  border: 1px solid $soft-gray !important;
+  border: none;
+  text-transform: none !important;
+  padding: 0.5rem 1.2rem !important;
+  border-radius: 8px;
+  font-weight: 800 !important;
+  transition: background-color 0.3s ease;
+  border-radius: 1.5rem !important;
+  @include themed-box-shadow($mid-gray);
+
+  &:hover {
+    background-color: $soft-gray;
+  }
+
+  &:disabled {
+    background-color: $button-color-disabled;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
 @mixin theme {
-  --mui-primary-main: #{$primary500};
+  --mui-primary-main: #{$button-color-main};
   --mui-secondary-main: #{$secondary};
 }

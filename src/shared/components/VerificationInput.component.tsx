@@ -7,7 +7,7 @@ import { OtpInputComponent } from "./otpInput.component";
 import { MFAMethod } from "../dtos/user.dto";
 import {
   usePhoneConfirmationMutation,
-  useEmailConfirmationMutation,
+  useEmailRegConfirmationMutation,
 } from "../services/Auth.service";
 
 export type VerificationInputProps = {

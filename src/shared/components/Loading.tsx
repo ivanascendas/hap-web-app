@@ -9,7 +9,7 @@ export const Loading = (): JSX.Element => {
   );
 
   return (
-    <div className="loading-overlay">
+    <div className="loading-overlay" role="progressbar" aria-label="Loading">
       <div
         className={`loading-overlay__progress ${isLoading ? "in-progress" : ""}`}
         style={percent ? { width: `${percent}%` } : {}}

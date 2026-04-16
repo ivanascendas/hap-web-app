@@ -1,0 +1,47 @@
+import { Box, SxProps, Theme } from "@mui/material";
+import { useTranslation } from "react-i18next";
+import { Link, useParams } from "react-router-dom";
+import React from "react";
+export type FooterProps = {
+  drawerWidth?: number;
+  isAuthenticated?: boolean;
+  showFooter: boolean;
+  sx?: SxProps<Theme>;
+};
+
+export const FooterComponent = ({
+  drawerWidth,
+  isAuthenticated,
+  showFooter,
+  sx,
+}: FooterProps): JSX.Element => {
+  const { t } = useTranslation();
+
+  return showFooter ? (
+    <Box
+      component="footer"
+      role="contentinfo"
+      sx={{
+        display: {
+          xs: showFooter ? "none" : "flex",
+          md: "flex",
+        },
+        left: {
+          md: "0px",
+          lg: isAuthenticated ? `${drawerWidth}px` : "0px",
+        },
+        justifyContent: {
+          xs: "center",
+          md: "flex-end ",
+        },
+        ...(sx ? sx : {}),
+      }}
+      className={isAuthenticated ? "authenticated" : undefined}
+    >
+      {new Date().getFullYear()} {t("APP.FOOTER_TEXT")}
+      <Link to="/policy"> {t("MAIN.MENU.DATA_POLICY")}</Link>
+    </Box>
+  ) : (
+    <></>
+  );
+};

@@ -1,0 +1,144 @@
+@import "../../../../assets/styles/variables.scss";
+
+.drawer-nav {
+  display: flex;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.drawer-container {
+  overflow: visible !important;
+  display: flex;
+  border-right: 0.0625rem solid rgb(218, 218, 218);
+  flex-direction: column;
+
+  background: $white !important;
+
+  &__footer {
+    max-height: 5rem;
+    padding: 0.625rem 2rem;
+
+    p {
+      font-size: smaller !important;
+      color: $mid-gray !important;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .welcome-block {
+    margin-left: 0.9375rem;
+
+    .welcome-text {
+      font-size: 0.8125rem !important;
+      color: $primary700;
+    }
+  }
+
+  .profile-block {
+    background-color: $soft-gray;
+    border-radius: 1.8rem;
+    margin: auto;
+    padding: 1rem;
+    .personal_box_filter_title {
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.8125rem;
+      margin-right: 1.4375rem;
+      opacity: 0.8;
+      display: block;
+    }
+
+    .personal_box_filter_value {
+      font-size: 1.225rem;
+      font-weight: bold;
+
+      margin-bottom: 0.5rem;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      justify-content: space-between;
+      cursor: pointer;
+
+      .user-name {
+        font-weight: 700;
+        font-size: 0.775rem;
+        color: $dark-gray;
+      }
+
+      .user-email {
+        font-size: 0.75rem;
+        color: $mid-gray;
+      }
+    }
+  }
+}
+
+.MuiDrawer-paper {
+  @media screen and (min-width: $mobileSize) {
+    background: none !important;
+    border: none !important;
+    overflow: visible !important;
+  }
+
+  .MuiListItemButton-root {
+    margin: 0.2rem 1.25rem;
+    border-radius: 2.5rem;
+    color: $mid-gray !important;
+
+    .unread {
+      background-color: rgba($color: $primary700, $alpha: 0.1);
+      font-weight: 700;
+      font-size: small !important;
+
+      width: 1.7rem;
+      height: 1.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .MuiTypography-root {
+      font-weight: 700 !important;
+      font-size: 0.875rem;
+    }
+
+    @media screen and (min-width: $mobileSize) {
+      overflow: visible !important;
+    }
+
+    &.active,
+    &.Mui-selected {
+      background: $soft-gray !important;
+      position: relative;
+      justify-content: flex-start;
+      color: $button-color-main !important;
+      fill: $button-color-main !important;
+
+      svg {
+        font-weight: 700 !important;
+        color: $button-color-main !important;
+        fill: $button-color-main !important;
+      }
+
+      &:after {
+        content: "";
+        right: -1.8125rem;
+        border-top: 1.5625rem solid transparent;
+        border-bottom: 1.5625rem solid transparent;
+        border-left: 1.8125rem solid #dee0e3;
+        position: absolute;
+        display: none;
+
+        @media screen and (max-width: $desktopMdSize) {
+          display: none;
+        }
+      }
+    }
+  }
+}

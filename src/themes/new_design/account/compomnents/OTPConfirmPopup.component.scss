@@ -1,0 +1,56 @@
+@import "../../../../assets/styles/variables.scss";
+
+.otp-popup {
+  position: absolute;
+  width: auto;
+  left: 50%;
+  top: 50%;
+  padding: 0;
+  transform: translate(-50%, -50%);
+  max-width: 22.9375rem;
+  border-radius: 1.5rem;
+  min-width: 16rem;
+
+  label {
+    font-size: 0.875rem !important;
+  }
+
+  &__title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.9375rem 1rem 0.875rem;
+    font-size: 1.125rem;
+    font-weight: 900;
+
+    border-bottom: 1px solid $light-gray;
+    span {
+      font-weight: 900;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.9375rem 0;
+    border-top: 1px solid $light-gray;
+
+    button {
+      margin: 0 3rem;
+      padding: 0.5rem 1.5rem;
+      text-transform: none;
+    }
+  }
+
+  &_send-box {
+    button {
+      color: $secondary100;
+      text-transform: none;
+    }
+  }
+
+  &_confirm-box {
+    padding-right: 0.9375rem;
+  }
+}

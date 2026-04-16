@@ -1,0 +1,306 @@
+@import "../../../assets/styles/variables.scss";
+
+.invoices-container {
+  padding: 1.875rem 0;
+
+  .page_wrap_height_title {
+    padding: 0;
+    padding-top: 1rem;
+
+    h1 {
+      margin: 0 2.1875rem;
+    }
+  }
+
+  .header-balance-text {
+    display: flex;
+    justify-content: flex-end;
+    color: black;
+    opacity: 0.6;
+  }
+
+  .header-balance-value {
+    display: flex;
+    justify-content: flex-end;
+    color: black;
+    font-weight: bold;
+    font-size: 1.1875rem;
+  }
+
+  .h_title {
+    display: flex;
+    padding-bottom: 0.25rem;
+    font-size: 1.625rem;
+    color: #000;
+    font-weight: bold;
+    margin-left: 2.1875rem;
+
+    @media screen and (max-width: $mobileSize) {
+      margin-left: 0.625rem;
+    }
+
+    p {
+      font-weight: 400;
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  .h_title_right {
+    justify-content: center;
+    align-items: end;
+
+    .print-text {
+      margin-left: auto;
+    }
+
+    .print_btn {
+      margin-left: auto;
+      color: $secondary700 !important;
+      text-transform: none;
+      margin-right: 1.875rem;
+
+      svg {
+        fill: $secondary700 !important;
+      }
+    }
+  }
+
+  .personal_box {
+    &_filter {
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+
+      &_balance {
+        flex: 3;
+        align-items: end;
+        flex-direction: column;
+        color: $primary900;
+        margin-right: 1rem;
+      }
+
+      &_title {
+        font-size: 0.8125rem;
+        margin-right: 1.4375rem;
+        opacity: 0.6;
+      }
+
+      &_value {
+        font-size: 1.625rem;
+        font-weight: bold;
+      }
+    }
+
+    &_content {
+      margin-top: 1.25rem;
+
+      .rates_invoice_table {
+        margin-bottom: 3.5rem;
+
+        tr {
+          th {
+            @media screen and (max-width: $mobileSize) {
+              font-size: 12px !important;
+              padding: 0.5rem !important;
+            }
+          }
+          &.selected {
+            background-color: rgba($primary700, 0.1) !important;
+          }
+
+          &:hover {
+            .invoice-no {
+              color: $primary700;
+
+              .MuiIconButton-root {
+                svg {
+                  display: block;
+                  color: $primary700;
+                }
+              }
+            }
+          }
+
+          &:nth-child(even) {
+            background-color: $secondary200;
+          }
+
+          .invoice-no {
+            display: flex;
+            align-items: center;
+            justify-content: start;
+
+            .MuiIconButton-root {
+              margin-left: 0.3125rem;
+
+              svg {
+                display: none;
+                color: $primary700;
+              }
+            }
+          }
+
+          .MuiFormControl-root {
+            width: 7.9375rem;
+            @media screen and (max-width: $mobileSize) {
+              font-size: 12px !important;
+              width: 7rem;
+            }
+          }
+
+          td {
+            flex: 1;
+            @media screen and (max-width: $mobileSize) {
+              font-size: 12px !important;
+              padding: 0.5rem !important;
+            }
+            &:nth-child(3) {
+              width: 15.625rem;
+              @media screen and (max-width: $mobileSize) {
+                width: 6.625rem;
+              }
+            }
+
+            &:nth-child(6) {
+              width: 2.5rem;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  button {
+    text-transform: none;
+  }
+}
+
+.mobile-button {
+  background: $secondary;
+  position: fixed;
+  display: flex;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  box-shadow: 0 0 0.5625rem 0px rgba(220, 224, 231, 0.85);
+
+  button {
+    width: 100%;
+    padding: 0.9375rem;
+    box-shadow: 0 0 0.5625rem 0px rgba(220, 224, 231, 0.85);
+  }
+}
+
+.month_invoices {
+  &_container {
+    display: flex;
+    height: 100%;
+    padding: 0 1.875rem;
+    overflow-y: auto;
+
+    @media screen and (max-width: $mobileSize) {
+      padding: 0 0.925rem 0 0.625rem;
+    }
+    .personal_box {
+      border-radius: 1.5rem !important;
+      margin: 0 0 0.625rem 0.5rem;
+    }
+    .summary-box-wrapper {
+      width: 20rem;
+      position: relative;
+    }
+  }
+
+  &_content {
+    min-width: 20rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 1.25rem 0;
+    gap: 1.25rem;
+    flex: 1;
+    color: $dark-gray;
+  }
+
+  &_title {
+    font-weight: 900 !important;
+  }
+
+  &_item {
+    padding: 0.2rem 0.875rem;
+    background-color: $soft-gray;
+    min-width: 15rem;
+    &.disabled {
+      background-color: transparent;
+    }
+    border-radius: 1.5rem;
+    border: 1px solid rgba($light-gray, 0.5);
+    position: relative;
+    flex: 0.5;
+
+    &_content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      margin-top: 1.25rem;
+      @media screen and (max-width: $mobileSize) {
+        flex-direction: column;
+      }
+    }
+
+    &_input {
+      width: 100%;
+      margin-right: 0.625rem;
+      position: relative;
+      &_pending {
+        color: $dark-gray;
+        background-color: rgba($mid-gray, 0.2);
+        border-radius: 0.625rem;
+        padding: 0.25rem 0.5rem;
+        width: fit-content;
+        position: absolute;
+        right: 0;
+        top: 0.5rem;
+        font-size: 0.8rem;
+      }
+      .MuiInputBase-input {
+        &::before {
+          content: "€";
+          border-bottom-style: solid !important;
+        }
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+      }
+      .Mui-disabled {
+        &::before {
+          border-bottom-style: solid !important;
+        }
+      }
+    }
+  }
+}
+.balance {
+  display: flex;
+  flex-direction: column;
+  color: $black;
+  font-size: 1rem;
+  font-weight: 700;
+  @media screen and (max-width: $mobileSize) {
+    font-size: 12px !important;
+  }
+
+  span {
+    &.success::before {
+      content: "✔";
+      color: $success;
+      font-weight: 900;
+      margin-right: 0.2125rem;
+    }
+
+    font-weight: normal;
+    color: $mid-gray;
+    font-size: 0.625rem;
+  }
+}

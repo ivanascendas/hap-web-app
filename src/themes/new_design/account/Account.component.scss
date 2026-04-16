@@ -1,0 +1,269 @@
+@import "../../../assets/styles/variables.scss";
+@import "../../../assets/styles/functions.scss";
+
+.account {
+  padding: 0.9375rem 2.1875rem; // 15px 35px
+  padding-bottom: pxToRem(55);
+  max-height: calc(100vh - 11.8rem);
+  border-radius: 1.5rem;
+  overflow: hidden;
+
+  &_avatar {
+    border-radius: 2rem;
+    border: 1px solid $mid-gray;
+    margin-right: 2.25rem; // 20px
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 15rem;
+    width: 15rem;
+    flex: 1;
+    width: 100%;
+
+    &_container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      @media screen and (max-width: $mobileSize) {
+        margin: 1.5rem 0;
+      }
+    }
+
+    &_controls {
+      margin-top: 1.25rem; // 20px
+      display: flex;
+      margin-right: 3rem;
+      align-items: center;
+      justify-content: start;
+      width: 100%;
+      gap: 0.625rem; // 10px
+      button {
+        width: 10rem;
+        height: 2.625rem; // 42px
+        margin: 0;
+        text-transform: none;
+        padding: 0.5rem 1.25rem; // 8px 20px
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: $mobileSize) {
+    max-height: calc(100vh - 1.7rem);
+    padding-bottom: pxToRem(50);
+    padding: 0.8rem;
+
+    &.password-tab {
+      min-height: 48.5rem !important; // 560px
+    }
+  }
+
+  &_header {
+    color: $primary900;
+    font-size: 2.5rem !important; // 40px
+    margin: 0.53em 2.5rem !important;
+    font-weight: bold !important;
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+
+    @media screen and (max-width: $mobileSize) {
+      flex-direction: column;
+      align-items: flex-start;
+      margin: 1.6rem 0.6rem !important;
+    }
+
+    h1 {
+      font-size: 1.7rem !important; // 26px
+      font-weight: bold !important;
+      margin: 0;
+    }
+    span:not(.MuiButton-icon) {
+      display: flex;
+      align-items: center;
+      color: $mid-gray;
+      strong {
+        margin-left: 0.5rem; // 8px
+      }
+      button {
+        svg.MuiSvgIcon-root {
+          fill: $primary900 !important;
+          color: $primary900 !important;
+        }
+        svg {
+          fill: $primary900 !important;
+          color: $primary900 !important;
+          width: 0.7em !important;
+          height: 0.7em !important;
+        }
+      }
+    }
+
+    .MuiIconButton-root {
+      padding: 0.5rem !important; // 8px
+      color: $primary900;
+      font-size: 1.25rem !important; // 20px
+    }
+  }
+
+  &_content {
+    margin: 0 !important;
+    display: flex;
+    justify-content: space-between;
+
+    @media screen and (max-width: $mobileSize) {
+      flex-direction: column;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      max-width: 100%;
+    }
+  }
+
+  &_form {
+    flex: 1;
+    padding: 1.25rem 2.5rem 0 2.5rem; // 20px 40px 0 40px
+
+    @media screen and (max-width: $mobileSize) {
+      padding: 0;
+      display: none;
+
+      &.active {
+        display: block;
+        min-height: 35rem; // 560px
+      }
+
+      &:last-child {
+        .MFA {
+          // display: none;
+        }
+      }
+    }
+
+    &.passwords-managment {
+      @media screen and (max-width: $mobileSize) {
+        display: none;
+      }
+    }
+
+    &_password_info {
+      color: $primary900;
+      display: block;
+      font-size: 0.83em;
+      margin-block-start: 1.67em;
+      margin-block-end: 1.67em;
+      margin-inline-start: 0;
+      margin-inline-end: 0;
+      font-weight: bold !important;
+      unicode-bidi: isolate;
+      margin-bottom: 1.25rem !important; // 20px
+    }
+
+    &:first-child {
+      @media screen and (max-width: $mobileSize) {
+        border: none;
+      }
+    }
+
+    &.loading {
+      .account_form__phone-input {
+        display: none !important;
+      }
+
+      .iti__country-container {
+        opacity: 0;
+      }
+    }
+
+    &_header {
+      box-sizing: border-box;
+      line-height: 1.1 !important;
+      padding: 0 0 1.5rem; // 24px
+      color: $primary900;
+      font-size: 1.625rem !important; // 26px
+      font-weight: bold !important;
+      padding-bottom: 0.9375rem !important; // 15px
+    }
+
+    &_row {
+      display: flex;
+      flex-direction: column;
+
+      label:not(.MuiFormControlLabel-root) {
+        font-size: 0.8125rem; // 13px
+        color: $primary900;
+        margin: 0.5625rem 0; // 9px 0
+      }
+
+      .iti {
+        display: block !important;
+      }
+
+      .MuiInputBase-root {
+        height: 2.625rem !important; // 42px
+      }
+
+      button {
+        max-width: 9.375rem; // 150px
+
+        @media screen and (max-width: $mobileSize) {
+          max-width: 100%;
+        }
+      }
+    }
+
+    &__phone-input {
+      border-width: 1px !important;
+      width: 100% !important;
+      border-radius: 0.25rem !important; // 4px
+
+      &:not([aria-invalid="true"]) {
+        border-color: $border-input-color !important;
+      }
+
+      &.loading {
+        display: none;
+      }
+
+      &:hover {
+        border-color: $border-input-color-hover !important;
+      }
+    }
+
+    .MFA {
+      margin-top: 1.25rem; // 20px
+
+      .MuiFormLabel-root {
+        font-size: 1rem; // 16px
+        color: $primary900;
+        font-weight: bold !important;
+      }
+    }
+  }
+
+  .MuiTabs-root {
+    @media screen and (max-width: $mobileSize) {
+      position: relative;
+      top: -1.5rem; // -24px
+      height: 4rem; // 56px
+    }
+    .MuiTabs-list {
+      width: 100%;
+      display: flex;
+    }
+
+    button {
+      flex: 1;
+      width: 100% !important;
+      text-transform: none;
+      margin: 0;
+      padding: 0;
+      &.Mui-selected {
+        background: $secondary100;
+        border-top-left-radius: 0.625rem; // 10px
+        border-top-right-radius: 0.625rem; // 10px
+      }
+    }
+  }
+}

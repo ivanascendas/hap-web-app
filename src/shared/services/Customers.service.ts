@@ -50,6 +50,7 @@ export const customersApi = createApi({
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
+          "OData-Version": "4.0",
         },
       }),
     }),

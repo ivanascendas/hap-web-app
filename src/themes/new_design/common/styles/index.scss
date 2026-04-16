@@ -1,0 +1,52 @@
+@import "../../../../assets/styles/variables.scss";
+
+.MuiFormControl-root .MuiInputBase-root:not(.MuiInputBase-multiline) {
+  height: 2.5rem;
+}
+
+input:not([type="radio"]) {
+  height: 1.2rem;
+}
+
+a,
+.link-element {
+  color: $button-color-main;
+  text-decoration: none;
+  cursor: pointer;
+  line-height: 0.9625rem; // 15.4px
+  font-size: 0.875rem; // 14px
+
+  p {
+    color: $button-color-main;
+  }
+
+  svg {
+    fill: $button-color-main;
+    color: $button-color-main;
+  }
+}
+
+.label-question:after {
+  content: "";
+  cursor: pointer;
+  background-image: url(../../../../assets/img/info.svg);
+  background-size: 100%;
+  display: inline-block;
+  position: absolute;
+  height: 0.6875rem;
+  margin-top: 0.125rem;
+  margin-left: 0.25rem;
+  width: 0.6875rem;
+  font-weight: bold;
+}
+
+.MuiSvgIcon-root {
+  &.active {
+    color: $button-color-main !important;
+    fill: $button-color-main !important;
+  }
+}
+
+.MuiAvatar-root {
+  background-color: $light-gray !important;
+}

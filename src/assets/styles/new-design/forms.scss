@@ -1,0 +1,133 @@
+@import "variables.scss";
+
+input:not([type="radio"]) {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: $placeholder_size;
+  color: #3c515f;
+  padding: 0 0.688rem;
+  height: 2.063rem;
+  width: 100%;
+  display: block;
+  padding: 1.25rem 0.625rem;
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  outline: none;
+
+  &::placeholder {
+    font-size: $placeholder_size;
+  }
+
+  &::-webkit-input-placeholder {
+    font-size: $placeholder_size;
+  }
+
+  &::-moz-placeholder {
+    font-size: $placeholder_size;
+  }
+
+  &:-moz-placeholder {
+    font-size: $placeholder_size;
+  }
+
+  &:-ms-input-placeholder {
+    font-size: $placeholder_size;
+  }
+
+  &[aria-invalid="true"] {
+    border-color: $errorBorder;
+  }
+}
+
+.button-primary {
+  font-weight: 700;
+  background: linear-gradient(85deg, $primary600 100%, $primary400 0%);
+  width: 100%;
+  line-height: 2.188rem;
+  font-size: 0.938rem;
+  border-radius: 0.25rem;
+  overflow: 0;
+  color: $secondary;
+  font-family: "Roboto", sans-serif;
+  border: 0;
+  height: 3.438rem;
+  font-weight: 700;
+
+  &:disabled {
+    background: #e0e0e0;
+  }
+}
+
+.button-secondary {
+  background: none;
+  border: 0;
+  width: 100%;
+  line-height: 2.188rem;
+  font-size: 0.938rem;
+  border-radius: 0.25rem;
+  height: 3.438rem;
+  font-weight: 700;
+  color: $primary900;
+  opacity: 0.4;
+  font-weight: normal;
+  font-size: 1.188rem;
+  text-decoration: none;
+}
+
+.back-btn {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  &::before {
+    content: "";
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.625rem;
+    background: url(../img/back-arrow.svg);
+  }
+}
+
+.input-container {
+  position: relative;
+  display: block;
+
+  .password-icon {
+    position: absolute;
+    right: 0.625rem;
+    top: 0;
+
+    @media screen and (max-width: $mobileSize) {
+      top: 0.5rem;
+    }
+  }
+}
+
+.MuiFormControl-root {
+  width: 100%;
+
+  .MuiInputBase-root:not(.MuiInputBase-multiline) {
+    height: 2.063rem;
+
+    @media screen and (max-width: $mobileSize) {
+      height: 2.063rem;
+    }
+  }
+
+  .MuiInputLabel-root {
+    top: -0.625rem;
+
+    &.Mui-focused {
+      top: 0;
+    }
+
+    &.MuiFormLabel-filled {
+      top: 0;
+      left: 0;
+    }
+  }
+}

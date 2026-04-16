@@ -13,6 +13,8 @@ import {
   InvoiceInputRequest,
   InvoiceWithRelatedPayments,
 } from "../dtos/invoice.dtos";
+import { errorHandler } from "@shared/utils/getErrorMessage";
+import { setBalance } from "@shared/redux/slices/authSlice";
 
 export const statementsApi = createApi({
   reducerPath: "statementsApi",
@@ -24,6 +26,17 @@ export const statementsApi = createApi({
         method: "GET",
         params,
       }),
+      onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
+        try {
+          const { data } = await queryFulfilled;
+
+          if (data && args.incDept === "RATES") {
+            dispatch(setBalance(data));
+          }
+        } catch (error) {
+          dispatch(errorHandler(error));
+        }
+      },
     }),
     getProperties: builder.query<PropertyDto[], void>({
       query: () => ({

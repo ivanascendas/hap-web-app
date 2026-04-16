@@ -7,6 +7,11 @@
       "preLaunchTask": "Launch Server"
     },
     {
+      "name": "HapBackendDebug",
+      "type": "node",
+      "preLaunchTask": "HapBackendDebug"
+    },
+    {
       "name": "Launch Chrome",
       "type": "chrome",
       "request": "launch",
@@ -21,8 +26,30 @@
   ],
   "compounds": [
     {
+      "name": "React Debug",
+      "configurations": ["Launch Chrome"],
+      "preLaunchTask": "npm: start",
+      "presentation": {
+        "hidden": false,
+        "group": "dev",
+        "order": 1
+      },
+      "stopAll": true
+    },
+    {
       "name": "Full Stack: React + Server",
       "configurations": ["Launch Server", "Launch Chrome"],
+      "preLaunchTask": "npm: start",
+      "presentation": {
+        "hidden": false,
+        "group": "dev",
+        "order": 1
+      },
+      "stopAll": true
+    },
+    {
+      "name": "Full Stack: React + HapBackend",
+      "configurations": ["HapBackendDebug", "Launch Chrome"],
       "preLaunchTask": "npm: start",
       "presentation": {
         "hidden": false,
