@@ -1,5 +1,5 @@
 /**
- * PII masking utilities for IBAN, BIC, and PPSN fields.
+ * PII masking utilities for IBAN, BIC, PPSN, and address fields.
  *
  * Masking rules (from task-mask-pii-display):
  *  - IBAN: show country code (first 2 chars) + last 4 digits, rest masked
@@ -8,6 +8,8 @@
  *         e.g. "AIBKIE2D" → "****IE2D"
  *  - PPSN: fully masked
  *         e.g. "1234567T" → "********"
+ *  - Address: show a short prefix only, then ellipsis
+ *         e.g. "10 Main Street, Dublin" → "10 Main ..."
  */
 
 const MASK_CHAR = "*";
@@ -59,7 +61,22 @@ export function maskPpsn(ppsn: string | null | undefined): string {
   return MASK_CHAR.repeat(ppsn.length);
 }
 
-export type PiiType = "iban" | "bic" | "ppsn";
+/**
+ * Mask an address value.
+ * Keeps enough context for list scanning without exposing the full address.
+ */
+export function maskAddress(address: string | null | undefined): string {
+  if (!address) return "-";
+  const normalized = address.replace(/\s+/g, " ").trim();
+  if (!normalized) return "-";
+  if (normalized.length <= 4) {
+    return MASK_CHAR.repeat(normalized.length);
+  }
+  const visibleLength = normalized.length <= 12 ? 3 : 8;
+  return `${normalized.slice(0, visibleLength)}...`;
+}
+
+export type PiiType = "iban" | "bic" | "ppsn" | "address";
 
 /**
  * Generic masking dispatcher.
@@ -75,6 +92,8 @@ export function maskPii(
       return maskBic(value);
     case "ppsn":
       return maskPpsn(value);
+    case "address":
+      return maskAddress(value);
     default:
       return value || "-";
   }

@@ -20,6 +20,7 @@ import { useLazyGetAdminDepartmentsQuery } from "@shared/services/Department.ser
 import { useAuth } from "@shared/providers/Auth.provider";
 import { Edit, Delete, Visibility } from "@mui/icons-material";
 import { TablePaginationActions } from "../components/TablePaginationActions";
+import { MaskedField } from "@shared/components/MaskedField";
 
 export const UsersComponent = () => {
   const top = 7;
@@ -42,7 +43,13 @@ export const UsersComponent = () => {
       onClick: (col) =>
         setOrderUserName(orderUserName === "asc" ? "desc" : "asc"),
     },
-    { key: "address", label: "LABELS.ADDRESS" },
+    {
+      key: "address",
+      label: "LABELS.ADDRESS",
+      rowRender: (row: CustomerDto) => (
+        <MaskedField value={row.address} type="address" />
+      ),
+    },
 
     {
       key: "isActive",

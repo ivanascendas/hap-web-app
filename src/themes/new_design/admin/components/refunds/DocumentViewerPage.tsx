@@ -270,7 +270,7 @@ export const DocumentViewerPage: React.FC = () => {
 
       setBshVerificationResult(
         selectedStatus === "VALID"
-          ? `✓ Certificate verified: ${bshVerificationData.extracted.iban || "Details extracted"}`
+          ? "Certificate verified: Details extracted"
           : `✗ Certificate not verified: Invalid certificate`,
       );
 

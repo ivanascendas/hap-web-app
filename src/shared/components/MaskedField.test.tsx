@@ -43,6 +43,14 @@ describe("MaskedField", () => {
     expect(screen.getByText("********")).toBeInTheDocument();
   });
 
+  it("renders masked address by default", () => {
+    render(<MaskedField value="10 Main Street, Dublin" type="address" />);
+    expect(screen.getByText("10 Main ...")).toBeInTheDocument();
+    expect(
+      screen.queryByText("10 Main Street, Dublin"),
+    ).not.toBeInTheDocument();
+  });
+
   it("renders dash when value is null", () => {
     render(<MaskedField value={null} type="iban" />);
     expect(screen.getByText("-")).toBeInTheDocument();

@@ -117,9 +117,15 @@ export const BshComparisonTableComponent: React.FC<BshComparisonTableProps> = ({
       field: "Address",
       formValue: application?.address || "-",
       extractedValue: bshResult?.extracted?.customerAddress || "-",
+      renderForm: () => (
+        <MaskedField value={application?.address} type="address" />
+      ),
       renderExtracted: () => (
         <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-          <span>{bshResult?.extracted?.customerAddress || "-"}</span>
+          <MaskedField
+            value={bshResult?.extracted?.customerAddress}
+            type="address"
+          />
           <ConfidenceBadge
             confidence={bshResult?.extracted?.customerAddressConfidence}
             isLowConfidence={

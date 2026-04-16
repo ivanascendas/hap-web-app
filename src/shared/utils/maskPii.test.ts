@@ -1,4 +1,4 @@
-import { maskIban, maskBic, maskPpsn, maskPii } from "./maskPii";
+import { maskIban, maskBic, maskPpsn, maskAddress, maskPii } from "./maskPii";
 
 describe("maskPii utilities", () => {
   describe("maskIban", () => {
@@ -90,6 +90,27 @@ describe("maskPii utilities", () => {
     });
   });
 
+  describe("maskAddress", () => {
+    it("shows only a short prefix for a full address", () => {
+      expect(maskAddress("10 Main Street, Dublin")).toBe("10 Main ...");
+    });
+
+    it("normalizes whitespace before masking", () => {
+      expect(maskAddress("10 Main  Street\nDublin")).toBe("10 Main ...");
+    });
+
+    it("does not expose complete short addresses", () => {
+      expect(maskAddress("Main St")).toBe("Mai...");
+    });
+
+    it("returns dash for null, undefined, or empty values", () => {
+      expect(maskAddress(null)).toBe("-");
+      expect(maskAddress(undefined)).toBe("-");
+      expect(maskAddress("")).toBe("-");
+      expect(maskAddress("   ")).toBe("-");
+    });
+  });
+
   describe("maskPii (generic dispatcher)", () => {
     it("dispatches to maskIban for type iban", () => {
       const result = maskPii("IE29AIBK93115212345678", "iban");
@@ -104,10 +125,15 @@ describe("maskPii utilities", () => {
       expect(maskPii("1234567T", "ppsn")).toBe("********");
     });
 
+    it("dispatches to maskAddress for type address", () => {
+      expect(maskPii("10 Main Street, Dublin", "address")).toBe("10 Main ...");
+    });
+
     it("returns dash for null with any type", () => {
       expect(maskPii(null, "iban")).toBe("-");
       expect(maskPii(null, "bic")).toBe("-");
       expect(maskPii(null, "ppsn")).toBe("-");
+      expect(maskPii(null, "address")).toBe("-");
     });
   });
 });
