@@ -136,6 +136,35 @@ export const BshComparisonTableComponent: React.FC<BshComparisonTableProps> = ({
       ),
     },
     {
+      field: "BIC",
+      formValue: application?.bic || "-",
+      extractedValue: bshResult?.extracted?.bic || "-",
+      renderForm: () => <MaskedField value={application?.bic} type="bic" />,
+      renderExtracted: () => (
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <MaskedField value={bshResult?.extracted?.bic} type="bic" />
+          <ConfidenceBadge
+            confidence={bshResult?.extracted?.bicConfidence}
+            isLowConfidence={bshResult?.extracted?.isBicLowConfidence}
+          />
+        </Box>
+      ),
+    },
+    {
+      field: "Account Name",
+      formValue: application?.applicantName || "-",
+      extractedValue: bshResult?.extracted?.accountName || "-",
+      renderExtracted: () => (
+        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+          <span>{bshResult?.extracted?.accountName || "-"}</span>
+          <ConfidenceBadge
+            confidence={bshResult?.extracted?.accountNameConfidence}
+            isLowConfidence={bshResult?.extracted?.isAccountNameLowConfidence}
+          />
+        </Box>
+      ),
+    },
+    {
       field: "Date",
       formValue: application?.createdAt
         ? new Date(application.createdAt).toLocaleDateString()
@@ -165,7 +194,13 @@ export const BshComparisonTableComponent: React.FC<BshComparisonTableProps> = ({
   ];
 
   useEffect(() => {
-    if (matchStates[0] && matchStates[1] && matchStates[2]) {
+    if (
+      matchStates[0] &&
+      matchStates[1] &&
+      matchStates[2] &&
+      matchStates[3] &&
+      matchStates[4]
+    ) {
       handleStatusChange({
         target: { value: "VALID" },
       } as SelectChangeEvent<string>);
@@ -174,8 +209,8 @@ export const BshComparisonTableComponent: React.FC<BshComparisonTableProps> = ({
         target: { value: "INVALID" },
       } as SelectChangeEvent<string>);
     }
-    if (lopRequirementChange && matchStates[3] !== undefined) {
-      lopRequirementChange(matchStates[3]);
+    if (lopRequirementChange && matchStates[5] !== undefined) {
+      lopRequirementChange(matchStates[5]);
     }
   }, [matchStates, lopRequirementChange]);
 
