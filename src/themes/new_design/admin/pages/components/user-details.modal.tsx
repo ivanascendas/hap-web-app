@@ -21,7 +21,6 @@ import {
   useUpdateCustomerMutation,
 } from "@shared/services/Customers.service";
 import "./user-details.modal.scss";
-import { NotificationComponent } from "@shared/components/Notification.component";
 import { useForm, Controller } from "react-hook-form";
 import { CustomerDto, CustomerUpdateDto } from "@shared/dtos/customer.dtos";
 import { IntlTelInputComponent } from "@shared/components/IntlTelInput.component";
@@ -30,7 +29,8 @@ import { IntlTelInputRef } from "intl-tel-input/react";
 import { getErrorMessage } from "@shared/utils/getErrorMessage";
 import { setNotify } from "@shared/redux/slices/notifySlice";
 import { useDispatch } from "react-redux";
-import { Close as CloseIcon, Label } from "@mui/icons-material";
+import { Close as CloseIcon } from "@mui/icons-material";
+import { MaskedField } from "@shared/components/MaskedField";
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { default: utils } = require("intl-tel-input/build/js/utils.js");
@@ -298,22 +298,12 @@ export const UserDetailsModal: React.FC<UserDetailsModalProps> = ({
                 />
               </Grid>
               <Grid size={{ xs: 12 }}>
-                <TextField
-                  {...register("address")}
-                  fullWidth
-                  label={t("LABELS.ADDRESS")}
-                  slotProps={{
-                    input: {
-                      // readOnly: true,
-                    },
-                  }}
-                  error={!!errors.address}
-                  helperText={getErrorMessage(errors.address?.type)}
-                  variant="outlined"
-                  margin="normal"
-                  multiline
-                  rows={3}
-                />
+                <Typography variant="caption" color="text.secondary">
+                  {t("LABELS.ADDRESS")}
+                </Typography>
+                <Box sx={{ mt: 1 }}>
+                  <MaskedField value={customer?.address} type="address" />
+                </Box>
               </Grid>
               <Controller
                 name="isActive"

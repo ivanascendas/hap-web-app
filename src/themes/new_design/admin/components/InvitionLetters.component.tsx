@@ -9,6 +9,7 @@ import {
   useLazyGetLettersQuery,
 } from "@shared/services/Letters.service";
 import { useConfig } from "@shared/providers/Configuration.provider";
+import { MaskedField } from "@shared/components/MaskedField";
 
 export type InvitionLettersProps = {
   selectedIncDepts: string;
@@ -100,7 +101,11 @@ export const InvitionLettersComponent = ({
       },
     },
     { key: "customerName", label: "ADMIN.LETTER.COLUMNS.AGRESSO_NAME" },
-    { key: "address", label: "ADMIN.LETTER.COLUMNS.AGRESSO_ADDRESS" },
+    {
+      key: "address",
+      label: "ADMIN.LETTER.COLUMNS.AGRESSO_ADDRESS",
+      rowRender: (row) => <MaskedField value={row.address} type="address" />,
+    },
 
     {
       key: "revcollName",

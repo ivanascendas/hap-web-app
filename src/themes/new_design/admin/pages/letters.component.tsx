@@ -22,6 +22,7 @@ import { LettersDto } from "@shared/dtos/letters.dto";
 import { ColumnItem, TableComponent } from "@shared/components/Table.component";
 import { InvitionLettersComponent } from "../components/InvitionLetters.component";
 import { ReminderLettersComponent } from "../components/ReminderLetters.component";
+import { MaskedField } from "@shared/components/MaskedField";
 
 export const LettersComponent = () => {
   const { type } = useParams();
@@ -83,7 +84,11 @@ export const LettersComponent = () => {
       // onClick: (col) => setrOrderAdminName(orderAdminName === 'asc' ? 'desc' : 'asc')
     },
     { key: "customerName", label: "ADMIN.LETTER.COLUMNS.AGRESSO_NAME" },
-    { key: "address", label: "ADMIN.LETTER.COLUMNS.AGRESSO_ADDRESS" },
+    {
+      key: "address",
+      label: "ADMIN.LETTER.COLUMNS.AGRESSO_ADDRESS",
+      rowRender: (row) => <MaskedField value={row.address} type="address" />,
+    },
 
     {
       key: "revcollName",

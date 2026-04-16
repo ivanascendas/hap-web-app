@@ -364,7 +364,7 @@ export const RefundDetailsComponent: React.FC = () => {
                   <Typography variant="caption" color="text.secondary">
                     Address
                   </Typography>
-                  <Typography variant="body2">{application.address}</Typography>
+                  <MaskedField value={application.address} type="address" />
                 </Grid>
                 <Grid size={12} container spacing={2}>
                   <Grid size={6}>

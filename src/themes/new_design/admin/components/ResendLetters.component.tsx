@@ -12,6 +12,7 @@ import {
   useRemoveLettersMutation,
 } from "@shared/services/Letters.service";
 import { useConfig } from "@shared/providers/Configuration.provider";
+import { MaskedField } from "@shared/components/MaskedField";
 
 export type InvitionLettersProps = {
   selectedIncDepts: string;
@@ -119,7 +120,11 @@ export const ResendLettersComponent = ({
       // onClick: (col) => setrOrderAdminName(orderAdminName === 'asc' ? 'desc' : 'asc')
     },
     { key: "customerName", label: "ADMIN.LETTER.COLUMNS.AGRESSO_NAME" },
-    { key: "address", label: "ADMIN.LETTER.COLUMNS.AGRESSO_ADDRESS" },
+    {
+      key: "address",
+      label: "ADMIN.LETTER.COLUMNS.AGRESSO_ADDRESS",
+      rowRender: (row) => <MaskedField value={row.address} type="address" />,
+    },
 
     {
       key: "enteredName",
@@ -128,6 +133,9 @@ export const ResendLettersComponent = ({
     {
       key: "enteredAddress",
       label: "ADMIN.LETTER.COLUMNS.WEB_ADDRESS",
+      rowRender: (row) => (
+        <MaskedField value={row.enteredAddress} type="address" />
+      ),
     },
   ];
 
