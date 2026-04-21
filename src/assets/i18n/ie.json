@@ -1094,6 +1094,21 @@
       "CONFIRM_DELETE_TITLE": "Scrios leagan",
       "CONFIRM_DELETE": "An bhfuil tú cinnte gur mian leat an leagan seo a scriosadh?"
     },
+    "BULK_REASSIGN": {
+      "ASSIGN_TO_ADMIN": "Assign to admin",
+      "SELECTED_COUNT": "Selected: {{count}}",
+      "APPLY": "Apply",
+      "CONFIRM_TITLE": "Are you sure?",
+      "CONFIRM_BODY": "{{count}} selected refund application(s) will be assigned to {{admin}}.",
+      "CONFIRM": "Confirm",
+      "CANCEL": "Cancel",
+      "SUCCESS": "{{count}} refund application(s) assigned successfully.",
+      "PARTIAL_SUCCESS": "{{successCount}} assigned successfully, {{failedCount}} failed.",
+      "ERROR": "Failed to assign selected refund applications.",
+      "NO_ADMINS": "No admins with L1, L2, AP or SuperAdmin roles found.",
+      "SELECT_PAGE": "Select all refund applications on this page",
+      "SELECT_APPLICATION": "Select refund application {{reference}}"
+    },
     "STATUS": {
       "0": "Curtha Isteach",
       "1": "Ar Feitheamh Leibhéal 1",

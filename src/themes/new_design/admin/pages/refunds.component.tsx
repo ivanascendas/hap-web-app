@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Box,
   Typography,
@@ -6,6 +6,7 @@ import {
   TablePagination,
   CircularProgress,
   Button,
+  Checkbox,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -17,9 +18,13 @@ import {
   setAdminPagination,
 } from "@shared/redux/slices/adminRefundSlice";
 import { selectUser } from "@shared/redux/slices/authSlice";
-import { useLazyGetAdminApplicationsQuery } from "@shared/services/Refunds.service";
-import { TablePaginationActions } from "@shared/components/TablePaginationActions";
-import { TableComponent } from "@shared/components/Table.component";
+import { useGetAdminsQuery } from "@shared/services/Admins.service";
+import {
+  useLazyGetAdminApplicationsQuery,
+  useReassignApplicationsMutation,
+} from "@shared/services/Refunds.service";
+import { TablePaginationActions } from "@components/admin/components/TablePaginationActions";
+import { ColumnItem, TableComponent } from "@shared/components/Table.component";
 import { RefundFilters } from "../components/refunds/RefundFilters";
 import { RefundStatusBadge } from "../components/refunds/RefundStatusBadge";
 import { formatCurrency, formatDate } from "../utils/statusLabels";
@@ -28,6 +33,10 @@ import { RefundApplicationDto } from "@shared/dtos/refund.dtos";
 import { useUserRole } from "@shared/hooks/useUserRole";
 import AddIcon from "@mui/icons-material/Add";
 import { useTranslation } from "react-i18next";
+import { AdminDto } from "@shared/dtos/admins.dtos";
+import { hasAssignableRole } from "../components/refunds/BulkReassignControls";
+import { BulkReassignConfirmDialog } from "../components/refunds/BulkReassignConfirmDialog";
+import { showToast } from "@shared/utils/showToast";
 
 /**
  * RefundsComponent - Admin page for managing refund applications
@@ -48,6 +57,12 @@ export const RefundsComponent: React.FC = () => {
   const pagination = useSelector(selectAdminPagination);
   const { hasRole } = useUserRole();
   const { t } = useTranslation();
+  const [selectedApplicationIds, setSelectedApplicationIds] = useState<
+    string[]
+  >([]);
+  const [selectedAdmin, setSelectedAdmin] = useState<AdminDto | null>(null);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isBulkAssigning, setIsBulkAssigning] = useState(false);
   // Fetch data - hooks must be called before any early returns
   const hasRoleAccess =
     user?.isAdmin ||
@@ -57,22 +72,49 @@ export const RefundsComponent: React.FC = () => {
     hasRole("AP");
   const [getAdminApplications, { data, isFetching, isError }] =
     useLazyGetAdminApplicationsQuery();
+  const { data: adminOptions, isFetching: isAdminsFetching } =
+    useGetAdminsQuery(undefined, {
+      skip: !hasRoleAccess,
+    });
+  const [reassignApplication] = useReassignApplicationsMutation();
+
+  const adminApplicationQueryArgs = useMemo(
+    () => ({
+      $skip: pagination.pageNumber * pagination.pageSize,
+      $top: pagination.pageSize,
+      statuses: filters.status,
+      tenantId: filters.customerNo,
+      incDept: filters.incDept,
+      assignedToId: filters.assignedToId,
+    }),
+    [filters, pagination],
+  );
 
   useEffect(() => {
     if (hasRoleAccess) {
-      getAdminApplications({
-        $skip: pagination.pageNumber * pagination.pageSize,
-        $top: pagination.pageSize,
-        statuses: filters.status,
-        tenantId: filters.customerNo,
-        incDept: filters.incDept,
-        assignedToId: filters.assignedToId,
-      });
+      getAdminApplications(adminApplicationQueryArgs);
     }
-  }, [user, getAdminApplications, filters, pagination]);
+  }, [user, getAdminApplications, hasRoleAccess, adminApplicationQueryArgs]);
 
   const applications = data?.items || [];
   const totalCount = data?.count || 0;
+  const assignableAdmins = useMemo(
+    () => (adminOptions || []).filter(hasAssignableRole),
+    [adminOptions],
+  );
+  const currentPageApplicationIds = useMemo(
+    () => applications.map((application) => application.applicationId),
+    [applications],
+  );
+  const isCurrentPageAllSelected =
+    currentPageApplicationIds.length > 0 &&
+    currentPageApplicationIds.every((applicationId) =>
+      selectedApplicationIds.includes(applicationId),
+    );
+  const isCurrentPagePartiallySelected =
+    currentPageApplicationIds.some((applicationId) =>
+      selectedApplicationIds.includes(applicationId),
+    ) && !isCurrentPageAllSelected;
 
   // Check if user has admin access
   if (!hasRoleAccess) {
@@ -114,8 +156,115 @@ export const RefundsComponent: React.FC = () => {
     navigate(`/admin/refunds/${app.applicationId}`);
   };
 
+  const toggleApplicationSelection = (applicationId: string) => {
+    setSelectedApplicationIds((currentIds) =>
+      currentIds.includes(applicationId)
+        ? currentIds.filter((id) => id !== applicationId)
+        : [...currentIds, applicationId],
+    );
+  };
+
+  const toggleCurrentPageSelection = () => {
+    setSelectedApplicationIds((currentIds) => {
+      if (isCurrentPageAllSelected) {
+        return currentIds.filter(
+          (id) => !currentPageApplicationIds.includes(id),
+        );
+      }
+
+      return Array.from(new Set([...currentIds, ...currentPageApplicationIds]));
+    });
+  };
+
+  const handleOpenBulkAssignConfirm = () => {
+    if (selectedApplicationIds.length === 0 || !selectedAdmin) {
+      return;
+    }
+
+    setIsConfirmOpen(true);
+  };
+
+  const handleBulkAssignConfirm = async () => {
+    if (!selectedAdmin || selectedApplicationIds.length === 0) {
+      return;
+    }
+
+    setIsBulkAssigning(true);
+
+    const applicationIds = [...selectedApplicationIds];
+    const results = await Promise.allSettled(
+      applicationIds.map((applicationId) =>
+        reassignApplication({
+          applicationId,
+          targetAdminId: selectedAdmin.userName,
+        })
+          .unwrap()
+          .then(() => applicationId),
+      ),
+    );
+
+    const failedApplicationIds = results
+      .map((result, index) =>
+        result.status === "rejected" ? applicationIds[index] : null,
+      )
+      .filter((applicationId): applicationId is string => !!applicationId);
+    const successCount = applicationIds.length - failedApplicationIds.length;
+
+    setIsBulkAssigning(false);
+    setIsConfirmOpen(false);
+
+    if (failedApplicationIds.length === 0) {
+      setSelectedApplicationIds([]);
+      showToast(
+        "success",
+        t("REFUNDS.BULK_REASSIGN.SUCCESS", { count: successCount }),
+      );
+    } else if (successCount > 0) {
+      setSelectedApplicationIds(failedApplicationIds);
+      showToast(
+        "warning",
+        t("REFUNDS.BULK_REASSIGN.PARTIAL_SUCCESS", {
+          successCount,
+          failedCount: failedApplicationIds.length,
+        }),
+      );
+    } else {
+      showToast("error", t("REFUNDS.BULK_REASSIGN.ERROR"));
+    }
+
+    getAdminApplications(adminApplicationQueryArgs);
+  };
+
   // Table columns configuration
-  const columns = [
+  const columns: ColumnItem<RefundApplicationDto>[] = [
+    {
+      key: "selection" as keyof RefundApplicationDto,
+      label: "",
+      colSx: { width: 48 },
+      calSx: { width: 48 },
+      colRnder: () => (
+        <Checkbox
+          aria-label={t("REFUNDS.BULK_REASSIGN.SELECT_PAGE")}
+          checked={isCurrentPageAllSelected}
+          indeterminate={isCurrentPagePartiallySelected}
+          disabled={applications.length === 0}
+          onChange={toggleCurrentPageSelection}
+          onClick={(event) => event.stopPropagation()}
+          size="small"
+        />
+      ),
+      rowRender: (row: RefundApplicationDto) => (
+        <Checkbox
+          aria-label={t("REFUNDS.BULK_REASSIGN.SELECT_APPLICATION", {
+            reference: row.referenceCode || row.applicationId,
+          })}
+          checked={selectedApplicationIds.includes(row.applicationId)}
+          onChange={() => toggleApplicationSelection(row.applicationId)}
+          onClick={(event) => event.stopPropagation()}
+          size="small"
+        />
+      ),
+    },
     {
       key: "applicationId",
       label: "Application ID",
@@ -177,6 +326,13 @@ export const RefundsComponent: React.FC = () => {
         filters={filters}
         onFilterChange={handleFilterChange}
         departments={[]}
+        adminOptions={assignableAdmins}
+        selectedAdmin={selectedAdmin}
+        selectedCount={selectedApplicationIds.length}
+        isAdminLoading={isAdminsFetching}
+        isBulkAssigning={isBulkAssigning}
+        onSelectedAdminChange={setSelectedAdmin}
+        onApplyBulkAssign={handleOpenBulkAssignConfirm}
       />
 
       {/* Table */}
@@ -216,6 +372,9 @@ export const RefundsComponent: React.FC = () => {
               columns={columns}
               className="admin-table"
               onItemClick={handleRowClick}
+              selected={(row: RefundApplicationDto) =>
+                selectedApplicationIds.includes(row.applicationId)
+              }
             />
 
             <TablePagination
@@ -227,10 +386,21 @@ export const RefundsComponent: React.FC = () => {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
               ActionsComponent={TablePaginationActions}
+              labelDisplayedRows={({ from, to, count }) =>
+                `${from}-${to} of ${count}`
+              }
             />
           </>
         )}
       </Paper>
+      <BulkReassignConfirmDialog
+        open={isConfirmOpen}
+        selectedAdmin={selectedAdmin}
+        selectedCount={selectedApplicationIds.length}
+        isSubmitting={isBulkAssigning}
+        onClose={() => setIsConfirmOpen(false)}
+        onConfirm={handleBulkAssignConfirm}
+      />
     </Box>
   );
 };
