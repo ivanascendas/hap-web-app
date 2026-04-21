@@ -13,6 +13,8 @@ import { AdminFiltersState } from "@shared/redux/slices/adminRefundSlice";
 import { getStatusLabel } from "../../utils/statusLabels";
 import { selectUser } from "@shared/redux/slices/authSlice";
 import { useSelector } from "react-redux";
+import { AdminDto } from "@shared/dtos/admins.dtos";
+import { BulkReassignControls } from "./BulkReassignControls";
 
 /**
  * Props for RefundFilters component
@@ -32,6 +34,13 @@ export interface RefundFiltersProps {
    * Available departments for filtering
    */
   departments?: Array<{ incDept: string; department?: string }>;
+  adminOptions?: AdminDto[];
+  selectedAdmin?: AdminDto | null;
+  selectedCount?: number;
+  isAdminLoading?: boolean;
+  isBulkAssigning?: boolean;
+  onSelectedAdminChange?: (admin: AdminDto | null) => void;
+  onApplyBulkAssign?: () => void;
 }
 
 /**
@@ -51,6 +60,13 @@ export const RefundFilters: React.FC<RefundFiltersProps> = ({
   filters,
   onFilterChange,
   departments = [],
+  adminOptions = [],
+  selectedAdmin = null,
+  selectedCount = 0,
+  isAdminLoading = false,
+  isBulkAssigning = false,
+  onSelectedAdminChange,
+  onApplyBulkAssign,
 }) => {
   const allStatuses = [
     RefundStatus.Submitted,
@@ -208,6 +224,18 @@ export const RefundFilters: React.FC<RefundFiltersProps> = ({
         >
           Show Main
         </Button>
+      )}
+
+      {onSelectedAdminChange && onApplyBulkAssign && (
+        <BulkReassignControls
+          adminOptions={adminOptions}
+          selectedAdmin={selectedAdmin}
+          selectedCount={selectedCount}
+          isAdminLoading={isAdminLoading}
+          isBulkAssigning={isBulkAssigning}
+          onSelectedAdminChange={onSelectedAdminChange}
+          onApplyBulkAssign={onApplyBulkAssign}
+        />
       )}
 
       {/* Customer No / Search */}
