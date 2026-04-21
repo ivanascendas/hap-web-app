@@ -18,6 +18,7 @@
     "WRONG_CREDENTIALS": "Comhcheangal Ainm Úsáideora/Pasfhocal Mícheart",
     "WEEK_PASSWORD": "Cruthaigh pasfhocal nua le do thoil.<br/>Tá sé tugtha faoi deara againn go bhfuil pasfhocal lag in úsáid agat",
     "SESSION_EXPIRED": "Seisiún imithe in éag, logáil isteach arís.",
+    "SESSION_EXPIRING_WARNING": "Your session will expire soon. Please save your work before continuing.",
     "AMOUNT_REQUIRED_FIELD": "Is réimse riachtanach é Méid",
     "SERVER_CONNECTION_ERROR": "Earráid le cumarsáid freastalaí",
     "DIFFERENT_PASSWORDS": "Tá na pasfhocail difriúil",
