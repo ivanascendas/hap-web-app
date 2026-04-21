@@ -45,3 +45,43 @@ module.exports.jest = function (config) {
   ];
   return config;
 };
+
+module.exports.devServer = function (configFunction) {
+  return function (proxy, allowedHost) {
+    const config = configFunction(proxy, allowedHost);
+    const onBeforeSetupMiddleware = config.onBeforeSetupMiddleware;
+    const onAfterSetupMiddleware = config.onAfterSetupMiddleware;
+    const setupMiddlewares = config.setupMiddlewares;
+    const https = config.https;
+
+    delete config.onBeforeSetupMiddleware;
+    delete config.onAfterSetupMiddleware;
+    delete config.https;
+
+    if (https) {
+      config.server = {
+        type: "https",
+        options: https === true ? {} : https,
+      };
+    }
+
+    config.setupMiddlewares = function (middlewares, devServer) {
+      if (typeof onBeforeSetupMiddleware === "function") {
+        onBeforeSetupMiddleware(devServer);
+      }
+
+      const nextMiddlewares =
+        typeof setupMiddlewares === "function"
+          ? setupMiddlewares(middlewares, devServer) || middlewares
+          : middlewares;
+
+      if (typeof onAfterSetupMiddleware === "function") {
+        onAfterSetupMiddleware(devServer);
+      }
+
+      return nextMiddlewares;
+    };
+
+    return config;
+  };
+};

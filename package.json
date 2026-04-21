@@ -82,7 +82,6 @@
     "@eslint/js": "^9.10.0",
     "@types/css-modules": "^1.0.5",
     "@types/react-google-recaptcha": "^2.1.9",
-    "@types/react-pdf": "^6.2.0",
     "@types/uuid": "^10.0.0",
     "ajv": "^6.12.6",
     "ajv-keywords": "^3.5.2",
@@ -107,16 +106,20 @@
   "overrides": {
     "svgo": "^3.0.0",
     "postcss": "^8.4.47",
-    "webpack-dev-server": "^4.15.2",
+    "webpack-dev-server": "^5.2.3",
     "nth-check": "^2.1.1",
     "css-select": "^5.1.0",
-    "resolve-url-loader": "^5.0.0"
+    "resolve-url-loader": "^5.0.0",
+    "@tootallnate/once": "^3.0.1",
+    "serialize-javascript": "^7.0.5",
+    "underscore": "^1.13.8",
+    "yaml": "^2.8.3"
   },
   "resolutions": {
     "cross-spawn": "^7.0.3",
     "nth-check": "^2.1.1",
     "postcss": "^8.4.47",
-    "webpack-dev-server": "^4.15.2",
+    "webpack-dev-server": "^5.2.3",
     "css-select": "^5.1.0",
     "resolve-url-loader": "^5.0.0",
     "@toolpad/utils": "^0.16.0",
@@ -124,6 +127,10 @@
     "clipboardy": "^4.0.0",
     "execa": "^8.0.0",
     "@svgr/plugin-svgo": "^8.0.0",
-    "@svgr/webpack": "^8.0.0"
+    "@svgr/webpack": "^8.0.0",
+    "@tootallnate/once": "^3.0.1",
+    "serialize-javascript": "^7.0.5",
+    "underscore": "^1.13.8",
+    "yaml": "^2.8.3"
   }
 }
