@@ -18,6 +18,7 @@
     "WRONG_CREDENTIALS": "Wrong Username/Password combination",
     "WEEK_PASSWORD": "Please create a new password.<br/>We have detected that you are using a weak password",
     "SESSION_EXPIRED": "Session Expired, please login again.",
+    "SESSION_EXPIRING_WARNING": "Your session will expire soon. Please save your work before continuing.",
     "AMOUNT_REQUIRED_FIELD": "Amount is required field",
     "SERVER_CONNECTION_ERROR": "Error with server communication",
     "DIFFERENT_PASSWORDS": "Passwords are different",

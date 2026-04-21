@@ -7,6 +7,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { selectToken } from "../redux/slices/authSlice";
 import { getStoredToken } from "../utils/secureTokenStorage";
+import { useTokenExpiryWarning } from "@shared/hooks/useTokenExpiryWarning";
 
 export type AuthContextType = {
   isTokenRecived: boolean;
@@ -56,6 +57,7 @@ export const AuthProvider = ({
   const dispatch = useDispatch();
   let tokenData = useSelector(selectToken);
   const [isTokenRecived, setTokenRecived] = React.useState(false);
+  useTokenExpiryWarning();
 
   useEffect(() => {
     if (!tokenData) {

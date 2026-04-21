@@ -9,6 +9,7 @@ import { useAuth } from "@shared/providers/Auth.provider";
 import HeaderComponent from "./components/Headers.component";
 import { FooterComponent } from "../main/components/Footer.component";
 import { Loading } from "@shared/components/Loading";
+import { NotificationComponent } from "@shared/components/Notification.component";
 
 export const AdminComponent = () => {
   const auth = useAuth();
@@ -25,6 +26,7 @@ export const AdminComponent = () => {
   return (
     <Paper className="admin-container">
       <Loading />
+      <NotificationComponent />
       <HeaderComponent
         isSidebarCollapsed={isSidebarCollapsed}
         setIsSidebarCollapsed={setIsSidebarCollapsed}

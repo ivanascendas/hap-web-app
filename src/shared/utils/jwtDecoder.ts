@@ -63,6 +63,18 @@ export const isTokenExpired = (token: string): boolean => {
 };
 
 /**
+ * Gets the token expiry timestamp in milliseconds.
+ * @param token - The JWT token string
+ * @returns Expiry timestamp in milliseconds, or null when the token is invalid
+ */
+export const getTokenExpiryMs = (token: string): number | null => {
+  const decoded = decodeJWT(token);
+  if (!decoded || !decoded.exp) return null;
+
+  return decoded.exp * 1000;
+};
+
+/**
  * Extracts the role from JWT token
  * @param token - The JWT token string
  * @returns The role as string, array of strings, or null
