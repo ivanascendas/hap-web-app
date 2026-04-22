@@ -1,5 +1,5 @@
 /**
- * PII masking utilities for IBAN, BIC, PPSN, and address fields.
+ * PII masking utilities for IBAN, BIC, PPSN, address, name, email, and phone fields.
  *
  * Masking rules (from task-mask-pii-display):
  *  - IBAN: show country code (first 2 chars) + last 4 digits, rest masked
@@ -76,7 +76,44 @@ export function maskAddress(address: string | null | undefined): string {
   return `${normalized.slice(0, visibleLength)}...`;
 }
 
-export type PiiType = "iban" | "bic" | "ppsn" | "address";
+export function maskName(name: string | null | undefined): string {
+  if (!name) return "-";
+  const normalized = name.replace(/\s+/g, " ").trim();
+  if (!normalized) return "-";
+  if (normalized.length <= 2) return MASK_CHAR.repeat(normalized.length);
+  return `${normalized.slice(0, 2)}***`;
+}
+
+export function maskEmail(email: string | null | undefined): string {
+  if (!email) return "-";
+  const trimmed = email.trim();
+  const atIndex = trimmed.indexOf("@");
+  if (atIndex <= 0 || atIndex === trimmed.length - 1) {
+    return maskName(trimmed);
+  }
+  return `${trimmed[0]}***@${trimmed.slice(atIndex + 1)}`;
+}
+
+export function maskPhone(phone: string | null | undefined): string {
+  if (!phone) return "-";
+  const trimmed = phone.trim();
+  const digits = trimmed.replace(/\D/g, "");
+  if (!digits) return "-";
+  const suffix = digits.length <= 4 ? digits : digits.slice(-4);
+  const countryPrefixMatch = trimmed.match(/^\+\d{1,3}/);
+  return countryPrefixMatch
+    ? `${countryPrefixMatch[0]} ******${suffix}`
+    : `******${suffix}`;
+}
+
+export type PiiType =
+  | "iban"
+  | "bic"
+  | "ppsn"
+  | "address"
+  | "name"
+  | "email"
+  | "phone";
 
 /**
  * Generic masking dispatcher.
@@ -94,6 +131,12 @@ export function maskPii(
       return maskPpsn(value);
     case "address":
       return maskAddress(value);
+    case "name":
+      return maskName(value);
+    case "email":
+      return maskEmail(value);
+    case "phone":
+      return maskPhone(value);
     default:
       return value || "-";
   }

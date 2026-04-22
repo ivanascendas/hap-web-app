@@ -1,4 +1,13 @@
-import { maskIban, maskBic, maskPpsn, maskAddress, maskPii } from "./maskPii";
+import {
+  maskIban,
+  maskBic,
+  maskPpsn,
+  maskAddress,
+  maskName,
+  maskEmail,
+  maskPhone,
+  maskPii,
+} from "./maskPii";
 
 describe("maskPii utilities", () => {
   describe("maskIban", () => {
@@ -111,6 +120,38 @@ describe("maskPii utilities", () => {
     });
   });
 
+  describe("maskName", () => {
+    it("shows only a short prefix for a full name", () => {
+      expect(maskName("John Smith")).toBe("Jo***");
+    });
+
+    it("returns dash for empty values", () => {
+      expect(maskName(null)).toBe("-");
+      expect(maskName(undefined)).toBe("-");
+      expect(maskName("")).toBe("-");
+    });
+  });
+
+  describe("maskEmail", () => {
+    it("keeps only first local character and domain", () => {
+      expect(maskEmail("john.smith@example.ie")).toBe("j***@example.ie");
+    });
+
+    it("falls back to generic masking for invalid email strings", () => {
+      expect(maskEmail("not-an-email")).toBe("no***");
+    });
+  });
+
+  describe("maskPhone", () => {
+    it("keeps country prefix and last four digits", () => {
+      expect(maskPhone("+353871234567")).toBe("+353 ******4567");
+    });
+
+    it("keeps only last four digits without country prefix", () => {
+      expect(maskPhone("087 123 4567")).toBe("******4567");
+    });
+  });
+
   describe("maskPii (generic dispatcher)", () => {
     it("dispatches to maskIban for type iban", () => {
       const result = maskPii("IE29AIBK93115212345678", "iban");
@@ -129,11 +170,20 @@ describe("maskPii utilities", () => {
       expect(maskPii("10 Main Street, Dublin", "address")).toBe("10 Main ...");
     });
 
+    it("dispatches to contact and name maskers", () => {
+      expect(maskPii("John Smith", "name")).toBe("Jo***");
+      expect(maskPii("john.smith@example.ie", "email")).toBe("j***@example.ie");
+      expect(maskPii("+353871234567", "phone")).toBe("+353 ******4567");
+    });
+
     it("returns dash for null with any type", () => {
       expect(maskPii(null, "iban")).toBe("-");
       expect(maskPii(null, "bic")).toBe("-");
       expect(maskPii(null, "ppsn")).toBe("-");
       expect(maskPii(null, "address")).toBe("-");
+      expect(maskPii(null, "email")).toBe("-");
+      expect(maskPii(null, "phone")).toBe("-");
+      expect(maskPii(null, "name")).toBe("-");
     });
   });
 });

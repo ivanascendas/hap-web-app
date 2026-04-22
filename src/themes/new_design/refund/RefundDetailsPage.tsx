@@ -107,7 +107,12 @@ export const RefundDetailsPage = (): JSX.Element => {
       </Button>
 
       <Typography variant={isMobile ? "h5" : "h4"} gutterBottom>
-        {t("REFUNDS.DETAILS.TITLE")} - {application.applicantName}
+        {t("REFUNDS.DETAILS.TITLE")} -{" "}
+        <MaskedField
+          value={application.applicantName}
+          type="name"
+          variant={isMobile ? "h5" : "h4"}
+        />
       </Typography>
 
       <Paper sx={{ p: isMobile ? 2 : 3, mb: isMobile ? 2 : 3 }}>
@@ -167,14 +172,22 @@ export const RefundDetailsPage = (): JSX.Element => {
             <Typography variant="subtitle2" color="textSecondary">
               {t("REFUNDS.DETAILS.EMAIL")}
             </Typography>
-            <Typography variant="body1">{application.email}</Typography>
+            <MaskedField
+              value={application.email}
+              type="email"
+              variant="body1"
+            />
           </Grid>
 
           <Grid size={isMobile ? 12 : 6}>
             <Typography variant="subtitle2" color="textSecondary">
               {t("REFUNDS.DETAILS.PHONE")}
             </Typography>
-            <Typography variant="body1">{application.phone}</Typography>
+            <MaskedField
+              value={application.phone}
+              type="phone"
+              variant="body1"
+            />
           </Grid>
           <Grid size={isMobile ? 12 : 6}>
             <Typography variant="subtitle2" color="textSecondary">
