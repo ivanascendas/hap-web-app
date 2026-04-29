@@ -12,7 +12,18 @@ export interface MaskedFieldProps {
   /** If true, the field starts in the revealed state */
   defaultVisible?: boolean;
   /** MUI Typography variant for the value text */
-  variant?: "body1" | "body2" | "caption" | "subtitle1" | "subtitle2";
+  variant?:
+    | "body1"
+    | "body2"
+    | "caption"
+    | "subtitle1"
+    | "subtitle2"
+    | "h6"
+    | "h5"
+    | "h4"
+    | "h3"
+    | "h2"
+    | "h1";
   /** Additional sx styles for the container Box */
   sx?: object;
 }

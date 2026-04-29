@@ -2,7 +2,6 @@ import { useCallback, useRef, useMemo, useState } from "react";
 import { UseFormSetValue, Path } from "react-hook-form";
 import { IntlTelInputRef } from "intl-tel-input/react";
 import { useTranslation } from "react-i18next";
-import { get } from "http";
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const { default: utils } = require("intl-tel-input/build/js/utils.js");
@@ -73,18 +72,11 @@ export const usePhoneInput = <T extends Record<string, any>>(
         if (fullNumber && utils.isValidNumber(fullNumber, countryData?.iso2)) {
           phoneState.lastValidNumber = fullNumber;
           phoneState.lastCountryCode = dialCode || "";
-          console.log("handlePhoneChange: Valid full number:", fullNumber);
           setValue(fieldName, fullNumber as any);
         } else {
           const cleanedNumber = cleanPhoneNumber(value, dialCode);
 
           const phone = `+${dialCode}${cleanedNumber}`;
-          console.log(
-            "handlePhoneChange: Cleaned number:",
-            utils.isValidNumber(phone, countryData?.iso2)
-              ? phone
-              : (cleanedNumber as any),
-          );
           setValue(
             fieldName,
             utils.isValidNumber(phone, countryData?.iso2)
@@ -104,11 +96,6 @@ export const usePhoneInput = <T extends Record<string, any>>(
   );
 
   const handleItiInit = useCallback((obj: IntlTelInputRef) => {
-    console.log("handleItiInit called with:", {
-      input: obj.getInput(),
-      instance: obj.getInstance(),
-      intlTelRef: intlTelRef.current,
-    });
     const { value } = obj?.getInput() || {};
     const { dialCode } = obj?.getInstance()?.getSelectedCountryData() || {};
     if (value && dialCode) {
@@ -163,14 +150,12 @@ export const usePhoneInput = <T extends Record<string, any>>(
           ) {
             phoneState.lastValidNumber = fullNumber;
             phoneState.lastCountryCode = countryData?.dialCode || "";
-            console.log("setPhoneNumber: Valid full number:", fullNumber);
             setValue(fieldName, fullNumber as any);
           } else {
             const cleanedNumber = cleanPhoneNumber(
               phoneNumber,
               countryData?.dialCode,
             );
-            console.log("setPhoneNumber: Cleaned number:", cleanedNumber);
             setValue(fieldName, cleanedNumber as any);
           }
 

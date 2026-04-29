@@ -181,7 +181,6 @@ export const RefundListPage = (): JSX.Element => {
             {Object.values(RefundStatus)
               .filter((s) => typeof s === "number")
               .map((status) => {
-                console.log(typeof status, status);
                 return (
                   <MenuItem key={status} value={status}>
                     {t(`REFUNDS.STATUS.${status}`)}

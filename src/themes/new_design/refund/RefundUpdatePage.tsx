@@ -115,7 +115,6 @@ export const RefundUpdatePage = (): JSX.Element => {
         dueBy: "",
       });
     }
-    console.log("Loaded refund application data:", data);
   }, [data, reset, user]);
   const onSubmit = async (data: RefundFormData) => {
     try {

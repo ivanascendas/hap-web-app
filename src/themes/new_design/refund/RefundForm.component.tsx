@@ -134,7 +134,7 @@ export const RefundFormComponent = ({
   const handleCancel = () => {
     navigate("/refunds");
   };
-  console.log({ isLopFilesUploaded, isHeaderFilesUploaded });
+
   return (
     <Box
       className={`refund-form-container personal_box personal_box_content ${isMobile ? "refund-form-container--mobile" : ""}`}

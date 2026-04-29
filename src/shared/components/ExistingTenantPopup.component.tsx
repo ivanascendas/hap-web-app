@@ -123,9 +123,7 @@ export const ExistingTenantPopupComponent = ({
           phoneNumberConfirmed: model.PhoneNumberConfirmed,
         }),
       );
-      console.log("updateUser", { model });
       return updateUser(model).then(() => {
-        console.log({ model });
         reset(model, {
           keepValues: true,
           keepDirty: false,
@@ -176,7 +174,6 @@ export const ExistingTenantPopupComponent = ({
 
   useEffect(() => {
     if (smsConfirmResult.isSuccess) {
-      console.log({ smsConfirmResult });
       dispatch(
         setUser({
           phone: getValues("PhoneNumber").replace("+", ""),
@@ -197,14 +194,9 @@ export const ExistingTenantPopupComponent = ({
     if (isValid) {
       handleSubmit(onSubmit)()
         .then(() => {
-          console.log("submitted");
           onClose();
         })
-        .catch((err) => {
-          console.log({ err });
-        });
-    } else {
-      console.log("not valid");
+        .catch(() => {});
     }
   };
   return (
@@ -310,10 +302,6 @@ export const ExistingTenantPopupComponent = ({
                               formatAsYouType: true,
                             },
                             getIti: (obj: IntlTelInputRef) => {
-                              console.log("set IntlTelInputRef", {
-                                input: obj.getInput(),
-                                instance: obj.getInstance(),
-                              });
                               iniTelReff.current = obj;
                               const instance = obj.getInstance();
                               if (instance) {
@@ -328,13 +316,6 @@ export const ExistingTenantPopupComponent = ({
                                 ?.getInstance()
                                 ?.getSelectedCountryData();
                               const phone = `+${countryData?.dialCode}${value}`;
-                              console.log(
-                                "onChange",
-                                phone,
-                                value,
-                                utils,
-                                countryData,
-                              );
 
                               setValue("PhoneNumber", phone);
                             },
